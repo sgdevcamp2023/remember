@@ -12,6 +12,8 @@ namespace user_service
             {
                 _connectionString = connectionString;
                 _redisDb = ConnectionMultiplexer.Connect(_connectionString).GetDatabase();
+                if(_redisDb == null)
+                    throw new System.Exception("Redis connection is null");
             }
 
             public IDatabase GetConnection()

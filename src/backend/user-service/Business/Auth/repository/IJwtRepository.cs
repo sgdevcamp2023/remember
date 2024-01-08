@@ -10,7 +10,7 @@ namespace user_service
             {
                 bool InsertJwt(JwtModel jwt);
                 bool UpdateJwt(JwtModel jwt);
-                string GetJwtById(long id);
+                async string? GetJwtById(string email);
             }
         }
     }

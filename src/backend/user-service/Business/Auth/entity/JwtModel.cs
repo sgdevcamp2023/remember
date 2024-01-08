@@ -7,13 +7,13 @@ namespace user_service
         {
             public class JwtModel
             {
-                public JwtModel(long Id, string Token)
+                public JwtModel(string Email, string Token)
                 {
-                    this.Id = Id;
+                    this.Email = Email;
                     this.Token = Token;
                 }
 
-                public long Id { get; set; }
+                public string Email { get; set; }
                 public string Token { get; set; } = null!;
             }
         }

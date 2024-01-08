@@ -27,6 +27,8 @@ namespace user_service
                     // 흐름도
                     
                     // 1. Refresh Token 검증
+                    // _jwtRepository.GetJwtById(dto.);
+
                     // 2. Refresh Token 검증 실패 시 예외 처리
                     // 3. Refresh Token 검증 성공 시 Access Token 재발급
                     // 4. Access Token 재발급 실패 시 예외 처리
@@ -54,26 +56,6 @@ namespace user_service
                     using var rng = RandomNumberGenerator.Create();
                     rng.GetBytes(randomNumber);
                     return Convert.ToBase64String(randomNumber);
-                }
-
-                public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
-                {
-                    var tokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = true,
-                        ValidateIssuer = true,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"])),
-                        ValidateLifetime = true
-                    };
-
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-                    if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                        throw new SecurityTokenException("Invalid token");
-
-                    return principal;
-
                 }
 
                 public bool ValidationToken(string accessToken)
