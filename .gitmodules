@@ -1,0 +1,3 @@
+[submodule "src/backend/community-service/remember-community-private-env"]
+	path = src/backend/community-service/remember-community-private-env
+	url = https://github.com/0Chord/remember-community-private-env.git
