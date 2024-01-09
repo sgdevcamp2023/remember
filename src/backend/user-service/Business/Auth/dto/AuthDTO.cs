@@ -1,5 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace user_service
 {
@@ -9,37 +10,34 @@ namespace user_service
         {
             public class AuthRegisterRequestDto
             {
-                [Required(ErrorMessage = "Email is required")]
-                [EmailAddress]
+                [Required(ErrorMessage = "4000")]
+                [EmailAddress(ErrorMessage = "4001")]
                 [DataType(DataType.EmailAddress)]
-                [MaxLength(50)]
                 public string Email { get; set; } = null!;
 
-                [Required(ErrorMessage = "Username is required")]
-                [MaxLength(50)]
+                [Required(ErrorMessage = "4005")]
+                [RegularExpression(@"^[a-zA-Z_-]+$", ErrorMessage = "4006")]
                 public string Username { get; set; } = null!;
 
-                [Required(ErrorMessage = "Password is required")]
-                [MinLength(8, ErrorMessage = "Password must be at least 8 characters")]
-                [MaxLength(50)]
+                [Required(ErrorMessage = "4002")]
+                [RegularExpression(@"^(?=.*[a-z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,20}$", ErrorMessage = "4003")]
                 [DataType(DataType.Password)]
-                [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "비밀번호는 대소문자, 숫자, 특수문자를 포함해야 합니다.")]
                 public string Password { get; set; } = null!;
+
+                [Required(ErrorMessage = "4004")]
+                public string EmailCheck { get; set; } = null!;
             }
 
             public class AuthLoginRequestDto
             {
-                [Required(ErrorMessage = "Email is required")]
-                [EmailAddress]
+                [Required(ErrorMessage = "4000")]
+                [EmailAddress(ErrorMessage = "4001")]
                 [DataType(DataType.EmailAddress)]
-                [MaxLength(50)]
                 public string Email { get; set; } = null!;
 
-                [Required(ErrorMessage = "Password is required")]
-                [MinLength(8, ErrorMessage = "Password must be at least 8 characters")]
-                [MaxLength(50)]
+                [Required(ErrorMessage = "4002")]
+                [RegularExpression(@"^(?=.*[a-z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,20}$", ErrorMessage = "4003")]
                 [DataType(DataType.Password)]
-                [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "비밀번호는 대소문자, 숫자, 특수문자를 포함해야 합니다.")]
                 public string Password { get; set; } = null!;
             }
         }

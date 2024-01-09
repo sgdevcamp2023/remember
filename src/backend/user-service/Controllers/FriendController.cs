@@ -2,12 +2,13 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using user_service.filter;
 
 namespace user_service
 {
     namespace friend
     {
-        [filter.TraceIdCheckFilter]
+        [TraceIdCheckFilter]
         [Route("api/user/[controller]")]
         [ApiController]
         public class FriendController : ControllerBase

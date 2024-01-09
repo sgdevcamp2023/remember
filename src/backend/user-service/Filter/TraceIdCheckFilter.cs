@@ -4,16 +4,17 @@ namespace user_service
 {
     namespace filter
     {
-        public class TraceIdFilter : Attribute, IActionFilter
+        public class TraceIdCheckFilter : ActionFilterAttribute
         {
-            public void OnActionExecuted(ActionExecutedContext context)
+            public override void OnActionExecuted(ActionExecutedContext context)
             {
                 if(context.HttpContext.Request.Headers.ContainsKey("trace-id") == false)
                     throw new Exception("Trace id is required");
+                
                 throw new NotImplementedException();
             }
 
-            public void OnActionExecuting(ActionExecutingContext context)
+            public override void OnActionExecuting(ActionExecutingContext context)
             {
                 throw new NotImplementedException();
             }

@@ -6,14 +6,14 @@ namespace user_service
         {
             public class JwtDTO
             {
-                public JwtDTO(string refreshToken, string accessToken)
+                public JwtDTO(string accessToken, string refreshToken)
                 {
-                    this.RefreshToken = refreshToken;
                     this.AccessToken = accessToken;
+                    this.RefreshToken = refreshToken;
                 }
                 
-                public string RefreshToken { get; set; } = null!;
                 public string AccessToken { get; set; } = null!;
+                public string RefreshToken { get; set; } = null!;
             }
         }
     }

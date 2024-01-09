@@ -12,8 +12,8 @@ namespace user_service
         {
             public AuthController()
             {
-                
-            }  
+
+            }
 
 
             [HttpPost("register")]
@@ -29,13 +29,17 @@ namespace user_service
             }
 
             [HttpGet("check-email/{email}")]
-            public IActionResult CheckSameEmail([EmailAddress] string email)
+            public IActionResult CheckSameEmail([EmailAddress(ErrorMessage = "4001")] string email)
             {
                 return Ok();
             }
 
             [HttpPost("send-email")]
-            public IActionResult SendEmailCheck([FromBody] [Required] [EmailAddress] string email)
+            public IActionResult SendEmailCheck(
+                [FromBody]
+                [Required(ErrorMessage = "4000")]
+                [EmailAddress(ErrorMessage = "4001")]
+                 string email)
             {
                 return Ok();
             }
@@ -44,22 +48,25 @@ namespace user_service
             public IActionResult Logout()
             {
                 return Ok();
-            }   
+            }
 
             [HttpPost("refresh-token")]
-            public IActionResult RefreshToken([FromBody] string refreshToken)
+            public IActionResult RefreshToken(
+                [FromBody] string refreshToken)
             {
                 return Ok();
             }
 
             [HttpPost("validation-token")]
-            public IActionResult ValidationToken([FromBody] string acessToken)
+            public IActionResult ValidationToken(
+                [FromBody] string accessToken)
             {
                 return Ok();
             }
 
             [HttpPost("find-password")]
-            public IActionResult FindPassword([FromBody] string email)
+            public IActionResult FindPassword(
+                [FromBody] string email)
             {
                 return Ok();
             }

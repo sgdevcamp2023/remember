@@ -7,7 +7,13 @@ namespace user_service
         {
             public void Log(string message)
             {
-                
+                Task.Run(() =>
+                {
+                    using (StreamWriter writer = new StreamWriter("log.txt", true))
+                    {
+                        writer.WriteLine(message);
+                    }
+                });
             }
         }
     }

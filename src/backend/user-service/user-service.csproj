@@ -10,5 +10,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.25"/>
     <PackageReference Include="StackExchange.Redis" Version="2.7.10"/>
+    <PackageReference Include="MailKit" Version="4.3.0"/>
   </ItemGroup>
 </Project>
