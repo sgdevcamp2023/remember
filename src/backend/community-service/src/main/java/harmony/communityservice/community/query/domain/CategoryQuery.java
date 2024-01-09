@@ -1,36 +1,32 @@
-package harmony.communityservice.community.command.domain;
+package harmony.communityservice.community.query.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category_query")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class CategoryQuery {
 
     @Id
-    @Column(name = "category_id")
+    @Column(name = "category_query_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long categoryQueryId;
 
-    @ManyToOne
-    @JoinColumn(name = "guild_id")
-    private Guild guild;
+    @NotNull
+    @Column(name = "guild_id")
+    private Long guildId;
 
     @NotBlank
+    @Column(name = "category_name")
     private String name;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
 
 }

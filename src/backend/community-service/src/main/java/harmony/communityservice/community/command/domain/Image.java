@@ -9,28 +9,24 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "category")
+@Table(name = "image")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Image {
 
     @Id
-    @Column(name = "category_id")
+    @Column(name = "image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long imageId;
 
     @ManyToOne
-    @JoinColumn(name = "guild_id")
-    private Guild guild;
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     @NotBlank
-    private String name;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
+    @Column(name = "image_addr")
+    private String imageAddr;
 }

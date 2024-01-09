@@ -1,5 +1,5 @@
 package harmony.communityservice.community.command.domain;
 
-public enum CategoryType {
+public enum ChannelType {
 TEXT, VOICE, FORUM, ANNOUNCEMENT, STAGE
 }
