@@ -20,7 +20,7 @@ public class Guild {
 
     @Id
     @Column(name = "guild_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guildId;
 
     @NotBlank
