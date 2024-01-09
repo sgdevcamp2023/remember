@@ -1,6 +1,6 @@
 package harmony.communityservice.community.command.repository;
 
-import harmony.communityservice.community.command.domain.User;
+import harmony.communityservice.community.domain.User;
 
 public interface UserCommandRepository {
 

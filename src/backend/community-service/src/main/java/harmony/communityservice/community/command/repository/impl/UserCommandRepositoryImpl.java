@@ -1,6 +1,6 @@
 package harmony.communityservice.community.command.repository.impl;
 
-import harmony.communityservice.community.command.domain.User;
+import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.command.repository.UserCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaUserCommandRepository;
 import lombok.RequiredArgsConstructor;

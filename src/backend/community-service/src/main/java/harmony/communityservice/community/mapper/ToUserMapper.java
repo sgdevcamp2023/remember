@@ -1,6 +1,6 @@
 package harmony.communityservice.community.mapper;
 
-import harmony.communityservice.community.command.domain.User;
+import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.command.dto.UserStoreRequestDto;
 
 public class ToUserMapper {
