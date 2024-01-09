@@ -1,0 +1,3 @@
+[submodule "src/backend/chat-service/harmony-private-env"]
+	path = src/backend/chat-service/harmony-private-env
+	url = https://github.com/acs0209/harmony-private-env.git
