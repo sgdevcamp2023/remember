@@ -119,6 +119,30 @@ namespace user_service
                     reader.GetBoolean(reader.GetOrdinal("is_deleted"))
                 );
             }
+
+            public bool UpdateName(long id, string name)
+            {
+                string query = $"UPDATE users SET name = '{name}' WHERE id = {id}";
+                _dbConnectionManager.ExecuteNonQuery(query);
+
+                return true;
+            }
+
+            public bool UpdatePassword(string email, string password)
+            {
+                string query = $"UPDATE users SET password ='{password}' WHERE email = '{email}'";
+                _dbConnectionManager.ExecuteNonQuery(query);
+
+                return true;
+            }
+
+            public bool UpdatePassword(long id, string password)
+            {
+                string query = $"UPDATE users SET password ='{password}' WHERE id = {id}";
+                _dbConnectionManager.ExecuteNonQuery(query);
+
+                return true;
+            }
         }
     }
 }

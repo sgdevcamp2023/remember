@@ -40,25 +40,29 @@ namespace user_service
                 return Ok();
             }
 
-            [HttpGet("check-email/{email}")]
-            public IActionResult CheckSameEmail([EmailAddress(ErrorMessage = "4001")] string email)
+            [HttpPost("send-email")]
+            public IActionResult SendEmailCheck(
+                [FromBody] [Required(ErrorMessage = "4000")] [EmailAddress(ErrorMessage = "4001")] string email)
             {
+                _authService.SendEmailChecksum(email);
+
                 return Ok();
             }
 
-            [HttpPost("send-email")]
-            public IActionResult SendEmailCheck(
-                [FromBody]
-                [Required(ErrorMessage = "4000")]
-                [EmailAddress(ErrorMessage = "4001")]
-                 string email)
+            [HttpPost("check-email")]
+            public IActionResult CheckEmail(
+                [FromBody] [Required(ErrorMessage = "4000")] EmailDTO email)
             {
+                _authService.CheckEmailChecksum(email.Email, email.EmailChecksum);
+
                 return Ok();
             }
 
             [HttpPost("logout")]
             public IActionResult Logout()
             {
+                
+
                 return Ok();
             }
 
@@ -66,6 +70,7 @@ namespace user_service
             public IActionResult RefreshToken(
                 [FromBody] string refreshToken)
             {
+                // _jwtService
                 return Ok();
             }
 
@@ -73,14 +78,17 @@ namespace user_service
             public IActionResult ValidationToken(
                 [FromBody] string accessToken)
             {
-                
+                _jwtService.ValidationToken(accessToken);
+
                 return Ok();
             }
 
-            [HttpPost("find-password")]
-            public IActionResult FindPassword(
+            [HttpPost("reset-password")]
+            public IActionResult ResetPassword(
                 [FromBody] string email)
             {
+                _authService.SendMailResetPassword(email);
+
                 return Ok();
             }
         }

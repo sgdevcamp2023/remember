@@ -55,6 +55,21 @@
         "description": "회원가입에 실패했습니다."
     },
     {
+        "code": 4011,
+        "message": "FAILED_SEND_EMAIL",
+        "description": "이메일 전송에 실패했습니다."
+    },
+    {
+        "code": 4012,
+        "message": "EXPIRED_EMAIL_CHECKSUM",
+        "description": "이메일 인증 시간이 만료되었습니다."
+    },
+    {
+        "code": 4013,
+        "message": "INVALID_EMAIL_CHECKSUM",
+        "description": "이메일 인증 번호가 올바르지 않습니다."
+    },
+    {
         "code": 4100,
         "message": "INVALID_ACCESS_TOKEN",
         "description": "엑세스 토큰이 올바르지 않습니다."

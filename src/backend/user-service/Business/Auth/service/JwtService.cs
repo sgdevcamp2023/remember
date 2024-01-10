@@ -33,12 +33,12 @@ namespace user_service
                     _logger = logger;
                 }
 
-                public async Task<String> RefreshToken(TokenDTO dto)
+                public string RefreshToken(TokenDTO dto)
                 {
                     // 흐름도
 
                     // 1. Refresh Token
-                    string? accressToken = await _redisRepository.GetStringById(dto.RefreshToken);
+                    string? accressToken = _redisRepository.GetStringById(dto.RefreshToken);
                     if (accressToken == null)
                         throw new ServiceException(4101);
 
@@ -146,7 +146,7 @@ namespace user_service
                         throw new ServiceException(4100);
                     }
                 }
-                public bool ValidationToken(string accessToken)
+                public long ValidationToken(string accessToken)
                 {
                     // AccessToken이 무조건 있다고 가정
                     var tokenValidationParameters = new TokenValidationParameters
@@ -162,12 +162,17 @@ namespace user_service
                     var tokenHandler = new JwtSecurityTokenHandler();
                     try
                     {
-                        tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
+                        var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
                         // 토큰 유효성 검사 성공
+                        var claims = principal.Claims.ToList();
 
-                        // DB에서 고유 아이디 가져오는 코드 작성
+                        foreach(var claim in claims)
+                        {
+                            if(claim.Type == ClaimTypes.Name)
+                                return long.Parse(claim.Value);
+                        }
 
-                        return true;
+                        throw new ServiceException(4100);
                     }
                     catch (Exception e)
                     {

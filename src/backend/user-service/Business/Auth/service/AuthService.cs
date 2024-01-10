@@ -5,6 +5,7 @@ using MimeKit;
 using MimeKit.Text;
 
 using user_service.auth.dto;
+using user_service.auth.entity;
 using user_service.auth.repository;
 using user_service.common;
 using user_service.common.exception;
@@ -32,7 +33,80 @@ namespace user_service
                     _redisRepository = redisRepository;
                     _config = config;
                 }
-                public void SameEmailCheck(string email)
+
+                public void Register(RegisterDTO register)
+                {
+                    // 체크
+                    SameEmailCheck(register.Email);
+                    CheckEmailChecksum(register.Email, register.EmailCheck);
+
+                    _redisRepository.DeleteRedis(register.Email);
+
+                    // 비밀번호 암호화
+                    register.Password = Utils.SHA256Hash(register.Password);
+
+                    if (_userRepository.InsertUser(register) == false)
+                        throw new ServiceException(4010);
+                }
+
+                public void SendEmailChecksum(string email)
+                {
+                    SameEmailCheck(email);
+
+                    int checksum = Utils.GenerateRandomNumber(100000, 999999);
+                    try
+                    {
+                        // 이메일 전송
+                        var message = new MimeMessage();
+                        message.From.Add(new MailboxAddress("user-service", _config["Mail:Email"]));
+                        message.To.Add(new MailboxAddress("", email));
+                        message.Subject = "user-service 인증번호입니다.";
+                        message.Body = new TextPart("plain") { Text = $"인증번호 : {checksum}" };
+
+                        SendEMail(message);
+
+                        _redisRepository.InsertRedis(new RedisModel(email, checksum.ToString()), new TimeSpan(0, 0, int.Parse(_config["Mail:ExpiredTime"])));
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Log(e.Message);
+
+                        throw new ServiceException(4011);
+                    }
+                }
+
+                public void SendMailResetPassword(string email)
+                {
+                    if(_userRepository.IsEmailExist(email) == true)
+                    {
+                        int resetPassword = Utils.GenerateRandomNumber(10000, 100000);
+
+                        var message = new MimeMessage();
+                        message.From.Add(new MailboxAddress("user-service", _config["Mail:Email"]));
+                        message.To.Add(new MailboxAddress("", email));
+                        message.Subject = "user-service 비밀번호 재설정";
+                        message.Body = new TextPart("plain") { Text = $"Reset Password : {resetPassword}" };
+
+                        SendEMail(message);
+                        
+                        _userRepository.UpdatePassword(email, Utils.SHA256Hash(resetPassword.ToString()));
+                    }
+                    else
+                        throw new ServiceException(4007);
+                }
+
+                public void CheckEmailChecksum(string email, string checksum)
+                {
+                    string? redisChecksum = _redisRepository.GetStringById(email);
+
+                    if (redisChecksum == null)
+                        throw new ServiceException(4012);
+
+                    if (redisChecksum != checksum)
+                        throw new ServiceException(4013);
+                }
+
+                private void SameEmailCheck(string email)
                 {
                     if (_userRepository.IsEmailExist(email))
                     {
@@ -40,44 +114,26 @@ namespace user_service
                     }
                 }
 
-                public void Register(RegisterDTO register)
+                private void SendEMail(MimeMessage message)
                 {
-                    // 비밀번호 암호화
-                    register.Password = SHA356Hash(register.Password);
-                    
-                    if (_userRepository.InsertUser(register) == false)
-                        throw new ServiceException(4010);
-                }
-
-                public void SendEmail(string email)
-                {
-                    // 이메일 전송
-                    var message = new MimeMessage();
-                    message.From.Add(new MailboxAddress("user-service", _config["Mail:Email"]));
-                    message.To.Add(new MailboxAddress("", email));
-                    message.Subject = "Hello World";
-                    message.Body = new TextPart("plain") { Text = "Hello from .NET!" };
-
-                    using (var client = new MailKit.Net.Smtp.SmtpClient())
+                    try
                     {
-                        client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-                        client.Authenticate(_config["Mail:Id"], _config["Mail:Password"]);
+                        using (var client = new MailKit.Net.Smtp.SmtpClient())
+                        {
+                            client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                            client.Authenticate(_config["Mail:Id"], _config["Mail:Password"]);
 
-                        client.Send(message);
-                        client.Disconnect(true);
+                            client.Send(message);
+                            client.Disconnect(true);
+                        }
                     }
-                }
-
-                private string SHA356Hash(string password)
-                {
-                    SHA256 sha256Hash = SHA256.Create();
-                    byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-                    StringBuilder sBuilder = new StringBuilder();
-                    for (int i = 0; i < data.Length; i++)
+                    catch (Exception e)
                     {
-                        sBuilder.Append(data[i].ToString("x2"));
+                        _logger.Log(e.Message);
+
+                        throw new ServiceException(4011);
                     }
-                    return sBuilder.ToString();
+
                 }
             }
         }

@@ -9,6 +9,9 @@ namespace user_service
         {
             bool InsertUser(RegisterDTO user);
             bool UpdateUser(UserModel user);
+            bool UpdateName(long id, string name);
+            bool UpdatePassword(string email, string password);
+            bool UpdatePassword(long id, string password);
             bool DeleteUser(long id);
             bool DeleteUser(string email);
             bool IsEmailExist(string email);

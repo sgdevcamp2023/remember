@@ -51,14 +51,14 @@ namespace user_service
                 }
             }
 
-            public bool Insert(string key, string value)
+            public bool Insert(string key, string value, TimeSpan? timeSpan = null)
             {
                 try
                 {
                    if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
                         Connect();
                     
-                    return _redisDb.StringSet(key, value);
+                    return _redisDb.StringSet(key, value, timeSpan);
                 }
                 catch (Exception e)
                 {
@@ -87,7 +87,7 @@ namespace user_service
                 }
             }
             
-            public string? GetStringByKeyAsync(string key)
+            public string? GetStringByKey(string key)
             {
                 try
                     {

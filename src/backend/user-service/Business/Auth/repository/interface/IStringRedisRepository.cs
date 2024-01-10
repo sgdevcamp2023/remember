@@ -9,8 +9,8 @@ namespace user_service
             public interface IStringRedisRepository
             {
                 bool InsertRedis(RedisModel model, TimeSpan? expiry = null);
-                bool DeleteRedis(RedisModel model);
-                Task<string?> GetStringById(string email);
+                bool DeleteRedis(string key);
+                string? GetStringById(string email);
             }
         }
     }

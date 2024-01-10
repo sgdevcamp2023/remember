@@ -26,7 +26,7 @@ namespace user_service
             [HttpPatch("change-password")]
             public IActionResult ChangePassword(
                 [FromHeader(Name = "trace-id")] [Required] int traceId,
-                [FromBody] [Required] dto.ChangePasswrodRequestDto request)
+                [FromBody] [Required] dto.PasswordDTO request)
             {
                 return Ok();
             }
@@ -34,7 +34,7 @@ namespace user_service
             [HttpPatch("change-name")]
             public IActionResult ChangeName(
                 [FromHeader(Name = "trace-id")] [Required] int traceId,
-                [FromBody] [Required] dto.ChangeNameRequestDto request)
+                [FromBody] [Required] dto.PasswordDTO request)
             {
                 return Ok();
             }

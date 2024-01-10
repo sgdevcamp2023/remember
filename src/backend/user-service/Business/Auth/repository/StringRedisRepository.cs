@@ -21,48 +21,17 @@ namespace user_service
 
                 public bool InsertRedis(RedisModel model, TimeSpan? expiry = null)
                 {
-                    try
-                    {
-                        return _redisConnectionManager.GetConnection().StringSet(model.Key, model.Value, expiry);
-                    }
-                    catch (Exception e) when (e is RedisConnectionException)
-                    {
-                        // 에러 처리
-                        _logger.Log(e.Message);
-                        
-                        return false;
-                    }
+                    return _redisConnectionManager.Insert(model.Key, model.Value, expiry);
                 }
 
-                public bool DeleteRedis(RedisModel model)
+                public bool DeleteRedis(string key)
                 {
-                    try
-                    {
-                        return _redisConnectionManager.GetConnection().KeyDelete(model.Key);
-                    }
-                    catch (Exception e) when (e is RedisConnectionException)
-                    {
-                        // 에러 처리
-                        _logger.Log(e.Message);
-
-                        return false;
-                    }
+                    return _redisConnectionManager.Delete(key);
                 }
 
-                public async Task<string?> GetStringById(string key)
+                public string? GetStringById(string key)
                 {
-                    try
-                    {
-                        var task = _redisConnectionManager.GetConnection().StringGetAsync(key);
-                        await _redisConnectionManager.GetConnection().KeyDeleteAsync(key);
-                        return await task;
-                    }
-                    catch (Exception e) when (e is RedisConnectionException)
-                    {
-                        // 에러 처리
-                        _logger.Log(e.Message);
-                        return null;
-                    }
+                    return _redisConnectionManager.GetStringByKey(key);
                 }
             }
         }
