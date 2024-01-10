@@ -7,7 +7,7 @@ public class ToGuildReadMapper {
 
     public static GuildRead convert(GuildReadRequestDto requestDto) {
         return GuildRead.builder()
-                .guildReadId(requestDto.getGuildId())
+                .guildId(requestDto.getGuildId())
                 .userId(requestDto.getUserId())
                 .profile(requestDto.getProfile())
                 .name(requestDto.getName())

@@ -7,4 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface GuildCommandService {
 
     void save(GuildRegistrationRequestDto requestDto, String profile);
+
+    void join(String invitationCode);
 }

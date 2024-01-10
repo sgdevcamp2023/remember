@@ -13,7 +13,9 @@ import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.mapper.ToGuildMapper;
 import harmony.communityservice.community.mapper.ToGuildReadRequestDtoMapper;
 import harmony.communityservice.community.mapper.ToUserReadRequestDtoMapper;
+import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     private final UserQueryService userQueryService;
     private final GuildUserCommandService guildUserCommandService;
     private final UserReadCommandService userReadCommandService;
+    private final GuildQueryService guildQueryService;
 
     @Override
     public void save(GuildRegistrationRequestDto requestDto, String profile) {
@@ -34,6 +37,19 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         User findUser = userQueryService.findUser(requestDto.getManagerId());
         guildUserCommandService.save(guild, findUser);
         UserReadRequestDto userReadRequestDto = ToUserReadRequestDtoMapper.convert(guild, findUser);
+        userReadCommandService.save(userReadRequestDto);
+    }
+
+    @Override
+    public void join(String invitationCode) {
+        List<String> splitCodes = List.of(invitationCode.split("."));
+        long userId = Long.parseLong(splitCodes.get(1));
+        Guild findGuild = guildQueryService.findGuildByInviteCode(splitCodes.get(0));
+        GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(findGuild);
+        guildReadCommandService.save(guildReadRequestDto);
+        User findUser = userQueryService.findUser(userId);
+        guildUserCommandService.save(findGuild, findUser);
+        UserReadRequestDto userReadRequestDto = ToUserReadRequestDtoMapper.convert(findGuild, findUser);
         userReadCommandService.save(userReadRequestDto);
     }
 }
