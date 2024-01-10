@@ -5,7 +5,10 @@ import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
 import harmony.communityservice.community.command.dto.InvitationRequestDto;
 import harmony.communityservice.community.command.service.GuildCommandService;
+import harmony.communityservice.community.domain.GuildRead;
 import harmony.communityservice.community.query.service.GuildQueryService;
+import harmony.communityservice.community.query.service.GuildReadQueryService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +29,7 @@ public class GuildController {
     private final ContentService contentService;
     private final GuildCommandService guildCommandService;
     private final GuildQueryService guildQueryService;
+    private final GuildReadQueryService guildReadQueryService;
 
     @PostMapping("/registration/guild")
     public BaseResponse<?> registration(
@@ -47,5 +51,11 @@ public class GuildController {
     public BaseResponse<?> join(@PathVariable String invitationCode) {
         guildCommandService.join(invitationCode);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
+    }
+
+    @GetMapping("/check/guild/{userId}")
+    public BaseResponse<?> checkGuild(@PathVariable Long userId) {
+        List<GuildRead> findGuildReads = guildReadQueryService.findGuildReadsByUserId(userId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", findGuildReads);
     }
 }
