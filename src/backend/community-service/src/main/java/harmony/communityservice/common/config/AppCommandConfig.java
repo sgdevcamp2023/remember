@@ -93,4 +93,7 @@ public class AppCommandConfig {
         return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userQueryService,
                 guildUserCommandService(), userReadCommandService(), guildQueryService);
     }
+
+//    @Bean
+//    public Con
 }

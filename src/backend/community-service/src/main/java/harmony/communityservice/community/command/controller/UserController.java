@@ -5,6 +5,7 @@ import harmony.communityservice.community.command.dto.UserStoreRequestDto;
 import harmony.communityservice.community.command.service.UserCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class UserController {
     private final UserCommandService userCommandService;
 
     @PostMapping("/registration/user")
-    public BaseResponse<?> join(@RequestBody UserStoreRequestDto userStoreRequestDto) {
+    public BaseResponse<?> join(@RequestBody @Validated UserStoreRequestDto userStoreRequestDto) {
         userCommandService.save(userStoreRequestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }

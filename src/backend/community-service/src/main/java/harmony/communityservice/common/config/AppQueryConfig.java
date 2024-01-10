@@ -1,18 +1,23 @@
 package harmony.communityservice.common.config;
 
 import harmony.communityservice.community.query.repository.GuildQueryRepository;
+import harmony.communityservice.community.query.repository.GuildReadQueryRepository;
 import harmony.communityservice.community.query.repository.UserQueryRepository;
 import harmony.communityservice.community.query.repository.UserReadQueryRepository;
 import harmony.communityservice.community.query.repository.impl.GuildQueryRepositoryImpl;
+import harmony.communityservice.community.query.repository.impl.GuildReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.UserQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.UserReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.jpa.JpaGuildQueryRepository;
+import harmony.communityservice.community.query.repository.jpa.JpaGuildReadQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaUserQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaUserReadQueryRepository;
 import harmony.communityservice.community.query.service.GuildQueryService;
+import harmony.communityservice.community.query.service.GuildReadQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import harmony.communityservice.community.query.service.impl.GuildQueryServiceImpl;
+import harmony.communityservice.community.query.service.impl.GuildReadQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.UserQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.UserReadQueryServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +31,7 @@ public class AppQueryConfig {
     private final JpaUserQueryRepository jpaUserQueryRepository;
     private final JpaUserReadQueryRepository jpaUserReadQueryRepository;
     private final JpaGuildQueryRepository jpaGuildQueryRepository;
+    private final JpaGuildReadQueryRepository jpaGuildReadQueryRepository;
 
     @Bean
     public UserQueryRepository userQueryRepository() {
@@ -55,5 +61,15 @@ public class AppQueryConfig {
     @Bean
     public GuildQueryService guildQueryService() {
         return new GuildQueryServiceImpl(guildQueryRepository(), userReadQueryService());
+    }
+
+    @Bean
+    public GuildReadQueryRepository guildReadQueryRepository() {
+        return new GuildReadQueryRepositoryImpl(jpaGuildReadQueryRepository);
+    }
+
+    @Bean
+    public GuildReadQueryService guildReadQueryService() {
+        return new GuildReadQueryServiceImpl(guildReadQueryRepository());
     }
 }
