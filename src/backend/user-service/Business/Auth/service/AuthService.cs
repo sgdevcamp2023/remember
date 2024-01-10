@@ -1,4 +1,6 @@
 using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
 using MimeKit;
 using MimeKit.Text;
 
@@ -40,6 +42,9 @@ namespace user_service
 
                 public void Register(RegisterDTO register)
                 {
+                    // 비밀번호 암호화
+                    register.Password = SHA356Hash(register.Password);
+                    
                     if (_userRepository.InsertUser(register) == false)
                         throw new ServiceException(4010);
                 }
@@ -61,6 +66,18 @@ namespace user_service
                         client.Send(message);
                         client.Disconnect(true);
                     }
+                }
+
+                private string SHA356Hash(string password)
+                {
+                    SHA256 sha256Hash = SHA256.Create();
+                    byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+                    StringBuilder sBuilder = new StringBuilder();
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        sBuilder.Append(data[i].ToString("x2"));
+                    }
+                    return sBuilder.ToString();
                 }
             }
         }

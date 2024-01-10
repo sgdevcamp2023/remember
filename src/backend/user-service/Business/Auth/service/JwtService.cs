@@ -71,6 +71,7 @@ namespace user_service
                     if(user == null)
                         throw new ServiceException(4007);
                     
+                    loginDto.Password = SHA356Hash(loginDto.Password);
                     if(user.Password != loginDto.Password)
                         throw new ServiceException(4008);
                     
@@ -175,6 +176,18 @@ namespace user_service
 
                         throw new ServiceException(4100);
                     }
+                }
+
+                private string SHA356Hash(string password)
+                {
+                    SHA256 sha256Hash = SHA256.Create();
+                    byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+                    StringBuilder sBuilder = new StringBuilder();
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        sBuilder.Append(data[i].ToString("x2"));
+                    }
+                    return sBuilder.ToString();
                 }
             }
         }

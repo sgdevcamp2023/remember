@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id          INT IDENTITY(1, 1) NOT NULL,
     email       VARCHAR(50)         NOT NULL,
-    password    VARCHAR(50)         NOT NULL,
+    password    VARCHAR(64)         NOT NULL,
     name        VARCHAR(20)         NOT NULL,
     profile     VARCHAR(255)        NULL,
     created_at  DATETIME            NOT NULL DEFAULT GETDATE(),
@@ -20,3 +20,5 @@ CREATE TABLE friends (
     FOREIGN     KEY (first_user_id)  REFERENCES users(id),
     FOREIGN     KEY (second_user_id) REFERENCES users(id)
 );
+
+DROP TABLE friends, users;
