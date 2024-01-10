@@ -1,0 +1,87 @@
+[
+    {
+        "code": 4000,
+        "message": "REQUIRED_EMAIL",
+        "description": "이메일은 필수 입력입니다."
+    },
+    {
+        "code": 4001,
+        "message": "INVALID_EMAIL",
+        "description": "이메일 형식이 올바르지 않습니다."
+    },
+    {
+        "code": 4002,
+        "message": "REQUIRED_PASSWORD",
+        "description": "비밀번호는 필수 입력입니다."
+    },
+    {
+        "code": 4003,
+        "message": "INVALID_PASSWORD",
+        "description": "비밀번호는 8~20이며, 숫자, 특수문자를 포함해야 합니다."
+    },
+    {
+        "code": 4004,
+        "message": "REQUIRED_EMAIL_CHECK",
+        "description": "Email 체크를 넣어주세요."
+    },
+    {
+        "code": 4005,
+        "message": "REQUIRED_USERNAME",
+        "description": "유저 이름은 필수 입력입니다."
+    },
+    {
+        "code": 4006,
+        "message": "INVALID_USERNAME",
+        "description": "유저 이름은 영문, 언더스코어(_), 대시(-)만 포함해야 합니다."
+    },
+    {
+        "code": 4007,
+        "message": "NON_EXISTENT_USER",
+        "description": "존재하지 않는 유저입니다."
+    },
+    {
+        "code": 4008,
+        "message": "INVALID_PASSWORD",
+        "description": "비밀번호가 올바르지 않습니다."
+    },
+    {
+        "code": 4009,
+        "message": "SAME_EMAIL",
+        "description": "이미 존재하는 이메일입니다."
+    },
+    {
+        "code": 4010,
+        "message": "FAILED_REGISTER",
+        "description": "회원가입에 실패했습니다."
+    },
+    {
+        "code": 4011,
+        "message": "FAILED_SEND_EMAIL",
+        "description": "이메일 전송에 실패했습니다."
+    },
+    {
+        "code": 4012,
+        "message": "EXPIRED_EMAIL_CHECKSUM",
+        "description": "이메일 인증 시간이 만료되었습니다."
+    },
+    {
+        "code": 4013,
+        "message": "INVALID_EMAIL_CHECKSUM",
+        "description": "이메일 인증 번호가 올바르지 않습니다."
+    },
+    {
+        "code": 4100,
+        "message": "INVALID_ACCESS_TOKEN",
+        "description": "엑세스 토큰이 올바르지 않습니다."
+    },
+    {
+        "code": 4101,
+        "message": "INVALID_REFRESH_TOKEN",
+        "description": "리프레시 토큰이 올바르지 않습니다."
+    },
+    {
+        "code": 4102,
+        "message": "CREATE_FAILED_ACCESS_TOKEN",
+        "description": "엑세스 토큰 생성에 실패했습니다."
+    }
+]
