@@ -4,9 +4,9 @@ namespace user_service
     {
         namespace dto
         {
-            public class JwtDTO
+            public class TokenDTO
             {
-                public JwtDTO(string accessToken, string refreshToken)
+                public TokenDTO(string accessToken, string refreshToken)
                 {
                     this.AccessToken = accessToken;
                     this.RefreshToken = refreshToken;

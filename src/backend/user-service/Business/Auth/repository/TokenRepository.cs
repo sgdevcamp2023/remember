@@ -9,11 +9,11 @@ namespace user_service
     {
         namespace repository
         {
-            public class RedisRepository : IRedisRepository
+            public class TokenRepository : ITokenRepository
             {
                 RedisConnectionManager _redisConnectionManager;
                 FileLogger _logger = new FileLogger();
-                public RedisRepository(RedisConnectionManager redisConnectionManager, FileLogger logger)
+                public TokenRepository(RedisConnectionManager redisConnectionManager, FileLogger logger)
                 {
                     _redisConnectionManager = redisConnectionManager;
                     _logger = logger;
@@ -29,7 +29,7 @@ namespace user_service
                     {
                         // 에러 처리
                         _logger.Log(e.Message);
-
+                        
                         return false;
                     }
                 }

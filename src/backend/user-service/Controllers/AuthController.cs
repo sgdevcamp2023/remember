@@ -16,23 +16,23 @@ namespace user_service
             }
 
 
-            [HttpPost("register")]
-            public IActionResult Register([FromBody] dto.AuthRegisterRequestDto request)
-            {
-                return Ok();
-            }
+            // [HttpPost("register")]
+            // public IActionResult Register([FromBody] dto.AuthRegisterRequestDto request)
+            // {
+            //     return Ok();
+            // }
 
-            [HttpPost("login")]
-            public IActionResult Login([FromBody] dto.AuthLoginRequestDto request)
-            {
-                return Ok();
-            }
+            // [HttpPost("login")]
+            // public IActionResult Login([FromBody] dto.AuthLoginRequestDto request)
+            // {
+            //     return Ok();
+            // }
 
-            [HttpGet("check-email/{email}")]
-            public IActionResult CheckSameEmail([EmailAddress(ErrorMessage = "4001")] string email)
-            {
-                return Ok();
-            }
+            // [HttpGet("check-email/{email}")]
+            // public IActionResult CheckSameEmail([EmailAddress(ErrorMessage = "4001")] string email)
+            // {
+            //     return Ok();
+            // }
 
             [HttpPost("send-email")]
             public IActionResult SendEmailCheck(

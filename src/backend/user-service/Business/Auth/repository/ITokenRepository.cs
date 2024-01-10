@@ -6,7 +6,7 @@ namespace user_service
     {
         namespace repository
         {
-            public interface IRedisRepository
+            public interface ITokenRepository
             {
                 bool InsertRedis(RedisModel jwt, TimeSpan? expiry = null);
                 bool DeleteRedis(RedisModel jwt);

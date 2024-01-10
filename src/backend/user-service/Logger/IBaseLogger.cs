@@ -5,6 +5,7 @@ namespace user_service
     {
         public interface IBaseLogger
         {
+            public static string path = null!;
             void Log(string message);
         }
     }

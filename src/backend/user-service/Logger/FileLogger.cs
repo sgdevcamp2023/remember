@@ -5,13 +5,18 @@ namespace user_service
     {
         public class FileLogger : IBaseLogger
         {
+            public static Object _lock = new object();
+            public static string _path = null!;
             public void Log(string message)
             {
                 Task.Run(() =>
                 {
-                    using (StreamWriter writer = new StreamWriter("log.txt", true))
+                    lock (_lock)
                     {
-                        writer.WriteLine(message);
+                        using (StreamWriter writer = new StreamWriter(_path, true))
+                        {
+                            writer.WriteLine(message);
+                        }
                     }
                 });
             }

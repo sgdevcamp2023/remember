@@ -7,6 +7,8 @@ namespace user_service
         {
             bool InsertUser(UserModel user);
             bool UpdateUser(UserModel user);
+            bool DeleteUser(int id);
+            bool DeleteUser(string email);
             UserModel? GetUserByEmail(string email);
             UserModel? GetUserById(int id);
         }
