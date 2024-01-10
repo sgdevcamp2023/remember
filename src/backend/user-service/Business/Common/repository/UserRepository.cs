@@ -59,20 +59,14 @@ namespace user_service
 
             public bool InsertUser(RegisterDTO user)
             {
-                string query = @$"INSERT INTO users (email, password, name, profile) 
-                                VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '{user.ProfileUrl}'))";
+                string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '{user.ProfileUrl}')";
                 _dbConnectionManager.ExecuteNonQuery(query);
 
                 return true;
             }
             public bool UpdateUser(UserModel user)
             {
-                string query = @$"UPDATE users 
-                                SET email = '{user.Email}', 
-                                    password = '{user.Password}', 
-                                    name = '{user.Name}', 
-                                    updated_at = '{user.UpdatedAt}' 
-                                WHERE id = {user.Id}";
+                string query = $"UPDATE users SET email = '{user.Email}', password = '{user.Password}', name = '{user.Name}', updated_at = '{user.UpdatedAt}' WHERE id = {user.Id}";
                 _dbConnectionManager.ExecuteNonQuery(query);
 
                 return true;
@@ -80,9 +74,7 @@ namespace user_service
 
             public bool DeleteUser(string email)
             {
-                string query = @$"DELETE 
-                                FROM users 
-                                WHERE email = '{email}'";
+                string query = $"DELETE FROM users WHERE email = '{email}'";
                 _dbConnectionManager.ExecuteNonQuery(query);
 
                 return true;
@@ -98,17 +90,7 @@ namespace user_service
 
             public List<UserModel> GetFriends(long id)
             {
-                string query = @$"SELECT *
-                                FROM test
-                                WHERE id IN (
-                                    SELECT first_user_id
-                                    FROM friend
-                                    WHERE second_user_id = {id}
-                                    UNION
-                                    SELECT second_user_id
-                                    FROM friend
-                                    WHERE first_user_id = {id}
-                                )";
+                string query = $"SELECT * FROM test WHERE id IN (SELECT first_user_id FROM friend WHERE second_user_id = {id} UNION SELECT second_user_id FROM friend WHERE first_user_id = {id})";
 
                 List<UserModel> friends = new List<UserModel>();
                 using (var reader = _dbConnectionManager.ExecuteReader(query))

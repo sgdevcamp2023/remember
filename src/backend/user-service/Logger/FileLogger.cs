@@ -13,10 +13,11 @@ namespace user_service
                 {
                     lock (_lock)
                     {
-                        using (StreamWriter writer = new StreamWriter(_path, true))
-                        {
-                            writer.WriteLine(message);
-                        }
+                        System.Console.WriteLine(message);
+                        // using (StreamWriter writer = new StreamWriter(_path, true))
+                        // {
+                        //     writer.WriteLine(message);
+                        // }
                     }
                 });
             }

@@ -8,7 +8,7 @@ namespace user_service
 {
     namespace auth
     {
-        [Route("api/user/auth/[controller]")]
+        [Route("api/user/[controller]")]
         [ApiController]
         public class AuthController : ControllerBase
         {

@@ -18,7 +18,7 @@ namespace user_service
             {
                 _config = config;
                 _logger = logger;
-                _connectionString = _config.GetConnectionString("Redis");
+                _connectionString = _config.GetConnectionString("RedisConnection");
 
                 Connect();
             }

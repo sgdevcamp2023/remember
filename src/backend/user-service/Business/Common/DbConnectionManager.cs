@@ -15,7 +15,7 @@ namespace user_service
             {
                 _config = config;
                 _logger = logger;
-                _connectionString = _config.GetConnectionString("DefaultConnection");
+                _connectionString = _config.GetConnectionString("MSSQLConnection");
                 _connection = new SqlConnection(_connectionString);
             }
 
@@ -28,7 +28,7 @@ namespace user_service
             {
                 try
                 {
-                    if(_connection.State == System.Data.ConnectionState.Closed)
+                    if(_connection.State != System.Data.ConnectionState.Open)
                         _connection.Open();
                 }
                 catch (Exception e)
@@ -65,7 +65,7 @@ namespace user_service
                 {
                     _logger.Log(e.Message);
 
-                    throw new user_service.common.exception.SqlException("Database SQL Query error");
+                    throw new user_service.common.exception.SqlException(query);
                 }
             }
 
@@ -81,7 +81,7 @@ namespace user_service
                 {
                     _logger.Log(e.Message);
 
-                    throw new user_service.common.exception.SqlException("Database SQL Query error");
+                    throw new user_service.common.exception.SqlException(query);
                 }
             }
         }
