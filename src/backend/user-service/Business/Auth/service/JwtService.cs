@@ -19,10 +19,13 @@ namespace user_service
             public class JwtService
             {
                 private IConfiguration _config;
-                private ITokenRepository _redisRepository;
+                private IStringRedisRepository _redisRepository;
                 private IUserRepository _userRepository;
                 private IBaseLogger _logger;
-                public JwtService(IConfiguration config, ITokenRepository redisRepository, IUserRepository userRepository, FileLogger logger)
+                public JwtService(IConfiguration config, 
+                                IStringRedisRepository redisRepository, 
+                                IUserRepository userRepository, 
+                                IBaseLogger logger)
                 {
                     _config = config;
                     _redisRepository = redisRepository;
@@ -35,7 +38,7 @@ namespace user_service
                     // 흐름도
 
                     // 1. Refresh Token
-                    string? accressToken = await _redisRepository.GetJwtById(dto.RefreshToken);
+                    string? accressToken = await _redisRepository.GetStringById(dto.RefreshToken);
                     if (accressToken == null)
                         throw new ServiceException(4101);
 
@@ -54,6 +57,10 @@ namespace user_service
                         throw new RedisException("Redis Repository Insert Error");
 
                     return accessToken;
+                }
+                public void DeleteToken()
+                {
+                    // 토큰 삭제 필요함
                 }
                 public TokenDTO CreateToken(LoginDTO loginDto)
                 {

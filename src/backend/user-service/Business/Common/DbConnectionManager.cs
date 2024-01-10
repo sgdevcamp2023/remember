@@ -10,8 +10,8 @@ namespace user_service
             private IConfiguration _config;
             private string? _connectionString;
             private SqlConnection _connection = null!;
-            private FileLogger _logger;
-            public DbConnectionManager(IConfiguration config, FileLogger logger)
+            private IBaseLogger _logger;
+            public DbConnectionManager(IConfiguration config, IBaseLogger logger)
             {
                 _config = config;
                 _logger = logger;

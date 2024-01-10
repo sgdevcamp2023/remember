@@ -1,16 +1,21 @@
 
+using user_service.auth.dto;
+
 namespace user_service
 {
     namespace common
     {
         public interface IUserRepository
         {
-            bool InsertUser(UserModel user);
+            bool InsertUser(RegisterDTO user);
             bool UpdateUser(UserModel user);
-            bool DeleteUser(int id);
+            bool DeleteUser(long id);
             bool DeleteUser(string email);
+            bool IsEmailExist(string email);
             UserModel? GetUserByEmail(string email);
-            UserModel? GetUserById(int id);
+            UserModel? GetUserById(long id);
+
+            List<UserModel> GetFriends(long id);
         }
     }
 }

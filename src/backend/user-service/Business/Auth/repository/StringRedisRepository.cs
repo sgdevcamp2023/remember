@@ -9,21 +9,21 @@ namespace user_service
     {
         namespace repository
         {
-            public class TokenRepository : ITokenRepository
+            public class StringRedisRepository : IStringRedisRepository
             {
-                RedisConnectionManager _redisConnectionManager;
-                FileLogger _logger = new FileLogger();
-                public TokenRepository(RedisConnectionManager redisConnectionManager, FileLogger logger)
+                private RedisConnectionManager _redisConnectionManager;
+                private IBaseLogger _logger;
+                public StringRedisRepository(RedisConnectionManager redisConnectionManager, IBaseLogger logger)
                 {
                     _redisConnectionManager = redisConnectionManager;
                     _logger = logger;
                 }
 
-                public bool InsertRedis(RedisModel jwt, TimeSpan? expiry = null)
+                public bool InsertRedis(RedisModel model, TimeSpan? expiry = null)
                 {
                     try
                     {
-                        return _redisConnectionManager.GetConnection().StringSet(jwt.Key, jwt.Value, expiry);
+                        return _redisConnectionManager.GetConnection().StringSet(model.Key, model.Value, expiry);
                     }
                     catch (Exception e) when (e is RedisConnectionException)
                     {
@@ -34,11 +34,11 @@ namespace user_service
                     }
                 }
 
-                public bool DeleteRedis(RedisModel jwt)
+                public bool DeleteRedis(RedisModel model)
                 {
                     try
                     {
-                        return _redisConnectionManager.GetConnection().KeyDelete(jwt.Key);
+                        return _redisConnectionManager.GetConnection().KeyDelete(model.Key);
                     }
                     catch (Exception e) when (e is RedisConnectionException)
                     {
@@ -49,12 +49,12 @@ namespace user_service
                     }
                 }
 
-                public async Task<string?> GetJwtById(string accessToken)
+                public async Task<string?> GetStringById(string key)
                 {
                     try
                     {
-                        var task = _redisConnectionManager.GetConnection().StringGetAsync(accessToken);
-                        await _redisConnectionManager.GetConnection().KeyDeleteAsync(accessToken);
+                        var task = _redisConnectionManager.GetConnection().StringGetAsync(key);
+                        await _redisConnectionManager.GetConnection().KeyDeleteAsync(key);
                         return await task;
                     }
                     catch (Exception e) when (e is RedisConnectionException)

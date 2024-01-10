@@ -12,9 +12,9 @@ namespace user_service
             private IConfiguration _config;
             private IDatabase _redisDb = null!;
             private ConnectionMultiplexer? _redisConnection = null;
-            private FileLogger _logger;
+            private IBaseLogger _logger;
             private string _connectionString;
-            public RedisConnectionManager(IConfiguration config, FileLogger logger)
+            public RedisConnectionManager(IConfiguration config, IBaseLogger logger)
             {
                 _config = config;
                 _logger = logger;

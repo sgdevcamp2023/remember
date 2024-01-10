@@ -48,7 +48,12 @@
         "code": 4009,
         "message": "SAME_EMAIL",
         "description": "이미 존재하는 이메일입니다."
-    }
+    },
+    {
+        "code": 4010,
+        "message": "FAILED_REGISTER",
+        "description": "회원가입에 실패했습니다."
+    },
     {
         "code": 4100,
         "message": "INVALID_ACCESS_TOKEN",
@@ -61,7 +66,7 @@
     },
     {
         "code": 4102,
-        "message": "CREATE_FAILED_ACCESS_TOKEN"
+        "message": "CREATE_FAILED_ACCESS_TOKEN",
         "description": "엑세스 토큰 생성에 실패했습니다."
     }
 ]

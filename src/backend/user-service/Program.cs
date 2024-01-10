@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using user_service.auth.repository;
+using user_service.auth.service;
 using user_service.common;
 using user_service.common.exception;
 using user_service.config;
@@ -10,6 +12,9 @@ ErrorManager.Init();
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configurationBinder = builder.Configuration;
 
+// secretconfig
+builder.Configuration.AddJsonFile("secretconfig.json", optional: true, reloadOnChange: true);
+
 // 로거 의존성 주입
 builder.Services.AddSingleton<IBaseLogger, FileLogger>();
 
@@ -19,6 +24,10 @@ builder.Services.AddSingleton<RedisConnectionManager>();
 
 // Repository 의존성 주입
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IStringRedisRepository, StringRedisRepository>();
+
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<JwtService>();
 
 // Service 의존성 주입
 
