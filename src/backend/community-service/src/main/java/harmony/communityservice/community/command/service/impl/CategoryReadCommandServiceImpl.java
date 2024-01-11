@@ -17,4 +17,9 @@ public class CategoryReadCommandServiceImpl implements CategoryReadCommandServic
         CategoryRead categoryRead = ToCategoryReadMapper.convert(category, guildId);
         categoryReadCommandRepository.save(categoryRead);
     }
+
+    @Override
+    public void delete(Long categoryId) {
+        categoryReadCommandRepository.delete(categoryId);
+    }
 }

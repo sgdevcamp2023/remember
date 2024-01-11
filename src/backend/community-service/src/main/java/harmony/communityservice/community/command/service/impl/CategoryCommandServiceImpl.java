@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.community.command.dto.CategoryDeleteRequestDto;
 import harmony.communityservice.community.command.dto.CategoryRegistrationRequestDto;
 import harmony.communityservice.community.command.repository.CategoryCommandRepository;
 import harmony.communityservice.community.command.service.CategoryCommandService;
@@ -25,5 +26,12 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
         Category category = ToCategoryMapper.convert(findGuild, requestDto);
         categoryCommandRepository.save(category);
         categoryReadCommandService.save(category, requestDto.getGuildId());
+    }
+
+    @Override
+    public void delete(CategoryDeleteRequestDto requestDto) {
+        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
+        categoryCommandRepository.deleteByCategoryId(requestDto.getCategoryId());
+        categoryReadCommandService.delete(requestDto.getCategoryId());
     }
 }

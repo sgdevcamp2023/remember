@@ -15,4 +15,9 @@ public class CategoryCommandRepositoryImpl implements CategoryCommandRepository 
     public void save(Category category) {
         jpaCategoryCommandRepository.save(category);
     }
+
+    @Override
+    public void deleteByCategoryId(Long categoryId) {
+        jpaCategoryCommandRepository.deleteById(categoryId);
+    }
 }

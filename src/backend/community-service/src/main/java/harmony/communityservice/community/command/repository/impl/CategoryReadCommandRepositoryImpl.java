@@ -13,4 +13,9 @@ public class CategoryReadCommandRepositoryImpl implements CategoryReadCommandRep
     public void save(CategoryRead categoryRead) {
         jpaCategoryReadCommandRepository.save(categoryRead);
     }
+
+    @Override
+    public void delete(Long categoryReadId) {
+        jpaCategoryReadCommandRepository.deleteById(categoryReadId);
+    }
 }

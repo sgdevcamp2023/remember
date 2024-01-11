@@ -5,4 +5,6 @@ import harmony.communityservice.community.domain.Category;
 public interface CategoryCommandRepository {
 
     void save(Category category);
+
+    void deleteByCategoryId(Long categoryId);
 }
