@@ -31,12 +31,7 @@ public class GuildCommandController {
     public BaseResponse<?> registration(
             @RequestPart(value = "requestDto") @Validated GuildRegistrationRequestDto requestDto,
             @RequestPart(name = "profile", required = false) MultipartFile profile) {
-
-        /**
-         * 단일 책임 원칙 위배
-         */
-//        String imageAddr = contentService.image(profile);¡¡
-        guildCommandService.save(requestDto, "ex");
+        guildCommandService.save(requestDto, profile);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
