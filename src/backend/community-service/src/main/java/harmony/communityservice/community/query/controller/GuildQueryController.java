@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
-public class GuildController {
+public class GuildQueryController {
 
     private final GuildQueryService guildQueryService;
     private final GuildReadQueryService guildReadQueryService;
