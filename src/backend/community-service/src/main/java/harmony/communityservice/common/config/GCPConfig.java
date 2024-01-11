@@ -13,9 +13,9 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 public class GCPConfig {
     @Bean
-    public Storage gcpStorage(){
+    public Storage gcpStorage() {
         try {
-            ClassPathResource resource = new ClassPathResource("smilegate-recamp-project-efa22199ffa9.json");
+            ClassPathResource resource = new ClassPathResource("smilegate-recamp-project-8342d152b109.json");
             GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
             String projectId = "smilegate-recamp-project";
             return StorageOptions.newBuilder()

@@ -29,7 +29,7 @@ ext {
 task copyPrivate(type: Copy) {
 	copy {
 		from './remember-community-private-env'
-		include "*.yml", "*.properties"
+		include "*.yml", "*.properties","*.json"
 		into 'src/main/resources'
 	}
 }

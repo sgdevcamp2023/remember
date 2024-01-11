@@ -1,26 +1,36 @@
 package harmony.communityservice.common.config;
 
 import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.community.command.repository.CategoryCommandRepository;
+import harmony.communityservice.community.command.repository.CategoryReadCommandRepository;
 import harmony.communityservice.community.command.repository.GuildCommandRepository;
 import harmony.communityservice.community.command.repository.GuildReadCommandRepository;
 import harmony.communityservice.community.command.repository.GuildUserCommandRepository;
 import harmony.communityservice.community.command.repository.UserCommandRepository;
 import harmony.communityservice.community.command.repository.UserReadCommandRepository;
+import harmony.communityservice.community.command.repository.impl.CategoryCommandRepositoryImpl;
+import harmony.communityservice.community.command.repository.impl.CategoryReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.GuildCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.GuildReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.GuildUserCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.UserCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.UserReadCommandRepositoryImpl;
+import harmony.communityservice.community.command.repository.jpa.JpaCategoryCommandRepository;
+import harmony.communityservice.community.command.repository.jpa.JpaCategoryReadCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaGuildCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaGuildReadCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaGuildUserCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaUserCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaUserReadCommandRepository;
+import harmony.communityservice.community.command.service.CategoryCommandService;
+import harmony.communityservice.community.command.service.CategoryReadCommandService;
 import harmony.communityservice.community.command.service.GuildCommandService;
 import harmony.communityservice.community.command.service.GuildReadCommandService;
 import harmony.communityservice.community.command.service.GuildUserCommandService;
 import harmony.communityservice.community.command.service.UserCommandService;
 import harmony.communityservice.community.command.service.UserReadCommandService;
+import harmony.communityservice.community.command.service.impl.CategoryCommandServiceImpl;
+import harmony.communityservice.community.command.service.impl.CategoryReadCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.GuildCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.GuildReadCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.GuildUserCommandServiceImpl;
@@ -42,6 +52,8 @@ public class AppCommandConfig {
     private final JpaGuildUserCommandRepository jpaGuildUserCommandRepository;
     private final JpaGuildReadCommandRepository jpaGuildReadCommandRepository;
     private final JpaGuildCommandRepository jpaGuildCommandRepository;
+    private final JpaCategoryCommandRepository categoryCommandRepository;
+    private final JpaCategoryReadCommandRepository jpaCategoryReadCommandRepository;
     private final UserQueryService userQueryService;
     private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
@@ -97,5 +109,26 @@ public class AppCommandConfig {
         return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userQueryService,
                 guildUserCommandService(), userReadCommandService(), guildQueryService, userReadQueryService,
                 contentService);
+    }
+
+    @Bean
+    public CategoryCommandRepository categoryCommandRepository() {
+        return new CategoryCommandRepositoryImpl(categoryCommandRepository);
+    }
+
+    @Bean
+    public CategoryCommandService categoryCommandService() {
+        return new CategoryCommandServiceImpl(guildQueryService, userReadQueryService, categoryCommandRepository(),
+                categoryReadCommandService());
+    }
+
+    @Bean
+    public CategoryReadCommandRepository categoryReadCommandRepository() {
+        return new CategoryReadCommandRepositoryImpl(jpaCategoryReadCommandRepository);
+    }
+
+    @Bean
+    public CategoryReadCommandService categoryReadCommandService() {
+        return new CategoryReadCommandServiceImpl(categoryReadCommandRepository());
     }
 }

@@ -23,8 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
 public class GuildCommandController {
-
-    //    private final ContentService contentService;
     private final GuildCommandService guildCommandService;
 
     @PostMapping("/registration/guild")

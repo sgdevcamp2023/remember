@@ -9,16 +9,18 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "category_read")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CategoryRead {
 
     @Id
     @Column(name = "category_read_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryReadId;
 
     @NotNull
@@ -29,4 +31,10 @@ public class CategoryRead {
     @Column(name = "category_name")
     private String name;
 
+    @Builder
+    public CategoryRead(Long categoryReadId, Long guildId, String name) {
+        this.categoryReadId = categoryReadId;
+        this.guildId = guildId;
+        this.name = name;
+    }
 }

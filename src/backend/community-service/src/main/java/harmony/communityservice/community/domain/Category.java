@@ -11,8 +11,11 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,4 +36,10 @@ public class Category {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Builder
+    public Category(Guild guild, String name) {
+        this.guild = guild;
+        this.name = name;
+        this.createdAt = LocalDateTime.now();
+    }
 }
