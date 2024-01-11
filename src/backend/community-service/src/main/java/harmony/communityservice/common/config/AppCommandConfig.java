@@ -1,5 +1,6 @@
 package harmony.communityservice.common.config;
 
+import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.community.command.repository.GuildCommandRepository;
 import harmony.communityservice.community.command.repository.GuildReadCommandRepository;
 import harmony.communityservice.community.command.repository.GuildUserCommandRepository;
@@ -44,6 +45,7 @@ public class AppCommandConfig {
     private final UserQueryService userQueryService;
     private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
+    private final ContentService contentService;
 
     @Bean
     public UserCommandRepository userCommandRepository() {
@@ -93,6 +95,7 @@ public class AppCommandConfig {
     @Bean
     public GuildCommandService guildCommandService() {
         return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userQueryService,
-                guildUserCommandService(), userReadCommandService(), guildQueryService, userReadQueryService);
+                guildUserCommandService(), userReadCommandService(), guildQueryService, userReadQueryService,
+                contentService);
     }
 }

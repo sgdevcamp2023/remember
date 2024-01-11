@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
 import harmony.communityservice.community.command.dto.GuildReadRequestDto;
 import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
@@ -21,6 +22,7 @@ import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 public class GuildCommandServiceImpl implements GuildCommandService {
@@ -32,9 +34,11 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     private final UserReadCommandService userReadCommandService;
     private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
+    private final ContentService contentService;
     @Override
-    public void save(GuildRegistrationRequestDto requestDto, String profile) {
-        Guild guild = ToGuildMapper.convert(requestDto, profile);
+    public void save(GuildRegistrationRequestDto requestDto, MultipartFile profile) {
+        String imageUrl = contentService.imageConvertUrl(profile);
+        Guild guild = ToGuildMapper.convert(requestDto, imageUrl);
         guildCommandRepository.save(guild);
         GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(guild);
         guildReadCommandService.save(guildReadRequestDto);

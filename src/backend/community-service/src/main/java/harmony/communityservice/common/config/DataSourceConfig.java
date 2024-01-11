@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 
 @Configuration
-public class DataSourceConfiguration {
+public class DataSourceConfig {
 
     public static final String SOURCE_DATASOURCE = "sourceDataSource";
     public static final String REPLICA_DATASOURCE = "replicaDataSource";
