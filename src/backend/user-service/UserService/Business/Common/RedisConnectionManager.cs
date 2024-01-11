@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using StackExchange.Redis;
 using user_service.common.exception;
 using user_service.logger;
+using RedisException = user_service.common.exception.RedisException;
 
 namespace user_service
 {
@@ -47,7 +48,7 @@ namespace user_service
                 {
                     _logger.Log("Redis connection error");
 
-                    Console.WriteLine(e.Message);
+                    throw new RedisException(e.Message);
                 }
             }
 
@@ -64,11 +65,25 @@ namespace user_service
                 {
                     _logger.Log("Redis insert error");
 
-                    Console.WriteLine(e.Message);
-                    return false;
+                    throw new RedisException(e.Message);
                 }
             }
+            public bool InsertList(string key, string value)
+            {
+                try
+                {
+                    if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
+                        Connect();
+                    
+                    return _redisDb.ListRightPush(key, value) > 0;
+                }
+                catch (Exception e)
+                {
+                    _logger.Log("Redis insert error");
 
+                    throw new RedisException(e.Message);
+                }
+            }
             public bool Delete(string key)
             {
                 try
@@ -82,8 +97,41 @@ namespace user_service
                 {
                     _logger.Log("Redis delete error");
 
-                    Console.WriteLine(e.Message);
-                    return false;
+                    throw new RedisException(e.Message);
+                }
+            }
+
+            public bool DeleteList(string key, string value)
+            {
+                try
+                {
+                    if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
+                        Connect();
+                    
+                    return _redisDb.ListRemove(key, value) > 0;
+                }
+                catch (Exception e)
+                {
+                    _logger.Log("Redis delete error");
+
+                    throw new RedisException(e.Message);
+                }
+            }
+
+            public List<string> GetListByKey(string key)
+            {
+                try
+                {
+                    if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
+                        Connect();
+                    
+                    return _redisDb.ListRange(key).Select(x => x.ToString()).ToList();
+                }
+                catch (Exception e)
+                {
+                    _logger.Log("Redis get list error");
+
+                    throw new RedisException(e.Message);
                 }
             }
             
@@ -95,11 +143,12 @@ namespace user_service
                             Connect();
                         return _redisDb.StringGet(key);
                     }
-                    catch (Exception e) when (e is RedisConnectionException)
+                    catch (Exception e)
                     {
                         // 에러 처리
                         _logger.Log(e.Message);
-                        return null;
+                        
+                        throw new RedisException(e.Message);
                     }
             }
         }

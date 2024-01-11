@@ -1,6 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Ocsp;
 using user_service.auth.dto;
 using user_service.auth.service;
 
@@ -54,11 +55,13 @@ namespace user_service
 
                 return Ok();
             }
-
+            [filter.TraceIdCheckFilter]
             [HttpPost("logout")]
-            public IActionResult Logout()
+            public IActionResult Logout(
+                [FromHeader(Name =("trace-id"))] string id,
+                [FromHeader(Name = "Authorization")] string accessToken)
             {
-                
+                _jwtService.DeleteToken(id, accessToken.Split(" ")[1]);
 
                 return Ok();
             }
@@ -68,9 +71,11 @@ namespace user_service
                 [FromHeader(Name = "Authorization")] string accessToken)
             {
                 string? refreshToken = HttpContext.Request.Cookies["refreshToken"];
-                _jwtService.ValidationToken(new TokenDTO(accessToken, refreshToken));
 
-                return Ok();
+                // API Gateway를 위한 Custom
+                return Ok(
+                    _jwtService.ValidationToken(
+                        new TokenDTO(accessToken, refreshToken)));
             }
 
             [HttpPost("reset-password")]

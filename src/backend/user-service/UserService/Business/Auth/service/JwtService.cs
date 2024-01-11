@@ -40,7 +40,7 @@ namespace user_service
                     if (dto.RefreshToken == null)
                         throw new ServiceException(4104);
 
-                    var tokenPrincipal = GetPrincipalFromExpiredToken(dto.AccessToken);
+                    var tokenPrincipal = GetPrincipalFromToken(dto.AccessToken);
                     if (tokenPrincipal == null)
                         throw new ServiceException(4101);
 
@@ -63,10 +63,20 @@ namespace user_service
 
                     return accessToken;
                 }
-                public void DeleteToken()
+                
+                public void DeleteToken(string id, string accessToken)
                 {
                     // 토큰 삭제 필요함
+                    if(_redisRepository.DeleteRedis(id) == false)
+                        throw new ServiceException(4014);
+                    
+
+                    if(_redisRepository.InsertRedis(
+                                new RedisModel(accessToken, id.ToString()),
+                                new TimeSpan(0, 0, int.Parse(_config["JWT:AccessTokenValidityInSecond"]))) == false)
+                        throw new ServiceException(4014);
                 }
+
                 public TokenDTO CreateToken(LoginDTO loginDto)
                 {
                     // 흐름도
@@ -129,14 +139,69 @@ namespace user_service
 
                         return new JwtSecurityTokenHandler().WriteToken(token);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        _logger.Log(e.Message);
                         throw new ServiceException(4102);
                     }
                 }
 
-                public ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+                public string ValidationToken(TokenDTO token)
+                {
+                    string[] tokens = token.AccessToken.Split(" ");
+                    token.AccessToken = tokens[1];
+
+                    if (tokens[0] != "Bearer")
+                        throw new ServiceException(4103);
+
+                    if(_redisRepository.GetStringById(token.AccessToken) != null)
+                        throw new ServiceException(4014);
+
+                    if (token.RefreshToken == null)
+                        throw new ServiceException(4104);
+                        
+                    // AccessToken이 무조건 있다고 가정
+                    var tokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = true,
+                        ValidAudience = _config["JWT:ValidAudience"],
+                        ValidateIssuer = true,
+                        ValidIssuer = _config["JWT:ValidIssuer"],
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"])),
+                        ValidateLifetime = true,
+                    };
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    try
+                    {
+                        var principal = tokenHandler.ValidateToken(token.AccessToken, tokenValidationParameters, out SecurityToken securityToken);
+                        if(principal == null)
+                            throw new ServiceException(4100);
+
+                        string id = principal.Identity?.Name ?? throw new ServiceException(4100);
+
+                        return id;
+                    }
+                    catch (SecurityTokenExpiredException)
+                    {
+                        RefreshToken(token);
+
+                        // 토큰 유효성 검사 실패
+                        throw new TokenException(4105, token);
+                    }
+                }
+                private string SHA356Hash(string password)
+                {
+                    SHA256 sha256Hash = SHA256.Create();
+                    byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+                    StringBuilder sBuilder = new StringBuilder();
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        sBuilder.Append(data[i].ToString("x2"));
+                    }
+                    return sBuilder.ToString();
+                }
+
+                private ClaimsPrincipal? GetPrincipalFromToken(string? token)
                 {
                     var tokenValidationParameters = new TokenValidationParameters
                     {
@@ -153,72 +218,6 @@ namespace user_service
                         throw new SecurityTokenException("Invalid token");
 
                     return principal;
-                }
-
-
-                public long ValidationToken(TokenDTO token)
-                {
-                    if (token.RefreshToken == null)
-                        throw new ServiceException(4104);
-
-                    string[] tokens = token.AccessToken.Split(" ");
-                    if (tokens[0] != "Bearer")
-                        throw new ServiceException(4103);
-
-                    token.AccessToken = tokens[1];
-                    // AccessToken이 무조건 있다고 가정
-                    var tokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = true,
-                        ValidAudience = _config["JWT:ValidAudience"],
-                        ValidateIssuer = true,
-                        ValidIssuer = _config["JWT:ValidIssuer"],
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"])),
-                        ValidateLifetime = true,
-                    };
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    try
-                    {
-                        var principal = tokenHandler.ValidateToken(token.AccessToken, tokenValidationParameters, out SecurityToken securityToken);
-
-                        // 토큰 유효성 검사 성공
-                        var claims = principal.Claims.ToList();
-
-                        foreach (var claim in claims)
-                        {
-                            if (claim.Type == ClaimTypes.Name)
-                                return long.Parse(claim.Value);
-                        }
-
-                        throw new ServiceException(4100);
-                    }
-                    catch (SecurityTokenExpiredException)
-                    {
-                        RefreshToken(token);
-
-                        // 토큰 유효성 검사 실패
-                        throw new TokenException(4105, token);
-                    }
-                    catch (Exception e)
-                    {
-                        // 예외 처리 로직 추가
-                        _logger.Log(e.Message);
-
-                        throw new ServiceException(4100);
-                    }
-                }
-
-                private string SHA356Hash(string password)
-                {
-                    SHA256 sha256Hash = SHA256.Create();
-                    byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-                    StringBuilder sBuilder = new StringBuilder();
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        sBuilder.Append(data[i].ToString("x2"));
-                    }
-                    return sBuilder.ToString();
                 }
             }
         }

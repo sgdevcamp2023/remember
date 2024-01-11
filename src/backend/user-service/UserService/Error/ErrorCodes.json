@@ -70,6 +70,11 @@
         "description": "이메일 인증 번호가 올바르지 않습니다."
     },
     {
+        "code": 4014,
+        "message": "ALREADY_LOGOUT",
+        "description": "이미 로그아웃된 유저입니다."
+    },
+    {
         "code": 4100,
         "message": "INVALID_ACCESS_TOKEN",
         "description": "엑세스 토큰이 올바르지 않습니다."
