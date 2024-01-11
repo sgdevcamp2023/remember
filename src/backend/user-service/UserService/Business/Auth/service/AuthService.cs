@@ -38,7 +38,7 @@ namespace user_service
                 {
                     // 체크
                     SameEmailCheck(register.Email);
-                    CheckEmailChecksum(register.Email, register.EmailCheck);
+                    CheckEmailChecksum(register.Email, register.EmailChecksum);
 
                     _redisRepository.DeleteRedis(register.Email);
 

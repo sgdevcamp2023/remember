@@ -1,6 +1,6 @@
 namespace user_service
 {
-    namespace config
+    namespace error
     {
         public class ErrorCode
         {

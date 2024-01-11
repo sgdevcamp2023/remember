@@ -16,8 +16,8 @@ namespace user_service
             private JwtService _jwtService;
             public AuthController(AuthService authService, JwtService jwtService)
             {
-                this._authService = authService;
-                this._jwtService = jwtService;
+                _authService = authService;
+                _jwtService = jwtService;
             }
 
             [HttpPost("register")]
@@ -33,25 +33,22 @@ namespace user_service
             {
                 TokenDTO tokens = _jwtService.CreateToken(login);
                 Response.Headers["Authorization"] = $"Bearer {tokens.AccessToken}";
-                Response.Headers["Set-Cookie"] = @$"refreshToken={tokens.RefreshToken};
-                                                    Path=/api/user/auth;
-                                                    Domain=localhost;
-                                                    HttpOnly;";
+                Response.Headers["Set-Cookie"] = $"refreshToken={tokens.RefreshToken};Path=/api/user/auth;Domain=localhost;HttpOnly;";
                 return Ok();
             }
 
             [HttpPost("send-email")]
             public IActionResult SendEmailCheck(
-                [FromBody] [Required(ErrorMessage = "4000")] [EmailAddress(ErrorMessage = "4001")] string email)
+                [FromBody] EmailRequestDTO email)
             {
-                _authService.SendEmailChecksum(email);
+                _authService.SendEmailChecksum(email.Email);
 
                 return Ok();
             }
 
             [HttpPost("check-email")]
             public IActionResult CheckEmail(
-                [FromBody] [Required(ErrorMessage = "4000")] EmailDTO email)
+                [FromBody] EmailDTO email)
             {
                 _authService.CheckEmailChecksum(email.Email, email.EmailChecksum);
 
@@ -66,28 +63,21 @@ namespace user_service
                 return Ok();
             }
 
-            [HttpPost("refresh-token")]
-            public IActionResult RefreshToken(
-                [FromBody] string refreshToken)
-            {
-                // _jwtService
-                return Ok();
-            }
-
             [HttpPost("validation-token")]
             public IActionResult ValidationToken(
-                [FromBody] string accessToken)
+                [FromHeader(Name = "Authorization")] string accessToken)
             {
-                _jwtService.ValidationToken(accessToken);
+                string? refreshToken = HttpContext.Request.Cookies["refreshToken"];
+                _jwtService.ValidationToken(new TokenDTO(accessToken, refreshToken));
 
                 return Ok();
             }
 
             [HttpPost("reset-password")]
             public IActionResult ResetPassword(
-                [FromBody] string email)
+                [FromBody] EmailRequestDTO email)
             {
-                _authService.SendMailResetPassword(email);
+                _authService.SendMailResetPassword(email.Email);
 
                 return Ok();
             }

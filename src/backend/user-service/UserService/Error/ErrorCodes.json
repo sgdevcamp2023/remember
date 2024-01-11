@@ -83,5 +83,20 @@
         "code": 4102,
         "message": "CREATE_FAILED_ACCESS_TOKEN",
         "description": "엑세스 토큰 생성에 실패했습니다."
+    },
+    {
+        "code": 4103,
+        "message": "NOT_JWT_TOKEN",
+        "description": "JWT 토큰이 아닙니다."
+    },
+    {
+        "code": 4104,
+        "message": "REQUIRED_REFRESH_TOKEN",
+        "description": "리프레시 토큰은 필수 입력입니다."
+    },
+    {
+        "code": 4105,
+        "message": "EXPIRED_ACCESS_TOKEN",
+        "description": "엑세스 토큰이 만료되었습니다."
     }
 ]

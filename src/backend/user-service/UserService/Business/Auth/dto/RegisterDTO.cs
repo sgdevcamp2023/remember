@@ -25,7 +25,7 @@ namespace user_service
                 public string? ProfileUrl { get; set; }
 
                 [Required(ErrorMessage = "4004")]
-                public string EmailCheck { get; set; } = null!;
+                public string EmailChecksum { get; set; } = null!;
             }
         }
     }

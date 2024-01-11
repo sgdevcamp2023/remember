@@ -10,7 +10,6 @@ namespace user_service
             {
                 [Required(ErrorMessage = "4000")]
                 [EmailAddress(ErrorMessage = "4001")]
-                [DataType(DataType.EmailAddress)]
                 public string Email { get; set; } = null!;
 
                 [Required(ErrorMessage = "4004")]

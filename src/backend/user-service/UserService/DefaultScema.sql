@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id          INT IDENTITY(1, 1) NOT NULL,
+    id          BIGINT IDENTITY(1, 1) NOT NULL,
     email       VARCHAR(50)         NOT NULL,
     password    VARCHAR(64)         NOT NULL,
     name        VARCHAR(20)         NOT NULL,
@@ -12,9 +12,9 @@ CREATE TABLE users (
 );
 
 CREATE TABLE friends (
-    id                  int IDENTITY(1, 1)  NOT NULL,
-    first_user_id       int                 NOT NULL,
-    second_user_id      int                 NOT NULL,
+    id                  BIGINT IDENTITY(1, 1)  NOT NULL,
+    first_user_id       BIGINT                 NOT NULL,
+    second_user_id      BIGINT                 NOT NULL,
     created_at          DATETIME            NOT NULL DEFAULT GETDATE(),
     PRIMARY     KEY (id),
     FOREIGN     KEY (first_user_id)  REFERENCES users(id),

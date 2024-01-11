@@ -26,7 +26,7 @@ namespace user_service
 
             public UserModel? GetUserByEmail(string email)
             {
-                string query = $"SELECT * FROM users WHERE email = {email}";
+                string query = $"SELECT * FROM users WHERE email = '{email}'";
                 return GetUserModel(query);
             }
 
@@ -38,23 +38,14 @@ namespace user_service
 
             private UserModel? GetUserModel(string query)
             {
-                try
+                UserModel? user = null;
+                using (var reader = _dbConnectionManager.ExecuteReader(query))
                 {
-                    UserModel? user = null;
-                    using (var reader = _dbConnectionManager.ExecuteReader(query))
-                    {
-                        if (reader.Read())
-                        {
-                            user = GetUserModel(reader);
-                        }
-                    }
+                   if (reader.Read())
+                        user = GetUserModel(reader);
+                }
 
-                    return user;
-                }
-                catch
-                {
-                    return null;
-                }
+                return user;
             }
 
             public bool InsertUser(RegisterDTO user)
@@ -109,13 +100,13 @@ namespace user_service
             private UserModel GetUserModel(IDataReader reader)
             {
                 return new UserModel(
-                    reader.GetInt64(0),
+                    reader.GetInt64(reader.GetOrdinal("id")),
                     reader.GetString(reader.GetOrdinal("email")),
                     reader.GetString(reader.GetOrdinal("password")),
                     reader.GetString(reader.GetOrdinal("name")),
+                    reader.IsDBNull(reader.GetOrdinal("profile")) ? null : reader.GetString(reader.GetOrdinal("profile")),
                     reader.GetDateTime(reader.GetOrdinal("created_at")),
                     reader.GetDateTime(reader.GetOrdinal("updated_at")),
-                    reader.IsDBNull(reader.GetOrdinal("profile")) ? null : reader.GetString(reader.GetOrdinal("profile")),
                     reader.GetBoolean(reader.GetOrdinal("is_deleted"))
                 );
             }

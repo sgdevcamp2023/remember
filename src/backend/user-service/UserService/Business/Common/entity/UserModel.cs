@@ -5,7 +5,7 @@ namespace user_service
     {
         public class UserModel
         {
-            public UserModel(long Id, string Email, string Password, string Name, DateTime CreatedAt, DateTime UpdatedAt, string? Profile = null,  bool IsDeleted = false)
+            public UserModel(long Id, string Email, string Password, string Name, string? Profile, DateTime CreatedAt, DateTime UpdatedAt, bool IsDeleted = false)
             {
                 this.Id = Id;
                 this.Email = Email;

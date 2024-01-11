@@ -10,7 +10,7 @@ namespace user_service
             {
                 bool InsertRedis(RedisModel model, TimeSpan? expiry = null);
                 bool DeleteRedis(string key);
-                string? GetStringById(string email);
+                string? GetStringById(string key);
             }
         }
     }

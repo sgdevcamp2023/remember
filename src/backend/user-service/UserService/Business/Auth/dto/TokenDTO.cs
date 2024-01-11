@@ -6,14 +6,14 @@ namespace user_service
         {
             public class TokenDTO
             {
-                public TokenDTO(string accessToken, string refreshToken)
+                public TokenDTO(string accessToken, string? refreshToken)
                 {
-                    this.AccessToken = accessToken;
-                    this.RefreshToken = refreshToken;
+                    AccessToken = accessToken;
+                    RefreshToken = refreshToken;
                 }
                 
                 public string AccessToken { get; set; } = null!;
-                public string RefreshToken { get; set; } = null!;
+                public string? RefreshToken { get; set; } = null;
             }
         }
     }

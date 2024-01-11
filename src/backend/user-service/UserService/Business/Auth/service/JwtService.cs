@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using user_service.auth.dto;
 using user_service.auth.entity;
+using user_service.auth.exception;
 using user_service.auth.repository;
 using user_service.common;
 using user_service.common.exception;
@@ -22,9 +23,9 @@ namespace user_service
                 private IStringRedisRepository _redisRepository;
                 private IUserRepository _userRepository;
                 private IBaseLogger _logger;
-                public JwtService(IConfiguration config, 
-                                IStringRedisRepository redisRepository, 
-                                IUserRepository userRepository, 
+                public JwtService(IConfiguration config,
+                                IStringRedisRepository redisRepository,
+                                IUserRepository userRepository,
                                 IBaseLogger logger)
                 {
                     _config = config;
@@ -36,24 +37,28 @@ namespace user_service
                 public string RefreshToken(TokenDTO dto)
                 {
                     // 흐름도
+                    if (dto.RefreshToken == null)
+                        throw new ServiceException(4104);
 
-                    // 1. Refresh Token
-                    string? accressToken = _redisRepository.GetStringById(dto.RefreshToken);
-                    if (accressToken == null)
+                    var tokenPrincipal = GetPrincipalFromExpiredToken(dto.AccessToken);
+                    if (tokenPrincipal == null)
                         throw new ServiceException(4101);
 
-                    // 2. Refresh Token 검증
-                    if (dto.AccessToken != accressToken)
+                    string? id = tokenPrincipal.Identity?.Name;
+                    if (id == null)
                         throw new ServiceException(4101);
 
-                    // 3. Access Token에서 Claim 추출
-                    List<Claim> authClaims = GetClaimsFromAccessToken(dto.AccessToken);
+                    string? refreshToken = _redisRepository.GetStringById(id);
+                    if (refreshToken == null)
+                        throw new ServiceException(4101);
 
-                    // 5. Access Token 재발급 성공 시 Access Token 반환
-                    string accessToken = CreateAccessToken(authClaims);
+                    if (refreshToken != dto.RefreshToken)
+                        throw new ServiceException(4101);
+
+                    string accessToken = CreateAccessToken(tokenPrincipal.Claims.ToList());
                     if (!_redisRepository.InsertRedis(
-                        new RedisModel(dto.RefreshToken, accessToken),
-                        new TimeSpan(0, 0, int.Parse(_config["JWT:RefreshTokenInSecond"]))))
+                        new RedisModel(id, refreshToken),
+                        new TimeSpan(0, 0, int.Parse(_config["JWT:RefreshTokenValidityInSecond"]))))
                         throw new RedisException("Redis Repository Insert Error");
 
                     return accessToken;
@@ -68,13 +73,13 @@ namespace user_service
 
                     // DB 체크
                     UserModel? user = _userRepository.GetUserByEmail(loginDto.Email);
-                    if(user == null)
+                    if (user == null)
                         throw new ServiceException(4007);
-                    
+
                     loginDto.Password = SHA356Hash(loginDto.Password);
-                    if(user.Password != loginDto.Password)
+                    if (user.Password != loginDto.Password)
                         throw new ServiceException(4008);
-                    
+
                     // 1. Claim 생성
                     List<Claim> authClaims = new List<Claim>
                     {
@@ -90,8 +95,8 @@ namespace user_service
 
                     // 4. Redis에 Refresh Token 저장
                     if (!_redisRepository.InsertRedis(
-                        new RedisModel(refreshToken, accessToken),
-                        new TimeSpan(0, 0, int.Parse(_config["JWT:RefreshTokenInSecond"]))))
+                        new RedisModel(user.Id.ToString(), refreshToken),
+                        new TimeSpan(0, 0, int.Parse(_config["JWT:RefreshTokenValidityInSecond"]))))
                         throw new RedisException("Redis Repository Insert Error");
 
                     return new TokenDTO(accessToken, refreshToken);
@@ -112,12 +117,12 @@ namespace user_service
                     try
                     {
                         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
-                        int.TryParse(_config["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+                        int.TryParse(_config["JWT:AccessTokenValidityInSecond"], out int tokenValidityInSecond);
 
                         var token = new JwtSecurityToken(
                             issuer: _config["JWT:ValidIssuer"],
                             audience: _config["JWT:ValidAudience"],
-                            expires: DateTime.Now.AddSeconds(tokenValidityInMinutes),
+                            expires: DateTime.Now.AddSeconds(tokenValidityInSecond),
                             claims: authClaims,
                             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                             );
@@ -131,23 +136,36 @@ namespace user_service
                     }
                 }
 
-                private List<Claim> GetClaimsFromAccessToken(string accessToken)
+                public ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
                 {
-                    try
+                    var tokenValidationParameters = new TokenValidationParameters
                     {
-                        var handler = new JwtSecurityTokenHandler();
-                        var jwtToken = handler.ReadJwtToken(accessToken);
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"])),
+                        ValidateLifetime = false
+                    };
 
-                        return jwtToken.Claims.ToList();
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Log(e.Message);
-                        throw new ServiceException(4100);
-                    }
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+                    if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                        throw new SecurityTokenException("Invalid token");
+
+                    return principal;
                 }
-                public long ValidationToken(string accessToken)
+
+
+                public long ValidationToken(TokenDTO token)
                 {
+                    if (token.RefreshToken == null)
+                        throw new ServiceException(4104);
+
+                    string[] tokens = token.AccessToken.Split(" ");
+                    if (tokens[0] != "Bearer")
+                        throw new ServiceException(4103);
+
+                    token.AccessToken = tokens[1];
                     // AccessToken이 무조건 있다고 가정
                     var tokenValidationParameters = new TokenValidationParameters
                     {
@@ -157,22 +175,30 @@ namespace user_service
                         ValidIssuer = _config["JWT:ValidIssuer"],
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"])),
-                        ValidateLifetime = true
+                        ValidateLifetime = true,
                     };
                     var tokenHandler = new JwtSecurityTokenHandler();
                     try
                     {
-                        var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
+                        var principal = tokenHandler.ValidateToken(token.AccessToken, tokenValidationParameters, out SecurityToken securityToken);
+
                         // 토큰 유효성 검사 성공
                         var claims = principal.Claims.ToList();
 
-                        foreach(var claim in claims)
+                        foreach (var claim in claims)
                         {
-                            if(claim.Type == ClaimTypes.Name)
+                            if (claim.Type == ClaimTypes.Name)
                                 return long.Parse(claim.Value);
                         }
 
                         throw new ServiceException(4100);
+                    }
+                    catch (SecurityTokenExpiredException)
+                    {
+                        RefreshToken(token);
+
+                        // 토큰 유효성 검사 실패
+                        throw new TokenException(4105, token);
                     }
                     catch (Exception e)
                     {

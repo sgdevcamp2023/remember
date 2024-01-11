@@ -21,6 +21,8 @@ namespace user_service
 
                 public bool InsertRedis(RedisModel model, TimeSpan? expiry = null)
                 {
+                    if(expiry == null)
+                        return _redisConnectionManager.Insert(model.Key, model.Value);
                     return _redisConnectionManager.Insert(model.Key, model.Value, expiry);
                 }
 

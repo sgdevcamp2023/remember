@@ -6,18 +6,15 @@ namespace user_service
         {
             public class ServiceException : Exception
             {
-                
-                public int codeCount;
-                public int statusCode;
-                public ServiceException(int statusCode, int codeCount = 1) : base("Service Exception")
+                public int errorCode;
+                public ServiceException(int errorCode) : base("Service Exception")
                 {
-                    this.statusCode = statusCode;
-                    this.codeCount = codeCount;
+                    this.errorCode = errorCode;
                 }
 
                 public override string ToString()
                 {
-                    string str = $"Exception {statusCode} : {Message}";
+                    string str = $"Exception {errorCode} : {Message}";
                     return str;
                 }
             }
