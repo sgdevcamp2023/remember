@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
-public class UserController {
+public class UserCommandController {
 
     private final UserCommandService userCommandService;
 

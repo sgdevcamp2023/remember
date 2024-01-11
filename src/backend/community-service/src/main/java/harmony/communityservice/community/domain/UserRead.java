@@ -43,4 +43,8 @@ public class UserRead {
         this.profile = profile;
         this.nickname = nickname;
     }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

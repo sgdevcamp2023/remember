@@ -27,6 +27,7 @@ import harmony.communityservice.community.command.service.impl.UserCommandServic
 import harmony.communityservice.community.command.service.impl.UserReadCommandServiceImpl;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
+import harmony.communityservice.community.query.service.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,7 @@ public class AppCommandConfig {
     private final JpaGuildCommandRepository jpaGuildCommandRepository;
     private final UserQueryService userQueryService;
     private final GuildQueryService guildQueryService;
+    private final UserReadQueryService userReadQueryService;
 
     @Bean
     public UserCommandRepository userCommandRepository() {
@@ -91,9 +93,6 @@ public class AppCommandConfig {
     @Bean
     public GuildCommandService guildCommandService() {
         return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userQueryService,
-                guildUserCommandService(), userReadCommandService(), guildQueryService);
+                guildUserCommandService(), userReadCommandService(), guildQueryService, userReadQueryService);
     }
-
-//    @Bean
-//    public Con
 }

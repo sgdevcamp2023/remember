@@ -3,6 +3,7 @@ package harmony.communityservice.community.command.service.impl;
 import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
 import harmony.communityservice.community.command.dto.GuildReadRequestDto;
 import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
+import harmony.communityservice.community.command.dto.GuildUpdateNicknameRequestDto;
 import harmony.communityservice.community.command.dto.UserReadRequestDto;
 import harmony.communityservice.community.command.repository.GuildCommandRepository;
 import harmony.communityservice.community.command.service.GuildCommandService;
@@ -11,11 +12,13 @@ import harmony.communityservice.community.command.service.GuildUserCommandServic
 import harmony.communityservice.community.command.service.UserReadCommandService;
 import harmony.communityservice.community.domain.Guild;
 import harmony.communityservice.community.domain.User;
+import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.mapper.ToGuildMapper;
 import harmony.communityservice.community.mapper.ToGuildReadRequestDtoMapper;
 import harmony.communityservice.community.mapper.ToUserReadRequestDtoMapper;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
+import harmony.communityservice.community.query.service.UserReadQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +31,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     private final GuildUserCommandService guildUserCommandService;
     private final UserReadCommandService userReadCommandService;
     private final GuildQueryService guildQueryService;
-
+    private final UserReadQueryService userReadQueryService;
     @Override
     public void save(GuildRegistrationRequestDto requestDto, String profile) {
         Guild guild = ToGuildMapper.convert(requestDto, profile);
@@ -59,5 +62,12 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         guildQueryService.existsGuildByGuildIdAndManagerId(guildDeleteRequestDto.getGuildId(),
                 guildDeleteRequestDto.getManagerId());
         guildCommandRepository.delete(guildDeleteRequestDto.getGuildId());
+    }
+
+    @Override
+    public void updateGuildNickname(GuildUpdateNicknameRequestDto requestDto) {
+        UserRead findUserRead = userReadQueryService.findUserReadIdAndGuildId(requestDto.getUserId(),
+                requestDto.getGuildId());
+        findUserRead.updateNickname(requestDto.getNickname());
     }
 }
