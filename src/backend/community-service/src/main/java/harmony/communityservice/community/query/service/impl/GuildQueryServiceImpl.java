@@ -26,4 +26,14 @@ public class GuildQueryServiceImpl implements GuildQueryService {
     public Guild findGuildByInviteCode(String code) {
         return guildQueryRepository.findByInvitationCode(code).orElseThrow();
     }
+
+    @Override
+    public Guild findByGuildId(Long guildId) {
+        return guildQueryRepository.findById(guildId).orElseThrow();
+    }
+
+    @Override
+    public boolean existsGuildByGuildIdAndManagerId(Long guildId, Long managerId) {
+        return guildQueryRepository.existsByGuildIdAndManagerId(guildId, managerId);
+    }
 }

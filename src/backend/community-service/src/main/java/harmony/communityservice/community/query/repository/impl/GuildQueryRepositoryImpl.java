@@ -20,4 +20,9 @@ public class GuildQueryRepositoryImpl implements GuildQueryRepository {
     public Optional<Guild> findByInvitationCode(String invitationCode) {
         return jpaGuildQueryRepository.findByInviteCode(invitationCode);
     }
+
+    @Override
+    public boolean existsByGuildIdAndManagerId(Long guildId, Long managerId) {
+        return jpaGuildQueryRepository.existsByGuildIdAndManagerId(guildId, managerId);
+    }
 }

@@ -7,4 +7,6 @@ public interface GuildQueryRepository {
     Optional<Guild> findById(Long guildId);
 
     Optional<Guild> findByInvitationCode(String invitationCode);
+
+    boolean existsByGuildIdAndManagerId(Long guildId, Long managerId);
 }

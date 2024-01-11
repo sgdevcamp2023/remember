@@ -10,4 +10,8 @@ public interface GuildQueryService {
     String findInviteCode(InvitationRequestDto requestDto);
 
     Guild findGuildByInviteCode(String code);
+
+    Guild findByGuildId(Long guildId);
+
+    boolean existsGuildByGuildIdAndManagerId(Long guildId, Long managerId);
 }

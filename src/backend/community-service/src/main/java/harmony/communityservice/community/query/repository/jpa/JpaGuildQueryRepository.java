@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaGuildQueryRepository extends JpaRepository<Guild,Long> {
     Optional<Guild> findByInviteCode(String code);
+
+    boolean existsByGuildIdAndManagerId(Long guildId, Long managerId);
 }

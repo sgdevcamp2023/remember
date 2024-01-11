@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
 import harmony.communityservice.community.command.dto.GuildReadRequestDto;
 import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
 import harmony.communityservice.community.command.dto.UserReadRequestDto;
@@ -51,5 +52,12 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         guildUserCommandService.save(findGuild, findUser);
         UserReadRequestDto userReadRequestDto = ToUserReadRequestDtoMapper.convert(findGuild, findUser);
         userReadCommandService.save(userReadRequestDto);
+    }
+
+    @Override
+    public void remove(GuildDeleteRequestDto guildDeleteRequestDto) {
+        guildQueryService.existsGuildByGuildIdAndManagerId(guildDeleteRequestDto.getGuildId(),
+                guildDeleteRequestDto.getManagerId());
+        guildCommandRepository.delete(guildDeleteRequestDto.getGuildId());
     }
 }
