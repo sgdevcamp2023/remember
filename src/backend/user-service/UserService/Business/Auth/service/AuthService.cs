@@ -79,7 +79,7 @@ namespace user_service
                 {
                     if(_userRepository.IsEmailExist(email) == true)
                     {
-                        int resetPassword = Utils.GenerateRandomNumber(10000, 100000);
+                        string resetPassword = Utils.GenerateRandomPassword();
 
                         var message = new MimeMessage();
                         message.From.Add(new MailboxAddress("user-service", _config["Mail:Email"]));
