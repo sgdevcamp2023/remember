@@ -47,4 +47,8 @@ public class UserRead {
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void updateProfile(String profile){
+        this.profile = profile;
+    }
 }

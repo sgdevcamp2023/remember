@@ -82,7 +82,7 @@ public class AppCommandConfig {
 
     @Bean
     public UserCommandService userCommandService() {
-        return new UserCommandServiceImpl(userCommandRepository());
+        return new UserCommandServiceImpl(userCommandRepository(), userQueryService, userReadQueryService);
     }
 
     @Bean

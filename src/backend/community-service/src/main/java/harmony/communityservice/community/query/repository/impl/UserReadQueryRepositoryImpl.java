@@ -3,6 +3,7 @@ package harmony.communityservice.community.query.repository.impl;
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.query.repository.UserReadQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaUserReadQueryRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
@@ -19,5 +20,10 @@ public class UserReadQueryRepositoryImpl implements UserReadQueryRepository {
     @Override
     public Optional<UserRead> findByUserIdAndGuildId(Long userId, Long guildId) {
         return jpaUserReadQueryRepository.findByUserIdAndGuildId(userId, guildId);
+    }
+
+    @Override
+    public List<UserRead> findUserReadsByUserId(Long userId) {
+        return jpaUserReadQueryRepository.findUserReadByUserId(userId);
     }
 }
