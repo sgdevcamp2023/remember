@@ -1,7 +1,7 @@
 package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.command.dto.InvitationRequestDto;
+import harmony.communityservice.community.query.dto.InvitationRequestDto;
 import harmony.communityservice.community.domain.GuildRead;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.GuildReadQueryService;

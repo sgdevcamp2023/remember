@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -30,4 +31,12 @@ public class ChannelRead {
     @Enumerated(EnumType.STRING)
     private ChannelType type;
 
+    @Builder
+    public ChannelRead(Long channelReadId, Long categoryId, Long guildId, String name, ChannelType type) {
+        this.channelReadId = channelReadId;
+        this.categoryId = categoryId;
+        this.guildId = guildId;
+        this.name = name;
+        this.type = type;
+    }
 }

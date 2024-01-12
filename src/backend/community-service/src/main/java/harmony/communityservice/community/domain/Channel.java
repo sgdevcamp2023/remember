@@ -13,9 +13,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "channel")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel {
@@ -42,4 +45,14 @@ public class Channel {
     @Enumerated(EnumType.STRING)
     @Column(name = "channel_type")
     private ChannelType type;
+
+    @Builder
+    public Channel(Guild guild, Long categoryId, String name,
+                   String type) {
+        this.guild = guild;
+        this.categoryId = categoryId;
+        this.name = name;
+        this.createdAt = LocalDateTime.now();
+        this.type = ChannelType.valueOf(type);
+    }
 }

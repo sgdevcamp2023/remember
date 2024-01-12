@@ -1,6 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
-import harmony.communityservice.community.command.dto.InvitationRequestDto;
+import harmony.communityservice.community.query.dto.InvitationRequestDto;
 import harmony.communityservice.community.domain.Guild;
 import harmony.communityservice.community.mapper.ToInviteCodeMapper;
 import harmony.communityservice.community.query.repository.GuildQueryRepository;

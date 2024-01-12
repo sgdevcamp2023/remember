@@ -1,4 +1,4 @@
-package harmony.communityservice.community.command.dto;
+package harmony.communityservice.community.query.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
