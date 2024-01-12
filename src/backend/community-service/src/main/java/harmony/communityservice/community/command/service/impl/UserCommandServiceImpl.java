@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.community.command.dto.UserNicknameUpdateRequestDto;
 import harmony.communityservice.community.command.dto.UserProfileUpdateRequestDto;
 import harmony.communityservice.community.command.dto.UserStoreRequestDto;
 import harmony.communityservice.community.command.repository.UserCommandRepository;
@@ -29,5 +30,13 @@ public class UserCommandServiceImpl implements UserCommandService {
         findUser.updateProfile(requestDto.getProfile());
         userReadQueryService.findUserReadsByUserId(requestDto.getUserId())
                 .forEach(findUserRead -> findUserRead.updateProfile(requestDto.getProfile()));
+    }
+
+    @Override
+    public void updateNickname(UserNicknameUpdateRequestDto requestDto) {
+        User findUser = userQueryService.findUser(requestDto.getUserId());
+        findUser.updateProfile(requestDto.getNickname());
+        userReadQueryService.findUserReadsByUserId(requestDto.getUserId())
+                .forEach(findUserRead -> findUserRead.updateProfile(requestDto.getNickname()));
     }
 }
