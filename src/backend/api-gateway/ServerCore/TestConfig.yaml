@@ -1,0 +1,30 @@
+listeners:
+- name: listener1
+  protocol: 
+  address:
+    address: 127.0.0.1
+    port: 8080
+  route-config:
+    services:
+    - service1
+    - service2
+    - service3
+clusters:
+- services:
+  - name: service1
+    protocol: http
+    address:
+      address: 127.0.0.1
+      port: 8081
+    prefix: /service1
+    custom-filter:
+      name: customFilter1
+    connect-timeout: 1s
+  - name: service2
+    protocol: http
+    address:
+      address: 127.0.0.1
+      port: 8082
+    prefix: /service2
+    custom-filter: 
+    connect-timeout: 1s
