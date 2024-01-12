@@ -14,4 +14,9 @@ public class ChannelCommandRepositoryImpl implements ChannelCommandRepository {
     public void save(Channel channel) {
         jpaChannelCommandRepository.save(channel);
     }
+
+    @Override
+    public void deleteByChannelId(Long channelId) {
+        jpaChannelCommandRepository.deleteById(channelId);
+    }
 }

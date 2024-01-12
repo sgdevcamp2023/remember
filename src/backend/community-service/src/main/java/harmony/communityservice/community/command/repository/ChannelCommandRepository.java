@@ -4,4 +4,7 @@ import harmony.communityservice.community.domain.Channel;
 
 public interface ChannelCommandRepository {
     void save(Channel channel);
+
+    void deleteByChannelId(Long channelId);
+
 }

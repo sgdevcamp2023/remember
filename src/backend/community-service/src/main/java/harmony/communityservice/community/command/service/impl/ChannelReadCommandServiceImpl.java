@@ -18,4 +18,9 @@ public class ChannelReadCommandServiceImpl implements ChannelReadCommandService 
         ChannelRead channelRead = ToChannelReadMapper.convert(channel, guildId);
         channelReadCommandRepository.save(channelRead);
     }
+
+    @Override
+    public void remove(long channelId) {
+        channelReadCommandRepository.deleteByChannelId(channelId);
+    }
 }

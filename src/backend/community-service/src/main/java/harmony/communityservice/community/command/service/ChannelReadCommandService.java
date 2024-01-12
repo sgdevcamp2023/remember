@@ -7,4 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ChannelReadCommandService {
 
     void registration(long guildId, Channel channel);
+
+    void remove(long channelId);
 }

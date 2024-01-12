@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.community.command.dto.ChannelDeleteRequestDto;
 import harmony.communityservice.community.command.dto.ChannelRegistrationRequestDto;
 import harmony.communityservice.community.command.repository.ChannelCommandRepository;
 import harmony.communityservice.community.command.service.ChannelCommandService;
@@ -26,5 +27,12 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
         Channel channel = ToChannelMapper.convert(requestDto, guild);
         channelCommandRepository.save(channel);
         channelReadCommandService.registration(requestDto.getGuildId(), channel);
+    }
+
+    @Override
+    public void remove(ChannelDeleteRequestDto requestDto) {
+        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
+        channelReadCommandService.remove(requestDto.getChannelId());
+        channelCommandRepository.deleteByChannelId(requestDto.getChannelId());
     }
 }

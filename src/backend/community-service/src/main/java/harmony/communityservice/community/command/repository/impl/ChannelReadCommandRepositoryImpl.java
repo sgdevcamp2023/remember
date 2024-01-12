@@ -14,4 +14,9 @@ public class ChannelReadCommandRepositoryImpl implements ChannelReadCommandRepos
     public void save(ChannelRead channelRead) {
         jpaChannelReadCommandRepository.save(channelRead);
     }
+
+    @Override
+    public void deleteByChannelId(Long channelId) {
+        jpaChannelReadCommandRepository.deleteById(channelId);
+    }
 }
