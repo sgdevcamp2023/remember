@@ -23,4 +23,10 @@ public class ChannelCommandController {
         channelCommandService.registration(requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
+
+    @PostMapping("/registration/guild/channel")
+    public BaseResponse<?> guildRegistration(@RequestBody @Validated ChannelRegistrationRequestDto requestDto) {
+        channelCommandService.registration(requestDto);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK");
+    }
 }
