@@ -37,4 +37,8 @@ public class CategoryRead {
         this.guildId = guildId;
         this.name = name;
     }
+
+    public void updateName(String newName) {
+        this.name = newName;
+    }
 }

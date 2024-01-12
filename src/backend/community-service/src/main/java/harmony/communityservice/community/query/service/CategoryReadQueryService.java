@@ -8,4 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CategoryReadQueryService {
 
     List<CategoryRead> findCategoryReadsByGuildId(long guildId, long userId);
+
+    CategoryRead findByCategoryId(long categoryId);
+
+    void existsByCategoryIdAndGuildId(long categoryId, long guildId);
 }

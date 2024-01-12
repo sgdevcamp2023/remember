@@ -36,6 +36,8 @@ import harmony.communityservice.community.command.service.impl.GuildReadCommandS
 import harmony.communityservice.community.command.service.impl.GuildUserCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.UserCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.UserReadCommandServiceImpl;
+import harmony.communityservice.community.query.service.CategoryQueryService;
+import harmony.communityservice.community.query.service.CategoryReadQueryService;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
@@ -58,6 +60,8 @@ public class AppCommandConfig {
     private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
+    private final CategoryQueryService categoryQueryService;
+    private final CategoryReadQueryService categoryReadQueryService;
 
     @Bean
     public UserCommandRepository userCommandRepository() {
@@ -119,7 +123,7 @@ public class AppCommandConfig {
     @Bean
     public CategoryCommandService categoryCommandService() {
         return new CategoryCommandServiceImpl(guildQueryService, userReadQueryService, categoryCommandRepository(),
-                categoryReadCommandService());
+                categoryReadCommandService(), categoryReadQueryService, categoryQueryService);
     }
 
     @Bean

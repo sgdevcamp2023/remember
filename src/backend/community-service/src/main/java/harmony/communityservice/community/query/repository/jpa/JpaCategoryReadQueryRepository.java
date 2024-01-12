@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaCategoryReadQueryRepository extends JpaRepository<CategoryRead, Long> {
     List<CategoryRead> findCategoryReadsByGuildId(Long guildId);
+
+    boolean existsCategoryReadByCategoryReadIdAndGuildId(Long categoryId, Long guildId);
 }

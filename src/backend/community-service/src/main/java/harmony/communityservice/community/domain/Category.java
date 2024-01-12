@@ -36,10 +36,20 @@ public class Category {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "modified_at")
+    private LocalDateTime modifiedAt;
+
     @Builder
     public Category(Guild guild, String name) {
         this.guild = guild;
         this.name = name;
         this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
     }
+
+    public void updateName(String name) {
+        this.name = name;
+        this.modifiedAt = LocalDateTime.now();
+    }
+
 }

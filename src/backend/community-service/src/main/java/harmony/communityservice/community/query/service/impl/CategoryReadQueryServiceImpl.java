@@ -17,4 +17,16 @@ public class CategoryReadQueryServiceImpl implements CategoryReadQueryService {
         userReadQueryService.existsUserIdAndGuildId(userId, guildId);
         return categoryReadQueryRepository.findAllByGuildId(guildId);
     }
+
+    @Override
+    public CategoryRead findByCategoryId(long categoryId) {
+        return categoryReadQueryRepository.findCategoryReadById(categoryId).orElseThrow();
+    }
+
+    @Override
+    public void existsByCategoryIdAndGuildId(long categoryId, long guildId) {
+        if (!categoryReadQueryRepository.existsByCategoryIdAndGuildId(categoryId, guildId)) {
+            throw new IllegalStateException();
+        }
+    }
 }
