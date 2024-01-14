@@ -3,28 +3,59 @@ listeners:
   protocol: 
   address:
     address: 127.0.0.1
-    port: 8080
+    port: 4000
   route-config:
     services:
-    - service1
-    - service2
-    - service3
+    - user-service
+    - community-service
+    - chat-service
+    - auth-service
+  authorization:
+    type: JWT
+    jwt-validator:
+      cluster-name: auth-service
+      url: /api/user/auth/validate-token
+      success-status: 
+        - 200
+
 clusters:
 - services:
-  - name: service1
+  - name: auth-service
     protocol: http
     address:
       address: 127.0.0.1
-      port: 8081
-    prefix: /service1
+      port: 5000
+    prefix: /api/user/auth
+    connect-timeout: 5s
+    authorization: false
+
+  - name: user-service
+    protocol: http
+    address:
+      address: 127.0.0.1
+      port: 5000
+    prefix: /api/user
+    connect-timeout: 5s
+    authorization: true
+
+  - name: community-service
+    protocol: http
+    address:
+      address: 127.0.0.1
+      port: 6000
+    prefix: /api/community
     custom-filter:
-      name: customFilter1
-    connect-timeout: 1s
-  - name: service2
+      name: CustomFilter
+      path: /ApiGateway/CustomFilter.cs
+    connect-timeout: 5s
+    authorization: true
+
+  - name: chat-service
     protocol: http
     address:
       address: 127.0.0.1
-      port: 8082
+      port: 7000
     prefix: /service2
     custom-filter: 
-    connect-timeout: 1s
+    connect-timeout: 5s
+    authorization: true
