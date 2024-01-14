@@ -86,7 +86,7 @@ namespace user_service
                     if (user == null)
                         throw new ServiceException(4007);
 
-                    loginDto.Password = SHA356Hash(loginDto.Password);
+                    loginDto.Password = Utils.SHA256Hash(loginDto.Password);
                     if (user.Password != loginDto.Password)
                         throw new ServiceException(4008);
 
@@ -188,17 +188,6 @@ namespace user_service
                         // 토큰 유효성 검사 실패
                         throw new TokenException(4105, token);
                     }
-                }
-                private string SHA356Hash(string password)
-                {
-                    SHA256 sha256Hash = SHA256.Create();
-                    byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-                    StringBuilder sBuilder = new StringBuilder();
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        sBuilder.Append(data[i].ToString("x2"));
-                    }
-                    return sBuilder.ToString();
                 }
 
                 private ClaimsPrincipal? GetPrincipalFromToken(string? token)

@@ -31,7 +31,27 @@ namespace user_service
                         throw new ServiceException(4008);
 
                     _userRepository.UpdatePassword(id, Utils.SHA256Hash(passwords.NewPassword));
-                } 
+                }
+
+                public UserDTO GetUserInfo(long id)
+                {
+                    UserModel? user = _userRepository.GetUserById(id);
+                    if(user == null)
+                        throw new ServiceException(4007);
+                    
+                    return new UserDTO()
+                    {
+                        Id = user.Id,
+                        Email = user.Email,
+                        Name = user.Name,
+                        ProfileUrl = user.Profile
+                    };
+                }
+
+                public void ChangeName(long id, string newName)
+                {
+                    _userRepository.UpdateName(id, newName);
+                }
             }
         }
     }
