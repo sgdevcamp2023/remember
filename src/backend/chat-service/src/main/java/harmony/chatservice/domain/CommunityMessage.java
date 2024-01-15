@@ -1,5 +1,6 @@
 package harmony.chatservice.domain;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,6 +60,11 @@ public class CommunityMessage extends BaseModel {
         this.senderName = senderName;
         this.message = message;
         this.delCheck = delCheck;
+    }
+
+    public void modify(String message) {
+        this.message = message;
+        this.setModifiedAt(LocalDateTime.now());
     }
 
     @Override

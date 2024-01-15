@@ -1,6 +1,7 @@
 package harmony.chatservice.controller;
 
 import harmony.chatservice.dto.CommunityMessageDto;
+import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.service.CommunityMessageService;
 import harmony.chatservice.service.kafka.MessageProducerService;
@@ -20,6 +21,12 @@ public class CommunityMessageController {
     @MessageMapping("/guild/message")
     public void chatMessage(CommunityMessageRequest messageRequest) {
         CommunityMessageDto messageDto = messageService.saveMessage(messageRequest);
+        messageProducerService.sendMessageForCommunity(messageDto);
+    }
+
+    @MessageMapping("/guild/modify")
+    public void modifyMessage(CommunityMessageModifyRequest modifyRequest) {
+        CommunityMessageDto messageDto = messageService.modifyMessage(modifyRequest);
         messageProducerService.sendMessageForCommunity(messageDto);
     }
 }

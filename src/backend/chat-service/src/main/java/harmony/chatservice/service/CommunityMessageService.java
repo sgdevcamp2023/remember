@@ -2,6 +2,7 @@ package harmony.chatservice.service;
 
 import harmony.chatservice.domain.CommunityMessage;
 import harmony.chatservice.dto.CommunityMessageDto;
+import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.repository.CommunityMessageRepository;
 import java.time.LocalDateTime;
@@ -36,5 +37,17 @@ public class CommunityMessageService {
         communityMessage.setCreatedAt(LocalDateTime.now());
 
         return new CommunityMessageDto(messageRepository.save(communityMessage));
+    }
+
+    @Transactional
+    public CommunityMessageDto modifyMessage(CommunityMessageModifyRequest modifyRequest) {
+
+        CommunityMessage message = messageRepository.findById(modifyRequest.getMessageId())
+                .orElseThrow(() -> new RuntimeException("예외 발생"));
+
+        message.modify(modifyRequest.getMessage());
+        message.setModifiedAt(LocalDateTime.now());
+
+        return new CommunityMessageDto(messageRepository.save(message));
     }
 }
