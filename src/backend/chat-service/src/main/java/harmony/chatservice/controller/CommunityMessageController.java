@@ -36,4 +36,10 @@ public class CommunityMessageController {
         CommunityMessageDto messageDto = messageService.deleteMessage(deleteRequest);
         messageProducerService.sendMessageForCommunity(messageDto);
     }
+
+    @MessageMapping("/guild/typing")
+    public void typingMessage(CommunityMessageDto messageDto) {
+
+        messageProducerService.sendMessageForCommunity(messageDto);
+    }
 }
