@@ -1,5 +1,6 @@
 package harmony.chatservice.domain;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,6 +45,11 @@ public class DirectMessage extends BaseModel{
 
     @Field
     private boolean delCheck;
+
+    public void modify(String message) {
+        this.message = message;
+        this.setModifiedAt(LocalDateTime.now());
+    }
 
     @Builder
     public DirectMessage(Long roomId, Long parentId, Long userId, String profileImage, String type, String senderName, String message) {

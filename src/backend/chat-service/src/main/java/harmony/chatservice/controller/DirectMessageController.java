@@ -1,6 +1,7 @@
 package harmony.chatservice.controller;
 
 import harmony.chatservice.dto.DirectMessageDto;
+import harmony.chatservice.dto.request.DirectMessageModifyRequest;
 import harmony.chatservice.dto.request.DirectMessageRequest;
 import harmony.chatservice.service.DirectMessageService;
 import harmony.chatservice.service.kafka.MessageProducerService;
@@ -22,6 +23,13 @@ public class DirectMessageController {
     public void chatMessage(@Payload DirectMessageRequest messageRequest) {
 
         DirectMessageDto messageDto = messageService.saveDirectMessage(messageRequest);
+        messageProducerService.sendMessageForDirect(messageDto);
+    }
+
+    @MessageMapping("/direct/modify")
+    public void modifyMessage(@Payload DirectMessageModifyRequest modifyRequest) {
+
+        DirectMessageDto messageDto = messageService.modifyDirectMessage(modifyRequest);
         messageProducerService.sendMessageForDirect(messageDto);
     }
 }
