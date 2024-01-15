@@ -12,11 +12,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document(collection = "channelMessages")
+@Document(collection = "communityMessages")
 public class CommunityMessage extends BaseModel {
 
     @Transient
-    public static final String SEQUENCE_NAME = "channelMessages_sequence";
+    public static final String SEQUENCE_NAME = "communityMessages_sequence";
 
     @Id
     private Long messageId;
