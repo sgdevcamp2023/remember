@@ -46,8 +46,9 @@ public class DirectMessage extends BaseModel{
     @Field
     private boolean delCheck;
 
-    public void modify(String message) {
+    public void modify(String message, String type) {
         this.message = message;
+        this.type = type;
         this.setModifiedAt(LocalDateTime.now());
     }
 

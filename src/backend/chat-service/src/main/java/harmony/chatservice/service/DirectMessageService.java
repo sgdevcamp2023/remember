@@ -41,7 +41,7 @@ public class DirectMessageService {
         DirectMessage directMessage = messageRepository.findById(modifyRequest.getMessageId())
                 .orElseThrow(() -> new RuntimeException("예외 발생"));
 
-        directMessage.modify(modifyRequest.getMessage());
+        directMessage.modify(modifyRequest.getMessage(), modifyRequest.getType());
         directMessage.setModifiedAt(LocalDateTime.now());
 
         return new DirectMessageDto(messageRepository.save(directMessage));
