@@ -40,4 +40,10 @@ public class DirectMessageController {
         DirectMessageDto messageDto = messageService.deleteDirectMessage(deleteRequest);
         messageProducerService.sendMessageForDirect(messageDto);
     }
+
+    @MessageMapping("/direct/typing")
+    public void typingMessage(@Payload DirectMessageDto messageDto) {
+
+        messageProducerService.sendMessageForDirect(messageDto);
+    }
 }
