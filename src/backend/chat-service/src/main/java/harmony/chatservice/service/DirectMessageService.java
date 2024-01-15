@@ -7,7 +7,14 @@ import harmony.chatservice.dto.request.DirectMessageModifyRequest;
 import harmony.chatservice.dto.request.DirectMessageRequest;
 import harmony.chatservice.repository.DirectMessageRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,5 +64,14 @@ public class DirectMessageService {
         directMessage.setModifiedAt(LocalDateTime.now());
 
         return new DirectMessageDto(messageRepository.save(directMessage));
+    }
+
+    public Page<DirectMessage> getDirectMessages(Long roomId) {
+
+        List<Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdAt"));
+        Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
+
+        return messageRepository.findByRoomIdAndDelCheckFalse(roomId, pageable);
     }
 }
