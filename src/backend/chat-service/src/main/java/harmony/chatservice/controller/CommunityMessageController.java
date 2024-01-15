@@ -1,6 +1,7 @@
 package harmony.chatservice.controller;
 
 import harmony.chatservice.dto.CommunityMessageDto;
+import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.service.CommunityMessageService;
@@ -27,6 +28,12 @@ public class CommunityMessageController {
     @MessageMapping("/guild/modify")
     public void modifyMessage(CommunityMessageModifyRequest modifyRequest) {
         CommunityMessageDto messageDto = messageService.modifyMessage(modifyRequest);
+        messageProducerService.sendMessageForCommunity(messageDto);
+    }
+
+    @MessageMapping("/guild/delete")
+    public void deleteMessage(CommunityMessageDeleteRequest deleteRequest) {
+        CommunityMessageDto messageDto = messageService.deleteMessage(deleteRequest);
         messageProducerService.sendMessageForCommunity(messageDto);
     }
 }

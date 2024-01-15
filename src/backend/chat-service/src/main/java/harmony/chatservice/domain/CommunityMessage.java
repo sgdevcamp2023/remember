@@ -67,6 +67,11 @@ public class CommunityMessage extends BaseModel {
         this.setModifiedAt(LocalDateTime.now());
     }
 
+    public void delete(String type) {
+        this.type = type;
+        this.delCheck = true;
+    }
+
     @Override
     public String toString() {
         return "MyClass{" +

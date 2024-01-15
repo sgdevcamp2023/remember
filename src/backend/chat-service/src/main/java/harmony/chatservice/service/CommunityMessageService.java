@@ -2,6 +2,7 @@ package harmony.chatservice.service;
 
 import harmony.chatservice.domain.CommunityMessage;
 import harmony.chatservice.dto.CommunityMessageDto;
+import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.repository.CommunityMessageRepository;
@@ -46,6 +47,18 @@ public class CommunityMessageService {
                 .orElseThrow(() -> new RuntimeException("예외 발생"));
 
         message.modify(modifyRequest.getMessage());
+        message.setModifiedAt(LocalDateTime.now());
+
+        return new CommunityMessageDto(messageRepository.save(message));
+    }
+
+    @Transactional
+    public CommunityMessageDto deleteMessage(CommunityMessageDeleteRequest deleteRequest) {
+
+        CommunityMessage message = messageRepository.findById(deleteRequest.getMessageId())
+                .orElseThrow(() -> new RuntimeException("예외 발생"));
+
+        message.delete(deleteRequest.getType());
         message.setModifiedAt(LocalDateTime.now());
 
         return new CommunityMessageDto(messageRepository.save(message));
