@@ -2,6 +2,7 @@ package harmony.chatservice.service;
 
 import harmony.chatservice.domain.DirectMessage;
 import harmony.chatservice.dto.DirectMessageDto;
+import harmony.chatservice.dto.request.DirectMessageDeleteRequest;
 import harmony.chatservice.dto.request.DirectMessageModifyRequest;
 import harmony.chatservice.dto.request.DirectMessageRequest;
 import harmony.chatservice.repository.DirectMessageRepository;
@@ -41,6 +42,18 @@ public class DirectMessageService {
                 .orElseThrow(() -> new RuntimeException("예외 발생"));
 
         directMessage.modify(modifyRequest.getMessage());
+        directMessage.setModifiedAt(LocalDateTime.now());
+
+        return new DirectMessageDto(messageRepository.save(directMessage));
+    }
+
+    @Transactional
+    public DirectMessageDto deleteDirectMessage(DirectMessageDeleteRequest deleteRequest) {
+
+        DirectMessage directMessage = messageRepository.findById(deleteRequest.getMessageId())
+                .orElseThrow(() -> new RuntimeException("예외 발생"));
+
+        directMessage.delete(deleteRequest.getType());
         directMessage.setModifiedAt(LocalDateTime.now());
 
         return new DirectMessageDto(messageRepository.save(directMessage));

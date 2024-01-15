@@ -51,6 +51,11 @@ public class DirectMessage extends BaseModel{
         this.setModifiedAt(LocalDateTime.now());
     }
 
+    public void delete(String type) {
+        this.type = type;
+        this.delCheck = true;
+    }
+
     @Builder
     public DirectMessage(Long roomId, Long parentId, Long userId, String profileImage, String type, String senderName, String message) {
         this.roomId = roomId;
