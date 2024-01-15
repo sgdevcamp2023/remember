@@ -53,7 +53,7 @@ public class CommunityMessageService {
         CommunityMessage message = messageRepository.findById(modifyRequest.getMessageId())
                 .orElseThrow(() -> new RuntimeException("예외 발생"));
 
-        message.modify(modifyRequest.getMessage());
+        message.modify(modifyRequest.getMessage(), modifyRequest.getType());
         message.setModifiedAt(LocalDateTime.now());
 
         return new CommunityMessageDto(messageRepository.save(message));

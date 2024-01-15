@@ -62,8 +62,9 @@ public class CommunityMessage extends BaseModel {
         this.delCheck = delCheck;
     }
 
-    public void modify(String message) {
+    public void modify(String message, String type) {
         this.message = message;
+        this.type = type;
         this.setModifiedAt(LocalDateTime.now());
     }
 
