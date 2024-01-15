@@ -7,8 +7,15 @@ import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.repository.CommunityMessageRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,5 +69,13 @@ public class CommunityMessageService {
         message.setModifiedAt(LocalDateTime.now());
 
         return new CommunityMessageDto(messageRepository.save(message));
+    }
+
+    public Page<CommunityMessage> getMessages(Long channelId) {
+
+        List<Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdAt"));
+        Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
+        return messageRepository.findByChannelIdAndDelCheckFalse(channelId, pageable);
     }
 }

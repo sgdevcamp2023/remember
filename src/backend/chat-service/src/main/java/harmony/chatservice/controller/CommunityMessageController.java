@@ -1,5 +1,6 @@
 package harmony.chatservice.controller;
 
+import harmony.chatservice.domain.CommunityMessage;
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
@@ -8,7 +9,10 @@ import harmony.chatservice.service.CommunityMessageService;
 import harmony.chatservice.service.kafka.MessageProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -41,5 +45,12 @@ public class CommunityMessageController {
     public void typingMessage(CommunityMessageDto messageDto) {
 
         messageProducerService.sendMessageForCommunity(messageDto);
+    }
+
+    @GetMapping("/api/messages/channel/{channelId}")
+    public Page<CommunityMessageDto> getMessages(@PathVariable("channelId") Long channelId) {
+
+        Page<CommunityMessage> messagePage = messageService.getMessages(channelId);
+        return messagePage.map(CommunityMessageDto::new);
     }
 }
