@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -65,4 +66,18 @@ public class Board {
 
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
+
+    @Builder
+    public Board(Channel channel, List<Image> images,
+                 String title, String content, String writerName, Long userId) {
+        this.channel = channel;
+        this.images = images;
+        this.title = title;
+        this.content = content;
+        this.writerName = writerName;
+        this.userId = userId;
+        this.modified = false;
+        this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
 }

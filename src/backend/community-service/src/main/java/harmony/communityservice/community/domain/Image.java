@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -29,4 +30,10 @@ public class Image {
     @NotBlank
     @Column(name = "image_addr")
     private String imageAddr;
+
+    @Builder
+    public Image(Board board, String imageAddr) {
+        this.board = board;
+        this.imageAddr = imageAddr;
+    }
 }
