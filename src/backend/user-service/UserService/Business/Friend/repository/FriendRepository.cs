@@ -12,7 +12,7 @@ namespace user_service
             {
                 private RedisConnectionManager _redis;
                 private DbConnectionManager _db;
-
+                private string FriendRequestKey = "friend_request ";
                 public FriendRepository(RedisConnectionManager redisConnectionManager,
                                         DbConnectionManager dbConnectionManager)
                 {
@@ -25,13 +25,19 @@ namespace user_service
                     string query = "SELECT * FROM users WHERE id IN (SELECT first_friend_id FROM  friend WHERE second_user_id = 1 UNION SELECT second_friend_id FROM friend WHERE first_user_id = 1);";
                     var reader = _db.ExecuteReader(query);
 
-                    // 리스트로 만들어줘야함.
-                    // 구조가 똑같은데 어떻게 하지?
                     return MakeListUserDTO(reader);
                 }
 
-                public List<UserDTO>? ShowAllFriendRequestList(long id, string email)
+                public List<UserDTO>? ShowAllFriendRequestList(long id)
                 {
+                    string emailGetQuery = $"SELECT email FROM users WHERE id = {id}";
+                    var emailReader = _db.ExecuteReader(emailGetQuery);
+
+                    if(!emailReader.Read())
+                        return null;
+
+                    string email = emailReader.GetString(emailReader.GetOrdinal("email"));
+
                     List<string> friendRequestList = _redis.GetListByKey(email);
                     if (friendRequestList.Count == 0)
                         return null;
@@ -53,6 +59,7 @@ namespace user_service
 
                 public bool AcceptFriendRequest(long id, string email)
                 {
+                    // string query = $"INSERT INTO friend "
                     throw new NotImplementedException();
                 }
 
@@ -67,13 +74,6 @@ namespace user_service
                     _db.ExecuteNonQuery(query);
 
                     return true;
-                }
-
-
-
-                public List<UserDTO> ShowAllFriendRequestList(long id)
-                {
-                    throw new NotImplementedException();
                 }
 
                 public List<UserDTO> MakeListUserDTO(IDataReader reader)

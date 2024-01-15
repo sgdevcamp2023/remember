@@ -22,7 +22,7 @@ builder.Services.AddSingleton<RedisConnectionManager>();
 
 // Repository 의존성 주입
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IStringRedisRepository, StringRedisRepository>();
+builder.Services.AddScoped<IAuthRedisRepository, AuthRedisRepository>();
 
 // Service 의존성 주입
 builder.Services.AddScoped<AuthService>();

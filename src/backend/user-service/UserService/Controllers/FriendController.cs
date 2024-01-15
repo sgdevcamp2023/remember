@@ -23,17 +23,17 @@ namespace user_service
             }
             
             [HttpGet("list")]
-            public List<UserDTO>? GetFriendList(
+            public List<UserDTO> GetFriendList(
                 [FromHeader(Name = "trace-id")] int traceId)
             {
                 return _friendService.GetFriendList(traceId);
             }
             
             [HttpGet("request/list")]
-            public IActionResult GetFriendRequestList(
+            public List<UserDTO>? GetFriendRequestList(
                 [FromHeader(Name = "trace-id")] int traceId)
             {
-                return Ok();
+                return _friendService.GetRequestListByUserId(traceId);
             }
 
             [HttpPost("request/send")]

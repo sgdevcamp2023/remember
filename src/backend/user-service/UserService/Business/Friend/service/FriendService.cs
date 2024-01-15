@@ -28,9 +28,7 @@ namespace user_service
 
                 public List<UserDTO>? GetRequestListByUserId(long id)
                 {
-                    string requestString = $"friend_request{id}";
-                    // _friendRepository.Get
-                    return null;
+                    return _friendRepository.ShowAllFriendRequestList(id);
                 }
 
                 public bool SendFriendAddRequest(long id, long friendId)
