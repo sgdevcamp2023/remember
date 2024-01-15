@@ -38,7 +38,7 @@ namespace user_service
                     UserModel? user = _userRepository.GetUserById(id);
                     if(user == null)
                         throw new ServiceException(4007);
-                    
+
                     return new UserDTO()
                     {
                         Id = user.Id,
@@ -51,6 +51,11 @@ namespace user_service
                 public void ChangeName(long id, string newName)
                 {
                     _userRepository.UpdateName(id, newName);
+                }
+
+                public void ChangeProfile(long id, string newProfileUrl)
+                {
+                    _userRepository.UpdateProfile(id, newProfileUrl);
                 }
             }
         }

@@ -55,6 +55,7 @@ namespace user_service
 
                 return Ok();
             }
+            
             [filter.TraceIdCheckFilter]
             [HttpPost("logout")]
             public IActionResult Logout(

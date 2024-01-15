@@ -1,8 +1,6 @@
-
-
 using System.Data;
 using user_service.auth.dto;
-using user_service.logger;
+using user_service.user.dto;
 
 namespace user_service
 {
@@ -10,15 +8,15 @@ namespace user_service
     {
         public class UserRepository : IUserRepository
         {
-            private DbConnectionManager _dbConnectionManager = null!;
+            private DbConnectionManager _db = null!;
             public UserRepository(DbConnectionManager dbConnectionManager)
             {
-                _dbConnectionManager = dbConnectionManager;
+                _db = dbConnectionManager;
             }
             public bool IsEmailExist(string email)
             {
                 string query = $"SELECT * FROM users WHERE email = '{email}'";
-                using (var reader = _dbConnectionManager.ExecuteReader(query))
+                using (var reader = _db.ExecuteReader(query))
                 {
                     return reader.Read();
                 }
@@ -39,7 +37,7 @@ namespace user_service
             private UserModel? GetUserModel(string query)
             {
                 UserModel? user = null;
-                using (var reader = _dbConnectionManager.ExecuteReader(query))
+                using (var reader = _db.ExecuteReader(query))
                 {
                    if (reader.Read())
                         user = GetUserModel(reader);
@@ -51,14 +49,14 @@ namespace user_service
             public bool InsertUser(RegisterDTO user)
             {
                 string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '{user.ProfileUrl}')";
-                _dbConnectionManager.ExecuteNonQuery(query);
+                _db.ExecuteNonQuery(query);
 
                 return true;
             }
             public bool UpdateUser(UserModel user)
             {
                 string query = $"UPDATE users SET email = '{user.Email}', password = '{user.Password}', name = '{user.Name}', updated_at = '{user.UpdatedAt}' WHERE id = {user.Id}";
-                _dbConnectionManager.ExecuteNonQuery(query);
+                _db.ExecuteNonQuery(query);
 
                 return true;
             }
@@ -66,7 +64,7 @@ namespace user_service
             public bool DeleteUser(string email)
             {
                 string query = $"DELETE FROM users WHERE email = '{email}'";
-                _dbConnectionManager.ExecuteNonQuery(query);
+                _db.ExecuteNonQuery(query);
 
                 return true;
             }
@@ -74,7 +72,7 @@ namespace user_service
             public bool DeleteUser(long id)
             {
                 string query = $"DELETE FROM users WHERE id = {id}";
-                _dbConnectionManager.ExecuteNonQuery(query);
+                _db.ExecuteNonQuery(query);
 
                 return true;
             }
@@ -84,7 +82,7 @@ namespace user_service
                 string query = $"SELECT * FROM test WHERE id IN (SELECT first_user_id FROM friend WHERE second_user_id = {id} UNION SELECT second_user_id FROM friend WHERE first_user_id = {id})";
 
                 List<UserModel> friends = new List<UserModel>();
-                using (var reader = _dbConnectionManager.ExecuteReader(query))
+                using (var reader = _db.ExecuteReader(query))
                 {
                     while (reader.Read())
                     {
@@ -114,7 +112,7 @@ namespace user_service
             public bool UpdateName(long id, string name)
             {
                 string query = $"UPDATE users SET name = '{name}' WHERE id = {id}";
-                _dbConnectionManager.ExecuteNonQuery(query);
+                _db.ExecuteNonQuery(query);
 
                 return true;
             }
@@ -122,7 +120,15 @@ namespace user_service
             public bool UpdatePassword(string email, string password)
             {
                 string query = $"UPDATE users SET password ='{password}' WHERE email = '{email}'";
-                _dbConnectionManager.ExecuteNonQuery(query);
+                _db.ExecuteNonQuery(query);
+
+                return true;
+            }
+
+            public bool UpdateProfile(long id, string profileUrl)
+            {
+                string query = $"UPDATE users SET profile = '{profileUrl}' WHERE id = {id}";
+                _db.ExecuteNonQuery(query);
 
                 return true;
             }
@@ -130,10 +136,12 @@ namespace user_service
             public bool UpdatePassword(long id, string password)
             {
                 string query = $"UPDATE users SET password ='{password}' WHERE id = {id}";
-                _dbConnectionManager.ExecuteNonQuery(query);
+                _db.ExecuteNonQuery(query);
 
                 return true;
             }
+
+           
         }
     }
 }

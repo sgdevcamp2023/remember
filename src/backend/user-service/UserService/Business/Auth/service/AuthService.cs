@@ -21,16 +21,16 @@ namespace user_service
             {
                 private readonly IBaseLogger _logger;
                 private readonly IUserRepository _userRepository;
-                private IStringRedisRepository _redisRepository = null!;
+                private IAuthRedisRepository _redis = null!;
                 private IConfiguration _config = null!;
                 public AuthService(IBaseLogger logger,
                                 IUserRepository userRepository,
-                                IStringRedisRepository redisRepository,
+                                IAuthRedisRepository redisRepository,
                                 IConfiguration config)
                 {
                     _logger = logger;
                     _userRepository = userRepository;
-                    _redisRepository = redisRepository;
+                    _redis = redisRepository;
                     _config = config;
                 }
 
@@ -40,7 +40,7 @@ namespace user_service
                     SameEmailCheck(register.Email);
                     CheckEmailChecksum(register.Email, register.EmailChecksum);
 
-                    _redisRepository.DeleteRedis(register.Email);
+                    _redis.DeleteChecksum(register.Email);
 
                     // 비밀번호 암호화
                     register.Password = Utils.SHA256Hash(register.Password);
@@ -65,7 +65,7 @@ namespace user_service
 
                         SendEMail(message);
 
-                        _redisRepository.InsertRedis(new RedisModel(email, checksum.ToString()), new TimeSpan(0, 0, int.Parse(_config["Mail:ExpiredTime"])));
+                        _redis.InsertEmailAndChecksum(email, checksum.ToString(), new TimeSpan(0, 0, int.Parse(_config["Mail:ExpiredTime"])));
                     }
                     catch (Exception e)
                     {
@@ -97,7 +97,7 @@ namespace user_service
 
                 public void CheckEmailChecksum(string email, string checksum)
                 {
-                    string? redisChecksum = _redisRepository.GetStringById(email);
+                    string? redisChecksum = _redis.GetChecksumByEmail(email);
 
                     if (redisChecksum == null)
                         throw new ServiceException(4012);

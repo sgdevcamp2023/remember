@@ -74,7 +74,7 @@ namespace user_service
                 {
                     if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
                         Connect();
-                    
+
                     return _redisDb.ListRightPush(key, value) > 0;
                 }
                 catch (Exception e)

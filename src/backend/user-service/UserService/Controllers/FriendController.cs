@@ -2,7 +2,10 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using user_service.Controllers.dto.friend;
 using user_service.filter;
+using user_service.friend.service;
+using user_service.user.dto;
 
 namespace user_service
 {
@@ -13,16 +16,17 @@ namespace user_service
         [ApiController]
         public class FriendController : ControllerBase
         {
-            public FriendController()
+            private FriendService _friendService;
+            public FriendController(FriendService friendService)
             {
-                
+                _friendService = friendService;
             }
             
             [HttpGet("list")]
-            public IActionResult GetFriendList(
+            public List<UserDTO>? GetFriendList(
                 [FromHeader(Name = "trace-id")] int traceId)
             {
-                return Ok();
+                return _friendService.GetFriendList(traceId);
             }
             
             [HttpGet("request/list")]
@@ -35,7 +39,7 @@ namespace user_service
             [HttpPost("request/send")]
             public IActionResult SendFriendRequest(
                 [FromHeader(Name = "trace-id")] int traceId,
-                [FromBody] [Required] dto.RequestEmailDto request)
+                [FromBody] FriendDTO friendDTO)
             {
                 return Ok();
             }
@@ -43,7 +47,7 @@ namespace user_service
             [HttpPost("request/accept")]
             public IActionResult AcceptFriendRequest(
                 [FromHeader(Name = "trace-id")] int traceId,
-                [FromBody] [Required] dto.RequestEmailDto request)
+                [FromBody] FriendDTO friendDTO)
             {
                 return Ok();
             }
@@ -51,14 +55,7 @@ namespace user_service
             [HttpPost("request/refuse")]
             public IActionResult RefuseFriendRequest(
                 [FromHeader(Name = "trace-id")] int traceId,
-                [FromBody] [Required] dto.RequestEmailDto request)
-            {
-                return Ok();
-            }
-
-            [HttpGet("request/list")]
-            public IActionResult ShowAllFriendRequest(
-                [FromHeader(Name = "trace-id")] int traceId)
+                [FromBody] FriendDTO friendDTO)
             {
                 return Ok();
             }
@@ -66,8 +63,10 @@ namespace user_service
             [HttpDelete("delete")]
             public IActionResult DeleteFriend(
                 [FromHeader(Name = "trace-id")] int traceId,
-                [FromBody] [Required] dto.RequestEmailDto request)
+                [FromBody] FriendDTO friendDTO)
             {
+                _friendService.DeleteFriend(traceId, friendDTO.FriendId);
+
                 return Ok();
             }
 

@@ -46,6 +46,16 @@ namespace user_service
                 
                 return Ok();
             }
+
+            [HttpPatch("change-profile")]
+            public IActionResult ChangeProfile(
+                [FromHeader(Name = "trace-id")] [Required] int traceId,
+                [FromBody] string newProfile)
+            {
+                _userService.ChangeProfile(traceId, newProfile);
+                
+                return Ok();
+            }
         }
     }
 }

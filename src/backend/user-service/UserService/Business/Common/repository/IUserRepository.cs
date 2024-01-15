@@ -12,6 +12,7 @@ namespace user_service
             bool UpdateName(long id, string name);
             bool UpdatePassword(string email, string password);
             bool UpdatePassword(long id, string password);
+            bool UpdateProfile(long id, string profileUrl);
             bool DeleteUser(long id);
             bool DeleteUser(string email);
             bool IsEmailExist(string email);

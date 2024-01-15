@@ -1,18 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-using System.ComponentModel.DataAnnotations;
-
-namespace user_service
+namespace user_service.Controllers.dto
 {
     namespace friend
     {
-        namespace dto
+        public class FriendDTO
         {
-            public class RequestEmailDto
-            {
-                [Required(ErrorMessage = "Email is required")]
-                [EmailAddress]
-                public string Email { get; set; } = null!;
-            }
+            public long FriendId { get; set; }
         }
     }
 }

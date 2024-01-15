@@ -20,16 +20,16 @@ namespace user_service
             public class JwtService
             {
                 private IConfiguration _config;
-                private IStringRedisRepository _redisRepository;
+                private IAuthRedisRepository _redis;
                 private IUserRepository _userRepository;
                 private IBaseLogger _logger;
                 public JwtService(IConfiguration config,
-                                IStringRedisRepository redisRepository,
+                                IAuthRedisRepository redisRepository,
                                 IUserRepository userRepository,
                                 IBaseLogger logger)
                 {
                     _config = config;
-                    _redisRepository = redisRepository;
+                    _redis = redisRepository;
                     _userRepository = userRepository;
                     _logger = logger;
                 }
@@ -48,7 +48,7 @@ namespace user_service
                     if (id == null)
                         throw new ServiceException(4101);
 
-                    string? refreshToken = _redisRepository.GetStringById(id);
+                    string? refreshToken = _redis.GetRefreshTokenById(id);
                     if (refreshToken == null)
                         throw new ServiceException(4101);
 
@@ -56,8 +56,8 @@ namespace user_service
                         throw new ServiceException(4101);
 
                     string accessToken = CreateAccessToken(tokenPrincipal.Claims.ToList());
-                    if (!_redisRepository.InsertRedis(
-                        new RedisModel(id, refreshToken),
+                    if (!_redis.InsertIdAndRefreshToken(
+                        id, refreshToken,
                         new TimeSpan(0, 0, int.Parse(_config["JWT:RefreshTokenValidityInSecond"]))))
                         throw new RedisException("Redis Repository Insert Error");
 
@@ -67,12 +67,12 @@ namespace user_service
                 public void DeleteToken(string id, string accessToken)
                 {
                     // 토큰 삭제 필요함
-                    if(_redisRepository.DeleteRedis(id) == false)
+                    if(_redis.DeleteRefreshToken(id) == false)
                         throw new ServiceException(4014);
                     
 
-                    if(_redisRepository.InsertRedis(
-                                new RedisModel(accessToken, id.ToString()),
+                    if(_redis.InsertBlackListToken(
+                                accessToken, id.ToString(),
                                 new TimeSpan(0, 0, int.Parse(_config["JWT:AccessTokenValidityInSecond"]))) == false)
                         throw new ServiceException(4014);
                 }
@@ -104,8 +104,8 @@ namespace user_service
                     string refreshToken = CreateRefreshToken();
 
                     // 4. Redis에 Refresh Token 저장
-                    if (!_redisRepository.InsertRedis(
-                        new RedisModel(user.Id.ToString(), refreshToken),
+                    if (!_redis.InsertIdAndRefreshToken(
+                        user.Id.ToString(), refreshToken,
                         new TimeSpan(0, 0, int.Parse(_config["JWT:RefreshTokenValidityInSecond"]))))
                         throw new RedisException("Redis Repository Insert Error");
 
@@ -153,7 +153,7 @@ namespace user_service
                     if (tokens[0] != "Bearer")
                         throw new ServiceException(4103);
 
-                    if(_redisRepository.GetStringById(token.AccessToken) != null)
+                    if(_redis.GetBlackListToken(token.AccessToken) != null)
                         throw new ServiceException(4014);
 
                     if (token.RefreshToken == null)

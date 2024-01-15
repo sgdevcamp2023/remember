@@ -8,9 +8,9 @@ namespace user_service
         public class DbConnectionManager
         {
             private IConfiguration _config;
-            private string? _connectionString;
             private SqlConnection _connection = null!;
             private IBaseLogger _logger;
+            private string? _connectionString;
             public DbConnectionManager(IConfiguration config, IBaseLogger logger)
             {
                 _config = config;
