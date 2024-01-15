@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Setter
 @NoArgsConstructor
 @Document(collection = "channelMessages")
-public class ChannelMessage extends BaseModel {
+public class CommunityMessage extends BaseModel {
 
     @Transient
     public static final String SEQUENCE_NAME = "channelMessages_sequence";
@@ -49,7 +49,7 @@ public class ChannelMessage extends BaseModel {
     private boolean delCheck;
 
     @Builder
-    public ChannelMessage(Long guildId, Long channelId, Long userId, Long parentId, String profileImage, String type, String senderName, String message, boolean delCheck) {
+    public CommunityMessage(Long guildId, Long channelId, Long userId, Long parentId, String profileImage, String type, String senderName, String message, boolean delCheck) {
         this.guildId = guildId;
         this.channelId = channelId;
         this.userId = userId;
