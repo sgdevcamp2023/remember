@@ -53,4 +53,11 @@ public class CommunityMessageController {
         Page<CommunityMessage> messagePage = messageService.getMessages(channelId);
         return messagePage.map(CommunityMessageDto::new);
     }
+
+    @GetMapping("/api/community/comments/{parentId}")
+    public Page<CommunityMessageDto> getComments(@PathVariable("parentId") Long parentId) {
+
+        Page<CommunityMessage> messagePage = messageService.getComments(parentId);
+        return messagePage.map(CommunityMessageDto::new);
+    }
 }

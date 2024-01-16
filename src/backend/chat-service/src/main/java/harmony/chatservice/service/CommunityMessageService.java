@@ -78,4 +78,12 @@ public class CommunityMessageService {
         Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
         return messageRepository.findByChannelIdAndDelCheckFalse(channelId, pageable);
     }
+
+    public Page<CommunityMessage> getComments(Long parentId) {
+
+        List<Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdAt"));
+        Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
+        return messageRepository.findByParentIdAndDelCheckFalse(parentId, pageable);
+    }
 }

@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface CommunityMessageRepository extends MongoRepository<CommunityMessage, Long> {
 
     Page<CommunityMessage> findByChannelIdAndDelCheckFalse(Long channelId, Pageable pageable);
+
+    Page<CommunityMessage> findByParentIdAndDelCheckFalse(Long parentId, Pageable pageable);
 }
