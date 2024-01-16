@@ -1,4 +1,6 @@
 using user_service.common;
+using user_service.common.exception;
+using user_service.Controllers.dto.friend;
 using user_service.friend.repository;
 using user_service.user.dto;
 
@@ -13,7 +15,7 @@ namespace user_service
                 private IConfiguration _config;
                 private IUserRepository _userRepository;
                 private IFriendRepository _friendRepository;
-                
+
                 public FriendService(IConfiguration config, IUserRepository userRepository, IFriendRepository friendRepository)
                 {
                     _config = config;
@@ -31,24 +33,36 @@ namespace user_service
                     return _friendRepository.ShowAllFriendRequestList(id);
                 }
 
-                public bool SendFriendAddRequest(long id, long friendId)
+                public bool SendFriendAddRequest(long id, FriendDTO friend)
+                {
+                    long friendId = _friendRepository.GetFriendId(friend.FriendEmail);
+                    if(friendId == 0)
+                        throw new ServiceException(4007);
+
+                    if(_friendRepository.CheckAlreadyFriend(id, friendId))
+                        throw new ServiceException(4016);
+
+                    if(!_friendRepository.SendFriendRequest(id, friendId))
+                        throw new ServiceException(4017);
+                    
+                    return true;
+                }
+
+                public bool AcceptFriendAddRequest(long id, FriendDTO friend)
                 {
                     return true;
                 }
 
-                public bool AcceptFriendAddRequest(long id, long friendId)
+                public bool RefuseFriendAddRequest(long id, FriendDTO friend)
                 {
                     return true;
                 }
 
-                public bool RefuseFriendAddRequest(long id, long friendId)
+                public bool DeleteFriend(long id, FriendDTO friend)
                 {
-                    return true;
-                }
+                    // return _friendRepository.DeleteFriend(id);
 
-                public bool DeleteFriend(long id, long friendId)
-                {
-                    return _friendRepository.DeleteFriend(id);
+                    return true;
                 }
             }
         }

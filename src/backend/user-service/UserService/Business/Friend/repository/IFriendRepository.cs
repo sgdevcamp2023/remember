@@ -10,9 +10,11 @@ namespace user_service
             {
                 public List<UserDTO> GetFriendList(long id);
                 public List<UserDTO>? ShowAllFriendRequestList(long id);
-                public bool SendFriendRequest(long id, string email);
-                public bool AcceptFriendRequest(long id, string email);
-                public bool RefuseFriendRequest(long id, string email);
+                public long GetFriendId(string email);
+                public bool CheckAlreadyFriend(long id, long friendId);
+                public bool SendFriendRequest(long id, long friendId);
+                public bool AcceptFriendRequest(long id, long friendId);
+                public bool RefuseFriendRequest(long id, long friendId);
                 public bool DeleteFriend(long id);
             }   
         }

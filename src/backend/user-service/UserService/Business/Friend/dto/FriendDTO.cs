@@ -9,7 +9,7 @@ namespace user_service.Controllers.dto
     {
         public class FriendDTO
         {
-            public long FriendId { get; set; }
+            public string FriendEmail { get; set; } = null!;
         }
     }
 }
