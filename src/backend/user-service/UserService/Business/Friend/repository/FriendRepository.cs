@@ -84,7 +84,7 @@ namespace user_service
                 public bool SendFriendRequest(long id, long friendId)
                 {
                     // 존재하는 유저인지 체크
-                    if (_redis.GetListByKey(SendRequestKey + id).Contains(friendId.ToString()))
+                    if (true == _redis.GetListByKey(SendRequestKey + id).Contains(friendId.ToString()))
                         return false;
 
                     _redis.InsertList(ReceiveRequestKey + friendId, id.ToString());
@@ -96,33 +96,35 @@ namespace user_service
                 public bool AcceptFriendRequest(long id, long friendId)
                 {
                     // 레디스에서 체크
-                    if (_redis.GetListByKey(ReceiveRequestKey + id).Contains(friendId.ToString()))
+                    if (!_redis.GetListByKey(ReceiveRequestKey + id).Contains(friendId.ToString()))
                         return false;
 
                     string query = $"INSERT INTO friends (first_user_id, second_user_id) VALUES ({id}, {friendId})";
                     _db.ExecuteNonQuery(query);
 
-                    _redis.DeleteList(ReceiveRequestKey + id, friendId.ToString());
-                    _redis.DeleteList(SendRequestKey + friendId, id.ToString());
+                    if (DeleteRequest(friendId, id))
+                        return false;
 
                     return true;
                 }
 
                 public bool RefuseFriendRequest(long id, long friendId)
                 {
-                    if (_redis.GetListByKey(ReceiveRequestKey + id).Contains(friendId.ToString()))
+                    if (!_redis.GetListByKey(ReceiveRequestKey + id).Contains(friendId.ToString()))
                         return false;
 
-                    _redis.DeleteList(ReceiveRequestKey + id, friendId.ToString());
-                    _redis.DeleteList(SendRequestKey + friendId, id.ToString());
+
 
                     return true;
                 }
 
                 public bool DeleteFriend(long id, long friendId)
                 {
-                    string query = $"SELECT * FROM friends WHERE (first_user_id = {id} AND second_user_id = {friendId}) OR (first_user_id = {friendId} AND second_user_id = {id})";
+                    string query = $"DELETE FROM friends WHERE (first_user_id = {id} AND second_user_id = {friendId}) OR (first_user_id = {friendId} AND second_user_id = {id})";
                     _db.ExecuteNonQuery(query);
+
+                    if (DeleteRequest(friendId, id))
+                        return false;
 
                     return true;
                 }
@@ -147,6 +149,14 @@ namespace user_service
                         Name = reader.GetString(reader.GetOrdinal("name")),
                         ProfileUrl = reader.IsDBNull(reader.GetOrdinal("profile")) ? null : reader.GetString(reader.GetOrdinal("profile"))
                     };
+                }
+
+                private bool DeleteRequest(long sendId, long receiveId)
+                {
+                    _redis.DeleteList(SendRequestKey + sendId, receiveId.ToString());
+                    _redis.DeleteList(ReceiveRequestKey + receiveId, sendId.ToString());
+
+                    return true;
                 }
             }
         }

@@ -10,7 +10,7 @@ namespace user_service
         public static class ErrorManager
         {
             public static Dictionary<int, ErrorCodeModel> ErrorCode { get; private set; } = null!;
-            private readonly static string _authPath = @"Error\ErrorCodes.json";
+            private readonly static string _authPath = @"Error\ErrorCode.json";
 
             public static void Init()
             {

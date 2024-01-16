@@ -45,8 +45,8 @@ namespace user_service
                     if(_friendRepository.CheckAlreadyFriend(id, friendId))
                         throw new ServiceException(4016);
 
-                    if(!_friendRepository.SendFriendRequest(id, friendId) == false)
-                        throw new ServiceException(4017);
+                    if(!_friendRepository.SendFriendRequest(id, friendId))
+                        throw new ServiceException(4017); 
 
                     return true;
                 }
@@ -55,7 +55,7 @@ namespace user_service
                 {
                     long friendId = GetFriendId(friend.FriendEmail);
                     
-                    if(_friendRepository.AcceptFriendRequest(id, friendId) == false)
+                    if(!_friendRepository.AcceptFriendRequest(id, friendId))
                         throw new ServiceException(4018);
                     
                     return true;
@@ -65,7 +65,7 @@ namespace user_service
                 {
                     long friendId = GetFriendId(friend.FriendEmail);
 
-                    if(_friendRepository.RefuseFriendRequest(id, friendId) == false)
+                    if(!_friendRepository.RefuseFriendRequest(id, friendId))
                         throw new ServiceException(4019);
                     
                     return true;

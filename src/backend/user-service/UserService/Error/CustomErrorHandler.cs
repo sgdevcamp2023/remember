@@ -13,6 +13,8 @@ namespace user_service
         {
             public static RequestDelegate MyRequestDelegate = async context =>
             {
+                System.Console.WriteLine("MyRequestDelegate");
+                
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                 if (exceptionHandlerPathFeature != null)
                 {
