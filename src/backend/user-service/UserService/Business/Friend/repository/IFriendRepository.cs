@@ -14,6 +14,7 @@ namespace user_service
                 public long GetFriendId(string email);
                 public bool CheckAlreadyFriend(long id, long friendId);
                 public bool SendFriendRequest(long id, long friendId);
+                public bool CancleFriendRequest(long id, long friendId);
                 public bool AcceptFriendRequest(long id, long friendId);
                 public bool RefuseFriendRequest(long id, long friendId);
                 public bool DeleteFriend(long id, long friendId);

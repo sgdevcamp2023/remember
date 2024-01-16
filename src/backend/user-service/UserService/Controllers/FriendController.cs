@@ -72,6 +72,16 @@ namespace user_service
                 return Ok();
             }
 
+            [HttpDelete("request/cancle")]
+            public IActionResult CancleFriendRequest(
+                [FromHeader(Name = "trace-id")] int traceId,
+                [FromBody] FriendDTO friendDTO)
+            {
+                _friendService.CancleFriendAddRequest(traceId, friendDTO);
+
+                return Ok();
+            }
+
             [HttpDelete("delete")]
             public IActionResult DeleteFriend(
                 [FromHeader(Name = "trace-id")] int traceId,

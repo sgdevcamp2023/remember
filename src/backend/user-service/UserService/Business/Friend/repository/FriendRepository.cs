@@ -102,18 +102,29 @@ namespace user_service
                     string query = $"INSERT INTO friends (first_user_id, second_user_id) VALUES ({id}, {friendId})";
                     _db.ExecuteNonQuery(query);
 
-                    if (DeleteRequest(friendId, id))
+                    if(!DeleteRequest(friendId, id))
                         return false;
 
                     return true;
                 }
+                
+                public bool CancleFriendRequest(long id, long friendId)
+                {
+                    if (!_redis.GetListByKey(SendRequestKey + id).Contains(friendId.ToString()))
+                        return false;
 
+                    if(!DeleteRequest(id, friendId))
+                        return false;
+
+                    return true;
+                }
                 public bool RefuseFriendRequest(long id, long friendId)
                 {
                     if (!_redis.GetListByKey(ReceiveRequestKey + id).Contains(friendId.ToString()))
                         return false;
 
-
+                    if(!DeleteRequest(friendId, id))
+                        return false;
 
                     return true;
                 }
@@ -122,9 +133,6 @@ namespace user_service
                 {
                     string query = $"DELETE FROM friends WHERE (first_user_id = {id} AND second_user_id = {friendId}) OR (first_user_id = {friendId} AND second_user_id = {id})";
                     _db.ExecuteNonQuery(query);
-
-                    if (DeleteRequest(friendId, id))
-                        return false;
 
                     return true;
                 }

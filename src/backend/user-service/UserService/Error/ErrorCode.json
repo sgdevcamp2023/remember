@@ -100,6 +100,11 @@
         "description": "친구 거절에 실패하였습니다."
     },
     {
+        "code": 4020,
+        "message": "FAILED_REQUEST_CANCLE",
+        "description": "친구 요청 취소에 실패하였습니다."
+    },
+    {
         "code": 4100,
         "message": "INVALID_ACCESS_TOKEN",
         "description": "엑세스 토큰이 올바르지 않습니다."

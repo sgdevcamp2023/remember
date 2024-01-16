@@ -38,7 +38,7 @@ namespace user_service
                     return _friendRepository.ShowAllReceiveRequesttList(id);
                 }
 
-                public bool SendFriendAddRequest(long id, FriendDTO friend)
+                public void SendFriendAddRequest(long id, FriendDTO friend)
                 {
                     long friendId = GetFriendId(friend.FriendEmail);
 
@@ -47,28 +47,30 @@ namespace user_service
 
                     if(!_friendRepository.SendFriendRequest(id, friendId))
                         throw new ServiceException(4017); 
-
-                    return true;
                 }
 
-                public bool AcceptFriendAddRequest(long id, FriendDTO friend)
+                public void CancleFriendAddRequest(long id, FriendDTO friend)
+                {
+                    long friendId = GetFriendId(friend.FriendEmail);
+
+                    if(!_friendRepository.CancleFriendRequest(id, friendId))
+                        throw new ServiceException(4020);
+                }
+
+                public void AcceptFriendAddRequest(long id, FriendDTO friend)
                 {
                     long friendId = GetFriendId(friend.FriendEmail);
                     
                     if(!_friendRepository.AcceptFriendRequest(id, friendId))
                         throw new ServiceException(4018);
-                    
-                    return true;
                 }
 
-                public bool RefuseFriendAddRequest(long id, FriendDTO friend)
+                public void RefuseFriendAddRequest(long id, FriendDTO friend)
                 {
                     long friendId = GetFriendId(friend.FriendEmail);
 
                     if(!_friendRepository.RefuseFriendRequest(id, friendId))
                         throw new ServiceException(4019);
-                    
-                    return true;
                 }
 
                 public bool DeleteFriend(long id, FriendDTO friend)
