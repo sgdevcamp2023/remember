@@ -9,8 +9,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "emoji_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,8 +27,5 @@ public class EmojiUser {
     @JoinColumn(name = "emoji_id")
     private Emoji emoji;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    private Long userId;
 }

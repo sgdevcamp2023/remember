@@ -15,8 +15,10 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

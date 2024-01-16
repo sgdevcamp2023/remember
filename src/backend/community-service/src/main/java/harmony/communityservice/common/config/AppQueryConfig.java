@@ -1,5 +1,6 @@
 package harmony.communityservice.common.config;
 
+import harmony.communityservice.community.query.repository.BoardQueryRepository;
 import harmony.communityservice.community.query.repository.CategoryQueryRepository;
 import harmony.communityservice.community.query.repository.CategoryReadQueryRepository;
 import harmony.communityservice.community.query.repository.ChannelQueryRepository;
@@ -8,6 +9,7 @@ import harmony.communityservice.community.query.repository.GuildQueryRepository;
 import harmony.communityservice.community.query.repository.GuildReadQueryRepository;
 import harmony.communityservice.community.query.repository.UserQueryRepository;
 import harmony.communityservice.community.query.repository.UserReadQueryRepository;
+import harmony.communityservice.community.query.repository.impl.BoardQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.CategoryQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.CategoryReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.ChannelQueryRepositoryImpl;
@@ -16,6 +18,7 @@ import harmony.communityservice.community.query.repository.impl.GuildQueryReposi
 import harmony.communityservice.community.query.repository.impl.GuildReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.UserQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.UserReadQueryRepositoryImpl;
+import harmony.communityservice.community.query.repository.jpa.JpaBoardQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaCategoryQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaCategoryReadQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaChannelQueryRepository;
@@ -24,6 +27,7 @@ import harmony.communityservice.community.query.repository.jpa.JpaGuildQueryRepo
 import harmony.communityservice.community.query.repository.jpa.JpaGuildReadQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaUserQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaUserReadQueryRepository;
+import harmony.communityservice.community.query.service.BoardQueryService;
 import harmony.communityservice.community.query.service.CategoryQueryService;
 import harmony.communityservice.community.query.service.CategoryReadQueryService;
 import harmony.communityservice.community.query.service.ChannelQueryService;
@@ -32,6 +36,7 @@ import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.GuildReadQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
+import harmony.communityservice.community.query.service.impl.BoardQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.CategoryQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.CategoryReadQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.ChannelQueryServiceImpl;
@@ -56,6 +61,7 @@ public class AppQueryConfig {
     private final JpaCategoryQueryRepository jpaCategoryQueryRepository;
     private final JpaChannelReadQueryRepository jpaChannelReadQueryRepository;
     private final JpaChannelQueryRepository jpaChannelQueryRepository;
+    private final JpaBoardQueryRepository jpaBoardQueryRepository;
 
     @Bean
     public UserQueryRepository userQueryRepository() {
@@ -135,5 +141,15 @@ public class AppQueryConfig {
     @Bean
     public ChannelQueryService channelQueryService() {
         return new ChannelQueryServiceImpl(channelQueryRepository());
+    }
+
+    @Bean
+    public BoardQueryRepository boardQueryRepository() {
+        return new BoardQueryRepositoryImpl(jpaBoardQueryRepository);
+    }
+
+    @Bean
+    public BoardQueryService boardQueryService() {
+        return new BoardQueryServiceImpl(boardQueryRepository());
     }
 }

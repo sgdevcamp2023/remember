@@ -8,6 +8,7 @@ import harmony.communityservice.community.command.service.ImageCommandService;
 import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.domain.Channel;
 import harmony.communityservice.community.domain.UserRead;
+import harmony.communityservice.community.mapper.ToBoardMapper;
 import harmony.communityservice.community.query.service.ChannelQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import java.util.List;
@@ -31,13 +32,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         UserRead findUserRead = userReadQueryService.findUserReadIdAndGuildId(requestDto.getUserId(),
                 requestDto.getGuildId());
         Channel findChannel = channelQueryService.findChannelByChannelId(requestDto.getChannelId());
-        Board board = Board.builder()
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .channel(findChannel)
-                .userId(findUserRead.getUserId())
-                .writerName(findUserRead.getNickname())
-                .build();
+        Board board = ToBoardMapper.convert(requestDto, findUserRead, findChannel);
         boardCommandRepository.save(board);
         imageCommandService.saveImages(imageUrls, board);
     }

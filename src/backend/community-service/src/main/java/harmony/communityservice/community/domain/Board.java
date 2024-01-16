@@ -16,8 +16,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "board")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -79,5 +81,9 @@ public class Board {
         this.modified = false;
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
+    }
+
+    public int commentCount() {
+        return comments.size();
     }
 }
