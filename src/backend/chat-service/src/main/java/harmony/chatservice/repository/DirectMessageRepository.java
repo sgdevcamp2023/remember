@@ -8,4 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface DirectMessageRepository extends MongoRepository<DirectMessage, Long> {
 
     Page<DirectMessage> findByRoomIdAndDelCheckFalse(Long roomId, Pageable pageable);
+
+    Page<DirectMessage> findByParentIdAndDelCheckFalse(Long parentId, Pageable pageable);
 }

@@ -57,4 +57,11 @@ public class DirectMessageController {
         Page<DirectMessage> directMessages = messageService.getDirectMessages(roomId);
         return directMessages.map(DirectMessageDto::new);
     }
+
+    @GetMapping("/api/direct/comments/{parentId}")
+    public Page<DirectMessageDto> getComments(@PathVariable("parentId") Long parentId) {
+
+        Page<DirectMessage> messagePage = messageService.getComments(parentId);
+        return messagePage.map(DirectMessageDto::new);
+    }
 }
