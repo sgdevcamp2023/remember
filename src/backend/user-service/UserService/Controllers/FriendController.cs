@@ -21,19 +21,26 @@ namespace user_service
             {
                 _friendService = friendService;
             }
-            
+
             [HttpGet("list")]
             public List<UserDTO> GetFriendList(
                 [FromHeader(Name = "trace-id")] int traceId)
             {
                 return _friendService.GetFriendList(traceId);
             }
-            
-            [HttpGet("request/list")]
-            public List<UserDTO>? GetFriendRequestList(
+
+            [HttpGet("request/send-list")]
+            public List<UserDTO> GetFriendSendRequestList(
                 [FromHeader(Name = "trace-id")] int traceId)
             {
-                return _friendService.GetRequestListByUserId(traceId);
+                return _friendService.GetSendRequestList(traceId);
+            }
+
+            [HttpGet("request/receive-list")]
+            public List<UserDTO> GetFriendReceiveRequestList(
+               [FromHeader(Name = "trace-id")] int traceId)
+            {
+                return _friendService.GetReceiveRequestList(traceId);
             }
 
             [HttpPost("request/send")]
@@ -42,7 +49,7 @@ namespace user_service
                 [FromBody] FriendDTO friendDTO)
             {
                 _friendService.SendFriendAddRequest(traceId, friendDTO);
-                
+
                 return Ok();
             }
 
