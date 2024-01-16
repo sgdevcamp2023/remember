@@ -64,13 +64,14 @@ namespace user_service
                     return accessToken;
                 }
                 
-                public void DeleteToken(string id, string accessToken)
+                public void DeleteToken(string accessToken)
                 {
+                    string id = GetIdWithAccessToken(accessToken);
+
                     // 토큰 삭제 필요함
                     if(_redis.DeleteRefreshToken(id) == false)
                         throw new ServiceException(4014);
                     
-
                     if(_redis.InsertBlackListToken(
                                 accessToken, id.ToString(),
                                 new TimeSpan(0, 0, int.Parse(_config["JWT:AccessTokenValidityInSecond"]))) == false)
@@ -207,6 +208,19 @@ namespace user_service
                         throw new SecurityTokenException("Invalid token");
 
                     return principal;
+                }
+
+                private string GetIdWithAccessToken(string accessToken)
+                {
+                    var tokenPrincipal = GetPrincipalFromToken(accessToken);
+                    if (tokenPrincipal == null)
+                        throw new ServiceException(4101);
+                    
+                    string? id = tokenPrincipal.Identity?.Name;
+                    if (id == null)
+                        throw new ServiceException(4101);
+
+                    return id;
                 }
             }
         }

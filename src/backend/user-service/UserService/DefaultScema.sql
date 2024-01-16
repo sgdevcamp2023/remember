@@ -22,3 +22,16 @@ CREATE TABLE friends (
 );
 
 DROP TABLE friends, users;
+
+INSERT INTO users (email, password, name, profile) VALUES ('asdfae@aasdfa213.com', 'asdfasdf', 'asdfasdf', 'asdfasdf');
+INSERT INTO users (email, password, name, profile) VALUES ('afdc234@aasdfa213.com', 'asdfasdf', 'asdfasdf', 'asdfasdf');
+INSERT INTO users (email, password, name, profile) VALUES ('dignrnfjrl12@aasdfa213.com', 'asdfasdf', 'asdfasdf', 'asdfasdf');
+INSERT INTO users (email, password, name, profile) VALUES ('dicunnekr@aasdfa213.com', 'asdfasdf', 'asdfasdf', 'asdfasdf');
+INSERT INTO users (email, password, name, profile) VALUES ('naruto1234@aasdfa213.com', 'asdfasdf', 'asdfasdf', 'asdfasdf');
+INSERT INTO users (email, password, name, profile) VALUES ('duucnkf@aasdfa213.com', 'asdfasdf', 'asdfasdf', 'asdfasdf');
+
+SELECT * FROM users;
+
+SELECT * FROM users WHERE id IN (SELECT first_user_id FROM friends WHERE second_user_id = 1 UNION SELECT second_user_id FROM friends WHERE first_user_id = 1);
+
+SELECT * FROM friends WHERE (first_user_id = 1 AND second_user_id = 1) OR (first_user_id = 1 AND second_user_id = 1);

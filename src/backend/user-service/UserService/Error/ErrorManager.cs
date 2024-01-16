@@ -9,13 +9,13 @@ namespace user_service
     {
         public static class ErrorManager
         {
-            public static Dictionary<int, ErrorCode> ErrorCode { get; private set; } = null!;
+            public static Dictionary<int, ErrorCodeModel> ErrorCode { get; private set; } = null!;
             private readonly static string _authPath = @"Error\ErrorCodes.json";
 
             public static void Init()
             {
-                ErrorCode = new Dictionary<int, ErrorCode>();
-                var json = JsonSerializer.Deserialize<List<ErrorCode>>(File.ReadAllText(_authPath));
+                ErrorCode = new Dictionary<int, ErrorCodeModel>();
+                var json = JsonSerializer.Deserialize<List<ErrorCodeModel>>(File.ReadAllText(_authPath));
                 if(json == null)
                     return;
                 foreach (var item in json)

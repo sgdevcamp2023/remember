@@ -55,14 +55,13 @@ namespace user_service
 
                 return Ok();
             }
-            
+
             [filter.TraceIdCheckFilter]
             [HttpPost("logout")]
             public IActionResult Logout(
-                [FromHeader(Name =("trace-id"))] string id,
                 [FromHeader(Name = "Authorization")] string accessToken)
             {
-                _jwtService.DeleteToken(id, accessToken.Split(" ")[1]);
+                _jwtService.DeleteToken(accessToken);
 
                 return Ok();
             }

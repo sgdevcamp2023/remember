@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
+using user_service.auth.exception;
+using user_service.common.exception;
 
 namespace user_service
 {
@@ -8,12 +10,13 @@ namespace user_service
         {
             public override void OnActionExecuted(ActionExecutedContext context)
             {
-                if(context.HttpContext.Request.Headers.ContainsKey("trace-id") == false)
-                    throw new Exception("Trace id is required");
+
             }
 
             public override void OnActionExecuting(ActionExecutingContext context)
             {
+                if(context.HttpContext.Request.Headers.ContainsKey("trace-id") == false)
+                    throw new ServiceException(4200);
             }
         }
     }

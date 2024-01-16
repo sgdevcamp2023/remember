@@ -65,7 +65,7 @@ namespace user_service
                 {
                     _logger.Log(e.Message);
 
-                    throw new user_service.common.exception.SqlException(query);
+                    throw new user_service.common.exception.SqlException(e.Message);
                 }
             }
 
@@ -81,7 +81,7 @@ namespace user_service
                 {
                     _logger.Log(e.Message);
 
-                    throw new user_service.common.exception.SqlException(query);
+                    throw new user_service.common.exception.SqlException(e.Message);
                 }
             }
         }

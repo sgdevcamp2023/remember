@@ -95,6 +95,11 @@
         "description": "친구 수락에 실패하였습니다."
     },
     {
+        "code": 4019,
+        "message": "FAILED_REQUEST_REFUSE",
+        "description": "친구 거절에 실패하였습니다."
+    },
+    {
         "code": 4100,
         "message": "INVALID_ACCESS_TOKEN",
         "description": "엑세스 토큰이 올바르지 않습니다."
@@ -123,5 +128,15 @@
         "code": 4105,
         "message": "EXPIRED_ACCESS_TOKEN",
         "description": "엑세스 토큰이 만료되었습니다."
+    },
+    {
+        "code": 4106,
+        "message": "REQUIRED_ACCESS_TOKEN",
+        "description": "엑세스 토큰은 필수 입력입니다."
+    },
+    {
+        "code": 4200,
+        "message": "REQUIRED_TRACE_ID",
+        "description": "Trace ID는 필수 입력입니다."
     }
 ]

@@ -49,6 +49,8 @@ namespace user_service
                 System.Console.WriteLine("InvalidModelStateResponseFactory");
                 // 있는지 체크?
                 var errorList = context.ModelState.Values.SelectMany(x => x.Errors.Select(m => m.ErrorMessage)).ToArray();
+                if(errorList[0].Contains("accessToken"))
+                    return ErrorManager.GetErrorCodeResult(4106);
                 int.TryParse(errorList[0], out int errorCode);
                 if (errorCode != 0)
                     return ErrorManager.GetErrorCodeResult(errorCode);
