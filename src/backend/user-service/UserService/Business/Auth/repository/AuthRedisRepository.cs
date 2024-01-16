@@ -13,14 +13,12 @@ namespace user_service
             public class AuthRedisRepository : IAuthRedisRepository
             {
                 private RedisConnectionManager _redisConnectionManager;
-                private IBaseLogger _logger;
                 private string RefreshKey = $"Refresh ";
                 private string ChecksumKey = $"Checksum ";
                 private string BlackListKey = $"BlackList ";
-                public AuthRedisRepository(RedisConnectionManager redisConnectionManager, IBaseLogger logger)
+                public AuthRedisRepository(RedisConnectionManager redisConnectionManager)
                 {
                     _redisConnectionManager = redisConnectionManager;
-                    _logger = logger;
                 }
 
                 public bool InsertRedis(string key, string value, TimeSpan? expiry = null)

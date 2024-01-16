@@ -110,6 +110,7 @@ namespace user_service
                 {
                     if (_userRepository.IsEmailExist(email))
                     {
+                        _logger.Log("Same Email");
                         throw new ServiceException(4009);
                     }
                 }

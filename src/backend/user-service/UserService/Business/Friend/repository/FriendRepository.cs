@@ -12,7 +12,6 @@ namespace user_service
             {
                 private RedisConnectionManager _redis;
                 private DbConnectionManager _db;
-                // 
                 private string SendRequestKey = "my send request ";
                 private string ReceiveRequestKey = "my receive request";
                 public FriendRepository(RedisConnectionManager redisConnectionManager,
