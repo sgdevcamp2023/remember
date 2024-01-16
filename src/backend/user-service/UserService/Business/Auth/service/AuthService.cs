@@ -19,16 +19,13 @@ namespace user_service
         {
             public class AuthService
             {
-                private readonly IBaseLogger _logger;
                 private readonly IUserRepository _userRepository;
                 private IAuthRedisRepository _redis = null!;
                 private IConfiguration _config = null!;
-                public AuthService(IBaseLogger logger,
-                                IUserRepository userRepository,
+                public AuthService(IUserRepository userRepository,
                                 IAuthRedisRepository redisRepository,
                                 IConfiguration config)
                 {
-                    _logger = logger;
                     _userRepository = userRepository;
                     _redis = redisRepository;
                     _config = config;
@@ -67,9 +64,9 @@ namespace user_service
 
                         _redis.InsertEmailAndChecksum(email, checksum.ToString(), new TimeSpan(0, 0, int.Parse(_config["Mail:ExpiredTime"])));
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        _logger.Log(e.Message);
+                        // _logger.Log(e.Message);
 
                         throw new ServiceException(4011);
                     }
@@ -77,7 +74,7 @@ namespace user_service
 
                 public void SendMailResetPassword(string email)
                 {
-                    if(_userRepository.IsEmailExist(email) == true)
+                    if (_userRepository.IsEmailExist(email) == true)
                     {
                         string resetPassword = Utils.GenerateRandomPassword();
 
@@ -88,7 +85,7 @@ namespace user_service
                         message.Body = new TextPart("plain") { Text = $"Reset Password : {resetPassword}" };
 
                         SendEMail(message);
-                        
+
                         _userRepository.UpdatePassword(email, Utils.SHA256Hash(resetPassword.ToString()));
                     }
                     else
@@ -110,7 +107,7 @@ namespace user_service
                 {
                     if (_userRepository.IsEmailExist(email))
                     {
-                        _logger.Log("Same Email");
+                        // _logger.Log("Same Email");
                         throw new ServiceException(4009);
                     }
                 }
@@ -128,9 +125,9 @@ namespace user_service
                             client.Disconnect(true);
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        _logger.Log(e.Message);
+                        // _logger.Log(e.Message);
 
                         throw new ServiceException(4011);
                     }

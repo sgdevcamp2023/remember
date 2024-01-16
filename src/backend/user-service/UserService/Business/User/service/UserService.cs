@@ -13,7 +13,6 @@ namespace user_service
             public class UserService
             {
                 private IUserRepository _userRepository;
-
                 public UserService(IUserRepository userRepository)
                 {
                     _userRepository = userRepository;

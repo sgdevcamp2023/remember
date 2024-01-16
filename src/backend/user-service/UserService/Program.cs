@@ -5,6 +5,7 @@ using user_service.error;
 using user_service.friend.repository;
 using user_service.friend.service;
 using user_service.logger;
+using user_service.middleware;
 using user_service.user.service;
 
 ErrorManager.Init();
@@ -51,6 +52,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<LoggerMiddleware>();
 
 app.UseExceptionHandler(exceptionHandlerApp =>
 {

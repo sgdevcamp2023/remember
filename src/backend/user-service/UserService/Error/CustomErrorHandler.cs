@@ -24,11 +24,11 @@ namespace user_service
                         if(context.Response.Headers.TryGetValue("Authorization", out var value))
                             context.Response.Headers.Remove("Authorization");
                         context.Response.Headers.Add("Authorization", $"Bearer {tokenException.tokenDTO.AccessToken}");
-                        HttpBadRequest(context, tokenException.errorCode);
+                        HttpBadRequest(context, tokenException.ErrorCode);
                     }
                     else if (exception is ServiceException serviceException)
                     {
-                        HttpBadRequest(context, serviceException.errorCode);
+                        HttpBadRequest(context, serviceException.ErrorCode);
                     }
                     else if (exception is RedisException redisException)
                     {

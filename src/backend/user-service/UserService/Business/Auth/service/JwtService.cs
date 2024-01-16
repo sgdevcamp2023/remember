@@ -22,16 +22,13 @@ namespace user_service
                 private IConfiguration _config;
                 private IAuthRedisRepository _redis;
                 private IUserRepository _userRepository;
-                private IBaseLogger _logger;
                 public JwtService(IConfiguration config,
                                 IAuthRedisRepository redisRepository,
-                                IUserRepository userRepository,
-                                IBaseLogger logger)
+                                IUserRepository userRepository)
                 {
                     _config = config;
                     _redis = redisRepository;
                     _userRepository = userRepository;
-                    _logger = logger;
                 }
 
                 public string RefreshToken(TokenDTO dto)

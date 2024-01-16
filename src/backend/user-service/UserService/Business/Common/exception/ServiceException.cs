@@ -1,3 +1,5 @@
+using user_service.logger;
+
 namespace user_service
 {
     namespace common
@@ -6,15 +8,15 @@ namespace user_service
         {
             public class ServiceException : Exception
             {
-                public int errorCode;
+                public int ErrorCode { get; set; }
                 public ServiceException(int errorCode) : base("Service Exception")
                 {
-                    this.errorCode = errorCode;
+                    ErrorCode = errorCode;
                 }
 
                 public override string ToString()
                 {
-                    string str = $"Exception {errorCode} : {Message}";
+                    string str = $"Exception {ErrorCode} : {Message}";
                     return str;
                 }
             }
