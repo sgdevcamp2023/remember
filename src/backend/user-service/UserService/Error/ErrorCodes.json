@@ -90,6 +90,11 @@
         "description": "이미 친구 요청을 보낸 유저입니다."
     },
     {
+        "code": 4018,
+        "message": "FAILED_REQUEST_ACCEPT",
+        "description": "친구 수락에 실패하였습니다."
+    },
+    {
         "code": 4100,
         "message": "INVALID_ACCESS_TOKEN",
         "description": "엑세스 토큰이 올바르지 않습니다."

@@ -40,9 +40,7 @@ namespace user_service
 
                 public bool SendFriendAddRequest(long id, FriendDTO friend)
                 {
-                    long friendId = _friendRepository.GetFriendId(friend.FriendEmail);
-                    if(friendId == 0)
-                        throw new ServiceException(4007);
+                    long friendId = GetFriendId(friend.FriendEmail);
 
                     if(_friendRepository.CheckAlreadyFriend(id, friendId))
                         throw new ServiceException(4016);
@@ -55,20 +53,37 @@ namespace user_service
 
                 public bool AcceptFriendAddRequest(long id, FriendDTO friend)
                 {
-                    long friendId = _friendRepository.GetFriendId(friend.FriendEmail);
+                    long friendId = GetFriendId(friend.FriendEmail);
+                    
+                    if(_friendRepository.AcceptFriendRequest(id, friendId))
+                        throw new ServiceException(4018);
+                    
                     return true;
                 }
 
                 public bool RefuseFriendAddRequest(long id, FriendDTO friend)
                 {
+                    long friendId = GetFriendId(friend.FriendEmail);
+
+                    if(_friendRepository.RefuseFriendRequest(id, friendId))
+                        throw new ServiceException(4019);
+                    
                     return true;
                 }
 
                 public bool DeleteFriend(long id, FriendDTO friend)
                 {
-                    // return _friendRepository.DeleteFriend(id);
+                    long friendId = GetFriendId(friend.FriendEmail);
 
-                    return true;
+                    return _friendRepository.DeleteFriend(id, friendId);
+                }
+
+                private long GetFriendId(string email)
+                {
+                    long friendId = _friendRepository.GetFriendId(email);
+                    if(friendId == 0)
+                        throw new ServiceException(4007);
+                    return friendId;
                 }
             }
         }

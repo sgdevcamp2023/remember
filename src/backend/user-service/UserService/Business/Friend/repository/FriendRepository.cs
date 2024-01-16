@@ -14,7 +14,7 @@ namespace user_service
                 private DbConnectionManager _db;
                 // 
                 private string SendRequestKey = "my send request ";
-                private string ReceiveReuqsetKey = "my receive request";
+                private string ReceiveRequestKey = "my receive request";
                 public FriendRepository(RedisConnectionManager redisConnectionManager,
                                         DbConnectionManager dbConnectionManager)
                 {
@@ -35,7 +35,7 @@ namespace user_service
 
                 public bool CheckAlreadyFriend(long id, long friendId)
                 {
-                    string query = $"SELECT * FROM friends WHERE first_user_id = {id} AND second_user_id = {friendId} OR first_user_id = {friendId} AND second_user_id = {id}";
+                    string query = $"SELECT * FROM friends WHERE (first_user_id = {id} AND second_user_id = {friendId}) OR (first_user_id = {friendId} AND second_user_id = {id})";
                     var reader = _db.ExecuteReader(query);
                     if(reader.Read())
                         return true;
@@ -61,7 +61,7 @@ namespace user_service
                 
                 public List<UserDTO> ShowAllReceiveRequesttList(long id)
                 {
-                    List<string> receiveRequestList = _redis.GetListByKey(ReceiveReuqsetKey + id);
+                    List<string> receiveRequestList = _redis.GetListByKey(ReceiveRequestKey + id);
                     if (receiveRequestList.Count == 0)
                         return new List<UserDTO>();
 
@@ -82,7 +82,7 @@ namespace user_service
                     if(_redis.GetListByKey(SendRequestKey + id).Contains(friendId.ToString()))
                         return false;
                     
-                    _redis.InsertList(ReceiveReuqsetKey + friendId, id.ToString());
+                    _redis.InsertList(ReceiveRequestKey + friendId, id.ToString());
                     _redis.InsertList(SendRequestKey + id, friendId.ToString());
                     
                     return true;
@@ -91,22 +91,32 @@ namespace user_service
                 public bool AcceptFriendRequest(long id, long friendId)
                 {
                     // 레디스에서 체크
-
+                    if(_redis.GetListByKey(ReceiveRequestKey + id).Contains(friendId.ToString()))
+                        return false;
 
                     string query = $"INSERT INTO friend (first_user_id, second_user_id) VALUES ({id}, {friendId})";
                     _db.ExecuteNonQuery(query);
+
+                    _redis.DeleteList(ReceiveRequestKey + id, friendId.ToString());
+                    _redis.DeleteList(SendRequestKey + friendId, id.ToString());
                     
                     return true;
                 }
 
                 public bool RefuseFriendRequest(long id, long friendId)
                 {
+                    if(_redis.GetListByKey(ReceiveRequestKey + id).Contains(friendId.ToString()))
+                        return false;
+                    
+                    _redis.DeleteList(ReceiveRequestKey + id, friendId.ToString());
+                    _redis.DeleteList(SendRequestKey + friendId, id.ToString());
+
                     throw new NotImplementedException();
                 }
 
-                public bool DeleteFriend(long id)
+                public bool DeleteFriend(long id, long friendId)
                 {
-                    string query = $"DELETE FROM friend WHERE first_user_id = {id} OR second_user_id = {id}";
+                    string query = $"SELECT * FROM friends WHERE (first_user_id = {id} AND second_user_id = {friendId}) OR (first_user_id = {friendId} AND second_user_id = {id})";
                     _db.ExecuteNonQuery(query);
 
                     return true;
