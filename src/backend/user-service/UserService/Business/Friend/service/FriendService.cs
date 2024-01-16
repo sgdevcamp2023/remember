@@ -28,9 +28,14 @@ namespace user_service
                     return _friendRepository.GetFriendList(id);
                 }
 
-                public List<UserDTO>? GetRequestListByUserId(long id)
+                public List<UserDTO> GetSendRequestList(long id)
                 {
-                    return _friendRepository.ShowAllFriendRequestList(id);
+                    return _friendRepository.ShowAllSendRequestList(id);
+                }
+
+                public List<UserDTO> GetReceiveRequestList(long id)
+                {
+                    return _friendRepository.ShowAllReceiveRequesttList(id);
                 }
 
                 public bool SendFriendAddRequest(long id, FriendDTO friend)
@@ -44,12 +49,13 @@ namespace user_service
 
                     if(!_friendRepository.SendFriendRequest(id, friendId))
                         throw new ServiceException(4017);
-                    
+
                     return true;
                 }
 
                 public bool AcceptFriendAddRequest(long id, FriendDTO friend)
                 {
+                    long friendId = _friendRepository.GetFriendId(friend.FriendEmail);
                     return true;
                 }
 

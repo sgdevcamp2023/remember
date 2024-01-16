@@ -50,22 +50,27 @@ namespace user_service
                     return MakeListUserDTO(reader);
                 }
 
-                
-                public List<UserDTO>? ShowAllFriendRequestList(long id)
+                public List<UserDTO> ShowAllSendRequestList(long id)
                 {
-                    string emailGetQuery = $"SELECT email FROM users WHERE id = {id}";
-                    var emailReader = _db.ExecuteReader(emailGetQuery);
+                    List<string> sendRequestList = _redis.GetListByKey(SendRequestKey + id);
+                    if (sendRequestList.Count == 0)
+                        return new List<UserDTO>();
+                    
+                    return GetUserDTOList(sendRequestList);
+                }
+                
+                public List<UserDTO> ShowAllReceiveRequesttList(long id)
+                {
+                    List<string> receiveRequestList = _redis.GetListByKey(ReceiveReuqsetKey + id);
+                    if (receiveRequestList.Count == 0)
+                        return new List<UserDTO>();
 
-                    if(!emailReader.Read())
-                        return null;
+                    return GetUserDTOList(receiveRequestList);
+                }
 
-                    string email = emailReader.GetString(emailReader.GetOrdinal("email"));
-
-                    List<string> friendRequestList = _redis.GetListByKey(email);
-                    if (friendRequestList.Count == 0)
-                        return null;
-
-                    string query = $"SELECT * FROM users WHERE ID IN ({string.Join(' ', friendRequestList)})";
+                private List<UserDTO> GetUserDTOList(List<string> uers)
+                {
+                    string query = $"SELECT * FROM users WHERE ID IN ({string.Join(' ', uers)})";
                     var reader = _db.ExecuteReader(query);
 
                     return MakeListUserDTO(reader);
@@ -76,7 +81,7 @@ namespace user_service
                     // 존재하는 유저인지 체크
                     if(_redis.GetListByKey(SendRequestKey + id).Contains(friendId.ToString()))
                         return false;
-                        
+                    
                     _redis.InsertList(ReceiveReuqsetKey + friendId, id.ToString());
                     _redis.InsertList(SendRequestKey + id, friendId.ToString());
                     
@@ -85,8 +90,13 @@ namespace user_service
 
                 public bool AcceptFriendRequest(long id, long friendId)
                 {
-                    // string query = $"INSERT INTO friend "
-                    throw new NotImplementedException();
+                    // 레디스에서 체크
+
+
+                    string query = $"INSERT INTO friend (first_user_id, second_user_id) VALUES ({id}, {friendId})";
+                    _db.ExecuteNonQuery(query);
+                    
+                    return true;
                 }
 
                 public bool RefuseFriendRequest(long id, long friendId)
@@ -112,7 +122,6 @@ namespace user_service
 
                     return list;
                 }
-
 
                 private UserDTO MakeUserDTO(IDataReader reader)
                 {
