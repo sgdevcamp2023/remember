@@ -12,7 +12,7 @@ server:
         port: 3000
       filter_chains:
         - filters:
-        route_config:
+        route_config: 
           - services: [user_service, community_service, chat_service]
 
 # true, false로 특정 API authorization 체크 하고

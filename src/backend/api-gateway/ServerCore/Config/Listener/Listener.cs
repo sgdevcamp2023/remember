@@ -9,6 +9,4 @@ namespace ServerCore
         public CustomFilter? CustomFilter { get; set; }
         public Authorization? Authorization { get; set; }
     }
-
-
 }

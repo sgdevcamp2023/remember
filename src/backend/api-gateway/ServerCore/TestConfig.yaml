@@ -7,16 +7,14 @@ listeners:
   route-config:
     services:
     - user-service
-    - community-service
-    - chat-service
     - auth-service
   authorization:
     type: JWT
-    jwt-validator:
+      jwt-validator:
       cluster-name: auth-service
       url: /api/user/auth/validate-token
       success-status: 
-        - 200
+        - "200"
 
 clusters:
 - services:
@@ -26,6 +24,9 @@ clusters:
       address: 127.0.0.1
       port: 5000
     prefix: /api/user/auth
+    custom-filter:
+      name: CustomFilter
+      path: /ApiGateway/CustomFilter.cs
     connect-timeout: 5s
     authorization: false
 
