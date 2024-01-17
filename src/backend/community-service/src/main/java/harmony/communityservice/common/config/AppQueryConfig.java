@@ -6,6 +6,7 @@ import harmony.communityservice.community.query.repository.CategoryReadQueryRepo
 import harmony.communityservice.community.query.repository.ChannelQueryRepository;
 import harmony.communityservice.community.query.repository.ChannelReadQueryRepository;
 import harmony.communityservice.community.query.repository.CommentQueryRepository;
+import harmony.communityservice.community.query.repository.EmojiQueryRepository;
 import harmony.communityservice.community.query.repository.GuildQueryRepository;
 import harmony.communityservice.community.query.repository.GuildReadQueryRepository;
 import harmony.communityservice.community.query.repository.UserQueryRepository;
@@ -16,6 +17,7 @@ import harmony.communityservice.community.query.repository.impl.CategoryReadQuer
 import harmony.communityservice.community.query.repository.impl.ChannelQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.ChannelReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.CommentQueryRepositoryImpl;
+import harmony.communityservice.community.query.repository.impl.EmojiQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.GuildQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.GuildReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.UserQueryRepositoryImpl;
@@ -26,6 +28,7 @@ import harmony.communityservice.community.query.repository.jpa.JpaCategoryReadQu
 import harmony.communityservice.community.query.repository.jpa.JpaChannelQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaChannelReadQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaCommentQueryRepository;
+import harmony.communityservice.community.query.repository.jpa.JpaEmojiQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaGuildQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaGuildReadQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaUserQueryRepository;
@@ -36,6 +39,7 @@ import harmony.communityservice.community.query.service.CategoryReadQueryService
 import harmony.communityservice.community.query.service.ChannelQueryService;
 import harmony.communityservice.community.query.service.ChannelReadQueryService;
 import harmony.communityservice.community.query.service.CommentQueryService;
+import harmony.communityservice.community.query.service.EmojiQueryService;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.GuildReadQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
@@ -46,6 +50,7 @@ import harmony.communityservice.community.query.service.impl.CategoryReadQuerySe
 import harmony.communityservice.community.query.service.impl.ChannelQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.ChannelReadQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.CommentQueryServiceImpl;
+import harmony.communityservice.community.query.service.impl.EmojiQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.GuildQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.GuildReadQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.UserQueryServiceImpl;
@@ -68,6 +73,7 @@ public class AppQueryConfig {
     private final JpaChannelQueryRepository jpaChannelQueryRepository;
     private final JpaBoardQueryRepository jpaBoardQueryRepository;
     private final JpaCommentQueryRepository jpaCommentQueryRepository;
+    private final JpaEmojiQueryRepository jpaEmojiQueryRepository;
 
     @Bean
     public UserQueryRepository userQueryRepository() {
@@ -167,5 +173,15 @@ public class AppQueryConfig {
     @Bean
     public CommentQueryService commentQueryService() {
         return new CommentQueryServiceImpl(commentQueryRepository());
+    }
+
+    @Bean
+    public EmojiQueryRepository emojiQueryRepository() {
+        return new EmojiQueryRepositoryImpl(jpaEmojiQueryRepository);
+    }
+
+    @Bean
+    public EmojiQueryService emojiQueryService() {
+        return new EmojiQueryServiceImpl(emojiQueryRepository());
     }
 }

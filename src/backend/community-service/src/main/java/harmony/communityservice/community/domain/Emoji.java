@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,4 +36,10 @@ public class Emoji {
 
     @OneToMany(mappedBy = "emoji", fetch = FetchType.LAZY)
     private List<EmojiUser> emojiUsers;
+
+    @Builder
+    public Emoji(Board board, Long emojiType) {
+        this.board = board;
+        this.emojiType = emojiType;
+    }
 }
