@@ -8,6 +8,7 @@ import harmony.communityservice.community.command.service.BoardCommandService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,13 +35,13 @@ public class BoardCommandController {
     }
 
     @PatchMapping("/change/board")
-    public BaseResponse<?> change(@RequestBody BoardUpdateRequestDto boardUpdateRequestDto) {
+    public BaseResponse<?> change(@RequestBody @Validated BoardUpdateRequestDto boardUpdateRequestDto) {
         boardCommandService.update(boardUpdateRequestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/board")
-    public BaseResponse<?> delete(@RequestBody BoardDeleteRequestDto requestDto) {
+    public BaseResponse<?> delete(@RequestBody @Validated BoardDeleteRequestDto requestDto) {
         boardCommandService.delete(requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }

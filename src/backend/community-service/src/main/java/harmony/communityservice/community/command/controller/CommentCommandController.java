@@ -6,6 +6,8 @@ import harmony.communityservice.community.command.dto.CommentUpdateRequestDto;
 import harmony.communityservice.community.command.service.CommentCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +22,7 @@ public class CommentCommandController {
     private final CommentCommandService commentCommandService;
 
     @PostMapping("/registration/board/comment")
-    public BaseResponse<?> registration(@RequestBody CommentRegistrationRequestDto requestDto) {
+    public BaseResponse<?> registration(@RequestBody @Validated CommentRegistrationRequestDto requestDto) {
 
         commentCommandService.save(requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(),"OK");
@@ -28,7 +30,7 @@ public class CommentCommandController {
     }
 
     @PatchMapping("/change/comment")
-    public BaseResponse<?> update(@RequestBody CommentUpdateRequestDto requestDto) {
+    public BaseResponse<?> update(@RequestBody @Validated CommentUpdateRequestDto requestDto) {
         commentCommandService.updateComment(requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
