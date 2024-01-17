@@ -1,0 +1,50 @@
+# 파일 설정
+error_log: /var/log/error.log
+
+# Accept 포트 설정
+# Listener 에서 기본 필터 설정
+server:
+  - listener:
+    - name: listner_1
+      protocol: http
+      address:
+        address: 0.0.0.0
+        port: 3000
+      filter_chains:
+        - filters:
+        route_config: 
+          - services: [user_service, community_service, chat_service]
+
+# true, false로 특정 API authorization 체크 하고
+# trace-id로 값 판별
+# 서비스 등록
+clusters:
+  - name: user_service
+    protocol: http
+    address:
+      address: 127.0.0.1
+      port: 5000
+    prefix: /api/user/
+    custom_filter:
+      - name: authorization
+        path: 
+    connect_timeout: 5s
+  - name: community_service
+    protocol: http
+    address:
+      address: 127.0.0.1
+      port: 4000
+    prefix: /api/community/
+    custom_filter: false
+    connect_timeout: 5s
+  - name: chat_service
+    protocol: http
+    address:
+      address: 127.0.0.1
+      port: 4000
+    prefix: /api/community/
+    custom_filter:
+
+    connect_timeout: 5s
+# API prefix 마다 필터 커스텀 설정
+# 특정 요청의 GET POST DELETE PUT PATCH 등 선택해서 차단 필터
