@@ -14,4 +14,9 @@ public class EmojiUserCommandRepositoryImpl implements EmojiUserCommandRepositor
     public void save(EmojiUser emojiUser) {
         jpaEmojiUserCommandRepository.save(emojiUser);
     }
+
+    @Override
+    public void delete(EmojiUser emojiUser) {
+        jpaEmojiUserCommandRepository.delete(emojiUser);
+    }
 }

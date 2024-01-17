@@ -8,4 +8,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface EmojiQueryService {
     Emoji findByBoardAndEmojiType(Board board, Long emojiType);
 
+    Emoji findById(Long emojiId);
 }

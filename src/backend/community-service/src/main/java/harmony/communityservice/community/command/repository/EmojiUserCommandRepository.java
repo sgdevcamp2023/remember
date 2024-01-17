@@ -4,4 +4,6 @@ import harmony.communityservice.community.domain.EmojiUser;
 
 public interface EmojiUserCommandRepository {
     void save(EmojiUser emojiUser);
+
+    void delete(EmojiUser emojiUser);
 }

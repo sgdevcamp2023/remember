@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface EmojiQueryRepository {
     Optional<Emoji> findByBoardAndEmojiType(Board board, Long emojiType);
+
+    Optional<Emoji> findByEmojiId(Long emojiId);
 }

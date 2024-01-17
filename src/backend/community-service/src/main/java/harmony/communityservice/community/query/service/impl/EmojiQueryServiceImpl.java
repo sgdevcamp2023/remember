@@ -15,4 +15,9 @@ public class EmojiQueryServiceImpl implements EmojiQueryService {
     public Emoji findByBoardAndEmojiType(Board board, Long emojiType) {
         return emojiQueryRepository.findByBoardAndEmojiType(board,emojiType).orElse(null);
     }
+
+    @Override
+    public Emoji findById(Long emojiId) {
+        return emojiQueryRepository.findByEmojiId(emojiId).orElseThrow();
+    }
 }

@@ -16,4 +16,9 @@ public class EmojiQueryRepositoryImpl implements EmojiQueryRepository {
     public Optional<Emoji> findByBoardAndEmojiType(Board board, Long emojiType) {
         return jpaEmojiQueryRepository.findEmojiByBoardAndEmojiType(board, emojiType);
     }
+
+    @Override
+    public Optional<Emoji> findByEmojiId(Long emojiId) {
+        return jpaEmojiQueryRepository.findById(emojiId);
+    }
 }

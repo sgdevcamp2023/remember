@@ -17,4 +17,9 @@ public class EmojiUserCommandServiceImpl implements EmojiUserCommandService {
         EmojiUser emojiUser = ToEmojiUserMapper.convert(emoji, userId);
         emojiUserCommandRepository.save(emojiUser);
     }
+
+    @Override
+    public void delete(EmojiUser emojiUser) {
+        emojiUserCommandRepository.delete(emojiUser);
+    }
 }

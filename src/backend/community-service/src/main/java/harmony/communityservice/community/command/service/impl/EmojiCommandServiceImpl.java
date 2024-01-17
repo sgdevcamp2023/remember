@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.community.command.dto.EmojiDeleteRequestDto;
 import harmony.communityservice.community.command.dto.EmojiRegistrationRequestDto;
 import harmony.communityservice.community.command.repository.EmojiCommandRepository;
 import harmony.communityservice.community.command.service.EmojiCommandService;
@@ -30,6 +31,15 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
         } else {
             existsEmoji(emojiRegistrationRequestDto, findEmoji);
         }
+    }
+
+    @Override
+    public void delete(EmojiDeleteRequestDto requestDto) {
+        Emoji findEmoji = emojiQueryService.findById(requestDto.getEmojiId());
+        findEmoji.getEmojiUsers().stream()
+                .filter(emojiUser -> Objects.equals(emojiUser.getUserId(), requestDto.getUserId()))
+                .findAny()
+                .ifPresent(emojiUserCommandService::delete);
     }
 
     private void existsEmoji(EmojiRegistrationRequestDto emojiRegistrationRequestDto, Emoji findEmoji) {
