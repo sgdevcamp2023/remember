@@ -8,5 +8,6 @@ namespace ServerCore
         public RouteConfig RouteConfig { get; set; } = null!;
         public CustomFilter? CustomFilter { get; set; }
         public Authorization? Authorization { get; set; }
+        
     }
 }
