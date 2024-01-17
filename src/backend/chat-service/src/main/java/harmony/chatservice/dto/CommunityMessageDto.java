@@ -2,6 +2,8 @@ package harmony.chatservice.dto;
 
 import harmony.chatservice.domain.CommunityMessage;
 import java.time.LocalDateTime;
+import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +24,9 @@ public class CommunityMessageDto {
     private String message;
     private LocalDateTime createdAt;
     private boolean delCheck;
+    private List<String> files;
 
+    @Builder
     public CommunityMessageDto(CommunityMessage message) {
         this.messageId = message.getMessageId();
         this.guildId = message.getGuildId();
@@ -35,5 +39,6 @@ public class CommunityMessageDto {
         this.message = message.getMessage();
         this.createdAt = message.getCreatedAt();
         this.delCheck = message.isDelCheck();
+        this.files = message.getFiles();
     }
 }

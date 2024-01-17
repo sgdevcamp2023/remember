@@ -1,6 +1,7 @@
 package harmony.chatservice.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,8 +50,13 @@ public class CommunityMessage extends BaseModel {
     @Field
     private boolean delCheck;
 
+    @Field
+    private List<String> files;
+
     @Builder
-    public CommunityMessage(Long guildId, Long channelId, Long userId, Long parentId, String profileImage, String type, String senderName, String message, boolean delCheck) {
+    public CommunityMessage(Long guildId, Long channelId, Long userId, Long parentId, String profileImage, String type,
+                            String senderName, String message, boolean delCheck, List<String> files) {
+
         this.guildId = guildId;
         this.channelId = channelId;
         this.userId = userId;
@@ -60,6 +66,7 @@ public class CommunityMessage extends BaseModel {
         this.senderName = senderName;
         this.message = message;
         this.delCheck = delCheck;
+        this.files = files;
     }
 
     public void modify(String message, String type) {

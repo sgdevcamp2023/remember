@@ -39,6 +39,7 @@ public class CommunityMessageService {
                 .senderName(messageRequest.getSenderName())
                 .message(messageRequest.getMessage())
                 .delCheck(false)
+                .files(null)
                 .build();
 
         communityMessage.setMessageId(sequenceGeneratorService.generateSequence(CommunityMessage.SEQUENCE_NAME));
@@ -85,5 +86,26 @@ public class CommunityMessageService {
         sorts.add(Sort.Order.desc("createdAt"));
         Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
         return messageRepository.findByParentIdAndDelCheckFalse(parentId, pageable);
+    }
+
+    @Transactional
+    public CommunityMessageDto saveMessageWithFile(CommunityMessageRequest messageRequest, List<String> uploadFiles) {
+        CommunityMessage communityMessage = CommunityMessage.builder()
+                .guildId(messageRequest.getGuildId())
+                .channelId(messageRequest.getChannelId())
+                .userId(messageRequest.getUserId())
+                .parentId(messageRequest.getParentId())
+                .profileImage(messageRequest.getProfileImage())
+                .type(messageRequest.getType())
+                .senderName(messageRequest.getSenderName())
+                .message(messageRequest.getMessage())
+                .delCheck(false)
+                .files(uploadFiles)
+                .build();
+
+        communityMessage.setMessageId(sequenceGeneratorService.generateSequence(CommunityMessage.SEQUENCE_NAME));
+        communityMessage.setCreatedAt(LocalDateTime.now());
+
+        return new CommunityMessageDto(messageRepository.save(communityMessage));
     }
 }

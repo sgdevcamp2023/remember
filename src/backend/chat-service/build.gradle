@@ -27,6 +27,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.kafka:spring-kafka'
+
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter', version: '1.2.5.RELEASE'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-storage', version: '1.2.5.RELEASE'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -40,8 +44,8 @@ tasks.named('test') {
 
 task copyPrivate(type: Copy) {
 	copy {
-		from './remember-community-private-env'
-		include ".yml", ".properties"
+		from './harmony-private-env'
+		include "*.yml", "*.properties", "*.json"
 		into 'src/main/resources'
 	}
 }

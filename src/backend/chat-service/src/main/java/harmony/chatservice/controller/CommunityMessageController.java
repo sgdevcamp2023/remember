@@ -6,14 +6,20 @@ import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.service.CommunityMessageService;
+import harmony.chatservice.service.FileUploadService;
 import harmony.chatservice.service.kafka.MessageProducerService;
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommunityMessageController {
 
     private final CommunityMessageService messageService;
+    private final FileUploadService fileUploadService;
     private final MessageProducerService messageProducerService;
 
     @MessageMapping("/guild/message")
@@ -59,5 +66,14 @@ public class CommunityMessageController {
 
         Page<CommunityMessage> messagePage = messageService.getComments(parentId);
         return messagePage.map(CommunityMessageDto::new);
+    }
+
+    @PostMapping("/api/community/message/file")
+    public void uploadFile(@RequestPart CommunityMessageRequest communityMessageRequest,
+                           @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
+
+        List<String> uploadFiles = fileUploadService.uploadFile(files);
+        CommunityMessageDto messageDto = messageService.saveMessageWithFile(communityMessageRequest, uploadFiles);
+        messageProducerService.sendMessageForCommunity(messageDto);
     }
 }
