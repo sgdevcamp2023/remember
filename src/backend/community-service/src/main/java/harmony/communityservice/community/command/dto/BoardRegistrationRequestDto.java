@@ -17,4 +17,6 @@ public class BoardRegistrationRequestDto {
     private String title;
     @NotBlank
     private String content;
+    @NotBlank
+    private String writerProfile;
 }

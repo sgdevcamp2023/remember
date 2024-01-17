@@ -1,37 +1,36 @@
 package harmony.communityservice.community.query.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class BoardResponseDto {
-
     private Long boardId;
-    private Long channelId;
     private String title;
     private String content;
-    private String writer;
+    private String writerName;
     private Long userId;
     private boolean modified;
     private LocalDateTime createdAt;
-    private List<EmojiResponseDto> emojiResponseDtos;
-    private int CommentCount;
+    private CommentsResponseDto commentsResponseDto;
+    private ImagesResponseDto imagesResponseDto;
+    private EmojisResponseDto emojisResponseDto;
 
     @Builder
-    public BoardResponseDto(Long boardId, Long channelId, String title, String content, String writer, Long userId,
-                            boolean modified, LocalDateTime createdAt, List<EmojiResponseDto> emojiResponseDtos,
-                            int commentCount) {
+    public BoardResponseDto(Long boardId, String title, String content, String writerName, Long userId,
+                            boolean modified,
+                            LocalDateTime createdAt, CommentsResponseDto commentsResponseDto,
+                            ImagesResponseDto imagesResponseDto, EmojisResponseDto emojisResponseDto) {
         this.boardId = boardId;
-        this.channelId = channelId;
         this.title = title;
         this.content = content;
-        this.writer = writer;
+        this.writerName = writerName;
         this.userId = userId;
         this.modified = modified;
         this.createdAt = createdAt;
-        this.emojiResponseDtos = emojiResponseDtos;
-        CommentCount = commentCount;
+        this.commentsResponseDto = commentsResponseDto;
+        this.imagesResponseDto = imagesResponseDto;
+        this.emojisResponseDto = emojisResponseDto;
     }
 }

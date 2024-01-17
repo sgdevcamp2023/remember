@@ -2,6 +2,7 @@ package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.community.query.dto.BoardResponseDto;
+import harmony.communityservice.community.query.dto.BoardsResponseDto;
 import harmony.communityservice.community.query.service.BoardQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,13 @@ public class BoardQueryController {
     @GetMapping("/board/{guildId}/{channelId}/{cursor}")
     public BaseResponse<?> searchBoards(@PathVariable Long guildId, @PathVariable Long channelId,
                                         @PathVariable Long cursor) {
-        List<BoardResponseDto> boardResponseDtos = boardQueryService.findBoards(channelId, cursor);
+        List<BoardsResponseDto> boardResponseDtos = boardQueryService.findBoards(channelId, cursor);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", boardResponseDtos);
+    }
+
+    @GetMapping("/board/{boardId}")
+    private BaseResponse<?> searchBoard(@PathVariable Long boardId) {
+        BoardResponseDto boardResponseDto = boardQueryService.make(boardId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", boardResponseDto);
     }
 }

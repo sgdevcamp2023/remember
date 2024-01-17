@@ -55,6 +55,10 @@ public class Board {
     @Column(name = "writer_name")
     private String writerName;
 
+    @NotBlank
+    @Column(name = "writer_profile")
+    private String writerProfile;
+
     @NotNull
     @Column(name = "user_id")
     private Long userId;
@@ -71,7 +75,7 @@ public class Board {
 
     @Builder
     public Board(Channel channel, List<Image> images,
-                 String title, String content, String writerName, Long userId) {
+                 String title, String content, String writerName, Long userId, String writerProfile) {
         this.channel = channel;
         this.images = images;
         this.title = title;
@@ -81,6 +85,7 @@ public class Board {
         this.modified = false;
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
+        this.writerProfile = writerProfile;
     }
 
     public int commentCount() {
