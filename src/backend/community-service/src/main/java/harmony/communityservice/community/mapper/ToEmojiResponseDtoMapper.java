@@ -9,7 +9,6 @@ public class ToEmojiResponseDtoMapper {
         return EmojiResponseDto.builder()
                 .emojiId(emoji.getEmojiId())
                 .emojiUsers(emoji.getEmojiUsers())
-                .commentId(emoji.getComment().getCommentId())
                 .emojiType(emoji.getEmojiType())
                 .boardId(emoji.getBoard().getBoardId())
                 .build();

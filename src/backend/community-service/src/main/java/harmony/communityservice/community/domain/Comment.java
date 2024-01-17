@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,16 +34,21 @@ public class Comment {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
-    private List<Emoji> emojis;
-
     @NotBlank
     @Column(name = "content")
-    private String content;
+    private String comment;
 
     @NotNull
     @Column(name = "user_id")
     private Long userId;
+
+    @NotBlank
+    @Column(name = "writer_name")
+    private String writerName;
+
+    @NotBlank
+    @Column(name = "writer_profile")
+    private String writerProfile;
 
     @NotNull
     @Column(name = "modified")
@@ -53,4 +59,16 @@ public class Comment {
 
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
+
+    @Builder
+    public Comment(Board board, String comment, Long userId, String writerName,String writerProfile) {
+        this.board = board;
+        this.comment = comment;
+        this.userId = userId;
+        this.writerName = writerName;
+        this.modified = false;
+        this.writerProfile = writerProfile;
+        this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
 }

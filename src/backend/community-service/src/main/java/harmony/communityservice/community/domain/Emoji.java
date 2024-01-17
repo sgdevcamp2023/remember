@@ -30,10 +30,6 @@ public class Emoji {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @ManyToOne
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
-
     @Column(name = "emoji_type")
     private Long emojiType;
 
