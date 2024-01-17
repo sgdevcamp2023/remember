@@ -1,7 +1,6 @@
-namespace Http.Features
+namespace ApiGatewayCore.Http.Feature;
+
+public interface IRequestFeature : IBaseFeature
 {
-    public interface IRequestFeature : IBaseFeature
-    {
-        
-    }
+    
 }
