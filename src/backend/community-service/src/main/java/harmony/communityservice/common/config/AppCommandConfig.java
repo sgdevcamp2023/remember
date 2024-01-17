@@ -56,6 +56,7 @@ import harmony.communityservice.community.command.service.impl.GuildUserCommandS
 import harmony.communityservice.community.command.service.impl.ImageCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.UserCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.UserReadCommandServiceImpl;
+import harmony.communityservice.community.query.service.BoardQueryService;
 import harmony.communityservice.community.query.service.CategoryQueryService;
 import harmony.communityservice.community.query.service.CategoryReadQueryService;
 import harmony.communityservice.community.query.service.ChannelQueryService;
@@ -88,6 +89,7 @@ public class AppCommandConfig {
     private final CategoryQueryService categoryQueryService;
     private final CategoryReadQueryService categoryReadQueryService;
     private final ChannelQueryService channelQueryService;
+    private final BoardQueryService boardQueryService;
 
     @Bean
     public UserCommandRepository userCommandRepository() {
@@ -201,6 +203,6 @@ public class AppCommandConfig {
     @Bean
     public BoardCommandService boardCommandService() {
         return new BoardCommandServiceImpl(contentService, userReadQueryService, channelQueryService,
-                imageCommandService(), boardCommandRepository());
+                imageCommandService(), boardCommandRepository(), boardQueryService);
     }
 }

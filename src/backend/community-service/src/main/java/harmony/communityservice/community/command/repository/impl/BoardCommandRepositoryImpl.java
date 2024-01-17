@@ -14,4 +14,9 @@ public class BoardCommandRepositoryImpl implements BoardCommandRepository {
     public void save(Board board) {
         jpaBoardCommandRepository.save(board);
     }
+
+    @Override
+    public void delete(Board board) {
+        jpaBoardCommandRepository.delete(board);
+    }
 }

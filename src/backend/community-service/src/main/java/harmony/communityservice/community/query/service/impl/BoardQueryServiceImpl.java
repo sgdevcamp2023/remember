@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.mapper.ToBoardResponseDtoMapper;
 import harmony.communityservice.community.mapper.ToEmojiResponseDtoMapper;
 import harmony.communityservice.community.query.dto.BoardResponseDto;
@@ -29,5 +30,10 @@ public class BoardQueryServiceImpl implements BoardQueryService {
                     return ToBoardResponseDtoMapper.convert(findBoard, emojiResponseDtos);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Board findBoardByBoardId(Long boardId) {
+        return boardQueryRepository.findByBoardId(boardId).orElseThrow();
     }
 }

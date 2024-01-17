@@ -86,4 +86,17 @@ public class Board {
     public int commentCount() {
         return comments.size();
     }
+
+    public void checkWriter(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new IllegalStateException();
+        }
+    }
+
+    public void updateBoard(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.modified = true;
+        this.modifiedAt = LocalDateTime.now();
+    }
 }
