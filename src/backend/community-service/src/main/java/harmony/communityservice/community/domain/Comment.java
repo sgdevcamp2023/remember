@@ -71,4 +71,16 @@ public class Comment {
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
     }
+
+    public void checkWriter(Long writerId) {
+        if (!this.userId.equals(writerId)) {
+            throw new IllegalStateException();
+        }
+    }
+
+    public void updateComment(String comment) {
+        this.comment = comment;
+        this.modified = true;
+        this.modifiedAt = LocalDateTime.now();
+    }
 }
