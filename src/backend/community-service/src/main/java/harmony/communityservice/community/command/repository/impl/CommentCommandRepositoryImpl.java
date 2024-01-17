@@ -14,4 +14,9 @@ public class CommentCommandRepositoryImpl implements CommentCommandRepository {
     public void save(Comment comment) {
         jpaCommentCommandRepository.save(comment);
     }
+
+    @Override
+    public void delete(Comment comment) {
+        jpaCommentCommandRepository.delete(comment);
+    }
 }

@@ -4,4 +4,6 @@ import harmony.communityservice.community.domain.Comment;
 
 public interface CommentCommandRepository {
     void save(Comment comment);
+
+    void delete(Comment comment);
 }

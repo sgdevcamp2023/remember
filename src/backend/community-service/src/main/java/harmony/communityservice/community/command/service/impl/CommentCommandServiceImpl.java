@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.community.command.dto.CommentDeleteRequestDto;
 import harmony.communityservice.community.command.dto.CommentRegistrationRequestDto;
 import harmony.communityservice.community.command.dto.CommentUpdateRequestDto;
 import harmony.communityservice.community.command.repository.CommentCommandRepository;
@@ -31,5 +32,12 @@ public class CommentCommandServiceImpl implements CommentCommandService {
         Comment findComment = commentQueryService.findById(requestDto.getCommentId());
         findComment.checkWriter(requestDto.getUserId());
         findComment.updateComment(requestDto.getComment());
+    }
+
+    @Override
+    public void delete(CommentDeleteRequestDto requestDto) {
+        Comment findComment = commentQueryService.findById(requestDto.getCommentId());
+        findComment.checkWriter(requestDto.getUserId());
+        commentCommandRepository.delete(findComment);
     }
 }

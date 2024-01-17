@@ -1,6 +1,7 @@
 package harmony.communityservice.community.command.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
+import harmony.communityservice.community.command.dto.CommentDeleteRequestDto;
 import harmony.communityservice.community.command.dto.CommentRegistrationRequestDto;
 import harmony.communityservice.community.command.dto.CommentUpdateRequestDto;
 import harmony.communityservice.community.command.service.CommentCommandService;
@@ -32,6 +33,12 @@ public class CommentCommandController {
     @PatchMapping("/change/comment")
     public BaseResponse<?> update(@RequestBody @Validated CommentUpdateRequestDto requestDto) {
         commentCommandService.updateComment(requestDto);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK");
+    }
+
+    @DeleteMapping("/delete/comment")
+    public BaseResponse<?> delete(@RequestBody @Validated CommentDeleteRequestDto requestDto) {
+        commentCommandService.delete(requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }
