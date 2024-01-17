@@ -35,6 +35,7 @@ public class DirectMessageService {
                 .type(messageRequest.getType())
                 .senderName(messageRequest.getSenderName())
                 .message(messageRequest.getMessage())
+                .files(null)
                 .build();
         directMessage.setMessageId(sequenceGeneratorService.generateSequence(DirectMessage.SEQUENCE_NAME));
         directMessage.setCreatedAt(LocalDateTime.now());
@@ -81,5 +82,23 @@ public class DirectMessageService {
         sorts.add(Sort.Order.desc("createdAt"));
         Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
         return messageRepository.findByParentIdAndDelCheckFalse(parentId, pageable);
+    }
+
+    @Transactional
+    public DirectMessageDto saveMessageWithFile(DirectMessageRequest messageRequest, List<String> uploadFiles) {
+        DirectMessage directMessage = DirectMessage.builder()
+                .roomId(messageRequest.getRoomId())
+                .parentId(messageRequest.getParentId())
+                .userId(messageRequest.getUserId())
+                .profileImage(messageRequest.getProfileImage())
+                .type(messageRequest.getType())
+                .senderName(messageRequest.getSenderName())
+                .message(messageRequest.getMessage())
+                .files(uploadFiles)
+                .build();
+        directMessage.setMessageId(sequenceGeneratorService.generateSequence(DirectMessage.SEQUENCE_NAME));
+        directMessage.setCreatedAt(LocalDateTime.now());
+
+        return new DirectMessageDto(messageRepository.save(directMessage));
     }
 }

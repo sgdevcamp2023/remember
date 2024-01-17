@@ -2,6 +2,7 @@ package harmony.chatservice.dto;
 
 
 import harmony.chatservice.domain.DirectMessage;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class DirectMessageDto {
     private String senderName;
     private String message;
     private boolean delCheck;
+    private List<String> files;
 
     public DirectMessageDto(DirectMessage directMessage) {
         this.messageId = directMessage.getMessageId();
@@ -33,5 +35,6 @@ public class DirectMessageDto {
         this.senderName = directMessage.getSenderName();
         this.message = directMessage.getMessage();
         this.delCheck = directMessage.isDelCheck();
+        this.files = directMessage.getFiles();
     }
 }

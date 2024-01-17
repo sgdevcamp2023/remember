@@ -1,6 +1,7 @@
 package harmony.chatservice.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,9 @@ public class DirectMessage extends BaseModel{
     @Field
     private boolean delCheck;
 
+    @Field
+    private List<String> files;
+
     public void modify(String message, String type) {
         this.message = message;
         this.type = type;
@@ -58,15 +62,18 @@ public class DirectMessage extends BaseModel{
     }
 
     @Builder
-    public DirectMessage(Long roomId, Long parentId, Long userId, String profileImage, String type, String senderName, String message) {
+    public DirectMessage(Long roomId, Long parentId, Long userId, String profileImage, String type, String senderName,
+                         String message, List<String> files) {
+
         this.roomId = roomId;
         this.parentId = parentId;
         this.userId = userId;
-        this.profileImage =profileImage;
-        this.type =type;
+        this.profileImage = profileImage;
+        this.type = type;
         this.senderName = senderName;
         this.message = message;
         this.delCheck = false;
+        this.files = files;
     }
 
     @Override
