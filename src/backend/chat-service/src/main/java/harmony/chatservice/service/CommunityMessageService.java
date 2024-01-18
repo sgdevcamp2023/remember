@@ -8,6 +8,7 @@ import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.dto.request.EmojiDto;
+import harmony.chatservice.dto.response.CommunityMessageResponse;
 import harmony.chatservice.repository.CommunityMessageRepository;
 import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
@@ -78,12 +79,23 @@ public class CommunityMessageService {
         return new CommunityMessageDto(messageRepository.save(message));
     }
 
-    public Page<CommunityMessage> getMessages(Long channelId) {
-
-        List<Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdAt"));
+    public List<CommunityMessageResponse> getMessages(Long channelId) {
+        List<Order> sorts = Collections.singletonList(Sort.Order.desc("createdAt"));
         Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
-        return messageRepository.findByChannelIdAndDelCheckFalse(channelId, pageable);
+        Page<CommunityMessage> messages = messageRepository.findByChannelIdAndDelCheckFalse(channelId, pageable);
+        Page<CommunityMessageDto> messageDtos = messages.map(CommunityMessageDto::new);
+
+        List<CommunityMessageResponse> messageResponses = new ArrayList<>();
+        for (CommunityMessageDto messageDto : messageDtos) {
+            List<Emoji> emojis = emojiRepository.findAllByParentId(messageDto.getMessageId());
+            List<EmojiDto> emojiDtos = emojis.stream()
+                    .map(EmojiDto::new)
+                    .toList();
+            CommunityMessageResponse messageResponse = new CommunityMessageResponse(messageDto, emojiDtos);
+            messageResponses.add(messageResponse);
+        }
+
+        return messageResponses;
     }
 
     public List<CommunityCommentResponse> getComments(Long parentId) {
