@@ -3,10 +3,13 @@ package harmony.communityservice.community.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -16,43 +19,33 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "user")
+@Table(name = "room")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class Room {
 
     @Id
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "room_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roomId;
 
     @NotBlank
-    private String email;
-
-    @NotBlank
-    private String nickname;
+    @Column(name = "name")
+    private String name;
 
     @NotBlank
     private String profile;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-    private List<GuildUser> guildUsers = new ArrayList<>();
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<RoomUser> roomUsers = new ArrayList<>();
 
     @Builder
-    public User(Long userId, String email, String nickname, String profile) {
-        this.userId = userId;
-        this.email = email;
-        this.nickname = nickname;
+    public Room(String name, String profile, LocalDateTime createdAt) {
+        this.name = name;
         this.profile = profile;
-    }
-
-    public void updateProfile(String profile) {
-        this.profile = profile;
-    }
-
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
+        this.createdAt = createdAt;
     }
 
 }
