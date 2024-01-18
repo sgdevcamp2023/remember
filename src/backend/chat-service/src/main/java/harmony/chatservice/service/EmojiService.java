@@ -2,6 +2,8 @@ package harmony.chatservice.service;
 
 import harmony.chatservice.domain.CommunityMessage;
 import harmony.chatservice.domain.Emoji;
+import harmony.chatservice.dto.request.EmojiDeleteRequest;
+import harmony.chatservice.dto.request.EmojiDto;
 import harmony.chatservice.dto.request.EmojiRequest;
 import harmony.chatservice.repository.EmojiRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +31,17 @@ public class EmojiService {
         emoji.setEmojiId(sequenceGeneratorService.generateSequence(CommunityMessage.SEQUENCE_NAME));
 
         return emojiRepository.save(emoji);
+    }
+
+    @Transactional
+    public EmojiDto deleteEmoji(EmojiDeleteRequest deleteRequest) {
+        Emoji emoji = emojiRepository.findById(deleteRequest.getEmojiId())
+                .orElseThrow(() -> new RuntimeException("예외 발생"));
+        EmojiDto emojiDto = new EmojiDto(emoji);
+        emojiDto.setType(deleteRequest.getType());
+
+        emojiRepository.delete(emoji);
+
+        return emojiDto;
     }
 }

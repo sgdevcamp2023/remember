@@ -1,6 +1,7 @@
 package harmony.chatservice.controller;
 
 import harmony.chatservice.domain.Emoji;
+import harmony.chatservice.dto.request.EmojiDeleteRequest;
 import harmony.chatservice.dto.request.EmojiDto;
 import harmony.chatservice.dto.request.EmojiRequest;
 import harmony.chatservice.service.EmojiService;
@@ -20,6 +21,12 @@ public class EmojiController {
     public void saveEmoji(EmojiRequest emojiRequest) {
         Emoji emoji = emojiService.saveEmoji(emojiRequest);
         EmojiDto emojiDto = new EmojiDto(emoji);
+        producerService.sendMessageForEmoji(emojiDto);
+    }
+
+    @MessageMapping("/emoji/delete")
+    public void deleteEmoji(EmojiDeleteRequest deleteRequest) {
+        EmojiDto emojiDto = emojiService.deleteEmoji(deleteRequest);
         producerService.sendMessageForEmoji(emojiDto);
     }
 }
