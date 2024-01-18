@@ -1,6 +1,5 @@
 package harmony.chatservice.domain;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,17 +40,17 @@ public class Emoji {
     private String type;
 
     @Field
-    private List<Long> userIds;
+    private Long userId;
 
     @Builder
     public Emoji(Long guildId, Long channelId, Long roomId, Long parentId, Long typeId, String type,
-                 List<Long> userIds) {
+                 Long userId) {
         this.guildId = guildId;
         this.channelId = channelId;
         this.roomId = roomId;
         this.parentId = parentId;
         this.typeId = typeId;
         this.type = type;
-        this.userIds = userIds;
+        this.userId = userId;
     }
 }
