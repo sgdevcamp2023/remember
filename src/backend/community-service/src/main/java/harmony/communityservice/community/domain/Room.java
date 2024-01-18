@@ -42,10 +42,10 @@ public class Room {
     private List<RoomUser> roomUsers = new ArrayList<>();
 
     @Builder
-    public Room(String name, String profile, LocalDateTime createdAt) {
+    public Room(String name, String profile) {
         this.name = name;
         this.profile = profile;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDateTime.now();
     }
 
 }

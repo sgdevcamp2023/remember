@@ -13,6 +13,8 @@ import harmony.communityservice.community.command.repository.GuildCommandReposit
 import harmony.communityservice.community.command.repository.GuildReadCommandRepository;
 import harmony.communityservice.community.command.repository.GuildUserCommandRepository;
 import harmony.communityservice.community.command.repository.ImageCommandRepository;
+import harmony.communityservice.community.command.repository.RoomCommandRepository;
+import harmony.communityservice.community.command.repository.RoomUserCommandRepository;
 import harmony.communityservice.community.command.repository.UserCommandRepository;
 import harmony.communityservice.community.command.repository.UserReadCommandRepository;
 import harmony.communityservice.community.command.repository.impl.BoardCommandRepositoryImpl;
@@ -27,6 +29,8 @@ import harmony.communityservice.community.command.repository.impl.GuildCommandRe
 import harmony.communityservice.community.command.repository.impl.GuildReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.GuildUserCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.ImageCommandRepositoryImpl;
+import harmony.communityservice.community.command.repository.impl.RoomCommandRepositoryImpl;
+import harmony.communityservice.community.command.repository.impl.RoomUserCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.UserCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.UserReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.jpa.JpaBoardCommandRepository;
@@ -41,6 +45,8 @@ import harmony.communityservice.community.command.repository.jpa.JpaGuildCommand
 import harmony.communityservice.community.command.repository.jpa.JpaGuildReadCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaGuildUserCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaImageCommandRepository;
+import harmony.communityservice.community.command.repository.jpa.JpaRoomCommandRepository;
+import harmony.communityservice.community.command.repository.jpa.JpaRoomUserCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaUserCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaUserReadCommandRepository;
 import harmony.communityservice.community.command.service.BoardCommandService;
@@ -55,6 +61,8 @@ import harmony.communityservice.community.command.service.GuildCommandService;
 import harmony.communityservice.community.command.service.GuildReadCommandService;
 import harmony.communityservice.community.command.service.GuildUserCommandService;
 import harmony.communityservice.community.command.service.ImageCommandService;
+import harmony.communityservice.community.command.service.RoomCommandService;
+import harmony.communityservice.community.command.service.RoomUserCommandService;
 import harmony.communityservice.community.command.service.UserCommandService;
 import harmony.communityservice.community.command.service.UserReadCommandService;
 import harmony.communityservice.community.command.service.impl.BoardCommandServiceImpl;
@@ -69,6 +77,8 @@ import harmony.communityservice.community.command.service.impl.GuildCommandServi
 import harmony.communityservice.community.command.service.impl.GuildReadCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.GuildUserCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.ImageCommandServiceImpl;
+import harmony.communityservice.community.command.service.impl.RoomCommandServiceImpl;
+import harmony.communityservice.community.command.service.impl.RoomUserCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.UserCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.UserReadCommandServiceImpl;
 import harmony.communityservice.community.query.service.BoardQueryService;
@@ -102,6 +112,8 @@ public class AppCommandConfig {
     private final JpaCommentCommandRepository jpaCommentCommandRepository;
     private final JpaEmojiCommandRepository jpaEmojiCommandRepository;
     private final JpaEmojiUserCommandRepository jpaEmojiUserCommandRepository;
+    private final JpaRoomCommandRepository jpaRoomCommandRepository;
+    private final JpaRoomUserCommandRepository jpaRoomUserCommandRepository;
     private final UserQueryService userQueryService;
     private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
@@ -257,5 +269,26 @@ public class AppCommandConfig {
     public EmojiCommandService emojiCommandService() {
         return new EmojiCommandServiceImpl(boardQueryService, emojiCommandRepository(), emojiUserCommandService(),
                 emojiQueryService);
+    }
+
+    @Bean
+    public RoomCommandRepository roomCommandRepository() {
+        return new RoomCommandRepositoryImpl(jpaRoomCommandRepository);
+    }
+
+    @Bean
+    public RoomUserCommandRepository roomUserCommandRepository() {
+        return new RoomUserCommandRepositoryImpl(jpaRoomUserCommandRepository);
+    }
+
+    @Bean
+    public RoomUserCommandService roomUserCommandService() {
+        return new RoomUserCommandServiceImpl(roomUserCommandRepository());
+    }
+
+    @Bean
+    public RoomCommandService roomCommandService() {
+        return new RoomCommandServiceImpl(roomCommandRepository(), contentService, userQueryService,
+                roomUserCommandService());
     }
 }
