@@ -1,13 +1,18 @@
 package harmony.chatservice.service;
 
 import harmony.chatservice.domain.CommunityMessage;
+import harmony.chatservice.domain.Emoji;
 import harmony.chatservice.dto.CommunityMessageDto;
+import harmony.chatservice.dto.response.CommunityCommentResponse;
 import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
+import harmony.chatservice.dto.request.EmojiDto;
 import harmony.chatservice.repository.CommunityMessageRepository;
+import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommunityMessageService {
 
+    private final EmojiRepository emojiRepository;
     private final CommunityMessageRepository messageRepository;
     private final SequenceGeneratorService sequenceGeneratorService;
 
@@ -80,12 +86,23 @@ public class CommunityMessageService {
         return messageRepository.findByChannelIdAndDelCheckFalse(channelId, pageable);
     }
 
-    public Page<CommunityMessage> getComments(Long parentId) {
-
-        List<Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdAt"));
+    public List<CommunityCommentResponse> getComments(Long parentId) {
+        List<Order> sorts = Collections.singletonList(Sort.Order.desc("createdAt"));
         Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
-        return messageRepository.findByParentIdAndDelCheckFalse(parentId, pageable);
+        Page<CommunityMessage> messages = messageRepository.findByParentIdAndDelCheckFalse(parentId, pageable);
+        Page<CommunityMessageDto> messageDtos = messages.map(CommunityMessageDto::new);
+
+        List<CommunityCommentResponse> commentResponses = new ArrayList<>();
+        for (CommunityMessageDto messageDto : messageDtos) {
+            List<Emoji> emojis = emojiRepository.findAllByParentId(messageDto.getMessageId());
+            List<EmojiDto> emojiDtos = emojis.stream()
+                    .map(EmojiDto::new)
+                    .toList();
+            CommunityCommentResponse messageResponse = new CommunityCommentResponse(messageDto, emojiDtos);
+            commentResponses.add(messageResponse);
+        }
+
+        return commentResponses;
     }
 
     @Transactional

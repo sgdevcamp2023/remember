@@ -2,6 +2,7 @@ package harmony.chatservice.controller;
 
 import harmony.chatservice.domain.CommunityMessage;
 import harmony.chatservice.dto.CommunityMessageDto;
+import harmony.chatservice.dto.response.CommunityCommentResponse;
 import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
@@ -62,10 +63,9 @@ public class CommunityMessageController {
     }
 
     @GetMapping("/api/community/comments/{parentId}")
-    public Page<CommunityMessageDto> getComments(@PathVariable("parentId") Long parentId) {
+    public List<CommunityCommentResponse> getComments(@PathVariable("parentId") Long parentId) {
 
-        Page<CommunityMessage> messagePage = messageService.getComments(parentId);
-        return messagePage.map(CommunityMessageDto::new);
+        return messageService.getComments(parentId);
     }
 
     @PostMapping("/api/community/message/file")
