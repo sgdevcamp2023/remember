@@ -42,6 +42,7 @@ import harmony.communityservice.community.query.service.CommentQueryService;
 import harmony.communityservice.community.query.service.EmojiQueryService;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.GuildReadQueryService;
+import harmony.communityservice.community.query.service.RoomQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import harmony.communityservice.community.query.service.impl.BoardQueryServiceImpl;
@@ -53,6 +54,7 @@ import harmony.communityservice.community.query.service.impl.CommentQueryService
 import harmony.communityservice.community.query.service.impl.EmojiQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.GuildQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.GuildReadQueryServiceImpl;
+import harmony.communityservice.community.query.service.impl.RoomQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.UserQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.UserReadQueryServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -183,5 +185,10 @@ public class AppQueryConfig {
     @Bean
     public EmojiQueryService emojiQueryService() {
         return new EmojiQueryServiceImpl(emojiQueryRepository());
+    }
+
+    @Bean
+    public RoomQueryService roomQueryService() {
+        return new RoomQueryServiceImpl(userQueryService());
     }
 }
