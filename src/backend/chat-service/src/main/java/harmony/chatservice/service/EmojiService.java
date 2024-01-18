@@ -1,6 +1,5 @@
 package harmony.chatservice.service;
 
-import harmony.chatservice.domain.CommunityMessage;
 import harmony.chatservice.domain.Emoji;
 import harmony.chatservice.dto.request.EmojiDeleteRequest;
 import harmony.chatservice.dto.request.EmojiDto;
@@ -28,7 +27,7 @@ public class EmojiService {
                 .type(emojiRequest.getType())
                 .userId(emojiRequest.getUserId())
                 .build();
-        emoji.setEmojiId(sequenceGeneratorService.generateSequence(CommunityMessage.SEQUENCE_NAME));
+        emoji.setEmojiId(sequenceGeneratorService.generateSequence(Emoji.SEQUENCE_NAME));
 
         return emojiRepository.save(emoji);
     }
