@@ -1,6 +1,7 @@
 package harmony.communityservice.community.query.dto;
 
 import harmony.communityservice.community.domain.EmojiUser;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ public class EmojiResponseDto {
     private Long boardId;
     private Long commentId;
     private Long emojiType;
-    private List<EmojiUser> emojiUsers;
+    private List<EmojiUser> emojiUsers = new ArrayList<>();
 
     @Builder
     public EmojiResponseDto(Long emojiId, Long boardId, Long commentId, Long emojiType, List<EmojiUser> emojiUsers) {

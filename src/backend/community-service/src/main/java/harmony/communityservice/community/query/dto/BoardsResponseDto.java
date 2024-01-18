@@ -1,6 +1,7 @@
 package harmony.communityservice.community.query.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class BoardsResponseDto {
     private Long userId;
     private boolean modified;
     private LocalDateTime createdAt;
-    private List<EmojiResponseDto> emojiResponseDtos;
+    private List<EmojiResponseDto> emojiResponseDtos = new ArrayList<>();
     private int CommentCount;
 
     @Builder

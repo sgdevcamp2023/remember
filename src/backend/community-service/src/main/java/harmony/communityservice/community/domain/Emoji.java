@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,7 +36,7 @@ public class Emoji {
     private Long emojiType;
 
     @OneToMany(mappedBy = "emoji", fetch = FetchType.LAZY)
-    private List<EmojiUser> emojiUsers;
+    private List<EmojiUser> emojiUsers = new ArrayList<>();
 
     @Builder
     public Emoji(Board board, Long emojiType) {
