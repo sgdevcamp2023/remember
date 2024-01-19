@@ -57,7 +57,6 @@ public class CommunityMessageService {
 
     @Transactional
     public CommunityMessageDto modifyMessage(CommunityMessageModifyRequest modifyRequest) {
-
         CommunityMessage message = messageRepository.findById(modifyRequest.getMessageId())
                 .orElseThrow(() -> new RuntimeException("예외 발생"));
 
@@ -69,7 +68,6 @@ public class CommunityMessageService {
 
     @Transactional
     public CommunityMessageDto deleteMessage(CommunityMessageDeleteRequest deleteRequest) {
-
         CommunityMessage message = messageRepository.findById(deleteRequest.getMessageId())
                 .orElseThrow(() -> new RuntimeException("예외 발생"));
 
@@ -79,10 +77,32 @@ public class CommunityMessageService {
         return new CommunityMessageDto(messageRepository.save(message));
     }
 
+    @Transactional
+    public CommunityMessageDto saveMessageWithFile(CommunityMessageRequest messageRequest, List<String> uploadFiles) {
+        CommunityMessage communityMessage = CommunityMessage.builder()
+                .guildId(messageRequest.getGuildId())
+                .channelId(messageRequest.getChannelId())
+                .userId(messageRequest.getUserId())
+                .parentId(messageRequest.getParentId())
+                .profileImage(messageRequest.getProfileImage())
+                .type(messageRequest.getType())
+                .senderName(messageRequest.getSenderName())
+                .message(messageRequest.getMessage())
+                .delCheck(false)
+                .files(uploadFiles)
+                .build();
+
+        communityMessage.setMessageId(sequenceGeneratorService.generateSequence(CommunityMessage.SEQUENCE_NAME));
+        communityMessage.setCreatedAt(LocalDateTime.now());
+
+        return new CommunityMessageDto(messageRepository.save(communityMessage));
+    }
+
     public List<CommunityMessageResponse> getMessages(Long channelId) {
         List<Order> sorts = Collections.singletonList(Sort.Order.desc("createdAt"));
         Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
-        Page<CommunityMessage> messages = messageRepository.findByChannelIdAndDelCheckFalse(channelId, pageable);
+        Page<CommunityMessage> messages = messageRepository.findByChannelIdAndDelCheckAndParentId(channelId, pageable)
+                .orElseThrow(() -> new RuntimeException("예외 발생"));
         Page<CommunityMessageDto> messageDtos = messages.map(CommunityMessageDto::new);
 
         List<CommunityMessageResponse> messageResponses = new ArrayList<>();
@@ -110,31 +130,10 @@ public class CommunityMessageService {
             List<EmojiDto> emojiDtos = emojis.stream()
                     .map(EmojiDto::new)
                     .toList();
-            CommunityCommentResponse messageResponse = new CommunityCommentResponse(messageDto, emojiDtos);
-            commentResponses.add(messageResponse);
+            CommunityCommentResponse commentResponse = new CommunityCommentResponse(messageDto, emojiDtos);
+            commentResponses.add(commentResponse);
         }
 
         return commentResponses;
-    }
-
-    @Transactional
-    public CommunityMessageDto saveMessageWithFile(CommunityMessageRequest messageRequest, List<String> uploadFiles) {
-        CommunityMessage communityMessage = CommunityMessage.builder()
-                .guildId(messageRequest.getGuildId())
-                .channelId(messageRequest.getChannelId())
-                .userId(messageRequest.getUserId())
-                .parentId(messageRequest.getParentId())
-                .profileImage(messageRequest.getProfileImage())
-                .type(messageRequest.getType())
-                .senderName(messageRequest.getSenderName())
-                .message(messageRequest.getMessage())
-                .delCheck(false)
-                .files(uploadFiles)
-                .build();
-
-        communityMessage.setMessageId(sequenceGeneratorService.generateSequence(CommunityMessage.SEQUENCE_NAME));
-        communityMessage.setCreatedAt(LocalDateTime.now());
-
-        return new CommunityMessageDto(messageRepository.save(communityMessage));
     }
 }
