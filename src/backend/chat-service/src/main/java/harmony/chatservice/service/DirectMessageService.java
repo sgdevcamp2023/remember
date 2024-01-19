@@ -116,7 +116,7 @@ public class DirectMessageService {
         Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
         Page<DirectMessage> messages = null;
         if (type.equals("message")) {
-            messages = messageRepository.findByRoomIdAndDelCheckFalse(id, pageable)
+            messages = messageRepository.findByRoomIdAndDelCheckAndParentId(id, pageable)
                     .orElseThrow(() -> new RuntimeException("예외 발생"));
         }
         if (type.equals("comment")) {
