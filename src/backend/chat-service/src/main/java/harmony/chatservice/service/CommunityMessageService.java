@@ -6,7 +6,7 @@ import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
-import harmony.chatservice.dto.request.EmojiDto;
+import harmony.chatservice.dto.EmojiDto;
 import harmony.chatservice.repository.CommunityMessageRepository;
 import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
@@ -134,7 +134,7 @@ public class CommunityMessageService {
     }
 
     public List<EmojiDto> emojisToEmojiDtos(Long messageId) {
-        List<Emoji> emojis = emojiRepository.findAllByMessageId(messageId);
+        List<Emoji> emojis = emojiRepository.findAllByCommunityMessageId(messageId);
         return emojis.stream()
                 .map(EmojiDto::new)
                 .toList();

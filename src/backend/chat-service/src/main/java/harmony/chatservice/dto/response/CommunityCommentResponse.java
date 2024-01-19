@@ -1,7 +1,7 @@
 package harmony.chatservice.dto.response;
 
 import harmony.chatservice.dto.CommunityMessageDto;
-import harmony.chatservice.dto.request.EmojiDto;
+import harmony.chatservice.dto.EmojiDto;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

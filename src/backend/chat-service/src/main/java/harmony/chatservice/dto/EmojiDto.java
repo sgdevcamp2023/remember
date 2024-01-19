@@ -1,4 +1,4 @@
-package harmony.chatservice.dto.request;
+package harmony.chatservice.dto;
 
 import harmony.chatservice.domain.Emoji;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,8 @@ public class EmojiDto {
     private Long guildId;
     private Long channelId;
     private Long roomId;
-    private Long messageId;
+    private Long communityMessageId;
+    private Long directMessageId;
     private Long userId;
     private Long typeId;
     private String type;
@@ -28,7 +29,8 @@ public class EmojiDto {
         this.guildId = emoji.getGuildId();
         this.channelId = emoji.getChannelId();
         this.roomId = emoji.getRoomId();
-        this.messageId = emoji.getMessageId();
+        this.communityMessageId = emoji.getCommunityMessageId();
+        this.directMessageId = emoji.getDirectMessageId();
         this.userId = emoji.getUserId();
         this.typeId = emoji.getTypeId();
         this.type = emoji.getType();

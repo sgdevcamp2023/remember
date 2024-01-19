@@ -2,7 +2,7 @@ package harmony.chatservice.service.kafka;
 
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
-import harmony.chatservice.dto.request.EmojiDto;
+import harmony.chatservice.dto.EmojiDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;

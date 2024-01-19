@@ -1,7 +1,6 @@
 package harmony.chatservice.dto;
 
 import harmony.chatservice.domain.CommunityMessage;
-import harmony.chatservice.dto.request.EmojiDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;

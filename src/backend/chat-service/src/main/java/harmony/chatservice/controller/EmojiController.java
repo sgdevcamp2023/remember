@@ -2,7 +2,7 @@ package harmony.chatservice.controller;
 
 import harmony.chatservice.domain.Emoji;
 import harmony.chatservice.dto.request.EmojiDeleteRequest;
-import harmony.chatservice.dto.request.EmojiDto;
+import harmony.chatservice.dto.EmojiDto;
 import harmony.chatservice.dto.request.EmojiRequest;
 import harmony.chatservice.service.EmojiService;
 import harmony.chatservice.service.kafka.MessageProducerService;

@@ -14,7 +14,8 @@ public class EmojiRequest {
     private Long guildId;
     private Long channelId;
     private Long roomId;
-    private Long messageId;
+    private Long communityMessageId;
+    private Long directMessageId;
     private Long userId;
     private Long typeId;
     private String type;
