@@ -14,7 +14,7 @@ public class ToBoardMapper {
                 .channel(channel)
                 .userId(userRead.getUserId())
                 .writerName(userRead.getNickname())
-                .writerProfile(requestDto.getWriterProfile())
+                .writerProfile(userRead.getProfile())
                 .build();
     }
 }

@@ -45,7 +45,7 @@ public class Guild {
     @Column(name = "manager_id")
     private Long managerId;
 
-    @OneToMany(mappedBy = "guild")
+    @OneToMany(mappedBy = "guild", fetch = FetchType.LAZY,orphanRemoval = true)
     private List<GuildUser> guildUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "guild",fetch = FetchType.LAZY)

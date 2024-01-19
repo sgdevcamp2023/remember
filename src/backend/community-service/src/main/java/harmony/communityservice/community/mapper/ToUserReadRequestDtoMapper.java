@@ -9,7 +9,7 @@ public class ToUserReadRequestDtoMapper {
     public static UserReadRequestDto convert(Guild guild, User user) {
         return UserReadRequestDto.builder()
                 .guildId(guild.getGuildId())
-                .userId(guild.getManagerId())
+                .userId(user.getUserId())
                 .nickname(user.getNickname())
                 .profile(user.getProfile())
                 .build();

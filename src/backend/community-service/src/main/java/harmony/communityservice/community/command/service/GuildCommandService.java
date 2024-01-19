@@ -11,7 +11,7 @@ public interface GuildCommandService {
 
     void save(GuildRegistrationRequestDto requestDto, MultipartFile profile);
 
-    void join(String invitationCode);
+    void join(String invitationCode, Long userId);
 
     void remove(GuildDeleteRequestDto guildDeleteRequestDto);
 

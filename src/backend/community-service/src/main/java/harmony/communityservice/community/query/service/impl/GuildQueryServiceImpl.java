@@ -19,7 +19,7 @@ public class GuildQueryServiceImpl implements GuildQueryService {
         userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
         Guild guild = guildQueryRepository.findById(requestDto.getGuildId()).orElseThrow();
 
-        return ToInviteCodeMapper.convert(guild.getInviteCode(), requestDto.getUserId());
+        return ToInviteCodeMapper.convert(guild.getInviteCode(), requestDto.getUserId(),requestDto.getGuildId());
     }
 
     @Override

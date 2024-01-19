@@ -40,7 +40,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         String imageUrl = contentService.imageConvertUrl(profile);
         Guild guild = ToGuildMapper.convert(requestDto, imageUrl);
         guildCommandRepository.save(guild);
-        GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(guild);
+        GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(guild, requestDto.getManagerId());
         guildReadCommandService.save(guildReadRequestDto);
         User findUser = userQueryService.findUser(requestDto.getManagerId());
         guildUserCommandService.save(guild, findUser);
@@ -49,11 +49,10 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     }
 
     @Override
-    public void join(String invitationCode) {
-        List<String> splitCodes = List.of(invitationCode.split("."));
-        long userId = Long.parseLong(splitCodes.get(1));
+    public void join(String invitationCode, Long userId) {
+        List<String> splitCodes = List.of(invitationCode.split("\\."));
         Guild findGuild = guildQueryService.findGuildByInviteCode(splitCodes.get(0));
-        GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(findGuild);
+        GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(findGuild, userId);
         guildReadCommandService.save(guildReadRequestDto);
         User findUser = userQueryService.findUser(userId);
         guildUserCommandService.save(findGuild, findUser);

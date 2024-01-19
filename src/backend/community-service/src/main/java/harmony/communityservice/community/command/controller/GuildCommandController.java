@@ -34,9 +34,9 @@ public class GuildCommandController {
     }
 
 
-    @GetMapping("/join/guild/{invitationCode}")
-    public BaseResponse<?> join(@PathVariable String invitationCode) {
-        guildCommandService.join(invitationCode);
+    @GetMapping("/join/guild/{invitationCode}/{userId}")
+    public BaseResponse<?> join(@PathVariable String invitationCode, @PathVariable Long userId) {
+        guildCommandService.join(invitationCode, userId);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 

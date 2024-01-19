@@ -28,7 +28,7 @@ public class BoardCommandController {
 
     @PostMapping("/registration/board")
     public BaseResponse<?> registration(
-            @RequestPart(value = "boardRegistrationDto") BoardRegistrationRequestDto boardRegistrationDto,
+            @RequestPart(value = "requestDto") BoardRegistrationRequestDto boardRegistrationDto,
             @RequestPart(name = "images", required = false) List<MultipartFile> images) {
 
         boardCommandService.save(boardRegistrationDto, images);

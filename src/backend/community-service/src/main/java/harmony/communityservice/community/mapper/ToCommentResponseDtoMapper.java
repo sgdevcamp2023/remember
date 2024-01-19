@@ -8,6 +8,7 @@ public class ToCommentResponseDtoMapper {
     public static CommentResponseDto convert(Comment comment, long boardId) {
         return CommentResponseDto.builder()
                 .commentId(comment.getCommentId())
+                .comment(comment.getComment())
                 .writerName(comment.getWriterName())
                 .userId(comment.getUserId())
                 .writerProfile(comment.getWriterProfile())

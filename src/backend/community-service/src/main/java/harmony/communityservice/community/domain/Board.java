@@ -35,13 +35,13 @@ public class Board {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Emoji> emojis = new ArrayList<>();
 
     @NotBlank

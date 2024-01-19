@@ -13,7 +13,7 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
 
     @Override
     public void existsUserIdAndGuildId(long userId, long guildId) {
-        if (userReadQueryRepository.existByUserIdAndGuildId(userId, guildId)) {
+        if (!userReadQueryRepository.existByUserIdAndGuildId(userId, guildId)) {
             throw new IllegalStateException();
         }
     }

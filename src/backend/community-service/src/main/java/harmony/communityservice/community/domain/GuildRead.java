@@ -9,9 +9,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @Table(name = "guild_read")
 public class GuildRead {

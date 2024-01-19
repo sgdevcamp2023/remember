@@ -5,9 +5,9 @@ import harmony.communityservice.community.domain.Guild;
 
 public class ToGuildReadRequestDtoMapper {
 
-    public static GuildReadRequestDto convert(Guild guild) {
+    public static GuildReadRequestDto convert(Guild guild, Long userId) {
         return GuildReadRequestDto.builder()
-                .userId(guild.getManagerId())
+                .userId(userId)
                 .guildId(guild.getGuildId())
                 .profile(guild.getProfile())
                 .name(guild.getName())

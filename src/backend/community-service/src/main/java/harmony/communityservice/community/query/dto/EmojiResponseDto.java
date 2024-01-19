@@ -12,10 +12,10 @@ public class EmojiResponseDto {
     private Long boardId;
     private Long commentId;
     private Long emojiType;
-    private List<EmojiUser> emojiUsers = new ArrayList<>();
+    private List<Long> emojiUsers = new ArrayList<>();
 
     @Builder
-    public EmojiResponseDto(Long emojiId, Long boardId, Long commentId, Long emojiType, List<EmojiUser> emojiUsers) {
+    public EmojiResponseDto(Long emojiId, Long boardId, Long commentId, Long emojiType, List<Long> emojiUsers) {
         this.emojiId = emojiId;
         this.boardId = boardId;
         this.commentId = commentId;
