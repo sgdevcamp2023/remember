@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.common.exception.DuplicatedEmojiException;
 import harmony.communityservice.community.command.dto.EmojiDeleteRequestDto;
 import harmony.communityservice.community.command.dto.EmojiRegistrationRequestDto;
 import harmony.communityservice.community.command.repository.EmojiCommandRepository;
@@ -47,7 +48,7 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
                 .filter(emojiUser -> Objects.equals(emojiUser.getUserId(), emojiRegistrationRequestDto.getUserId()))
                 .findAny()
                 .ifPresent(e -> {
-                    throw new IllegalStateException();
+                    throw new DuplicatedEmojiException();
                 });
         emojiUserCommandService.save(findEmoji, emojiRegistrationRequestDto.getUserId());
     }

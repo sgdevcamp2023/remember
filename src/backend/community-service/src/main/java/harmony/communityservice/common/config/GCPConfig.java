@@ -3,6 +3,7 @@ package harmony.communityservice.common.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import harmony.communityservice.common.exception.IllegalGcsException;
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.common.service.impl.GcsContentService;
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class GCPConfig {
                     .build()
                     .getService();
         } catch (IOException e) {
-            return null;
+            throw new IllegalGcsException();
         }
     }
 
