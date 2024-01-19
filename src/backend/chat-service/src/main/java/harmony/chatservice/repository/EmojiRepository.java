@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface EmojiRepository extends MongoRepository<Emoji, Long> {
 
-    List<Emoji> findAllByParentId(Long parentId);
+    List<Emoji> findAllByMessageId(Long messageId);
 }

@@ -17,7 +17,7 @@ public class EmojiDto {
     private Long guildId;
     private Long channelId;
     private Long roomId;
-    private Long parentId;
+    private Long messageId;
     private Long userId;
     private Long typeId;
     private String type;
@@ -28,7 +28,7 @@ public class EmojiDto {
         this.guildId = emoji.getGuildId();
         this.channelId = emoji.getChannelId();
         this.roomId = emoji.getRoomId();
-        this.parentId = emoji.getParentId();
+        this.messageId = emoji.getMessageId();
         this.userId = emoji.getUserId();
         this.typeId = emoji.getTypeId();
         this.type = emoji.getType();

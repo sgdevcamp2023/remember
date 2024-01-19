@@ -31,7 +31,7 @@ public class Emoji {
     private Long roomId;
 
     @Field
-    private Long parentId;
+    private Long messageId;
 
     @Field
     private Long typeId;
@@ -43,12 +43,12 @@ public class Emoji {
     private Long userId;
 
     @Builder
-    public Emoji(Long guildId, Long channelId, Long roomId, Long parentId, Long typeId, String type,
+    public Emoji(Long guildId, Long channelId, Long roomId, Long messageId, Long typeId, String type,
                  Long userId) {
         this.guildId = guildId;
         this.channelId = channelId;
         this.roomId = roomId;
-        this.parentId = parentId;
+        this.messageId = messageId;
         this.typeId = typeId;
         this.type = type;
         this.userId = userId;

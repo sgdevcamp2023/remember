@@ -22,7 +22,7 @@ public class EmojiService {
                 .guildId(emojiRequest.getGuildId())
                 .channelId(emojiRequest.getChannelId())
                 .roomId(emojiRequest.getRoomId())
-                .parentId(emojiRequest.getParentId())
+                .messageId(emojiRequest.getMessageId())
                 .typeId(emojiRequest.getTypeId())
                 .type(emojiRequest.getType())
                 .userId(emojiRequest.getUserId())

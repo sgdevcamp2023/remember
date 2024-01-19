@@ -107,7 +107,7 @@ public class CommunityMessageService {
 
         List<CommunityMessageResponse> messageResponses = new ArrayList<>();
         for (CommunityMessageDto messageDto : messageDtos) {
-            List<Emoji> emojis = emojiRepository.findAllByParentId(messageDto.getMessageId());
+            List<Emoji> emojis = emojiRepository.findAllByMessageId(messageDto.getMessageId());
             List<EmojiDto> emojiDtos = emojis.stream()
                     .map(EmojiDto::new)
                     .toList();
@@ -126,7 +126,7 @@ public class CommunityMessageService {
 
         List<CommunityCommentResponse> commentResponses = new ArrayList<>();
         for (CommunityMessageDto messageDto : messageDtos) {
-            List<Emoji> emojis = emojiRepository.findAllByParentId(messageDto.getMessageId());
+            List<Emoji> emojis = emojiRepository.findAllByMessageId(messageDto.getMessageId());
             List<EmojiDto> emojiDtos = emojis.stream()
                     .map(EmojiDto::new)
                     .toList();
