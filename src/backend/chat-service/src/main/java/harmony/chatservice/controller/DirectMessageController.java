@@ -1,6 +1,5 @@
 package harmony.chatservice.controller;
 
-import harmony.chatservice.domain.DirectMessage;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.request.DirectMessageDeleteRequest;
 import harmony.chatservice.dto.request.DirectMessageModifyRequest;
@@ -61,15 +60,13 @@ public class DirectMessageController {
     @GetMapping("/api/direct/messages/room/{roomId}")
     public Page<DirectMessageDto> getMessages(@PathVariable("roomId") Long roomId) {
 
-        Page<DirectMessage> directMessages = messageService.getDirectMessages(roomId);
-        return directMessages.map(DirectMessageDto::new);
+        return messageService.getDirectMessages(roomId);
     }
 
     @GetMapping("/api/direct/comments/{parentId}")
     public Page<DirectMessageDto> getComments(@PathVariable("parentId") Long parentId) {
 
-        Page<DirectMessage> messagePage = messageService.getComments(parentId);
-        return messagePage.map(DirectMessageDto::new);
+        return messageService.getComments(parentId);
     }
 
     @PostMapping("/api/direct/message/file")

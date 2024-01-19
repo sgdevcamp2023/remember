@@ -2,6 +2,7 @@ package harmony.chatservice.dto;
 
 
 import harmony.chatservice.domain.DirectMessage;
+import harmony.chatservice.dto.request.EmojiDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,12 +19,14 @@ public class DirectMessageDto {
     private Long parentId;
     private Long roomId;
     private Long userId;
+    private Long count;
     private String profileImage;
     private String type;
     private String senderName;
     private String message;
     private boolean delCheck;
     private List<String> files;
+    private List<EmojiDto> emojis;
 
     public DirectMessageDto(DirectMessage directMessage) {
         this.messageId = directMessage.getMessageId();

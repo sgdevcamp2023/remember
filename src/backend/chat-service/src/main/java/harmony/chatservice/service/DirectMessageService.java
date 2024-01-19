@@ -1,14 +1,18 @@
 package harmony.chatservice.service;
 
 import harmony.chatservice.domain.DirectMessage;
+import harmony.chatservice.domain.Emoji;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.request.DirectMessageDeleteRequest;
 import harmony.chatservice.dto.request.DirectMessageModifyRequest;
 import harmony.chatservice.dto.request.DirectMessageRequest;
+import harmony.chatservice.dto.request.EmojiDto;
 import harmony.chatservice.repository.DirectMessageRepository;
+import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DirectMessageService {
 
+    private final EmojiRepository emojiRepository;
     private final DirectMessageRepository messageRepository;
     private final SequenceGeneratorService sequenceGeneratorService;
 
@@ -67,23 +72,6 @@ public class DirectMessageService {
         return new DirectMessageDto(messageRepository.save(directMessage));
     }
 
-    public Page<DirectMessage> getDirectMessages(Long roomId) {
-
-        List<Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdAt"));
-        Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
-
-        return messageRepository.findByRoomIdAndDelCheckFalse(roomId, pageable);
-    }
-
-    public Page<DirectMessage> getComments(Long parentId) {
-
-        List<Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdAt"));
-        Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
-        return messageRepository.findByParentIdAndDelCheckFalse(parentId, pageable);
-    }
-
     @Transactional
     public DirectMessageDto saveMessageWithFile(DirectMessageRequest messageRequest, List<String> uploadFiles) {
         DirectMessage directMessage = DirectMessage.builder()
@@ -100,5 +88,49 @@ public class DirectMessageService {
         directMessage.setCreatedAt(LocalDateTime.now());
 
         return new DirectMessageDto(messageRepository.save(directMessage));
+    }
+
+    public Page<DirectMessageDto> getDirectMessages(Long roomId) {
+        Page<DirectMessageDto> messageDtos = messagesToMessageDtos("message", roomId);
+        for (DirectMessageDto messageDto : messageDtos) {
+            List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
+            messageDto.setEmojis(emojiDtos);
+            messageDto.setCount(messageRepository.countByParentId(messageDto.getMessageId()));
+        }
+
+        return messageDtos;
+    }
+
+    public Page<DirectMessageDto> getComments(Long parentId) {
+        Page<DirectMessageDto> messageDtos = messagesToMessageDtos("comment", parentId);
+        for (DirectMessageDto messageDto : messageDtos) {
+            List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
+            messageDto.setEmojis(emojiDtos);
+        }
+
+        return messageDtos;
+    }
+
+    public Page<DirectMessageDto> messagesToMessageDtos(String type, Long id) {
+        List<Order> sorts = Collections.singletonList(Sort.Order.desc("createdAt"));
+        Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
+        Page<DirectMessage> messages = null;
+        if (type.equals("message")) {
+            messages = messageRepository.findByRoomIdAndDelCheckFalse(id, pageable)
+                    .orElseThrow(() -> new RuntimeException("예외 발생"));
+        }
+        if (type.equals("comment")) {
+            messages = messageRepository.findByParentIdAndDelCheckFalse(id, pageable)
+                    .orElseThrow(() -> new RuntimeException("예외 발생"));
+        }
+
+        return Objects.requireNonNull(messages, "예외 발생").map(DirectMessageDto::new);
+    }
+
+    public List<EmojiDto> emojisToEmojiDtos(Long messageId) {
+        List<Emoji> emojis = emojiRepository.findAllByMessageId(messageId);
+        return emojis.stream()
+                .map(EmojiDto::new)
+                .toList();
     }
 }
