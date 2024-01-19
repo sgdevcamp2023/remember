@@ -54,7 +54,7 @@ public class CommunityMessageController {
         messageProducerService.sendMessageForCommunity(messageDto);
     }
 
-    @GetMapping("/api/messages/channel/{channelId}")
+    @GetMapping("/api/community/messages/channel/{channelId}")
     public List<CommunityMessageResponse> getMessages(@PathVariable("channelId") Long channelId) {
 
         return messageService.getMessages(channelId);
