@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.community.domain.CategoryRead;
 import harmony.communityservice.community.query.repository.CategoryReadQueryRepository;
 import harmony.communityservice.community.query.service.CategoryReadQueryService;
@@ -20,13 +21,13 @@ public class CategoryReadQueryServiceImpl implements CategoryReadQueryService {
 
     @Override
     public CategoryRead findByCategoryId(long categoryId) {
-        return categoryReadQueryRepository.findCategoryReadById(categoryId).orElseThrow();
+        return categoryReadQueryRepository.findCategoryReadById(categoryId).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
     public void existsByCategoryIdAndGuildId(long categoryId, long guildId) {
         if (!categoryReadQueryRepository.existsByCategoryIdAndGuildId(categoryId, guildId)) {
-            throw new IllegalStateException();
+            throw new NotFoundDataException();
         }
     }
 }

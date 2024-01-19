@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.query.repository.UserQueryRepository;
 import harmony.communityservice.community.query.service.UserQueryService;
@@ -12,6 +13,6 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public User findUser(Long userId) {
-        return userQueryRepository.findById(userId).orElseThrow();
+        return userQueryRepository.findById(userId).orElseThrow(NotFoundDataException::new);
     }
 }

@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.query.repository.UserReadQueryRepository;
 import harmony.communityservice.community.query.service.UserReadQueryService;
@@ -14,13 +15,13 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
     @Override
     public void existsUserIdAndGuildId(long userId, long guildId) {
         if (!userReadQueryRepository.existByUserIdAndGuildId(userId, guildId)) {
-            throw new IllegalStateException();
+            throw new NotFoundDataException();
         }
     }
 
     @Override
     public UserRead findUserReadIdAndGuildId(long userId, long guildId) {
-        return userReadQueryRepository.findByUserIdAndGuildId(userId, guildId).orElseThrow();
+        return userReadQueryRepository.findByUserIdAndGuildId(userId, guildId).orElseThrow(NotFoundDataException::new);
     }
 
     @Override

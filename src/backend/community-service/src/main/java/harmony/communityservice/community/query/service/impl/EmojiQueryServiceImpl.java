@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.domain.Emoji;
 import harmony.communityservice.community.query.repository.EmojiQueryRepository;
@@ -18,6 +19,6 @@ public class EmojiQueryServiceImpl implements EmojiQueryService {
 
     @Override
     public Emoji findById(Long emojiId) {
-        return emojiQueryRepository.findByEmojiId(emojiId).orElseThrow();
+        return emojiQueryRepository.findByEmojiId(emojiId).orElseThrow(NotFoundDataException::new);
     }
 }

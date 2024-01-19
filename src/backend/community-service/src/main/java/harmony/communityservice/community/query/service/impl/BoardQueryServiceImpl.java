@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.domain.Emoji;
 import harmony.communityservice.community.mapper.ToBoardResponseDtoMapper;
@@ -43,7 +44,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
 
     @Override
     public Board findBoardByBoardId(Long boardId) {
-        return boardQueryRepository.findByBoardId(boardId).orElseThrow();
+        return boardQueryRepository.findByBoardId(boardId).orElseThrow(NotFoundDataException::new);
     }
 
     @Override

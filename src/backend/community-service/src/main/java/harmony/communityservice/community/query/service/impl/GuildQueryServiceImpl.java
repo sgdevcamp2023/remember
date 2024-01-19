@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.community.query.dto.InvitationRequestDto;
 import harmony.communityservice.community.domain.Guild;
 import harmony.communityservice.community.mapper.ToInviteCodeMapper;
@@ -17,19 +18,19 @@ public class GuildQueryServiceImpl implements GuildQueryService {
     @Override
     public String findInviteCode(InvitationRequestDto requestDto) {
         userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        Guild guild = guildQueryRepository.findById(requestDto.getGuildId()).orElseThrow();
+        Guild guild = guildQueryRepository.findById(requestDto.getGuildId()).orElseThrow(NotFoundDataException::new);
 
         return ToInviteCodeMapper.convert(guild.getInviteCode(), requestDto.getUserId(),requestDto.getGuildId());
     }
 
     @Override
     public Guild findGuildByInviteCode(String code) {
-        return guildQueryRepository.findByInvitationCode(code).orElseThrow();
+        return guildQueryRepository.findByInvitationCode(code).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
     public Guild findByGuildId(Long guildId) {
-        return guildQueryRepository.findById(guildId).orElseThrow();
+        return guildQueryRepository.findById(guildId).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
