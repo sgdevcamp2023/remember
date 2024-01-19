@@ -2,6 +2,7 @@ package harmony.communityservice.common.service.impl;
 
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
+import harmony.communityservice.common.exception.IllegalGcsException;
 import harmony.communityservice.common.service.ContentService;
 import java.io.IOException;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class GcsContentService implements ContentService {
             );
             return bucketUrl + uuid;
         } catch (IOException e) {
-            throw new IllegalStateException();
+            throw new IllegalGcsException();
         }
 
     }
