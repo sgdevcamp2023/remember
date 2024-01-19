@@ -11,8 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommunityMessageRepository extends MongoRepository<CommunityMessage, Long> {
 
+    Long countByParentId(Long parentId);
+
     @Query("{ 'channelId': ?0, 'delCheck': false, 'parentId': 0 }")
     Optional<Page<CommunityMessage>> findByChannelIdAndDelCheckAndParentId(Long channelId, Pageable pageable);
 
-    Page<CommunityMessage> findByParentIdAndDelCheckFalse(Long parentId, Pageable pageable);
+    Optional<Page<CommunityMessage>> findByParentIdAndDelCheckFalse(Long parentId, Pageable pageable);
 }

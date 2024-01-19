@@ -1,6 +1,7 @@
 package harmony.chatservice.dto;
 
 import harmony.chatservice.domain.CommunityMessage;
+import harmony.chatservice.dto.request.EmojiDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
@@ -18,6 +19,7 @@ public class CommunityMessageDto {
     private Long channelId;
     private Long userId;
     private Long parentId;
+    private Long count;
     private String profileImage;
     private String type;
     private String senderName;
@@ -25,6 +27,7 @@ public class CommunityMessageDto {
     private LocalDateTime createdAt;
     private boolean delCheck;
     private List<String> files;
+    private List<EmojiDto> emojis;
 
     @Builder
     public CommunityMessageDto(CommunityMessage message) {
