@@ -7,6 +7,8 @@ import harmony.chatservice.dto.request.CommunityMessageDeleteRequest;
 import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.dto.EmojiDto;
+import harmony.chatservice.exception.DataNotFoundException;
+import harmony.chatservice.exception.ExceptionStatus;
 import harmony.chatservice.repository.CommunityMessageRepository;
 import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
@@ -55,7 +57,7 @@ public class CommunityMessageService {
     @Transactional
     public CommunityMessageDto modifyMessage(CommunityMessageModifyRequest modifyRequest) {
         CommunityMessage message = messageRepository.findById(modifyRequest.getMessageId())
-                .orElseThrow(() -> new RuntimeException("예외 발생"));
+                .orElseThrow(() -> new DataNotFoundException(ExceptionStatus.DATA_NOT_FOUND));
 
         message.modify(modifyRequest.getMessage(), modifyRequest.getType());
         message.setModifiedAt(LocalDateTime.now());
@@ -66,7 +68,7 @@ public class CommunityMessageService {
     @Transactional
     public CommunityMessageDto deleteMessage(CommunityMessageDeleteRequest deleteRequest) {
         CommunityMessage message = messageRepository.findById(deleteRequest.getMessageId())
-                .orElseThrow(() -> new RuntimeException("예외 발생"));
+                .orElseThrow(() -> new DataNotFoundException(ExceptionStatus.DATA_NOT_FOUND));
 
         message.delete(deleteRequest.getType());
         message.setModifiedAt(LocalDateTime.now());

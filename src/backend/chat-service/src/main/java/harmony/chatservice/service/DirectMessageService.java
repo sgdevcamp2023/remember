@@ -7,6 +7,8 @@ import harmony.chatservice.dto.request.DirectMessageDeleteRequest;
 import harmony.chatservice.dto.request.DirectMessageModifyRequest;
 import harmony.chatservice.dto.request.DirectMessageRequest;
 import harmony.chatservice.dto.EmojiDto;
+import harmony.chatservice.exception.DataNotFoundException;
+import harmony.chatservice.exception.ExceptionStatus;
 import harmony.chatservice.repository.DirectMessageRepository;
 import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
@@ -51,7 +53,7 @@ public class DirectMessageService {
     public DirectMessageDto modifyDirectMessage(DirectMessageModifyRequest modifyRequest) {
 
         DirectMessage directMessage = messageRepository.findById(modifyRequest.getMessageId())
-                .orElseThrow(() -> new RuntimeException("예외 발생"));
+                .orElseThrow(() -> new DataNotFoundException(ExceptionStatus.DATA_NOT_FOUND));
 
         directMessage.modify(modifyRequest.getMessage(), modifyRequest.getType());
         directMessage.setModifiedAt(LocalDateTime.now());
@@ -63,7 +65,7 @@ public class DirectMessageService {
     public DirectMessageDto deleteDirectMessage(DirectMessageDeleteRequest deleteRequest) {
 
         DirectMessage directMessage = messageRepository.findById(deleteRequest.getMessageId())
-                .orElseThrow(() -> new RuntimeException("예외 발생"));
+                .orElseThrow(() -> new DataNotFoundException(ExceptionStatus.DATA_NOT_FOUND));
 
         directMessage.delete(deleteRequest.getType());
         directMessage.setModifiedAt(LocalDateTime.now());
