@@ -12,7 +12,6 @@ import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -116,15 +115,12 @@ public class DirectMessageService {
         Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
         Page<DirectMessage> messages = null;
         if (type.equals("message")) {
-            messages = messageRepository.findByRoomIdAndDelCheckAndParentId(id, pageable)
-                    .orElseThrow(() -> new RuntimeException("예외 발생"));
-        }
-        if (type.equals("comment")) {
-            messages = messageRepository.findByParentIdAndDelCheckFalse(id, pageable)
-                    .orElseThrow(() -> new RuntimeException("예외 발생"));
+            messages = messageRepository.findByRoomIdAndDelCheckAndParentId(id, pageable);
+        } else if (type.equals("comment")) {
+            messages = messageRepository.findByParentIdAndDelCheckFalse(id, pageable);
         }
 
-        return Objects.requireNonNull(messages, "예외 발생").map(DirectMessageDto::new);
+        return (messages != null) ? messages.map(DirectMessageDto::new) : Page.empty(pageable);
     }
 
     public List<EmojiDto> emojisToEmojiDtos(Long messageId) {
