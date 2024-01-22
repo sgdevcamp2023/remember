@@ -10,10 +10,15 @@ namespace user_service
             public class ProfileDTO
             {
                 [Required(ErrorMessage = "4021")]
-                public long UserId { get; set; }
-
+                public string UserId { get; set; } = null!;
+                
                 [Required(ErrorMessage = "4023")]
-                public string NewProfile { get; set; } = null!;
+                public IFormFile NewProfile { get; set; } = null!;
+            }
+
+            public class ProfileResponseDTO
+            {
+                public string ProfileUrl { get; set; } = null!;
             }
         }
     }

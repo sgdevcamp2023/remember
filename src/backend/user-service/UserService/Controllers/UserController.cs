@@ -46,12 +46,15 @@ namespace user_service
             }
 
             [HttpPatch("change-profile")]
-            public IActionResult ChangeProfile(
-                [FromBody] ProfileDTO profileDTO)
+            public ProfileResponseDTO ChangeProfile(
+                [FromForm] ProfileDTO file)
             {
-                _userService.ChangeProfile(profileDTO);
-                
-                return Ok();
+                string profileUrl = _userService.ChangeProfile(file);
+            
+                return new ProfileResponseDTO()
+                {
+                    ProfileUrl = profileUrl
+                };
             }
         }
     }

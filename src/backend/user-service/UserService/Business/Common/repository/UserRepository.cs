@@ -48,7 +48,7 @@ namespace user_service
 
             public bool InsertUser(RegisterDTO user)
             {
-                string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '{user.ProfileUrl}')";
+                string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '')";
                 _db.ExecuteNonQuery(query);
 
                 return true;

@@ -22,8 +22,6 @@ namespace user_service
                 [DataType(DataType.Password)]
                 public string Password { get; set; } = null!;
 
-                public string? ProfileUrl { get; set; }
-
                 [Required(ErrorMessage = "4004")]
                 public string EmailChecksum { get; set; } = null!;
             }

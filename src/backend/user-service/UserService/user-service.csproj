@@ -12,5 +12,6 @@
     <PackageReference Include="StackExchange.Redis" Version="2.7.10"/>
     <PackageReference Include="MailKit" Version="4.3.0"/>
     <PackageReference Include="SmtpServer" Version="10.0.1"/>
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.7.0"/>
   </ItemGroup>
 </Project>
