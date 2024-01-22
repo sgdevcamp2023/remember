@@ -18,9 +18,10 @@ namespace user_service
                     _userRepository = userRepository;
                 }
                 
-                public void ChangePassword(long id, PasswordDTO passwords)
+                public void ChangePassword(PasswordDTO passwords)
                 {
-                    UserModel? user = _userRepository.GetUserById(id);
+                    long userId = passwords.UserId;
+                    UserModel? user = _userRepository.GetUserById(userId);
                     if(user == null)
                         throw new ServiceException(4007);
 
@@ -29,12 +30,12 @@ namespace user_service
                     if(user.Password != currentPassword)
                         throw new ServiceException(4008);
 
-                    _userRepository.UpdatePassword(id, Utils.SHA256Hash(passwords.NewPassword));
+                    _userRepository.UpdatePassword(userId, Utils.SHA256Hash(passwords.NewPassword));
                 }
 
-                public UserDTO GetUserInfo(long id)
+                public UserDTO GetUserInfo(long userId)
                 {
-                    UserModel? user = _userRepository.GetUserById(id);
+                    UserModel? user = _userRepository.GetUserById(userId);
                     if(user == null)
                         throw new ServiceException(4007);
 
@@ -47,14 +48,14 @@ namespace user_service
                     };
                 }
 
-                public void ChangeName(long id, string newName)
+                public void ChangeName(NameDTO nameDTO)
                 {
-                    _userRepository.UpdateName(id, newName);
+                    _userRepository.UpdateName(nameDTO.UserId, nameDTO.NewName);
                 }
 
-                public void ChangeProfile(long id, string newProfileUrl)
+                public void ChangeProfile(ProfileDTO profileDTO)
                 {
-                    _userRepository.UpdateProfile(id, newProfileUrl);
+                    _userRepository.UpdateProfile(profileDTO.UserId, profileDTO.NewProfile);
                 }
             }
         }

@@ -9,6 +9,9 @@ namespace user_service
         {
             public class PasswordDTO
             {
+                [Required(ErrorMessage = "4021")]
+                public long UserId { get; set; }
+
                 [Required(ErrorMessage = "4002")]
                 public string Password { get; set; } = null!;
 

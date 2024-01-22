@@ -105,6 +105,21 @@
         "description": "친구 요청 취소에 실패하였습니다."
     },
     {
+        "code": 4021,
+        "message": "REQUIRED_TRACE_ID",
+        "description": "Trace ID는 필수 입력입니다."
+    },
+    {
+        "code": 4022,
+        "message": "REQUIRED_NEW_NAME",
+        "description": "새로운 이름은 필수 입력입니다."
+    },
+    {
+        "code": 4023,
+        "message": "REQUIRED_NEW_PROFILE",
+        "description": "새로운 프로필은 필수 입력입니다."
+    },
+    {
         "code": 4100,
         "message": "INVALID_ACCESS_TOKEN",
         "description": "엑세스 토큰이 올바르지 않습니다."
@@ -138,10 +153,5 @@
         "code": 4106,
         "message": "REQUIRED_ACCESS_TOKEN",
         "description": "엑세스 토큰은 필수 입력입니다."
-    },
-    {
-        "code": 4200,
-        "message": "REQUIRED_TRACE_ID",
-        "description": "Trace ID는 필수 입력입니다."
     }
 ]

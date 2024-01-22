@@ -21,38 +21,35 @@ namespace user_service
                 _userService = userService;
             }
 
-            [HttpGet("info")]
-            public UserDTO GetInfo([FromHeader(Name = "trace-id")] int traceId)
+            [HttpGet("info/{userId}")]
+            public UserDTO GetInfo(int userId)
             {
-                return _userService.GetUserInfo(traceId);
+                return _userService.GetUserInfo(userId);
             }
             
             [HttpPatch("change-password")]
             public IActionResult ChangePassword(
-                [FromHeader(Name = "trace-id")] int traceId,
                 [FromBody] PasswordDTO passwordDTO)
             {
-                _userService.ChangePassword(traceId, passwordDTO);
+                _userService.ChangePassword(passwordDTO);
 
                 return Ok();
             }
 
             [HttpPatch("change-name")]
             public IActionResult ChangeName(
-                [FromHeader(Name = "trace-id")] [Required] int traceId,
-                [FromBody] string newName)
+                [FromBody] NameDTO nameDTO)
             {
-                _userService.ChangeName(traceId, newName);
+                _userService.ChangeName(nameDTO);
                 
                 return Ok();
             }
 
             [HttpPatch("change-profile")]
             public IActionResult ChangeProfile(
-                [FromHeader(Name = "trace-id")] [Required] int traceId,
-                [FromBody] string newProfile)
+                [FromBody] ProfileDTO profileDTO)
             {
-                _userService.ChangeProfile(traceId, newProfile);
+                _userService.ChangeProfile(profileDTO);
                 
                 return Ok();
             }
