@@ -2,6 +2,8 @@ package harmony.chatservice.service;
 
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
+import harmony.chatservice.exception.ExceptionStatus;
+import harmony.chatservice.exception.FileException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +34,14 @@ public class FileUploadService {
     }
 
     public List<String> uploadFile(List<MultipartFile> files) throws IOException {
+        if (files.size() > 10) {
+            throw new FileException(ExceptionStatus.FILE_UPLOAD_EXCEEDED);
+        }
+
         List<String> uploadFiles = new ArrayList<>();
         for (MultipartFile file : files) {
             String originalFilename = file.getOriginalFilename();
-            log.info("originalFilename {}", originalFilename);
             String ext = extractExt(originalFilename);
-            log.info("ext {}", ext);
             String filename = createStoreFileName(originalFilename);
 
             // Cloud에 이미지 업로드
