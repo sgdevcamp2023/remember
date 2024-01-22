@@ -5,11 +5,11 @@ namespace ApiGatewayCore.Instance;
 public abstract class AbstractFilter
 {
     protected List<Func<RequestDelegate, RequestDelegate>> _filters = new List<Func<RequestDelegate, RequestDelegate>>();
-    public void UseMiddleware<T>()
+    public void UseFilter<T>()
     {
-        UseMiddleware(typeof(T));
+        UseFilter(typeof(T));
     }
-    public void UseMiddleware(Type type)
+    public void UseFilter(Type type)
     {
         Use(next => {
            return async context =>

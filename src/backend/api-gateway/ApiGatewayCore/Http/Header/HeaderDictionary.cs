@@ -127,14 +127,13 @@ public class HeaderDictionary : IDictionary<string, string>
 
     public void Clear()
     {
-        throw new NotImplementedException();
+        Store?.Clear();
     }
 
     public bool Contains(KeyValuePair<string, string> item)
     {
-        throw new NotImplementedException();
+        return Store?.Contains(item) ?? false;
     }
-
     public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
     {
         throw new NotImplementedException();
@@ -142,16 +141,17 @@ public class HeaderDictionary : IDictionary<string, string>
 
     public bool Remove(KeyValuePair<string, string> item)
     {
-        throw new NotImplementedException();
+        return Store?.Remove(item.Key) ?? false;
     }
 
     public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
     {
-        return Store?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, string>>().GetEnumerator();
+        return GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        throw new NotImplementedException();
+        return Store?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, string>>().GetEnumerator();
     }
+
 }
