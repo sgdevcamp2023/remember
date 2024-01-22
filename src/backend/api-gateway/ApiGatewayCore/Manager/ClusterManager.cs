@@ -1,6 +1,6 @@
 namespace ApiGatewayCore.Manager;
 
-public class ListenerManager
+public class ClusterManager
 {
     
 }

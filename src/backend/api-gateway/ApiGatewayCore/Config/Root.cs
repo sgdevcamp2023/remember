@@ -1,10 +1,8 @@
 using YamlDotNet.RepresentationModel;
 
-namespace ServerCore
+namespace ApiGatewayCore.Config;
+public class Root
 {
-    public class Root
-    {
-        public List<Listener> Listeners { get; set; } = null!;
-        public List<Cluster> Clusters { get; set; } = null!;
-    }
+    public List<ListenerModel> Listeners { get; set; } = null!;
+    public List<ClusterModel> Clusters { get; set; } = null!;
 }
