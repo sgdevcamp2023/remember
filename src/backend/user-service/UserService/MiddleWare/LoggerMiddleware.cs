@@ -4,7 +4,7 @@ namespace user_service
 {
     namespace middleware
     {
-        public class LoggerMiddleware
+        public class LoggerMiddleware : IMiddleware
         {
             private RequestDelegate _next;
             private IBaseLogger _logger;
@@ -14,9 +14,9 @@ namespace user_service
                 _logger = logger;
             }
 
-            public async Task Invoke(HttpContext context)
+            public async Task InvokeAsync(HttpContext context, RequestDelegate next)
             {
-                _logger.Log("Start");
+                 _logger.Log("Start");
 
                 await _next(context);
 
