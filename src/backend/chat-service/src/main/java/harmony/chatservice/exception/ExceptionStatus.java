@@ -9,7 +9,9 @@ public enum ExceptionStatus {
 
     FILE_UPLOAD_EXCEEDED(2005,  "File Count Error", "파일 업로드 개수는 10개 이하여야 합니다."),
 
-    FILE_SIZE_EXCEED(2006, "File Size Error","업로드 할 수 있는 파일의 최대 크기는 15MB 입니다.");
+    FILE_SIZE_EXCEEDED(2006, "File Size Error","업로드 할 수 있는 파일의 최대 크기는 15MB 입니다."),
+
+    FILE_UPLOAD_FAILED(2007, "Fail File Upload", "파일 업로드에 실패했습니다.");
 
     private final int statusCode;
     private final String message;

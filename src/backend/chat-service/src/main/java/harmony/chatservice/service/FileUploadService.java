@@ -5,6 +5,7 @@ import com.google.cloud.storage.Storage;
 import harmony.chatservice.exception.ExceptionStatus;
 import harmony.chatservice.exception.FileException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class FileUploadService {
         return fileDir + bucketName + SEP + filename;
     }
 
-    public List<String> uploadFile(List<MultipartFile> files) throws IOException {
+    public List<String> uploadFile(List<MultipartFile> files) {
         if (files.size() > 10) {
             throw new FileException(ExceptionStatus.FILE_UPLOAD_EXCEEDED);
         }
@@ -45,12 +46,14 @@ public class FileUploadService {
             String filename = createStoreFileName(originalFilename);
 
             // Cloud에 이미지 업로드
-            BlobInfo blobInfo = storage.create(
-                    BlobInfo.newBuilder(bucketName, filename)
-                            .setContentType(ext)
-                            .build(),
-                    file.getInputStream()
-            );
+            try (InputStream inputStream = file.getInputStream()) {
+                BlobInfo blobInfo = storage.create(
+                        BlobInfo.newBuilder(bucketName, filename)
+                                .setContentType(ext)
+                                .build(), inputStream);
+            } catch (IOException e) {
+                throw new FileException(ExceptionStatus.FILE_UPLOAD_FAILED);
+            }
 
             uploadFiles.add(createFullPath(filename));
         }
