@@ -17,14 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FileUploadService {
 
-    @Value("${spring.cloud.gcp.storage.bucket}") // application.yml에 써둔 bucket 이름
+    @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
 
     @Value("${file.dir}")
     private String fileDir;
 
     private final static String SEP = "/";
-    private final static String DOT = ".";
 
     private final Storage storage;
 
@@ -35,9 +34,11 @@ public class FileUploadService {
     public List<String> uploadFile(List<MultipartFile> files) throws IOException {
         List<String> uploadFiles = new ArrayList<>();
         for (MultipartFile file : files) {
-            String uuid = UUID.randomUUID().toString(); // Google Cloud Storage에 저장될 파일 이름
-            String ext = file.getContentType(); // 파일의 형식 ex) JPG
-            String filename = uuid + DOT + ext;
+            String originalFilename = file.getOriginalFilename();
+            log.info("originalFilename {}", originalFilename);
+            String ext = extractExt(originalFilename);
+            log.info("ext {}", ext);
+            String filename = createStoreFileName(originalFilename);
 
             // Cloud에 이미지 업로드
             BlobInfo blobInfo = storage.create(
@@ -50,5 +51,16 @@ public class FileUploadService {
             uploadFiles.add(createFullPath(filename));
         }
         return uploadFiles;
+    }
+
+    private String createStoreFileName(String originalFilename) {
+        String ext = extractExt(originalFilename);
+        String uuid = UUID.randomUUID().toString();
+        return uuid + "." + ext;
+    }
+
+    private String extractExt(String originalFilename) {
+        int pos = originalFilename.lastIndexOf(".");
+        return originalFilename.substring(pos + 1);
     }
 }
