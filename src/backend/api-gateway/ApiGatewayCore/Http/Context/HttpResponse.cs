@@ -13,6 +13,28 @@ public class HttpResponse
         _responseFeatrue = new ResponseFeature();
     }
 
+    public HttpResponse(string responseString)
+    {
+        _responseFeatrue = new ResponseFeature();
+        string[] responseLines = responseString.Split("\r\n");
+        string[] responseLine = responseLines[0].Split(" ");
+        Method = responseLine[0];
+        Path = responseLine[1];
+        Protocol = responseLine[2];
+
+        // HttpContext 분리 생성
+        for(int i = 1;i<responseLines.Length;i++)
+        {
+            if(responseLines[i] == "\n")
+            {
+                Body = string.Join("\n", responseLines, i + 1, responseLines.Length - i - 1);
+                break;
+            }
+
+            string[] header = responseLines[i].Split(": ");
+            Header.Add(header[0],header[1]);
+        }
+    }
     public string Method
     {
         get => _responseFeatrue.Method;
@@ -37,11 +59,12 @@ public class HttpResponse
         set => _responseFeatrue.Header = value;
     }
 
-    public string Body
+    public string? Body
     {
         get => _responseFeatrue.Body;
         set => _responseFeatrue.Body = value;
     }
+    
     public string ToResponseString()
     {
         string responseString = $"{Method} {Path} {Protocol}\r\n";

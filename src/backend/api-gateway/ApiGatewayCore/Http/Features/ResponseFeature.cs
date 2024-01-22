@@ -11,7 +11,7 @@ public sealed class ResponseFeature : IResponseFeature
         Path = string.Empty;
         Protocol = string.Empty;
 
-        // Header = new HeaderDictionary();
+        Header = new HeaderDictionary();
         Body = string.Empty;
     }
     public string Method { get; set; } = null!;
@@ -19,5 +19,5 @@ public sealed class ResponseFeature : IResponseFeature
     public string Protocol { get; set; } = null!;
 
     public HeaderDictionary Header { get; set; } = null!;
-    public string Body { get; set; } = null!;
+    public string? Body { get; set; } = null!;
 }

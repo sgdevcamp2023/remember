@@ -11,6 +11,29 @@ public class HttpRequest
         _requestFeature = new RequestFeature();
     }
 
+    public HttpRequest(string requestString)
+    {
+        _requestFeature = new RequestFeature();
+        string[] requestLines = requestString.Split("\r\n");
+        string[] requestLine = requestLines[0].Split(" ");
+        Method = requestLine[0];
+        Path = requestLine[1];
+        Protocol = requestLine[2];
+
+        // HttpContext 분리 생성
+        for(int i = 1;i<requestLines.Length;i++)
+        {
+            if(requestLines[i] == "\n")
+            {
+                Body = string.Join("\n", requestLines, i + 1, requestLines.Length - i - 1);
+                break;
+            }
+
+            string[] header = requestLines[i].Split(": ");
+            Header.Add(header[0],header[1]);
+        }
+    }
+
     public string Method
     {
         get => _requestFeature.Method;
@@ -35,7 +58,7 @@ public class HttpRequest
         set => _requestFeature.Header = value;
     }
 
-    public string Body
+    public string? Body
     {
         get => _requestFeature.Body;
         set => _requestFeature.Body = value;

@@ -9,5 +9,5 @@ public interface IBaseFeature
     public string Protocol { get; set; }
 
     public HeaderDictionary Header { get; set; }
-    public string Body { get; set; }
+    public string? Body { get; set; }
 }

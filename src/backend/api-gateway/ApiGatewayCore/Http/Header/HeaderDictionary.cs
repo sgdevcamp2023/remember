@@ -10,6 +10,11 @@ public class HeaderDictionary : IDictionary<string, string>
 
     private Dictionary<string, string>? Store { get; set; }
 
+    public HeaderDictionary()
+    {
+        Store = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    }
+    
     public HeaderDictionary(Dictionary<string, string>? keyValuePairs)
     {
         Store = keyValuePairs;

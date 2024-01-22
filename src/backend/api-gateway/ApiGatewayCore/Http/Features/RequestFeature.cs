@@ -19,5 +19,5 @@ public sealed class RequestFeature : IRequestFeature
     public string Protocol { get; set; } = null!;
 
     public HeaderDictionary Header { get; set; } = null!;
-    public string Body { get; set; } = null!;
+    public string? Body { get; set; } = null!;
 }
