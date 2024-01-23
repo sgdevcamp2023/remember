@@ -34,6 +34,17 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<FriendService>();
 
+// CORS 설정
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 // 에러 설정
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {
@@ -52,6 +63,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// CORS 설정
+app.UseCors();
 
 app.UseMiddleware<LoggerMiddleware>();
 

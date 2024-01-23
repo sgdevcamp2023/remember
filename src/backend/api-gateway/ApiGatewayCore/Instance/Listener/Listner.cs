@@ -13,10 +13,19 @@ public class Listener : AbstractFilter
     {   
         _model = model;
     }
+    public void Init()
+    {
 
-    public HttpContext MakeHttpContext(string request)
+    }
+
+    public async Task Run()
+    {
+        
+
+        await Task.CompletedTask;
+    }
+    private void MakeHttpContext(string request)
     {
         _context.Request = new HttpRequest(request);
-        return _context;
     }
 }
