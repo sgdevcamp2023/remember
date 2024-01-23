@@ -34,10 +34,10 @@ namespace user_service
                 public void Register(RegisterDTO register)
                 {
                     // 체크
-                    SameEmailCheck(register.Email);
-                    CheckEmailChecksum(register.Email, register.EmailChecksum);
+                    // SameEmailCheck(register.Email);
+                    // CheckEmailChecksum(register.Email, register.EmailChecksum);
 
-                    _redis.DeleteChecksum(register.Email);
+                    // _redis.DeleteChecksum(register.Email);
 
                     // 비밀번호 암호화
                     register.Password = Utils.SHA256Hash(register.Password);

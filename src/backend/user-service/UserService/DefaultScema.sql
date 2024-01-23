@@ -21,6 +21,7 @@ CREATE TABLE friends (
     FOREIGN     KEY (second_user_id) REFERENCES users(id)
 );
 
+SELECT * FROM users;
 DROP TABLE friends, users;
 
 INSERT INTO users (email, password, name, profile) VALUES ('asdfae@aasdfa213.com', 'asdfasdf', 'asdfasdf', 'asdfasdf');

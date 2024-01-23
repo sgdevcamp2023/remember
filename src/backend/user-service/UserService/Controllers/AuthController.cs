@@ -30,12 +30,11 @@ namespace user_service
             }
 
             [HttpPost("login")]
-            public IActionResult Login([FromBody] LoginDTO login)
+            public TokenDTO Login([FromBody] LoginDTO login)
             {
                 TokenDTO tokens = _jwtService.CreateToken(login);
-                Response.Headers["Authorization"] = $"Bearer {tokens.AccessToken}";
-                Response.Headers["Set-Cookie"] = $"refreshToken={tokens.RefreshToken};Path=/api/user/auth;Domain=localhost;HttpOnly;";
-                return Ok();
+                
+                return tokens;
             }
 
             [HttpPost("send-email")]
@@ -43,15 +42,6 @@ namespace user_service
                 [FromBody] EmailRequestDTO email)
             {
                 _authService.SendEmailChecksum(email.Email);
-
-                return Ok();
-            }
-
-            [HttpPost("check-email")]
-            public IActionResult CheckEmail(
-                [FromBody] EmailDTO email)
-            {
-                _authService.CheckEmailChecksum(email.Email, email.EmailChecksum);
 
                 return Ok();
             }

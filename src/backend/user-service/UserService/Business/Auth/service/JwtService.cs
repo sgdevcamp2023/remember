@@ -107,7 +107,7 @@ namespace user_service
                         new TimeSpan(0, 0, int.Parse(_config["JWT:RefreshTokenValidityInSecond"]))))
                         throw new RedisException("Redis Repository Insert Error");
 
-                    return new TokenDTO(accessToken, refreshToken);
+                    return new TokenDTO($"Bearer {accessToken}", refreshToken);
                 }
 
                 private string CreateRefreshToken()

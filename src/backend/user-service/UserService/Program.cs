@@ -37,18 +37,20 @@ builder.Services.AddScoped<FriendService>();
 // CORS 설정
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
+    options.AddPolicy("AllowReact", builder =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        builder.WithOrigins("http://localhost:3000") // 리액트 앱의 주소
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithExposedHeaders("Authorization");                
     });
 });
 
 // 에러 설정
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {
-    options.InvalidModelStateResponseFactory = CustomErrorHandler.ModelStateErrorHandler; 
+    options.InvalidModelStateResponseFactory = CustomErrorHandler.ModelStateErrorHandler;
 });
 
 builder.Services.AddControllers();
@@ -65,14 +67,14 @@ if (app.Environment.IsDevelopment())
 }
 
 // CORS 설정
-app.UseCors();
-
-app.UseMiddleware<LoggerMiddleware>();
+app.UseCors("AllowReact");
 
 app.UseExceptionHandler(exceptionHandlerApp =>
 {
-    exceptionHandlerApp.Run(CustomErrorHandler.MyRequestDelegate); 
+    exceptionHandlerApp.Run(CustomErrorHandler.MyRequestDelegate);
 });
+
+app.UseMiddleware<LoggerMiddleware>();
 
 app.MapControllers();
 
