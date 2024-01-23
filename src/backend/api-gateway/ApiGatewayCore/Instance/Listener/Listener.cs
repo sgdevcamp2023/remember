@@ -7,7 +7,6 @@ namespace ApiGatewayCore.Instance.Listener;
 
 public class Listener : AbstractFilter, IListener
 {
-    private HttpContext _context = new();
     private Socket _listenerSocket = null!;
     private Queue<SocketAsyncEventArgs> _recvArgs = new Queue<SocketAsyncEventArgs>();
     private Queue<SocketAsyncEventArgs> _sendArgs = new Queue<SocketAsyncEventArgs>();
@@ -36,9 +35,11 @@ public class Listener : AbstractFilter, IListener
 
         await Task.CompletedTask;
     }
-    private void MakeHttpContext(string request)
+    private HttpContext MakeHttpContext(string request)
     {
-        _context.Request = new HttpRequest(request);
+        HttpRequest httpRequest = new HttpRequest(request);
+        HttpResponse httpResponse = new HttpResponse();
+        return new HttpContext(httpRequest, httpResponse);
     }
 
     public void RegisterAccept(SocketAsyncEventArgs args)
@@ -93,15 +94,19 @@ public class Listener : AbstractFilter, IListener
             if (socket == null)
                 throw new Exception();
 
-            byte[]? bytes = args.Buffer;
-            if (bytes == null)
-                throw new Exception();
+            if(args.BytesTransferred < 0)
+            {
+                Disconnect(socket);
+                return;
+            }
 
-            MakeHttpContext(bytes.ToString()!);
+            ArraySegment<byte> buffer = args.Buffer!;
+            
+            HttpContext context = MakeHttpContext(System.Text.Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, buffer.Count));
 
             _recvArgs.Enqueue(args);
             // 이후 필터를 거쳐가는 과정이 필요
-
+            
             // 필터 종료 후
             RegisterSend(socket);
         }
