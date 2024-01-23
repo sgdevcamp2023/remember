@@ -1,8 +1,12 @@
 package harmony.chatservice.service.kafka;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
+import harmony.chatservice.dto.response.StateDto;
+import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -11,6 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class MessageConsumerService {
+
+    private final ObjectMapper objectMapper;
 
     private final SimpMessageSendingOperations messagingTemplate;
 
@@ -31,6 +37,23 @@ public class MessageConsumerService {
         }
         if (emojiDto.getGuildId() > 0) {
             messagingTemplate.convertAndSend("/topic/guild/" + emojiDto.getGuildId(), emojiDto);
+        }
+    }
+
+    @KafkaListener(topics = "stateChatTopic", groupId = "stateGroup", containerFactory = "stateListener")
+    public void consumeForState(StateDto stateDto) throws JsonProcessingException {
+        if (stateDto.getType().equals("CONNECT") || stateDto.getType().equals("DISCONNECT")) {
+            HashMap<String,String> stateInfo = new HashMap<>();
+            stateInfo.put("state",stateDto.getState());
+            stateInfo.put("userId", String.valueOf(stateDto.getUserId()));
+            String userState = objectMapper.writeValueAsString(stateInfo);
+
+            for (Long guildId : stateDto.getGuildIds()) {
+                messagingTemplate.convertAndSend("/topic/guild/" + guildId, userState);
+            }
+            for (Long roomId : stateDto.getRoomIds()) {
+                messagingTemplate.convertAndSend("/topic/direct/" + roomId, userState);
+            }
         }
     }
 }

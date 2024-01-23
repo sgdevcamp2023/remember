@@ -3,6 +3,7 @@ package harmony.chatservice.service.kafka;
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
+import harmony.chatservice.dto.response.StateDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -63,5 +64,16 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<String, EmojiDto> kafkaTemplateForEmoji() {
         return new KafkaTemplate<>(producerFactoryForEmoji());
+    }
+
+    // 상태 관련 producer
+    public ProducerFactory<String, StateDto> producerFactoryForState() {
+        return new DefaultKafkaProducerFactory<>(producerConfig());
+    }
+
+    // 상태 관련 producer
+    @Bean
+    public KafkaTemplate<String, StateDto> kafkaTemplateForState() {
+        return new KafkaTemplate<>(producerFactoryForState());
     }
 }

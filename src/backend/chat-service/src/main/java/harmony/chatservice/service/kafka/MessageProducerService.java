@@ -3,11 +3,14 @@ package harmony.chatservice.service.kafka;
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
+import harmony.chatservice.dto.response.StateDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MessageProducerService {
@@ -21,24 +24,34 @@ public class MessageProducerService {
     @Value("${spring.kafka.producer.emoji-chat-topic}")
     private String emojiChatTopic;
 
+    @Value("${spring.kafka.producer.state-chat-topic}")
+    private String stateChatTopic;
+
     private final KafkaTemplate<String, CommunityMessageDto> kafkaTemplateForCommunity;
 
     private final KafkaTemplate<String, DirectMessageDto> kafkaTemplateForDirect;
 
     private final KafkaTemplate<String, EmojiDto> kafkaTemplateForEmoji;
 
+    private final KafkaTemplate<String, StateDto> kafkaTemplateForState;
+
     public void sendMessageForCommunity(CommunityMessageDto messageDto) {
-        System.out.println("chatmessage = " + messageDto.getMessage());
+        log.info("messageDto {}", messageDto.getType());
         kafkaTemplateForCommunity.send(communityChatTopic, messageDto);
     }
 
     public void sendMessageForDirect(DirectMessageDto messageDto) {
-        System.out.println("chatmessage = " + messageDto.getMessage());
+        log.info("messageDto {}", messageDto.getType());
         kafkaTemplateForDirect.send(directChatTopic, messageDto);
     }
 
     public void sendMessageForEmoji(EmojiDto emojiDto) {
-        System.out.println("chatmessage = " + emojiDto.getType());
+        log.info("emoji {}", emojiDto.getType());
         kafkaTemplateForEmoji.send(emojiChatTopic, emojiDto);
+    }
+
+    public void sendMessageForState(StateDto stateDto) {
+        log.info("state {}", stateDto.getType());
+        kafkaTemplateForState.send(stateChatTopic, stateDto);
     }
 }
