@@ -107,7 +107,9 @@ public class Listener : AbstractFilter, IListener
             _recvArgs.Enqueue(args);
             // 이후 필터를 거쳐가는 과정이 필요
             
-            // 필터 종료 후
+            FilterStart(context);
+
+            // 필터 종료 후, Http Context 넘겨야 함
             RegisterSend(socket);
         }
         else

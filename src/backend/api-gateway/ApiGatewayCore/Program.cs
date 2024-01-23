@@ -1,10 +1,12 @@
-﻿using ServerCore;
+﻿using ApiGatewayCore.Config;
+
+namespace ApiGatewayCore;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        var yamlReaderWriter = new YamlReaderWriter("ServerCore/TestConfig.yaml");
+        var yamlReaderWriter = new ConfigReader("ServerCore/TestConfig.yaml");
         var root = yamlReaderWriter.Load<Root>();
         System.Console.WriteLine(root.Listeners.Count);
     }

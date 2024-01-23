@@ -1,4 +1,5 @@
 using ApiGatewayCore.Filter;
+using ApiGatewayCore.Http.Context;
 
 namespace ApiGatewayCore.Instance;
 
@@ -28,5 +29,20 @@ public abstract class AbstractFilter
     public void Use(Func<RequestDelegate, RequestDelegate> filter)
     {
         _filters.Add(filter);
+    }
+
+    public void FilterStart(HttpContext context)
+    {
+        RequestDelegate next = (context) =>
+        {
+            return Task.CompletedTask;
+        };
+
+        for (int i = _filters.Count - 1; i >= 0; i--)
+        {
+            next = _filters[i](next);
+        }
+
+        next(context);
     }
 }
