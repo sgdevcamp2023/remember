@@ -158,5 +158,4 @@ public class HeaderDictionary : IDictionary<string, string>
     {
         return Store?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, string>>().GetEnumerator();
     }
-
 }

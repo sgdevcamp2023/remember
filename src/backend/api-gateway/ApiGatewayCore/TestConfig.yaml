@@ -17,6 +17,7 @@ listeners:
         - "200"
   disallow-headers:
     - trace-id
+  thread-count: 1
 
 clusters:
 - services:
