@@ -1,11 +1,57 @@
 using System.Net.Sockets;
+using ApiGatewayCore.Filter;
+using ApiGatewayCore.Http.Context;
 using ApiGatewayCore.Utils;
 
 namespace ApiGatewayCore.Instance;
 
-public abstract class AbstractNetwork : AbstractFilter, INetwork
+public abstract class DefaultInstance : IFilter, INetwork
 {
-    private Queue<SocketAsyncEventArgs> _recvArgs = new Queue<SocketAsyncEventArgs>();
+    #region Filter
+    protected List<Func<RequestDelegate, RequestDelegate>> _filters = new List<Func<RequestDelegate, RequestDelegate>>();
+    public void UseFilter<T>()
+    {
+        UseFilter(typeof(T));
+    }
+    public void UseFilter(Type type)
+    {
+        Use(next => {
+           return async context =>
+            {
+                var middleware = Activator.CreateInstance(type) as IFilterBase;
+
+                if (middleware == null)
+                {
+                    throw new InvalidOperationException("middleware is null");
+                }
+
+                await middleware.InvokeAsync(context, next);
+            };
+        });
+    }   
+    public void Use(Func<RequestDelegate, RequestDelegate> filter)
+    {
+        _filters.Add(filter);
+    }
+
+    public void FilterStart(HttpContext context)
+    {
+        RequestDelegate next = (context) =>
+        {
+            return Task.CompletedTask;
+        };
+
+        for (int i = _filters.Count - 1; i >= 0; i--)
+        {
+            next = _filters[i](next);
+        }
+
+        next(context);
+    }
+    #endregion
+
+    #region Network
+     private Queue<SocketAsyncEventArgs> _recvArgs = new Queue<SocketAsyncEventArgs>();
     private Queue<SocketAsyncEventArgs> _sendArgs = new Queue<SocketAsyncEventArgs>();
     private MemoryPool _memory = new MemoryPool(1024);
     
@@ -95,7 +141,7 @@ public abstract class AbstractNetwork : AbstractFilter, INetwork
 
             _memory.Enqueue(buffer);
             _sendArgs.Enqueue(args);
-            
+
             Disconnect(socket);
         }
         else
@@ -109,6 +155,5 @@ public abstract class AbstractNetwork : AbstractFilter, INetwork
 
     protected abstract void OnReceive(ArraySegment<byte> buffer);
     protected abstract void OnSend(ArraySegment<byte> buffer);
-    // public
+    #endregion
 }
-

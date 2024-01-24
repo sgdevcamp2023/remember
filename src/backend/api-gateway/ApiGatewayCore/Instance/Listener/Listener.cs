@@ -6,7 +6,7 @@ using ApiGatewayCore.Http.Context;
 
 namespace ApiGatewayCore.Instance.Listener;
 
-public class Listener : AbstractNetwork, IListener
+public class Listener : DefaultInstance
 {
     private Socket _listenerSocket = null!;
     public ListenerConfig _model;
@@ -67,7 +67,7 @@ public class Listener : AbstractNetwork, IListener
 
         HttpContext context = new HttpContext(request: requestString);
 
-        FilterStart(context);
+        // FilterStart(context);
     }
 
     protected override void OnSend(ArraySegment<byte> buffer)

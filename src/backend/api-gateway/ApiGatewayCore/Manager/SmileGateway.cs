@@ -9,7 +9,7 @@ public class SmileGateway
     private ConfigReader _configReader = new ConfigReader("config.yaml");
     public SmileGateway()
     {
-
+        
     }
 
     public void Init()
