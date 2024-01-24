@@ -6,12 +6,7 @@ public interface INetwork
 {
     public void Init();
 
-    public void RegisterReceive(Socket socket);
-    public void OnReceiveCompleted(object? sender, SocketAsyncEventArgs args);
-
-    public void RegisterSend(Socket socket);
-    public void OnSendCompleted(object? sender, SocketAsyncEventArgs args);
-
+    public void Send(Socket socket, ArraySegment<byte> buffer);
+    public void Receive(Socket socket);
     public void Disconnect(Socket socket);
-
 }

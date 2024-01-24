@@ -3,38 +3,46 @@ using System.Net.Sockets;
 using System.Text;
 using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
+using ApiGatewayCore.Manager;
 
 namespace ApiGatewayCore.Instance.Listener;
 
 public class Listener : DefaultInstance
 {
     private Socket _listenerSocket = null!;
-    public ListenerConfig _model;
+    private readonly ListenerConfig _config = null!;
+    ThreadLocal<ClusterManager> _clusters = new ThreadLocal<ClusterManager>();
     public Listener(ListenerConfig model)
     {
-        _model = model;
+        _config = model;
     }
     public override void Init()
     {
         // 필터 설정
-        
+        // UseFilter<ExceptionFilter>();
+        // UseFilter<ServiceFilter>();
+        // UseFilter<ProtocolCheckFilter>();
+        // UseFilter<AuthenticationFilter();
+        // UseFilter<ConnectionFilter>();
+
+        // 소켓 설정
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(_model.Address.Address), _model.Address.Port);
+        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(_config.Address.Address), _config.Address.Port);
 
         _listenerSocket.Bind(endPoint);
         _listenerSocket.Listen(1);
     }
 
-    public async Task Run()
+    public override async Task Run()
     {
-        for (int i = 0; i < _model.ThreadCount; i++)
+        for (int i = 0; i < _config.ThreadCount; i++)
         {
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
             args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
             RegisterAccept(args);
         }
 
-        await Task.CompletedTask;
+        await Task.Delay(-1);
     }    
 
     public void RegisterAccept(SocketAsyncEventArgs args)
@@ -53,7 +61,7 @@ public class Listener : DefaultInstance
             if (socket == null)
                 throw new Exception();
 
-            RegisterReceive(socket);
+            Receive(socket);
         }
         else
             throw new Exception();
@@ -61,16 +69,18 @@ public class Listener : DefaultInstance
         RegisterAccept(args);
     }
 
-    protected override void OnReceive(ArraySegment<byte> buffer)
+    protected override void OnReceive(Socket socket, ArraySegment<byte> buffer)
     {
         string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, buffer.Count);
 
         HttpContext context = new HttpContext(request: requestString);
 
         // FilterStart(context);
+
+        Send(socket, System.Text.Encoding.UTF8.GetBytes(context.Response.ToResponseString()));
     }
 
-    protected override void OnSend(ArraySegment<byte> buffer)
+    protected override void OnSend(Socket socket, ArraySegment<byte> buffer)
     {
         throw new NotImplementedException();
     }

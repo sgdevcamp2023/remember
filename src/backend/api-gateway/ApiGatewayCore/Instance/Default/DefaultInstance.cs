@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using ApiGatewayCore.Filter;
+using ApiGatewayCore.Filter.Listner;
 using ApiGatewayCore.Http.Context;
 using ApiGatewayCore.Utils;
 
@@ -9,55 +10,82 @@ public abstract class DefaultInstance : IFilter, INetwork
 {
     #region Filter
     protected List<Func<RequestDelegate, RequestDelegate>> _filters = new List<Func<RequestDelegate, RequestDelegate>>();
+    private RequestDelegate? _start = null;
     public void UseFilter<T>()
     {
         UseFilter(typeof(T));
     }
     public void UseFilter(Type type)
     {
-        Use(next => {
-           return async context =>
-            {
-                var middleware = Activator.CreateInstance(type) as IFilterBase;
+        Use(next =>
+        {
+            return async context =>
+             {
+                 var middleware = Activator.CreateInstance(type) as IFilterBase;
 
-                if (middleware == null)
-                {
-                    throw new InvalidOperationException("middleware is null");
-                }
+                 if (middleware == null)
+                 {
+                     throw new InvalidOperationException("middleware is null");
+                 }
 
-                await middleware.InvokeAsync(context, next);
-            };
+                 await middleware.InvokeAsync(context, next);
+             };
         });
-    }   
+    }
     public void Use(Func<RequestDelegate, RequestDelegate> filter)
     {
         _filters.Add(filter);
     }
 
-    public void FilterStart(HttpContext context)
+    // 무조건 RouteFilter가 마지막
+    public void UseLastFilter()
     {
-        RequestDelegate next = (context) =>
+        RequestDelegate last = async context =>
         {
-            return Task.CompletedTask;
+            RouteFilter filter = new RouteFilter();
+            await filter.InvokeAsync(context);
         };
 
         for (int i = _filters.Count - 1; i >= 0; i--)
         {
-            next = _filters[i](next);
+            last = _filters[i](last);
         }
 
-        next(context);
+        _start = last;
+    }
+
+    public void FilterStart(HttpContext context)
+    {
+        if(_start == null)
+            return;
+
+        _start(context);
     }
     #endregion
 
     #region Network
-     private Queue<SocketAsyncEventArgs> _recvArgs = new Queue<SocketAsyncEventArgs>();
+    private Queue<SocketAsyncEventArgs> _recvArgs = new Queue<SocketAsyncEventArgs>();
     private Queue<SocketAsyncEventArgs> _sendArgs = new Queue<SocketAsyncEventArgs>();
     private MemoryPool _memory = new MemoryPool(1024);
     
-    public virtual void Init() { }
+    #region Abstract
+    public abstract void Init();
+    public abstract Task Run();
+    protected abstract void OnReceive(Socket socket, ArraySegment<byte> buffer);
+    protected abstract void OnSend(Socket socket, ArraySegment<byte> buffer);
+    #endregion
+    
+    public void Send(Socket socket, ArraySegment<byte> buffer)
+    {
+        RegisterSend(socket, buffer);
+    }
 
-    public void RegisterReceive(Socket socket)
+    public void Receive(Socket socket)
+    {
+        RegisterReceive(socket);
+    }
+
+    private void RegisterReceive(Socket socket)
     {
         SocketAsyncEventArgs recvArgs = null!;
         if (_recvArgs.Count == 0)
@@ -77,7 +105,7 @@ public abstract class DefaultInstance : IFilter, INetwork
             OnReceiveCompleted(null, recvArgs);
     }
 
-    public void OnReceiveCompleted(object? sender, SocketAsyncEventArgs args)
+    private void OnReceiveCompleted(object? sender, SocketAsyncEventArgs args)
     {
         if (args.SocketError == SocketError.Success)
         {
@@ -85,39 +113,36 @@ public abstract class DefaultInstance : IFilter, INetwork
             if (socket == null)
                 throw new Exception();
 
-            if(args.BytesTransferred < 0)
+            if (args.BytesTransferred < 0)
             {
                 Disconnect(socket);
                 return;
             }
 
             ArraySegment<byte> buffer = args.Buffer!;
-            
-            OnReceive(args.Buffer!);
+
+            OnReceive(socket, args.Buffer!);
 
             // 수거
             _memory.Enqueue(buffer);
             _recvArgs.Enqueue(args);
-
-            RegisterSend(socket);
         }
         else
             throw new Exception();
     }
 
-    public void RegisterSend(Socket socket)
+    private void RegisterSend(Socket socket, ArraySegment<byte> buffer)
     {
         SocketAsyncEventArgs sendArgs = null!;
         // Cluster를 거쳐왔을 때 작동
         if (_sendArgs.Count == 0)
         {
             sendArgs = _sendArgs.Dequeue();
-
         }
         else
         {
             sendArgs = new SocketAsyncEventArgs();
-            sendArgs.SetBuffer(_memory.Dequeue());
+            sendArgs.SetBuffer(buffer);
             sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
         }
 
@@ -128,18 +153,17 @@ public abstract class DefaultInstance : IFilter, INetwork
             OnSendCompleted(null, sendArgs);
     }
 
-    public void OnSendCompleted(object? sender, SocketAsyncEventArgs args)
+    private void OnSendCompleted(object? sender, SocketAsyncEventArgs args)
     {
-        if(args.SocketError == SocketError.Success)
+        if (args.SocketError == SocketError.Success)
         {
             Socket? socket = args.AcceptSocket;
             if (socket == null)
                 throw new Exception();
 
             ArraySegment<byte> buffer = args.Buffer!;
-            OnSend(buffer);
+            OnSend(socket, buffer);
 
-            _memory.Enqueue(buffer);
             _sendArgs.Enqueue(args);
 
             Disconnect(socket);
@@ -152,8 +176,5 @@ public abstract class DefaultInstance : IFilter, INetwork
     {
         socket.Disconnect(false);
     }
-
-    protected abstract void OnReceive(ArraySegment<byte> buffer);
-    protected abstract void OnSend(ArraySegment<byte> buffer);
     #endregion
 }

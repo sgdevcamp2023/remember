@@ -20,12 +20,11 @@ listeners:
   thread-count: 1
 
 clusters:
-- services:
   - name: auth-service
     protocol: http
     address:
-      address: 127.0.0.1
-      port: 5000
+      - address: 127.0.0.1
+        port: 5000
     prefix: /api/user/auth
     custom-filter:
       name: CustomFilter
@@ -36,8 +35,8 @@ clusters:
   - name: user-service
     protocol: http
     address:
-      address: 127.0.0.1
-      port: 5000
+      - address: 127.0.0.1
+        port: 5000
     prefix: /api/user
     connect-timeout: 5s
     authorization: true
@@ -45,8 +44,8 @@ clusters:
   - name: community-service
     protocol: http
     address:
-      address: 127.0.0.1
-      port: 6000
+      - address: 127.0.0.1
+        port: 6000
     prefix: /api/community
     custom-filter:
       name: CustomFilter
@@ -57,8 +56,8 @@ clusters:
   - name: chat-service
     protocol: http
     address:
-      address: 127.0.0.1
-      port: 7000
+      - address: 127.0.0.1
+        port: 7000
     prefix: /service2
     custom-filter: 
     connect-timeout: 5s
