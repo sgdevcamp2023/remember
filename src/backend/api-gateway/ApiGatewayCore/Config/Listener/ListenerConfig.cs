@@ -1,5 +1,5 @@
 namespace ApiGatewayCore.Config;
-public class ListenerModel
+public class ListenerConfig
 {
     public string Name { get; set; } = null!;
     public string Protocol { get; set; } = null!;

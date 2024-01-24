@@ -1,6 +1,6 @@
 using System.Net.NetworkInformation;
 namespace ApiGatewayCore.Config;
-    public class ServiceModel
+    public class ServiceConfig
     {
         public string Name { get; set; } = null!;
         public string Protocol { get; set; } = null!;

@@ -9,13 +9,15 @@ namespace ApiGatewayCore.Instance.Listener;
 public class Listener : AbstractNetwork, IListener
 {
     private Socket _listenerSocket = null!;
-    public ListenerModel _model;
-    public Listener(ListenerModel model)
+    public ListenerConfig _model;
+    public Listener(ListenerConfig model)
     {
         _model = model;
     }
     public override void Init()
     {
+        // 필터 설정
+        
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(_model.Address.Address), _model.Address.Port);
 
@@ -33,13 +35,7 @@ public class Listener : AbstractNetwork, IListener
         }
 
         await Task.CompletedTask;
-    }
-    private HttpContext MakeHttpContext(string request)
-    {
-        HttpRequest httpRequest = new HttpRequest(request);
-        HttpResponse httpResponse = new HttpResponse();
-        return new HttpContext(httpRequest, httpResponse);
-    }
+    }    
 
     public void RegisterAccept(SocketAsyncEventArgs args)
     {
@@ -67,8 +63,10 @@ public class Listener : AbstractNetwork, IListener
 
     protected override void OnReceive(ArraySegment<byte> buffer)
     {
-        string request = Encoding.UTF8.GetString(buffer.Array!, 0, buffer.Count);
-        HttpContext context = MakeHttpContext(request);
+        string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, buffer.Count);
+
+        HttpContext context = new HttpContext(request: requestString);
+
         FilterStart(context);
     }
 
