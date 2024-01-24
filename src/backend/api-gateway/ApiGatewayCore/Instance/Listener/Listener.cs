@@ -1,24 +1,20 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Utils;
 
 namespace ApiGatewayCore.Instance.Listener;
 
-public class Listener : AbstractFilter, IListener
+public class Listener : AbstractNetwork, IListener
 {
     private Socket _listenerSocket = null!;
-    private Queue<SocketAsyncEventArgs> _recvArgs = new Queue<SocketAsyncEventArgs>();
-    private Queue<SocketAsyncEventArgs> _sendArgs = new Queue<SocketAsyncEventArgs>();
-    private MemoryPool _memory;
     public ListenerModel _model;
     public Listener(ListenerModel model)
     {
         _model = model;
-        _memory = new MemoryPool(1024);
     }
-    public void Init()
+    public override void Init()
     {
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(_model.Address.Address), _model.Address.Port);
@@ -69,98 +65,15 @@ public class Listener : AbstractFilter, IListener
         RegisterAccept(args);
     }
 
-    public void RegisterReceive(Socket socket)
+    protected override void OnReceive(ArraySegment<byte> buffer)
     {
-        SocketAsyncEventArgs recvArgs = null!;
-        if (_recvArgs.Count == 0)
-        {
-            recvArgs = _recvArgs.Dequeue();
-        }
-        else
-        {
-            recvArgs = new SocketAsyncEventArgs();
-            recvArgs.SetBuffer(_memory.Dequeue());
-            recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
-        }
-
-        recvArgs.AcceptSocket = socket;
-        bool isPending = socket.ReceiveAsync(recvArgs);
-        if (!isPending)
-            OnReceiveCompleted(null, recvArgs);
+        string request = Encoding.UTF8.GetString(buffer.Array!, 0, buffer.Count);
+        HttpContext context = MakeHttpContext(request);
+        FilterStart(context);
     }
 
-    public void OnReceiveCompleted(object? sender, SocketAsyncEventArgs args)
+    protected override void OnSend(ArraySegment<byte> buffer)
     {
-        if (args.SocketError == SocketError.Success)
-        {
-            Socket? socket = args.AcceptSocket;
-            if (socket == null)
-                throw new Exception();
-
-            if(args.BytesTransferred < 0)
-            {
-                Disconnect(socket);
-                return;
-            }
-
-            ArraySegment<byte> buffer = args.Buffer!;
-            
-            HttpContext context = MakeHttpContext(System.Text.Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, buffer.Count));
-
-            _memory.Enqueue(buffer);
-            
-            _recvArgs.Enqueue(args);
-            // 이후 필터를 거쳐가는 과정이 필요
-            
-            FilterStart(context);
-
-            // 필터 종료 후, Http Context 넘겨야 함
-            RegisterSend(socket);
-        }
-        else
-            throw new Exception();
-    }
-
-    public void RegisterSend(Socket socket)
-    {
-        SocketAsyncEventArgs sendArgs = null!;
-        // Cluster를 거쳐왔을 때 작동
-        if (_sendArgs.Count == 0)
-        {
-            sendArgs = _sendArgs.Dequeue();
-
-        }
-        else
-        {
-            sendArgs = new SocketAsyncEventArgs();
-            sendArgs.SetBuffer(new byte[1024], 0, 1024);
-            sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
-        }
-
-        sendArgs.AcceptSocket = socket;
-
-        bool isPending = socket.SendAsync(sendArgs);
-        if (!isPending)
-            OnSendCompleted(null, sendArgs);
-    }
-
-    public void OnSendCompleted(object? sender, SocketAsyncEventArgs args)
-    {
-        if(args.SocketError == SocketError.Success)
-        {
-            Socket? socket = args.AcceptSocket;
-            if (socket == null)
-                throw new Exception();
-
-            _sendArgs.Enqueue(args);
-            Disconnect(socket);
-        }
-        else
-            throw new Exception();
-    }
-
-    public void Disconnect(Socket socket)
-    {
-        socket.Disconnect(false);
+        throw new NotImplementedException();
     }
 }
