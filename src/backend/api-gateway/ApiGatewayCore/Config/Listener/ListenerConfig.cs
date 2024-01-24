@@ -7,5 +7,6 @@ public class ListenerConfig
     public RouteConfig RouteConfig { get; set; } = null!;
     public CustomFilter? CustomFilter { get; set; }
     public Authorization? Authorization { get; set; }
+    public List<string> DisallowHeaders { get; set; } = null!;
     public int ThreadCount { get; set; }
 }

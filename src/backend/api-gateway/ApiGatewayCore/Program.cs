@@ -7,7 +7,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var yamlReaderWriter = new ConfigReader("ApiGatewayCore/TestConfig.yaml");
+        var yamlReaderWriter = new ConfigReader("ApiGatewayConfig.yaml");
         var root = yamlReaderWriter.Load<Root>();
         System.Console.WriteLine(root.Listeners.Count);
     }
