@@ -1,4 +1,5 @@
 ﻿using ApiGatewayCore.Config;
+using Microsoft.AspNetCore.Http;
 
 namespace ApiGatewayCore;
 
@@ -6,7 +7,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var yamlReaderWriter = new ConfigReader("ServerCore/TestConfig.yaml");
+        var yamlReaderWriter = new ConfigReader("ApiGatewayCore/TestConfig.yaml");
         var root = yamlReaderWriter.Load<Root>();
         System.Console.WriteLine(root.Listeners.Count);
     }

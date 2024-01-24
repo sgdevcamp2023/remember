@@ -14,7 +14,7 @@ public class HeaderDictionary : IDictionary<string, string>
     {
         Store = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     }
-    
+
     public HeaderDictionary(Dictionary<string, string>? keyValuePairs)
     {
         Store = keyValuePairs;
@@ -28,7 +28,7 @@ public class HeaderDictionary : IDictionary<string, string>
 
     public void EnsureStore(int capacity)
     {
-        if(Store == null)
+        if (Store == null)
         {
             Store = new Dictionary<string, string>(capacity, StringComparer.OrdinalIgnoreCase);
         }
@@ -98,7 +98,7 @@ public class HeaderDictionary : IDictionary<string, string>
     {
         if (Store == null)
             return false;
-        
+
         return Store.ContainsKey(key);
     }
 
@@ -106,24 +106,24 @@ public class HeaderDictionary : IDictionary<string, string>
     {
         if (Store == null)
             return false;
-        
+
         return Store.Remove(key);
     }
 
     public bool TryGetValue(string key, [MaybeNullWhen(false)] out string value)
     {
-        if(Store == null)
+        if (Store == null)
         {
             value = String.Empty;
             return false;
         }
-        
+
         return Store.TryGetValue(key, out value);
     }
 
     public void Add(KeyValuePair<string, string> item)
     {
-        if(item.Key != null && item.Value != null)
+        if (item.Key != null && item.Value != null)
         {
             EnsureStore(1);
             Store?.Add(item.Key, item.Value);
@@ -157,5 +157,11 @@ public class HeaderDictionary : IDictionary<string, string>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return Store?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, string>>().GetEnumerator();
+    }
+
+    public string? SetCookie
+    {
+        get { return Store!["Set-Cookie"] == null ? String.Empty : Store["Set-Cookie"]; }
+        set { Store!["Set-Cookie"] = value!; }
     }
 }

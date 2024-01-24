@@ -4,8 +4,8 @@ using ApiGatewayCore.Http.Header;
 namespace ApiGatewayCore.Http.Context;
 public class HttpRequest
 {
-    IRequestFeature _requestFeature;
-
+    private IRequestFeature _requestFeature;
+    private IRequestCookie? _requestCookie;
     public HttpRequest()
     {
         _requestFeature = new RequestFeature();
@@ -17,7 +17,8 @@ public class HttpRequest
         string[] requestLines = requestString.Split("\r\n");
         string[] requestLine = requestLines[0].Split(" ");
         Method = requestLine[0];
-        Path = requestLine[1];
+        Path = requestLine[1].Split("?")[0];
+        QueryString = requestLine[1].Split("?")[1];
         Protocol = requestLine[2];
 
         // HttpContext 분리 생성
@@ -27,6 +28,11 @@ public class HttpRequest
             {
                 Body = string.Join("\n", requestLines, i + 1, requestLines.Length - i - 1);
                 break;
+            }
+            if(requestLine[i] == "Cookie")
+            {
+                _requestCookie = new RequestCookie(requestLines[i]);
+                continue;
             }
 
             string[] header = requestLines[i].Split(": ");
@@ -62,6 +68,17 @@ public class HttpRequest
     {
         get => _requestFeature.Body;
         set => _requestFeature.Body = value;
+    }
+
+    public string? QueryString
+    {
+        get => _requestFeature.QueryString;
+        set => _requestFeature.QueryString = value;
+    }
+
+    public IRequestCookie? Cookie
+    {
+        get => _requestCookie;
     }
 
     public string ToRequestString()

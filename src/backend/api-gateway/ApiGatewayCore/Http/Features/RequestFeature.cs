@@ -20,4 +20,5 @@ public sealed class RequestFeature : IRequestFeature
 
     public HeaderDictionary Header { get; set; } = null!;
     public string? Body { get; set; } = null!;
+    public string? QueryString { get; set; } = null!;
 }

@@ -1,9 +1,9 @@
 namespace ApiGatewayCore.Config;
 public class JwtValidator
 {
-    public string ClusterName { get; set; } = null!;
-    public string Url { get; set; } = null!;
-    public string? HeaderName { get; set; } = "Authorization";
-    public string? Prefix { get; set; } = "Bearer";
-    public List<string> SuccessStatus { get; set; } = null!;
+    public string Path { get; set; } = null!;
+    public string ValidAudience { get; set; } = null!;
+    public string ValidIssuser { get; set; } = null!;
+    public string Secret { get; set; } = null!;
+    public int AccessTokenValidityInSecond { get; set; }
 }

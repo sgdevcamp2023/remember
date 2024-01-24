@@ -1,4 +1,5 @@
 using ApiGatewayCore.Http.Feature;
+using ApiGatewayCore.Http.Features;
 using ApiGatewayCore.Http.Header;
 
 namespace ApiGatewayCore.Http.Context;
@@ -7,10 +8,12 @@ namespace ApiGatewayCore.Http.Context;
 public class HttpResponse
 {
     IResponseFeature _responseFeatrue;
+    IResponseCookie _responseCookie;
 
     public HttpResponse()
     {
         _responseFeatrue = new ResponseFeature();
+        _responseCookie = new ResponseCookie(Header);
     }
 
     public HttpResponse(string responseString)
@@ -18,9 +21,9 @@ public class HttpResponse
         _responseFeatrue = new ResponseFeature();
         string[] responseLines = responseString.Split("\r\n");
         string[] responseLine = responseLines[0].Split(" ");
-        Method = responseLine[0];
-        Path = responseLine[1];
-        Protocol = responseLine[2];
+        Protocol = responseLine[0];
+        StatusCode = int.Parse(responseLine[1]);
+        StatusMessage = responseLine[2];
 
         // HttpContext 분리 생성
         for(int i = 1;i<responseLines.Length;i++)
@@ -31,26 +34,34 @@ public class HttpResponse
                 break;
             }
 
+            if(responseLine[i] == "Set-Cookie")
+            {
+                Header.SetCookie = responseLines[i];
+                continue;
+            }
+            
             string[] header = responseLines[i].Split(": ");
             Header.Add(header[0],header[1]);
         }
-    }
-    public string Method
-    {
-        get => _responseFeatrue.Method;
-        set => _responseFeatrue.Method = value;
-    }
 
-    public string Path
-    {
-        get => _responseFeatrue.Path;
-        set => _responseFeatrue.Path = value;
+        _responseCookie = new ResponseCookie(Header);
     }
-
     public string Protocol
     {
         get => _responseFeatrue.Protocol;
         set => _responseFeatrue.Protocol = value;
+    }
+
+    public int StatusCode
+    {
+        get => _responseFeatrue.StatusCode;
+        set => _responseFeatrue.StatusCode = value;
+    }
+
+    public string StatusMessage
+    {
+        get => _responseFeatrue.StatusMessage;
+        set => _responseFeatrue.StatusMessage = value;
     }
 
     public HeaderDictionary Header
@@ -65,9 +76,13 @@ public class HttpResponse
         set => _responseFeatrue.Body = value;
     }
     
+    public IResponseCookie Cookie
+    {
+        get => _responseCookie!;
+    }
     public string ToResponseString()
     {
-        string responseString = $"{Method} {Path} {Protocol}\r\n";
+        string responseString = $"{Protocol} {StatusCode} {StatusMessage}\r\n";
         foreach (var header in Header)
         {
             responseString += $"{header.Key}: {header.Value}\r\n";
