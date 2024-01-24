@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
+using ApiGatewayCore.Utils;
 
 namespace ApiGatewayCore.Instance.Listener;
 
@@ -10,10 +11,12 @@ public class Listener : AbstractFilter, IListener
     private Socket _listenerSocket = null!;
     private Queue<SocketAsyncEventArgs> _recvArgs = new Queue<SocketAsyncEventArgs>();
     private Queue<SocketAsyncEventArgs> _sendArgs = new Queue<SocketAsyncEventArgs>();
+    private MemoryPool _memory;
     public ListenerModel _model;
     public Listener(ListenerModel model)
     {
         _model = model;
+        _memory = new MemoryPool(1024);
     }
     public void Init()
     {
@@ -76,7 +79,7 @@ public class Listener : AbstractFilter, IListener
         else
         {
             recvArgs = new SocketAsyncEventArgs();
-            recvArgs.SetBuffer(new byte[1024], 0, 1024);
+            recvArgs.SetBuffer(_memory.Dequeue());
             recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
         }
 
@@ -104,6 +107,8 @@ public class Listener : AbstractFilter, IListener
             
             HttpContext context = MakeHttpContext(System.Text.Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, buffer.Count));
 
+            _memory.Enqueue(buffer);
+            
             _recvArgs.Enqueue(args);
             // 이후 필터를 거쳐가는 과정이 필요
             
