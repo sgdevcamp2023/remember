@@ -53,3 +53,11 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+task copyPrivate(type: Copy) {
+	copy {
+		from './harmony-private-state'
+		include "*.yml", "*.properties", "*.json"
+		into 'src/main/resources'
+	}
+}

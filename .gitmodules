@@ -1,0 +1,3 @@
+[submodule "src/backend/state-service/stateservice/harmony-private-state"]
+	path = src/backend/state-service/stateservice/harmony-private-state
+	url = https://github.com/acs0209/harmony-private-state.git
