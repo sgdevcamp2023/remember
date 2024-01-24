@@ -38,7 +38,7 @@ public abstract class DefaultInstance : IFilter, INetwork
     }
 
     // 무조건 RouteFilter가 마지막
-    public void UseLastFilter()
+    public void FilterStart(HttpContext context)
     {
         RequestDelegate last = async context =>
         {
@@ -51,15 +51,7 @@ public abstract class DefaultInstance : IFilter, INetwork
             last = _filters[i](last);
         }
 
-        _start = last;
-    }
-
-    public void FilterStart(HttpContext context)
-    {
-        if(_start == null)
-            return;
-
-        _start(context);
+        last(context);
     }
     #endregion
 
