@@ -36,7 +36,7 @@ internal class AuthorizationFilter : DefaultFilter
     }
     protected override void Worked(Adapter adapter, HttpContext context)
     {
-        if (adapter.Authorization.LoginPath == context.Request.Path &&
+        if (adapter.Authorization!.LoginPath == context.Request.Path &&
                 context.Response.StatusCode == 200)
         {
             switch (adapter.Authorization.Type)

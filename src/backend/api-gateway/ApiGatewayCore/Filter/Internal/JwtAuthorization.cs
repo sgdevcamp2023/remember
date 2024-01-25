@@ -22,7 +22,7 @@ internal class JwtAuthorization : IJwtAuthorization
 
     public JwtModel CreateToken(Adapter adapter, string body)
     {
-        if (adapter.Authorization.jwtValidator == null)
+        if (adapter.Authorization!.jwtValidator == null)
             throw new Exception();
 
         // Claim 생성

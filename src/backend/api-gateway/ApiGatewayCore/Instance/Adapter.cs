@@ -4,7 +4,7 @@ namespace ApiGatewayCore.Instance;
 
 public class Adapter
 {
-    internal Authorization Authorization { get; set; } = null!;
+    internal Authorization? Authorization { get; set; }
     internal List<string>? DisallowHeaders { get; set; }
     internal AddressConfig Address { get; set; } = null!;
     internal Cluster Cluster { get; set; } = null!;

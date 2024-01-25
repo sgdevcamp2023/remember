@@ -1,4 +1,5 @@
 
+using System.Net;
 using System.Net.Sockets;
 using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
@@ -24,9 +25,9 @@ internal class Cluster : DefaultInstance
 
     public override void Init()
     {
-        foreach (var address in config.Addresses)
+        foreach (var address in config.Address)
         {
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(address.Address), address.Port);
 
             socket.Connect(endPoint);
@@ -34,14 +35,9 @@ internal class Cluster : DefaultInstance
         }
     }
 
-    public override Task Run()
+    public Task Run(HttpContext context)
     {
         throw new NotImplementedException();
-    }
-
-    public void Start(HttpContext context)
-    {
-
     }
 
     protected override void OnReceive(Socket socket, ArraySegment<byte> buffer)

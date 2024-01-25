@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using ApiGatewayCore.Config;
+using ApiGatewayCore.Filter.Listner;
 using ApiGatewayCore.Http.Context;
 using ApiGatewayCore.Manager;
 
@@ -28,7 +29,7 @@ internal class Listener : DefaultInstance
         // UseFilter<ExceptionFilter>();
         // UseFilter<ServiceFilter>();
         // UseFilter<ProtocolCheckFilter>();
-        // UseFilter<AuthenticationFilter();
+        UseFilter<AuthorizationFilter>();
         // UseFilter<ConnectionFilter>();
         foreach(string clusterName in Config.RouteConfig.Clusters)
         {
@@ -46,7 +47,7 @@ internal class Listener : DefaultInstance
         _listenerSocket.Listen(backlog: 100);
     }
 
-    public override async Task Run()
+    public async Task Run()
     {
         for (int i = 0; i < Config.ThreadCount; i++)
         {

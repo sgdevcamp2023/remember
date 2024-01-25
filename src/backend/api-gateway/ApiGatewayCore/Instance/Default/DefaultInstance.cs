@@ -61,7 +61,6 @@ public abstract class DefaultInstance : IFilter, INetwork
     
     #region Abstract
     public abstract void Init();
-    public abstract Task Run();
     protected abstract void OnReceive(Socket socket, ArraySegment<byte> buffer);
     protected abstract void OnSend(Socket socket, ArraySegment<byte> buffer);
     #endregion

@@ -7,8 +7,6 @@ internal class RouteFilter
 {
     public async Task InvokeAsync(Adapter adapter, HttpContext context)
     {
-        adapter.Cluster.Start(context);
-        
-        await Task.CompletedTask;
+        await adapter.Cluster.Run(context);
     }
 }
