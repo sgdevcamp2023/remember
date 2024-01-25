@@ -8,10 +8,12 @@ import harmony.chatservice.dto.EmojiDto;
 import harmony.chatservice.dto.response.StateDto;
 import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MessageConsumerService {
@@ -48,11 +50,15 @@ public class MessageConsumerService {
             stateInfo.put("userId", String.valueOf(stateDto.getUserId()));
             String userState = objectMapper.writeValueAsString(stateInfo);
 
-            for (Long guildId : stateDto.getGuildIds()) {
-                messagingTemplate.convertAndSend("/topic/guild/" + guildId, userState);
+            if (stateDto.getGuildIds() != null) {
+                for (Long guildId : stateDto.getGuildIds()) {
+                    messagingTemplate.convertAndSend("/topic/guild/" + guildId, userState);
+                }
             }
-            for (Long roomId : stateDto.getRoomIds()) {
-                messagingTemplate.convertAndSend("/topic/direct/" + roomId, userState);
+            if (stateDto.getRoomIds() != null) {
+                for (Long roomId : stateDto.getRoomIds()) {
+                    messagingTemplate.convertAndSend("/topic/direct/" + roomId, userState);
+                }
             }
         }
     }

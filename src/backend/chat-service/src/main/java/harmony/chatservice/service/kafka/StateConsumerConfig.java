@@ -36,7 +36,8 @@ public class StateConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, StateDto> consumerFactoryForState() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigurationsForState(), new StringDeserializer(), new JsonDeserializer<>(StateDto.class));
+        return new DefaultKafkaConsumerFactory<>(consumerConfigurationsForState(), new StringDeserializer(),
+                new JsonDeserializer<>(StateDto.class));
     }
 
     @Bean
