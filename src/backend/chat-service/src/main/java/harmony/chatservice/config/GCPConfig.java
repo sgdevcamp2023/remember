@@ -14,7 +14,7 @@ public class GCPConfig {
     @Bean
     public Storage gcpStorage() {
         try {
-            ClassPathResource resource = new ClassPathResource("stalwart-micron-411504-529935d659d4.json");
+            ClassPathResource resource = new ClassPathResource("private/stalwart-micron-411504-529935d659d4.json");
             GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
             String projectId = "stalwart-micron-411504";
             return StorageOptions.newBuilder()
