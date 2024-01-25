@@ -13,9 +13,7 @@ namespace user_service
             public class AuthRedisRepository : IAuthRedisRepository
             {
                 private RedisConnectionManager _redisConnectionManager;
-                private string RefreshKey = $"Refresh ";
                 private string ChecksumKey = $"Checksum ";
-                private string BlackListKey = $"BlackList ";
                 public AuthRedisRepository(RedisConnectionManager redisConnectionManager)
                 {
                     _redisConnectionManager = redisConnectionManager;
@@ -36,21 +34,6 @@ namespace user_service
                     return _redisConnectionManager.GetStringByKey(key);
                 }
 
-                public bool InsertIdAndRefreshToken(string key, string value, TimeSpan? expiry = null)
-                {
-                    return _redisConnectionManager.Insert(RefreshKey + key, value, expiry);
-                }
-
-                public bool DeleteRefreshToken(string key)
-                {
-                    return _redisConnectionManager.Delete(RefreshKey + key);
-                }
-
-                public string? GetRefreshTokenById(string key)
-                {
-                    return _redisConnectionManager.GetStringByKey(RefreshKey + key);
-                }
-
                 public bool InsertEmailAndChecksum(string key, string value, TimeSpan? expiry = null)
                 {
                     return _redisConnectionManager.Insert(ChecksumKey + key, value, expiry);
@@ -63,16 +46,6 @@ namespace user_service
                 public string? GetChecksumByEmail(string key)
                 {
                     return _redisConnectionManager.GetStringByKey(ChecksumKey + key);
-                }
-
-                public bool InsertBlackListToken(string key, string value, TimeSpan? expiry = null)
-                {
-                    return _redisConnectionManager.Insert(BlackListKey + key, value, expiry);
-                }
-
-                public string? GetBlackListToken(string key)
-                {
-                    return _redisConnectionManager.GetStringByKey(BlackListKey + key);
                 }
             }
         }

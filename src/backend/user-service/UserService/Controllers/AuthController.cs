@@ -14,11 +14,9 @@ namespace user_service
         public class AuthController : ControllerBase
         {
             private AuthService _authService;
-            private JwtService _jwtService;
-            public AuthController(AuthService authService, JwtService jwtService)
+            public AuthController(AuthService authService)
             {
                 _authService = authService;
-                _jwtService = jwtService;
             }
 
             [HttpPost("register")]
@@ -30,11 +28,11 @@ namespace user_service
             }
 
             [HttpPost("login")]
-            public TokenDTO Login([FromBody] LoginDTO login)
+            public ClaimDTO Login([FromBody] LoginDTO login)
             {
-                TokenDTO tokens = _jwtService.CreateToken(login);
+                ClaimDTO claim = _authService.Login(login);
                 
-                return tokens;
+                return claim;
             }
 
             [HttpPost("send-email")]
@@ -49,24 +47,24 @@ namespace user_service
             [filter.TraceIdCheckFilter]
             [HttpPost("logout")]
             public IActionResult Logout(
-                [FromHeader(Name = "Authorization")] string accessToken)
+                [FromHeader(Name = "user-id")] long userId)
             {
-                _jwtService.DeleteToken(accessToken);
+                _authService.Logout(userId);
 
                 return Ok();
             }
 
-            [HttpPost("validation-token")]
-            public IActionResult ValidationToken(
-                [FromHeader(Name = "Authorization")] string accessToken)
-            {
-                string? refreshToken = HttpContext.Request.Cookies["refreshToken"];
+            // [HttpPost("validation-token")]
+            // public IActionResult ValidationToken(
+            //     [FromHeader(Name = "Authorization")] string accessToken)
+            // {
+            //     string? refreshToken = HttpContext.Request.Cookies["refreshToken"];
 
-                // API Gateway를 위한 Custom
-                return Ok(
-                    _jwtService.ValidationToken(
-                        new TokenDTO(accessToken, refreshToken)));
-            }
+            //     // API Gateway를 위한 Custom
+            //     return Ok(
+            //         _jwtService.ValidationToken(
+            //             new TokenDTO(accessToken, refreshToken)));
+            // }
 
             [HttpPost("reset-password")]
             public IActionResult ResetPassword(

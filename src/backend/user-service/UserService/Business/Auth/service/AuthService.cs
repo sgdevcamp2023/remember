@@ -34,10 +34,10 @@ namespace user_service
                 public void Register(RegisterDTO register)
                 {
                     // 체크
-                    // SameEmailCheck(register.Email);
-                    // CheckEmailChecksum(register.Email, register.EmailChecksum);
+                    SameEmailCheck(register.Email);
+                    CheckEmailChecksum(register.Email, register.EmailChecksum);
 
-                    // _redis.DeleteChecksum(register.Email);
+                    _redis.DeleteChecksum(register.Email);
 
                     // 비밀번호 암호화
                     register.Password = Utils.SHA256Hash(register.Password);
@@ -101,6 +101,26 @@ namespace user_service
 
                     if (redisChecksum != checksum)
                         throw new ServiceException(4013);
+                }
+
+                public ClaimDTO Login(LoginDTO login)
+                {
+                    UserModel? user = _userRepository.GetUserByEmail(login.Email);
+
+                    if (user == null)
+                        throw new ServiceException(4007);
+
+                    if (user.Password != Utils.SHA256Hash(login.Password))
+                        throw new ServiceException(4008);
+                    
+                    return new ClaimDTO { Name = user.Id.ToString() };
+                }
+
+                public bool Logout(long id)
+                {
+                    // if(_redis.)
+
+                    return true;
                 }
 
                 private void SameEmailCheck(string email)

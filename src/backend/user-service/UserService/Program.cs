@@ -30,7 +30,6 @@ builder.Services.AddScoped<IFriendRepository, FriendRepository>();
 
 // Service 의존성 주입
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<FriendService>();
 
