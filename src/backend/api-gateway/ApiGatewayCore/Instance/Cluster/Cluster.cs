@@ -3,14 +3,14 @@ using System.Net.Sockets;
 using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
 
-namespace ApiGatewayCore.Instance.Cluster;
+namespace ApiGatewayCore.Instance;
 
-public class Cluster : DefaultInstance
+internal class Cluster : DefaultInstance
 {
-    private readonly ClusterConfig _config = null!;
+    public readonly ClusterConfig config;
     public Cluster(ClusterConfig config)
     {
-        _config = config;
+        this.config = config;
     }
 
     public override void Init()

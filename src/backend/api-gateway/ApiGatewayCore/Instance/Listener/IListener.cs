@@ -1,8 +1,8 @@
 using System.Net.Sockets;
 
-namespace ApiGatewayCore.Instance.Listener;
+namespace ApiGatewayCore.Instance;
 
-public interface IListener
+internal interface IListener
 {
     public void Init();
     public void RegisterAccept(SocketAsyncEventArgs args);

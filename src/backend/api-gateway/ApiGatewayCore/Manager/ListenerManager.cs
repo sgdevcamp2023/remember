@@ -1,20 +1,26 @@
 using ApiGatewayCore.Config;
-using ApiGatewayCore.Instance.Listener;
+using ApiGatewayCore.Instance;
 
 namespace ApiGatewayCore.Manager;
 
-public class ListenerManager
+internal class ListenerManager
 {
-    // private List<ListenerModel> _lisnterModel = null!;
-    private List<Listener> _listeners = new List<Listener>();
+    public ClusterManager ClusterManager { get; set; } = null!;
+    public List<Listener> Listeners { get; set; } = new List<Listener>();
+
     public void Init(List<ListenerConfig> models)
     {
-        foreach(var model in models)
+        foreach (var model in models)
         {
-            var listener = new Listener(model);
+            var listener = new Listener(ClusterManager, model);
             listener.Init();
 
-            _listeners.Add(listener);
+            Listeners.Add(listener);
         }
+    }
+
+    public void Run()
+    {
+        
     }
 }

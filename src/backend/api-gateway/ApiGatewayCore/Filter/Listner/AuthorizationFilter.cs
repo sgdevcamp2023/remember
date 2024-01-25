@@ -4,22 +4,29 @@ using System.Security.Cryptography;
 using System.Text;
 using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
+using ApiGatewayCore.Instance;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ApiGatewayCore.Filter.Listner;
 
-public class AuthenticationFilter : DefaultFilter
+internal class AuthorizationFilter : DefaultFilter
 {
     // 생성 관리 벨리데이션 체크깔쥐 다 해주기
-    private Authorization config = new Authorization();
+    public Authorization Config { get; set; } = null!;
+    public Dictionary<string, bool> IsAuthorization { get; set; } = new Dictionary<string, bool>();
+    
     private string _secretKey = null!;
     private string _issuer = null!;
     private string _audience = null!;
 
-    public override void Working(HttpContext context)
+    protected override void Working(Adapter adapter, HttpContext context)
     {
         // 해당 서비스가 Authentication Filter가 필요한 서비스인지 확인 필요
-
+        if (config.Authorization != null)
+        {
+            // if(config.Authorization.jwtValidator.)
+        }    
+        
         // 토큰이 없을 경우        
         if (context.Request.Header.TryGetValue("Authorization", out string? token))
         {
@@ -29,17 +36,21 @@ public class AuthenticationFilter : DefaultFilter
             // if (!ValidationToken(token))
                 // throw new Exception();
         }
+        else
+        {
+
+        }
     }
-    public override void Worked(HttpContext context)
+    protected override void Worked(Adapter adapter, HttpContext context)
     {
         if (config.Type == "JWT")
         {
-            if (context.Request.Path == config.jwtValidator!.Path)
+            if (context.Request.Path == config.Authorization.jw)
             {
                 if (context.Response.StatusCode == 200)
                 {
                     // 토큰 발급
-                    
+
                 }
             }
         }

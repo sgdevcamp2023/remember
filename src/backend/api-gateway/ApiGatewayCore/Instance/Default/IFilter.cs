@@ -3,10 +3,10 @@ using ApiGatewayCore.Http.Context;
 
 namespace ApiGatewayCore.Instance;
 
-public interface IFilter
+internal interface IFilter
 {
     public void UseFilter<T>();
     public void UseFilter(Type type);
     public void Use(Func<RequestDelegate, RequestDelegate> filter);
-    public void FilterStart(HttpContext context);
+    public void FilterStart(Adapter adapter, HttpContext context);
 }

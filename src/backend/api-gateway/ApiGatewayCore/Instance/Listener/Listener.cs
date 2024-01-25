@@ -5,37 +5,47 @@ using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
 using ApiGatewayCore.Manager;
 
-namespace ApiGatewayCore.Instance.Listener;
+namespace ApiGatewayCore.Instance;
 
-public class Listener : DefaultInstance
+internal class Listener : DefaultInstance
 {
     private Socket _listenerSocket = null!;
-    private readonly ListenerConfig _config = null!;
-    ThreadLocal<ClusterManager> _clusters = new ThreadLocal<ClusterManager>();
-    public Listener(ListenerConfig model)
+    public ClusterManager _clusterManager;
+    Dictionary<string, Cluster> _clusters = new Dictionary<string, Cluster>();
+    public ListenerConfig Config { get; private set; }
+
+    public Listener(ClusterManager clusterManager, ListenerConfig config)
     {
-        _config = model;
+        _clusterManager = clusterManager;
+        Config = config;
     }
     public override void Init()
     {
-        // 필터 설정
+        // 기본 필터 설정
         // UseFilter<ExceptionFilter>();
         // UseFilter<ServiceFilter>();
         // UseFilter<ProtocolCheckFilter>();
         // UseFilter<AuthenticationFilter();
         // UseFilter<ConnectionFilter>();
+        foreach(string clusterName in Config.RouteConfig.Clusters)
+        {
+            if(_clusterManager.Clusters.TryGetValue(clusterName, out Cluster? cluster))
+            {
+                _clusters.Add(clusterName, cluster);
+            }
+        }
 
         // 소켓 설정
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(_config.Address.Address), _config.Address.Port);
+        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Config.Address.Address), Config.Address.Port);
 
         _listenerSocket.Bind(endPoint);
-        _listenerSocket.Listen(1);
+        _listenerSocket.Listen(backlog: 100);
     }
 
     public override async Task Run()
     {
-        for (int i = 0; i < _config.ThreadCount; i++)
+        for (int i = 0; i < Config.ThreadCount; i++)
         {
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
             args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
@@ -43,7 +53,7 @@ public class Listener : DefaultInstance
         }
 
         await Task.Delay(-1);
-    }    
+    }
 
     public void RegisterAccept(SocketAsyncEventArgs args)
     {
@@ -74,8 +84,13 @@ public class Listener : DefaultInstance
         string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, buffer.Count);
 
         HttpContext context = new HttpContext(request: requestString);
+        
+        Adapter? adapter = MakeAdapter(context.Request.Path);
 
-        // FilterStart(context);
+        if(adapter == null)
+            throw new Exception();
+
+        FilterStart(adapter, context);
 
         Send(socket, System.Text.Encoding.UTF8.GetBytes(context.Response.ToResponseString()));
     }
@@ -83,5 +98,18 @@ public class Listener : DefaultInstance
     protected override void OnSend(Socket socket, ArraySegment<byte> buffer)
     {
         throw new NotImplementedException();
+    }
+
+    private Adapter? MakeAdapter(string clusterPath)
+    {
+        foreach(var (name, cluster) in _clusters)
+        {
+            if(clusterPath.Contains(cluster.config.Prefix))
+            {
+                return new Adapter(Config, cluster);
+            }
+        }
+
+        return null;
     }
 }

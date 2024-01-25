@@ -1,9 +1,9 @@
 using ApiGatewayCore.Http.Context;
+using ApiGatewayCore.Instance;
 
-namespace ApiGatewayCore.Filter
+namespace ApiGatewayCore.Filter;
+
+public interface IFilterBase
 {
-    public interface IFilterBase
-    {
-        public Task InvokeAsync(HttpContext context, RequestDelegate next);
-    }
+    public Task InvokeAsync(Adapter adapter, HttpContext context, RequestDelegate next);
 }

@@ -1,19 +1,21 @@
 using System.Security.Cryptography.X509Certificates;
+using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
+using ApiGatewayCore.Instance;
 
 namespace ApiGatewayCore.Filter;
 
-public abstract class DefaultFilter : IFilterBase
+internal abstract class DefaultFilter : IFilterBase
 {
-    public abstract void Working(HttpContext context);
-    public abstract void Worked(HttpContext context);
+    protected abstract void Working(Adapter adapter, HttpContext context);
+    protected abstract void Worked(Adapter adapter, HttpContext context);
 
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(Adapter adapter, HttpContext context, RequestDelegate next)
     {
-        Working(context);
+        Working(adapter, context);
 
-        await next(context);
+        await next(adapter, context);
 
-        Worked(context);
+        Worked(adapter, context);
     }
 }

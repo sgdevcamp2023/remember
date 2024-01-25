@@ -1,19 +1,21 @@
 using ApiGatewayCore.Config;
-using ApiGatewayCore.Instance.Cluster;
+using ApiGatewayCore.Instance;
 
 namespace ApiGatewayCore.Manager;
 
-public class ClusterManager
+internal class ClusterManager
 {
-    private List<Cluster> _clusters = new List<Cluster>();
+    public ListenerManager ListenerManager { get; set; } = null!;
+    public Dictionary<string, Cluster> Clusters { get; set; } = new Dictionary<string, Cluster>();
+
     public void Init(List<ClusterConfig> model)
     {
-        foreach(var config in model)
+        foreach (var config in model)
         {
             var cluster = new Cluster(config);
             cluster.Init();
-
-            _clusters.Add(cluster);
+            
+            Clusters.Add(config.Name, cluster);
         }
     }
 }

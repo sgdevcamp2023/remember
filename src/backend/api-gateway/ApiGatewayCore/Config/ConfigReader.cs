@@ -3,7 +3,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace ApiGatewayCore.Config;
 
-public class ConfigReader
+internal class ConfigReader
 {
     private string _path { get; set; } = null!;
     private readonly IDeserializer deserializer = new DeserializerBuilder()

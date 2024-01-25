@@ -3,11 +3,11 @@ using ApiGatewayCore.Instance;
 
 namespace ApiGatewayCore.Filter.Listner;
 
-public class RouteFilter
+internal class RouteFilter
 {
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(Adapter adapter, HttpContext context)
     {
-        // Cluster 작동하도록 설정
+        adapter.Cluster.Start(context);
         
         await Task.CompletedTask;
     }

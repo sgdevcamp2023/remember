@@ -19,7 +19,7 @@ public abstract class DefaultInstance : IFilter, INetwork
     {
         Use(next =>
         {
-            return async context =>
+            return async (instance, context) =>
              {
                  var middleware = Activator.CreateInstance(type) as IFilterBase;
 
@@ -28,7 +28,7 @@ public abstract class DefaultInstance : IFilter, INetwork
                      throw new InvalidOperationException("middleware is null");
                  }
 
-                 await middleware.InvokeAsync(context, next);
+                 await middleware.InvokeAsync(instance, context, next);
              };
         });
     }
@@ -38,12 +38,12 @@ public abstract class DefaultInstance : IFilter, INetwork
     }
 
     // 무조건 RouteFilter가 마지막
-    public void FilterStart(HttpContext context)
+    public void FilterStart(Adapter adapter, HttpContext context)
     {
-        RequestDelegate last = async context =>
+        RequestDelegate last = async (adapter, context) =>
         {
             RouteFilter filter = new RouteFilter();
-            await filter.InvokeAsync(context);
+            await filter.InvokeAsync(adapter, context);
         };
 
         for (int i = _filters.Count - 1; i >= 0; i--)
@@ -51,7 +51,7 @@ public abstract class DefaultInstance : IFilter, INetwork
             last = _filters[i](last);
         }
 
-        last(context);
+        last(adapter, context);
     }
     #endregion
 

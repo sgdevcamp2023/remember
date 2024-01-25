@@ -5,7 +5,7 @@ listeners:
     address: 127.0.0.1
     port: 4000
   route-config:
-    services:
+    clusters:
     - user-service
     - auth-service
   authorization:

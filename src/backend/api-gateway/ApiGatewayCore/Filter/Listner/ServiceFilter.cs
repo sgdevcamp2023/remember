@@ -1,15 +1,17 @@
+using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
+using ApiGatewayCore.Instance;
 
 namespace ApiGatewayCore.Filter.Listner;
 
-public class ServiceFilter : DefaultFilter
+internal class ServiceFilter : DefaultFilter
 {
-    public override void Worked(HttpContext context)
+    protected override void Worked(Adapter adapter, HttpContext context)
     {
         throw new NotImplementedException();
     }
 
-    public override void Working(HttpContext context)
+    protected override void Working(Adapter adapter, HttpContext context)
     {
         throw new NotImplementedException();
     }
