@@ -1,11 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
 using ApiGatewayCore.Instance;
-using Microsoft.IdentityModel.Tokens;
+using ApiGatewayCore.Filter.Internal;
 
 namespace ApiGatewayCore.Filter.Listner;
 
@@ -20,18 +15,23 @@ internal class AuthorizationFilter : DefaultFilter
         if (adapter.Cluster.config.Authorization == false)
             return;
 
+        if (adapter.Authorization == null)
+            throw new Exception();
+
         // 토큰이 없을 경우        
-        if (context.Request.Header.TryGetValue("Authorization", out string? token))
+        if (!context.Request.Header.TryGetValue("Authorization", out string? accessToken))
+            throw new Exception();
+
+        if (!_jwtAuthorization.ValidationToken(adapter.Authorization.jwtValidator, accessToken))
         {
-            if (token == null)
+            if (context.Request.Cookie == null)
                 throw new Exception();
 
-            // if (!ValidationToken(token))
-            // throw new Exception();
-        }
-        else
-        {
+            context.Request.Cookie.TryGetValue("refreshToken", out string? refreshToken);
+            if (refreshToken == null)
+                throw new Exception();
 
+            SetJwtInHeader(context, _jwtAuthorization.RefreshAccessToken(adapter.Authorization.jwtValidator, new JwtModel(accessToken, refreshToken)));
         }
     }
     protected override void Worked(Adapter adapter, HttpContext context)
@@ -42,11 +42,32 @@ internal class AuthorizationFilter : DefaultFilter
             switch (adapter.Authorization.Type)
             {
                 case "JWT":
-                    _jwtAuthorization.CreateToken(adapter, context);
+                    if (context.Response.Body == null)
+                        throw new Exception();
+                    SetJwtInHeader(context, _jwtAuthorization.CreateToken(adapter, context.Response.Body.ToString()));
+
                     break;
                 default:
                     break;
             }
         }
+        else if (adapter.Authorization.LogoutPath == context.Request.Path &&
+                context.Response.StatusCode == 200)
+        {
+            switch (adapter.Authorization.Type)
+            {
+                case "JWT":
+                    _jwtAuthorization.DeleteToken(adapter, context);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void SetJwtInHeader(HttpContext context, JwtModel jwtModel)
+    {
+        context.Response.Header["Authorization"] = jwtModel.AccessToken;
+        context.Response.Cookie.Append("refreshToken", jwtModel.RefreshToken);
     }
 }

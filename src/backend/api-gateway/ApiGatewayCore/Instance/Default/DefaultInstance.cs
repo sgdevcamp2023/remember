@@ -10,7 +10,6 @@ public abstract class DefaultInstance : IFilter, INetwork
 {
     #region Filter
     protected List<Func<RequestDelegate, RequestDelegate>> _filters = new List<Func<RequestDelegate, RequestDelegate>>();
-    private RequestDelegate? _start = null;
     public void UseFilter<T>()
     {
         UseFilter(typeof(T));

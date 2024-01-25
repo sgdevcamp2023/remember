@@ -2,39 +2,71 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using ApiGatewayCore.Config;
 using ApiGatewayCore.Http.Context;
 using ApiGatewayCore.Instance;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ApiGatewayCore.Filter;
+namespace ApiGatewayCore.Filter.Internal;
 
 internal class JwtAuthorization : IJwtAuthorization
 {
-    public void CreateToken(Adapter adapter, HttpContext context)
+    private IRedisRepository _redis;
+    public JwtAuthorization()
+    {
+        _redis = new RedisRepository("localhost:6379");
+    }
+
+    public JwtModel CreateToken(Adapter adapter, string body)
     {
         if (adapter.Authorization.jwtValidator == null)
             throw new Exception();
 
-        List<Claim> claims = new List<Claim>()
-        {
-            new Claim(ClaimTypes.Name, "id")
-        };
+        // Claim 생성
+        List<Claim> claims = new List<Claim>();
+        
+        JwtClaimsModel? claimsModel = JsonSerializer.Deserialize<JwtClaimsModel>(body);
+        if (claimsModel == null)
+            throw new Exception();
+        
+        claims.Add(new Claim(ClaimTypes.Name, claimsModel.Name));
+
+        // 토큰 생성
         string accessToken = CreateAccessToken(adapter.Authorization.jwtValidator, claims);
         string refreshToken = CreateRefreshToken();
+        
+        // 레디스에 토큰 저장
+        _redis.Insert(claimsModel.Name, refreshToken);
 
-        context.Response.Header["Authorization"] = accessToken;
-        context.Response.Cookie.Append("refreshToken", refreshToken);
+        // 리턴
+        return new JwtModel(accessToken, refreshToken);
     }
 
-    public ClaimsPrincipal? GetPrincipal(string accessToken, string secretKey)
+    public void DeleteToken(Adapter adapter, HttpContext context)
+    {
+        context.Request.Header.TryGetValue("Authorization", out string? accessToken);
+        if (accessToken == null)
+            throw new Exception();
+
+        string[] tokens = accessToken.Split(" ");
+        accessToken = tokens[1];
+
+        string? id = GetPrincipal(accessToken)?.Identity?.Name;
+        if(id == null)
+            throw new Exception();
+
+        _redis.Delete(id);
+    }
+
+    public ClaimsPrincipal? GetPrincipal(string accessToken)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false,
             ValidateIssuer = false,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
             ValidateLifetime = false
         };
 
@@ -46,82 +78,68 @@ internal class JwtAuthorization : IJwtAuthorization
         return principal;
     }
 
-    public string RefreshAccessToken(string refreshToken)
+    public JwtModel RefreshAccessToken(JwtValidator validator, JwtModel token)
     {
-        // if (refreshToken == null)
-        //     throw new Exception();
+        // 엑세스 토큰 Claim 가져오기
+        var tokenPrincipal = GetPrincipal(token.AccessToken);
+        if (tokenPrincipal == null)
+            throw new Exception();
 
-        // var tokenPrincipal = GetPrincipalFromToken(accessToken);
-        // if (tokenPrincipal == null)
-        //     throw new Exception();
+        string? name = tokenPrincipal.Identity?.Name;
+        if (name == null)
+            throw new Exception();
 
-        // string? id = tokenPrincipal.Identity?.Name;
-        // if (id == null)
-        //     throw new Exception();
+        string? refreshToken = _redis.GetByKey(name);
+        if (refreshToken == null)
+            throw new Exception();
 
-        // string? refreshToken = _redis.GetRefreshTokenById(id);
-        // if (refreshToken == null)
-        //     throw new Exception();
+        if (refreshToken != token.RefreshToken)
+            throw new Exception();
 
-        // if (refreshToken != refreshToken)
-        //     throw new Exception();
+        string accessToken = CreateAccessToken(validator, tokenPrincipal.Claims.ToList());
+        refreshToken = CreateRefreshToken();
 
-        // string accessToken = CreateAccessToken(tokenPrincipal.Claims.ToList());
-        // if (!_redis.InsertIdAndRefreshToken(
-        //     id, refreshToken,
-        //     new TimeSpan(0, 0, int.Parse(_config["JWT:RefreshTokenValidityInSecond"]))))
-        //     throw new RedisException("Redis Repository Insert Error");
+        _redis.Insert(
+            name, refreshToken,
+            new TimeSpan(0, 0, validator.RefreshTokenValidityInSecond));
 
-        // return accessToken;
-
-        return "";
+        return new JwtModel(accessToken, refreshToken);
     }
 
-    public bool ValidationToken(string accessToken)
+    // 성공이냐?
+    // 타임 아웃인지
+    // 토큰이 JWT가 맞는지
+    public bool ValidationToken(JwtValidator validator, string accessToken)
     {
-        // string[] tokens = token.AccessToken.Split(" ");
-        // token.AccessToken = tokens[1];
+        string[] tokens = accessToken.Split(" ");
+        accessToken = tokens[1];
 
-        // if (tokens[0] != "Bearer")
-        //     throw new Exception();
+        if (tokens[0] != "Bearer")
+            throw new Exception();
 
-        // if (_redis.GetBlackListToken(token.AccessToken) != null)
-        //     throw new Exception();
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true,
+            ValidAudience = validator.ValidAudience,
+            ValidateIssuer = true,
+            ValidIssuer = validator.ValidIssuer,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(validator.SecretKey)),
+            ValidateLifetime = true,
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        try
+        {
+            var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
+            if (principal == null)
+                throw new Exception();
 
-        // if (token.RefreshToken == null)
-        //     throw new Exception();
-
-        // // AccessToken이 무조건 있다고 가정
-        // var tokenValidationParameters = new TokenValidationParameters
-        // {
-        //     ValidateAudience = true,
-        //     ValidAudience = _config["JWT:ValidAudience"],
-        //     ValidateIssuer = true,
-        //     ValidIssuer = _config["JWT:ValidIssuer"],
-        //     ValidateIssuerSigningKey = true,
-        //     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"])),
-        //     ValidateLifetime = true,
-        // };
-        // var tokenHandler = new JwtSecurityTokenHandler();
-        // try
-        // {
-        //     var principal = tokenHandler.ValidateToken(token.AccessToken, tokenValidationParameters, out SecurityToken securityToken);
-        //     if (principal == null)
-        //         throw new Exception();
-
-        //     string id = principal.Identity?.Name ?? throw new Exception();
-
-        //     return id;
-        // }
-        // catch (SecurityTokenExpiredException)
-        // {
-        //     RefreshToken(token);
-
-        //     // 토큰 유효성 검사 실패
-        //     throw new TokenException(4105, token);
-        // }
-
-        return true;
+            return true;
+        }
+        catch (SecurityTokenExpiredException)
+        {
+            return false;
+        }
     }
 
     private string CreateAccessToken(JwtValidator validator, List<Claim> claims)

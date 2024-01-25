@@ -15,6 +15,8 @@ namespace ApiGatewayCore.Instance;
 internal class Cluster : DefaultInstance
 {
     public readonly ClusterConfig config;
+    public List<Socket> sockets = new List<Socket>();
+
     public Cluster(ClusterConfig config)
     {
         this.config = config;
@@ -22,7 +24,14 @@ internal class Cluster : DefaultInstance
 
     public override void Init()
     {
-        throw new NotImplementedException();
+        foreach (var address in config.Addresses)
+        {
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(address.Address), address.Port);
+
+            socket.Connect(endPoint);
+            sockets.Add(socket);
+        }
     }
 
     public override Task Run()
