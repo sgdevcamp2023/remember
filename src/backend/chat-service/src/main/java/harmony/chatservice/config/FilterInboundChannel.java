@@ -2,10 +2,9 @@ package harmony.chatservice.config;
 
 import harmony.chatservice.client.CommunityClient;
 import harmony.chatservice.dto.response.CommunityFeignResponse;
+import harmony.chatservice.dto.response.SessionDto;
 import harmony.chatservice.dto.response.StateDto;
 import harmony.chatservice.service.kafka.MessageProducerService;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,12 +48,18 @@ public class FilterInboundChannel implements ChannelInterceptor {
     public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
 
-        // 더미 데이터
-        List<Long> guildIds = Arrays.asList(1L, 2L);
-        List<Long> roomIds = Arrays.asList(1L, 3L, 5L);
-
         if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
+            log.info("sessionId {}", headerAccessor.getSessionId());
             Long userId = Long.parseLong(Objects.requireNonNull(headerAccessor.getFirstNativeHeader("user-id")));
+            String sessionId = headerAccessor.getSessionId();
+            SessionDto sessionDto = SessionDto.builder()
+                    .userId(userId)
+                    .sessionId(sessionId)
+                    .type("CONNECT")
+                    .state("online")
+                    .build();
+            messageService.sendMessageForSession(sessionDto);
+
             CommunityFeignResponse ids = communityClient.getGuildAndRoomIds(userId);
             log.info("getGuildIds {}", ids.getResultData().getGuildIds());
             log.info("getRoomIds {}", ids.getResultData().getRoomIds());
@@ -62,8 +67,6 @@ public class FilterInboundChannel implements ChannelInterceptor {
                     .userId(userId)
                     .type("CONNECT")
                     .state("online")
-//                    .guildIds(guildIds)
-//                    .roomIds(roomIds)
                     .guildIds(ids.getResultData().getGuildIds())
                     .roomIds(ids.getResultData().getRoomIds())
                     .build();

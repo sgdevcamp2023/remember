@@ -3,6 +3,7 @@ package harmony.chatservice.service.kafka;
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
+import harmony.chatservice.dto.response.SessionDto;
 import harmony.chatservice.dto.response.StateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,9 @@ public class MessageProducerService {
     @Value("${spring.kafka.producer.state-chat-topic}")
     private String stateChatTopic;
 
+    @Value("${spring.kafka.producer.session-chat-topic}")
+    private String sessionChatTopic;
+
     private final KafkaTemplate<String, CommunityMessageDto> kafkaTemplateForCommunity;
 
     private final KafkaTemplate<String, DirectMessageDto> kafkaTemplateForDirect;
@@ -34,6 +38,8 @@ public class MessageProducerService {
     private final KafkaTemplate<String, EmojiDto> kafkaTemplateForEmoji;
 
     private final KafkaTemplate<String, StateDto> kafkaTemplateForState;
+
+    private final KafkaTemplate<String, SessionDto> kafkaTemplateForSession;
 
     public void sendMessageForCommunity(CommunityMessageDto messageDto) {
         log.info("messageDto {}", messageDto.getType());
@@ -53,5 +59,10 @@ public class MessageProducerService {
     public void sendMessageForState(StateDto stateDto) {
         log.info("state {}", stateDto.getType());
         kafkaTemplateForState.send(stateChatTopic, stateDto);
+    }
+
+    public void sendMessageForSession(SessionDto sessionDto) {
+        log.info("state {}", sessionDto.getType());
+        kafkaTemplateForSession.send(sessionChatTopic, sessionDto);
     }
 }
