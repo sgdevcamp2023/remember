@@ -6,7 +6,7 @@ using ApiGatewayCore.Utils;
 
 namespace ApiGatewayCore.Instance;
 
-public abstract class DefaultInstance : IFilter, INetwork
+public abstract class DefaultInstance : IFilterInstance, INetworkInstance
 {
     #region Filter
     protected List<Func<RequestDelegate, RequestDelegate>> _filters = new List<Func<RequestDelegate, RequestDelegate>>();

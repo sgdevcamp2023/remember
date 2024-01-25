@@ -18,6 +18,7 @@ public sealed class RequestFeature : IRequestFeature
     public string Path { get; set; } = null!;
     public string Protocol { get; set; } = null!;
 
+    public int ContentLength { get; set; }
     public HeaderDictionary Header { get; set; } = null!;
     public string? Body { get; set; } = null!;
     public string? QueryString { get; set; } = null!;

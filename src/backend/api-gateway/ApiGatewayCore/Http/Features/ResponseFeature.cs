@@ -18,5 +18,6 @@ public sealed class ResponseFeature : IResponseFeature
     public string StatusMessage { get; set; } = null!;
     public string? QueryString { get; set; }
     public HeaderDictionary Header { get; set; } = null!;
+    public int ContentLength { get; set; }
     public string? Body { get; set; }
 }

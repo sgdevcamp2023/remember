@@ -40,6 +40,11 @@ internal class Cluster : DefaultInstance
         throw new NotImplementedException();
     }
 
+    public Cluster Clone()
+    {
+        return new Cluster(config);
+    }
+
     protected override void OnReceive(Socket socket, ArraySegment<byte> buffer)
     {
         

@@ -26,22 +26,27 @@ public class HttpResponse
         StatusMessage = responseLine[2];
 
         // HttpContext 분리 생성
-        for(int i = 1;i<responseLines.Length;i++)
+        for (int i = 1; i < responseLines.Length; i++)
         {
-            if(responseLines[i] == "\n")
+            if (responseLines[i] == "\n")
             {
                 Body = string.Join("\n", responseLines, i + 1, responseLines.Length - i - 1);
                 break;
             }
 
-            if(responseLine[i] == "Set-Cookie")
+            if (responseLine[i] == "Set-Cookie")
             {
                 Header.SetCookie = responseLines[i];
                 continue;
             }
-            
+            if (responseLine[i] == "Content-Length")
+            {
+                _responseFeatrue.ContentLength = int.Parse(responseLines[i]);
+                continue;
+            }
+
             string[] header = responseLines[i].Split(": ");
-            Header.Add(header[0],header[1]);
+            Header.Add(header[0], header[1]);
         }
 
         _responseCookie = new ResponseCookie(Header);
@@ -75,7 +80,7 @@ public class HttpResponse
         get => _responseFeatrue.Body;
         set => _responseFeatrue.Body = value;
     }
-    
+
     public IResponseCookie Cookie
     {
         get => _responseCookie!;

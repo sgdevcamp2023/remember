@@ -3,7 +3,7 @@ using ApiGatewayCore.Http.Context;
 
 namespace ApiGatewayCore.Instance;
 
-internal interface IFilter
+internal interface IFilterInstance
 {
     public void UseFilter<T>();
     public void UseFilter(Type type);

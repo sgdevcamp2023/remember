@@ -35,7 +35,7 @@ internal class Listener : DefaultInstance
         {
             if(_clusterManager.Clusters.TryGetValue(clusterName, out Cluster? cluster))
             {
-                _clusters.Add(clusterName, cluster);
+                _clusters.Add(clusterName, cluster.Clone());
             }
         }
 
