@@ -5,8 +5,8 @@ namespace ApiGatewayCore.Manager;
 
 public class SmileGateway
 {
-    internal static ListenerManager ListenerManager { get; private set; } = new();
-    internal static ClusterManager ClusterManager { get; private set; } = new();
+    internal ListenerManager ListenerManager { get; private set; } = new();
+    internal ClusterManager ClusterManager { get; private set; } = new();
     private ConfigReader _configReader;
 
     public SmileGateway(string configPath)

@@ -5,6 +5,13 @@ using ApiGatewayCore.Http.Context;
 
 namespace ApiGatewayCore.Instance;
 
+/// <summary>
+/// 1. 필터
+/// 2. 로드 밸런서
+/// 3. 업 스트림 전달
+/// 4. 클러스터 동기화
+/// 5. Queue로 동기화
+/// </summary>
 internal class Cluster : DefaultInstance
 {
     public readonly ClusterConfig config;

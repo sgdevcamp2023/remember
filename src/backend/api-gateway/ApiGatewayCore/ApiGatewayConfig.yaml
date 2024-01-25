@@ -10,8 +10,8 @@ listeners:
     - auth-service
   authorization:
     type: JWT
+    login-path: /api/user/auth/login
     jwt-validator:
-      path: /api/user/auth/login
       valid-audience: http://localhost:5000
       valid-issuer: http://localhost:5000
       secret-key: JWTRefreshTokenHIGHsecuredPasswordVVVp1OH7Xzyr
@@ -19,7 +19,7 @@ listeners:
       refresh-token-validity-in-second: 86400
   disallow-headers:
     - trace-id
-  thread-count: 1
+  thread-count: 10
 
 clusters:
   - name: auth-service

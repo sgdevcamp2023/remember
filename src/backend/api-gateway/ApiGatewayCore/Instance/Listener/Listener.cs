@@ -7,6 +7,9 @@ using ApiGatewayCore.Manager;
 
 namespace ApiGatewayCore.Instance;
 
+
+// 1. Accept
+// 2. 필터
 internal class Listener : DefaultInstance
 {
     private Socket _listenerSocket = null!;
@@ -102,6 +105,7 @@ internal class Listener : DefaultInstance
 
     private Adapter? MakeAdapter(string clusterPath)
     {
+        // Clister Select
         foreach(var (name, cluster) in _clusters)
         {
             if(clusterPath.Contains(cluster.config.Prefix))

@@ -67,9 +67,9 @@ public abstract class DefaultInstance : IFilter, INetwork
     protected abstract void OnSend(Socket socket, ArraySegment<byte> buffer);
     #endregion
     
-    public void Send(Socket socket, ArraySegment<byte> buffer)
+    public void Send(Socket socket, byte[] data)
     {
-        RegisterSend(socket, buffer);
+        RegisterSend(socket, data);
     }
 
     public void Receive(Socket socket)
@@ -123,7 +123,7 @@ public abstract class DefaultInstance : IFilter, INetwork
             throw new Exception();
     }
 
-    private void RegisterSend(Socket socket, ArraySegment<byte> buffer)
+    private void RegisterSend(Socket socket, byte[] data)
     {
         SocketAsyncEventArgs sendArgs = null!;
         // Cluster를 거쳐왔을 때 작동
@@ -134,7 +134,10 @@ public abstract class DefaultInstance : IFilter, INetwork
         else
         {
             sendArgs = new SocketAsyncEventArgs();
-            sendArgs.SetBuffer(buffer);
+
+            ArraySegment<byte> buffer = _memory.Dequeue();
+            buffer.CopyTo(data);
+            sendArgs.SetBuffer(buffer.Array, 0, data.Length);
             sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
         }
 
@@ -156,6 +159,7 @@ public abstract class DefaultInstance : IFilter, INetwork
             ArraySegment<byte> buffer = args.Buffer!;
             OnSend(socket, buffer);
 
+            _memory.Enqueue(buffer);
             _sendArgs.Enqueue(args);
 
             Disconnect(socket);
