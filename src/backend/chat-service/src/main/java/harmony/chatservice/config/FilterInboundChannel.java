@@ -1,6 +1,7 @@
 package harmony.chatservice.config;
 
 import harmony.chatservice.client.CommunityClient;
+import harmony.chatservice.client.StateClient;
 import harmony.chatservice.dto.response.CommunityFeignResponse;
 import harmony.chatservice.dto.response.SessionDto;
 import harmony.chatservice.dto.response.StateDto;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class FilterInboundChannel implements ChannelInterceptor {
 
     private final JwtTokenHandler jwtTokenHandler;
+    private final StateClient stateClient;
     private final CommunityClient communityClient;
     private final MessageProducerService messageService;
     private static final String AUTH_PREFIX = "Authorization";
@@ -35,6 +37,7 @@ public class FilterInboundChannel implements ChannelInterceptor {
 //        }
 
         log.info("================================");
+        log.info("preSend");
         log.info("getSessionId {}", headerAccessor.getSessionId());
         log.info("getSubscriptionId {}", headerAccessor.getSubscriptionId());
         log.info("getMessageHeaders {}", headerAccessor.getMessageHeaders());
@@ -49,7 +52,6 @@ public class FilterInboundChannel implements ChannelInterceptor {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
-            log.info("sessionId {}", headerAccessor.getSessionId());
             Long userId = Long.parseLong(Objects.requireNonNull(headerAccessor.getFirstNativeHeader("user-id")));
             String sessionId = headerAccessor.getSessionId();
             SessionDto sessionDto = SessionDto.builder()
@@ -61,12 +63,32 @@ public class FilterInboundChannel implements ChannelInterceptor {
             messageService.sendMessageForSession(sessionDto);
 
             CommunityFeignResponse ids = communityClient.getGuildAndRoomIds(userId);
-            log.info("getGuildIds {}", ids.getResultData().getGuildIds());
-            log.info("getRoomIds {}", ids.getResultData().getRoomIds());
             StateDto stateDto = StateDto.builder()
                     .userId(userId)
                     .type("CONNECT")
                     .state("online")
+                    .guildIds(ids.getResultData().getGuildIds())
+                    .roomIds(ids.getResultData().getRoomIds())
+                    .build();
+            messageService.sendMessageForState(stateDto);
+        }
+
+        if (StompCommand.DISCONNECT.equals(headerAccessor.getCommand())) {
+            String sessionId = headerAccessor.getSessionId();
+            log.info("postSend");
+            log.info("disconnect sessionId {}", sessionId);
+            SessionDto sessionDto = SessionDto.builder()
+                    .sessionId(sessionId)
+                    .type("DISCONNECT")
+                    .state("offline")
+                    .build();
+            Long userId = Long.parseLong(stateClient.updateSession(sessionDto));
+
+            CommunityFeignResponse ids = communityClient.getGuildAndRoomIds(userId);
+            StateDto stateDto = StateDto.builder()
+                    .userId(userId)
+                    .type("DISCONNECT")
+                    .state("offline")
                     .guildIds(ids.getResultData().getGuildIds())
                     .roomIds(ids.getResultData().getRoomIds())
                     .build();
