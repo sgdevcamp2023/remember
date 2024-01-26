@@ -10,8 +10,8 @@ namespace ApiGatewayCore.Instance;
 public class EndPoint : NetworkInstance
 {
     private ConnectionPool _connectionPool = new ConnectionPool();
-    private IPEndPoint _ipEndpoint = null!;
     private AsyncLocal<HttpContext> _context = new AsyncLocal<HttpContext>();
+    private IPEndPoint _ipEndpoint = null!;
     private long _usingCount = 0;
 
     public EndPoint(AddressConfig config)
@@ -36,14 +36,21 @@ public class EndPoint : NetworkInstance
     public async Task StartAsync(HttpContext context)
     {
         IncreaseUsingCount();
-
         var socket = _connectionPool.RentSocket();
         await socket.ConnectAsync(_ipEndpoint);
-        // await socket.Send()
-        await socket.ReceiveAsync(new ArraySegment<byte>(new byte[1024]), SocketFlags.None);
+
+        if(!socket.Connected)
+            throw new Exception();
         
+        // 여기서의 문제점
+        // Response 를 보장해 줄 것인가?
+        // Response 를 보장해 준다면, 어떻게 보장해 줄 것인가?
+        // 보장해주지 못한다면 어떻게 처리할 것인가?
+
+        _context.Value = context;
+        await Send(socket, context.Request.GetStringToBytes());
+
         DecreaseUsingCount();
-        await Task.CompletedTask;
     }
 
     public override void Init()

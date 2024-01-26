@@ -48,38 +48,21 @@ internal class Listener : NetworkInstance
     {
         for (int i = 0; i < Config.ThreadCount; i++)
         {
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-            args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
-            RegisterAccept(args);
+            RegisterAccept();
         }
 
         await Task.Delay(-1);
     }
 
-    public void RegisterAccept(SocketAsyncEventArgs args)
+    public async void RegisterAccept()
     {
-        args.AcceptSocket = null;
-        bool isPending = _listenerSocket.AcceptAsync(args);
-        if (!isPending)
-            OnAcceptCompleted(null, args);
-    }
-
-    public void OnAcceptCompleted(object? sender, SocketAsyncEventArgs args)
-    {
-        if (args.SocketError == SocketError.Success)
-        {
-            Socket? socket = args.AcceptSocket;
-            if (socket == null)
-                throw new Exception();
-
-            Receive(socket);
-        }
-        else
+        Socket? socket = await _listenerSocket.AcceptAsync();
+        if (socket == null)
             throw new Exception();
 
-        RegisterAccept(args);
+        await Receive(socket);
     }
-
+    
     protected override void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
         string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, recvLen);

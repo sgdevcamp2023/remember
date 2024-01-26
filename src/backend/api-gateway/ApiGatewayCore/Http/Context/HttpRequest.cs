@@ -96,4 +96,9 @@ public class HttpRequest
         requestString += $"\n{Body}";
         return requestString;
     }
+
+    public byte[] GetStringToBytes()
+    {
+        return System.Text.Encoding.UTF8.GetBytes(ToString());
+    }
 }

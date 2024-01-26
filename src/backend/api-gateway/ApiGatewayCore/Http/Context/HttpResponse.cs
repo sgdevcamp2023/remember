@@ -95,4 +95,9 @@ public class HttpResponse
         responseString += $"\n{Body}";
         return responseString;
     }
+
+    public byte[] GetStringToBytes()
+    {
+        return System.Text.Encoding.UTF8.GetBytes(ToString());
+    }
 }
