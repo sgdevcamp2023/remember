@@ -151,12 +151,13 @@ public class HeaderDictionary : IDictionary<string, string>
 
     public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
     {
-        return GetEnumerator();
+        return Store!.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return Store?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, string>>().GetEnumerator();
+        // return Store?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, string>>().GetEnumerator();
+        return GetEnumerator();
     }
 
     public string? SetCookie

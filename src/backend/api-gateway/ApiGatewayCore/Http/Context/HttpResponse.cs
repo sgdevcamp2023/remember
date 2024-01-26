@@ -1,6 +1,7 @@
 using ApiGatewayCore.Http.Feature;
 using ApiGatewayCore.Http.Features;
 using ApiGatewayCore.Http.Header;
+using StackExchange.Redis;
 
 namespace ApiGatewayCore.Http.Context;
 
@@ -87,13 +88,16 @@ public class HttpResponse
     }
     public override string ToString()
     {
-        string responseString = $"{Protocol} {StatusCode} {StatusMessage}\r\n";
-        foreach (var header in Header)
-        {
-            responseString += $"{header.Key}: {header.Value}\r\n";
-        }
-        responseString += $"\n{Body}";
-        return responseString;
+        // Emulator 고쳐야함.
+        // string responseString = $"{Protocol} {StatusCode} {StatusMessage}\r\n";
+        // foreach (var header in Header.)
+        // {
+        //     responseString += $"{header.Key}: {header.Value}\r\n";
+        // }
+        // responseString += $"\n{Body}";
+        // return responseString;
+
+        return "";
     }
 
     public byte[] GetStringToBytes()

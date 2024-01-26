@@ -13,7 +13,6 @@ internal class ClusterManager
         foreach (var config in model)
         {
             var cluster = new Cluster(config);
-            cluster.Init();
             
             Clusters.Add(config.Name, cluster);
         }

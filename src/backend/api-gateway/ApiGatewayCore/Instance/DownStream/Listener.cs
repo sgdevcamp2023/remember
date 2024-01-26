@@ -44,14 +44,12 @@ internal class Listener : NetworkInstance
         _listenerSocket.Listen(backlog: 100);
     }
 
-    public async Task Run()
+    public void Run()
     {
         for (int i = 0; i < Config.ThreadCount; i++)
         {
             RegisterAccept();
         }
-
-        await Task.Delay(-1);
     }
 
     public async void RegisterAccept()
@@ -62,7 +60,7 @@ internal class Listener : NetworkInstance
 
         await Receive(socket);
     }
-    
+
     protected override void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
         string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, recvLen);

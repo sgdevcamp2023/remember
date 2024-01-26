@@ -11,7 +11,7 @@ listeners:
   authorization:
     type: JWT
     login-path: /api/user/auth/login
-    logout-paht: /api/user/auth/logout
+    logout-path: /api/user/auth/logout
     jwt-validator:
       valid-audience: http://localhost:5000
       valid-issuer: http://localhost:5000

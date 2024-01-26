@@ -1,5 +1,4 @@
 using ApiGatewayCore.Config;
-using ApiGatewayCore.Instance;
 
 namespace ApiGatewayCore.Manager;
 
@@ -18,15 +17,23 @@ public class SmileGateway
     {
         // 초기화 
         Root config = _configReader.Load<Root>();
-        ListenerManager.Init(config.Listeners);
         ClusterManager.Init(config.Clusters);
-
         ListenerManager.ClusterManager = ClusterManager;
+
+        ListenerManager.Init(config.Listeners);
         ClusterManager.ListenerManager = ListenerManager;
     }
 
     public void Run()
     {
-        // 실행
+        foreach (var listener in ListenerManager.Listeners)
+        {
+            listener.Run();
+        }
+        System.Console.WriteLine("ApiGatewayCore is running...");
+        while (true)
+        {
+            Thread.Sleep(1000);
+        }
     }
 }

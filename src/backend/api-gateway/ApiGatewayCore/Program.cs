@@ -1,4 +1,5 @@
 ﻿using ApiGatewayCore.Config;
+using ApiGatewayCore.Manager;
 using Microsoft.AspNetCore.Http;
 
 namespace ApiGatewayCore;
@@ -7,9 +8,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var yamlReaderWriter = new ConfigReader("ApiGatewayConfig.yaml");
-        var root = yamlReaderWriter.Load<Root>();
-        System.Console.WriteLine(root.Listeners.Count);
+        var gateway = new SmileGateway("ApiGatewayConfig.yaml");
+        gateway.Init();
+        gateway.Run();
     }
 }
 

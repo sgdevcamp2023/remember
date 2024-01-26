@@ -10,7 +10,7 @@ public sealed class RequestFeature : IRequestFeature
         Path = string.Empty;
         Protocol = string.Empty;
 
-        // Header = new HeaderDictionary();
+        Header = new HeaderDictionary();
         Body = string.Empty;
     }
 

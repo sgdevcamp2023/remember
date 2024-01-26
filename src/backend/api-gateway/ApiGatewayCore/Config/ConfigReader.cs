@@ -13,9 +13,11 @@ internal class ConfigReader
                                                 .WithNamingConvention(HyphenatedNamingConvention.Instance)
                                                 .Build();
 
+    // private string directoryPath = Directory.GetCurrentDirectory();
+    private string directoryPath = "C:\\github\\remember\\src\\backend\\api-gateway\\ApiGatewayCore";
     public ConfigReader(string path)
     {
-        _path = path;
+        _path = directoryPath + "\\" + path;
     }
 
     public T Load<T>()

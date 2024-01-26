@@ -18,30 +18,38 @@ public class HttpRequest
         string[] requestLine = requestLines[0].Split(" ");
         Method = requestLine[0];
         Path = requestLine[1].Split("?")[0];
-        QueryString = requestLine[1].Split("?")[1];
+        // QueryString = requestLine[1].Split("?");
+        string[] temp = requestLine[1].Split("?");
+        if (temp.Length > 1)
+        {
+            QueryString = temp[1];
+        }
+
         Protocol = requestLine[2];
 
         // HttpContext 분리 생성
-        for(int i = 1;i<requestLines.Length;i++)
+        for (int i = 1; i < requestLines.Count(); i++)
         {
-            if(requestLines[i] == "\n")
+            if (requestLines[i] == "\n")
             {
                 Body = string.Join("\n", requestLines, i + 1, requestLines.Length - i - 1);
                 break;
             }
-            if(requestLine[i] == "Cookie")
+            string[] header = requestLines[i].Split(": ");
+
+            if (header[0] == "Cookie")
             {
-                _requestCookie = new RequestCookie(requestLines[i]);
+                _requestCookie = new RequestCookie(header[1]);
                 continue;
             }
-            if(requestLine[i] == "Content-Length")
+            if (header[0] == "Content-Length")
             {
-                _requestFeature.ContentLength = int.Parse(requestLines[i]);
+                _requestFeature.ContentLength = int.Parse(header[1]);
                 continue;
             }
 
-            string[] header = requestLines[i].Split(": ");
-            Header.Add(header[0],header[1]);
+            if (header.Length > 1)
+                Header.Add(header[0], header[1]);
         }
     }
 
