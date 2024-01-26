@@ -50,7 +50,7 @@ task copyPrivate(type: Copy) {
 	copy {
 		from './harmony-private-env'
 		include "*.yml", "*.properties", "*.json"
-		into 'src/main/resources/private'
+		into 'src/main/resources'
 	}
 }
 
