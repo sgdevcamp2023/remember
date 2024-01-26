@@ -17,24 +17,41 @@ public class StateService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void saveSessionInfo(SessionDto sessionDto) {
-        saveSessionId(sessionDto);
-        saveState(sessionDto);
-    }
-
-    public void saveState(SessionDto sessionDto) {
+    public String updateSession(SessionDto sessionDto) {
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
-        String userId = String.valueOf(sessionDto.getUserId());
+        String sessionId = sessionDto.getSessionId();
         Map<String, Object> map = new HashMap<>();
-        map.put("state", sessionDto.getState());
-        hashOperations.putAll(userId, map);
-        log.info("save user state {}", hashOperations.get(userId, "state"));
+        String userId = null;
+        if (sessionDto.getType().equals("CONNECT")) {
+            userId = String.valueOf(sessionDto.getUserId());
+            map.put("state", sessionDto.getState());
+            hashOperations.putAll(userId, map);
+            saveSessionId(sessionId, userId);
+        }
+        if (sessionDto.getType().equals("DISCONNECT")) {
+            userId = getUserId(sessionId);
+            map.put("state", sessionDto.getState());
+            hashOperations.putAll(userId, map);
+            deleteSessionId(sessionId);
+        }
+
+        log.info("userId {}", userId);
+        log.info("sessionId {}", sessionDto.getSessionId());
+        log.info("user state {}", hashOperations.get(userId, "state"));
+        return userId;
     }
 
-    public void saveSessionId(SessionDto sessionDto) {
+    public void saveSessionId(String sessionId, String userId) {
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        String userId = String.valueOf(sessionDto.getUserId());
-        valueOperations.set(sessionDto.getSessionId(), userId);
-        log.info("save getSessionId {}", valueOperations.get(sessionDto.getSessionId()));
+        valueOperations.set(sessionId, userId);
+    }
+
+    public void deleteSessionId(String sessionId) {
+        redisTemplate.delete(sessionId);
+    }
+
+    public String getUserId(String sessionId) {
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        return valueOperations.get(sessionId).toString();
     }
 }

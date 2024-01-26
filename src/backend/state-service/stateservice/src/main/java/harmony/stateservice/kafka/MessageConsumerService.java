@@ -16,8 +16,6 @@ public class MessageConsumerService {
 
     @KafkaListener(topics = "sessionChatTopic", groupId = "sessionGroup", containerFactory = "sessionListener")
     public void consumeForSession(SessionDto sessionDto){
-        stateService.saveSessionInfo(sessionDto);
-        log.info("sessionId {}", sessionDto.getSessionId());
-        log.info("userId {}", sessionDto.getUserId());
+        stateService.updateSession(sessionDto);
     }
 }
