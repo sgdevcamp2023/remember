@@ -9,5 +9,6 @@
     <PackageReference Include="YamlDotNet" Version="13.7.1"/>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25"/>
     <PackageReference Include="StackExchange.Redis" Version="2.7.17"/>
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.25"/>
   </ItemGroup>
 </Project>

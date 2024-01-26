@@ -34,6 +34,11 @@ public class HttpRequest
                 _requestCookie = new RequestCookie(requestLines[i]);
                 continue;
             }
+            if(requestLine[i] == "Content-Length")
+            {
+                _requestFeature.ContentLength = int.Parse(requestLines[i]);
+                continue;
+            }
 
             string[] header = requestLines[i].Split(": ");
             Header.Add(header[0],header[1]);
@@ -81,7 +86,7 @@ public class HttpRequest
         get => _requestCookie;
     }
 
-    public string ToRequestString()
+    public override string ToString()
     {
         string requestString = $"{Method} {Path} {Protocol}\r\n";
         foreach (var header in Header)

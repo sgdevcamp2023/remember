@@ -45,7 +45,6 @@ internal class AuthorizationFilter : DefaultFilter
                     if (context.Response.Body == null)
                         throw new Exception();
                     SetJwtInHeader(context, _jwtAuthorization.CreateToken(adapter, context.Response.Body.ToString()));
-
                     break;
                 default:
                     break;

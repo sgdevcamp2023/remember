@@ -85,7 +85,7 @@ public class HttpResponse
     {
         get => _responseCookie!;
     }
-    public string ToResponseString()
+    public override string ToString()
     {
         string responseString = $"{Protocol} {StatusCode} {StatusMessage}\r\n";
         foreach (var header in Header)
