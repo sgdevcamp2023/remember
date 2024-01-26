@@ -80,9 +80,9 @@ internal class Listener : NetworkInstance
         RegisterAccept(args);
     }
 
-    protected override void OnReceive(Socket socket, ArraySegment<byte> buffer)
+    protected override void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
-        string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, buffer.Count);
+        string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, recvLen);
 
         HttpContext context = new HttpContext(request: requestString);
         

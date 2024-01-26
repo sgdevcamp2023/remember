@@ -1,5 +1,5 @@
 using ApiGatewayCore.Config;
-using ApiGatewayCore.Instance;
+using ApiGatewayCore.Instance.Upstream;
 
 namespace ApiGatewayCore.Manager;
 
