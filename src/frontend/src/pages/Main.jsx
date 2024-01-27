@@ -2,13 +2,14 @@ import "../css/Main.css"
 import {Link, Outlet} from "react-router-dom";
 import DmRoomsStore from "../store/DmRoomsStore";
 import Room from "./Room";
+import Guilds from "./Guilds";
 
 export default function Main() {
   const {rooms, registerRooms, removeRooms} = DmRoomsStore();
 
-
   return (
     <div className="main">
+      <Guilds/>
       <h1>Main</h1>
       {rooms.length > 0 ? rooms.map((room, index) => (
         <Link to={`/main/room/${room.roomId}`} className="no-decoration">
