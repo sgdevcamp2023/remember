@@ -59,6 +59,7 @@ public class HttpRequest
                 _requestCookie = new RequestCookie(header[1]);
                 continue;
             }
+
             if (header[0] == "Content-Length")
             {
                 _requestFeature.ContentLength = int.Parse(header[1]);

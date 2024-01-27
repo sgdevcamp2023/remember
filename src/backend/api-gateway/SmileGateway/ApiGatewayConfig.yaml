@@ -1,0 +1,67 @@
+listeners:
+- name: listener1
+  protocol: 
+  address:
+    address: 127.0.0.1
+    port: 4000
+  route-config:
+    clusters:
+    - user-service
+    - auth-service
+  authorization:
+    type: JWT
+    login-path: /api/user/auth/login
+    logout-path: /api/user/auth/logout
+    jwt-validator:
+      valid-audience: http://localhost:5000
+      valid-issuer: http://localhost:5000
+      secret-key: JWTRefreshTokenHIGHsecuredPasswordVVVp1OH7Xzyr
+      access-token-validity-in-second: 60
+      refresh-token-validity-in-second: 86400
+  disallow-headers:
+    - trace-id
+  thread-count: 10
+
+clusters:
+  - name: auth-service
+    protocol: http
+    address:
+      - address: 127.0.0.1
+        port: 5000
+    prefix: /api/user/auth
+    custom-filter:
+      name: CustomFilter
+      path: /ApiGateway/CustomFilter.cs
+    connect-timeout: 5s
+    authorization: false
+
+  - name: user-service
+    protocol: http
+    address:
+      - address: 127.0.0.1
+        port: 5000
+    prefix: /api/user
+    connect-timeout: 5s
+    authorization: true
+
+  - name: community-service
+    protocol: http
+    address:
+      - address: 127.0.0.1
+        port: 6000
+    prefix: /api/community
+    custom-filter:
+      name: CustomFilter
+      path: /ApiGateway/CustomFilter.cs
+    connect-timeout: 5s
+    authorization: true
+
+  - name: chat-service
+    protocol: http
+    address:
+      - address: 127.0.0.1
+        port: 7000
+    prefix: /service2
+    custom-filter: 
+    connect-timeout: 5s
+    authorization: true
