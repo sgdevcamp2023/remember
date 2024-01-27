@@ -17,15 +17,15 @@ public abstract class NetworkInstance : INetworkInstance
     
     public Task Send(Socket socket, byte[] data)
     {
-        return RegisterSend(socket, data);
+        return ProcessSendAsync(socket, data);
     }
 
-    public  Task Receive(Socket socket)
+    public Task Receive(Socket socket)
     {
-        return RegisterReceive(socket);
+        return ProcessReceiveAsync(socket);
     }
 
-    private async Task RegisterReceive(Socket socket)
+    private async Task ProcessReceiveAsync(Socket socket)
     {
         if(!socket.Connected)
             throw new Exception();
@@ -44,7 +44,7 @@ public abstract class NetworkInstance : INetworkInstance
         _memory.ReturnBytes(buffer);
     }
 
-    private async Task RegisterSend(Socket socket, ArraySegment<byte> data)
+    private async Task ProcessSendAsync(Socket socket, ArraySegment<byte> data)
     {
         if(!socket.Connected)
             throw new Exception();

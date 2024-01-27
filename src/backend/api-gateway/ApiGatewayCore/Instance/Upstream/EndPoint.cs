@@ -47,9 +47,12 @@ public class EndPoint : NetworkInstance
         // Response 를 보장해 준다면, 어떻게 보장해 줄 것인가?
         // 보장해주지 못한다면 어떻게 처리할 것인가?
 
+        // Send Recv가 끝나고 리턴되어야함.
         _context.Value = context;
-        await Send(socket, context.Request.GetStringToBytes());
 
+        await Send(socket, context.Request.GetStringToBytes());
+        await Receive(socket);
+    
         DecreaseUsingCount();
     }
 
@@ -60,7 +63,7 @@ public class EndPoint : NetworkInstance
 
     protected override void OnSend(Socket socket, int size)
     {
-        Receive(socket);
+        System.Console.WriteLine($"Send {size} bytes");
     }
 
     protected override void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
@@ -69,8 +72,5 @@ public class EndPoint : NetworkInstance
         if(_context.Value == null)
             throw new Exception();
         _context.Value.Response = response;
-
-        DecreaseUsingCount();
     }
-
 }

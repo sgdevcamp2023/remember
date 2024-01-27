@@ -30,13 +30,13 @@ public class HttpRequest
         // HttpContext 분리 생성
         for (int i = 1; i < requestLines.Count(); i++)
         {
-            if (requestLines[i] == "\n")
+            if (requestLines[i] == "")
             {
-                Body = string.Join("\n", requestLines, i + 1, requestLines.Length - i - 1);
+                Body = string.Join("\r\n", requestLines, i, requestLines.Length - i);
                 break;
             }
             string[] header = requestLines[i].Split(": ");
-
+            // if(header[0] == )
             if (header[0] == "Cookie")
             {
                 _requestCookie = new RequestCookie(header[1]);
@@ -101,12 +101,15 @@ public class HttpRequest
         {
             requestString += $"{header.Key}: {header.Value}\r\n";
         }
-        requestString += $"\n{Body}";
+        
+        requestString += $"{Body}"; 
         return requestString;
     }
 
     public byte[] GetStringToBytes()
     {
-        return System.Text.Encoding.UTF8.GetBytes(ToString());
+        string requestString = ToString();
+        System.Console.WriteLine(requestString);
+        return System.Text.Encoding.UTF8.GetBytes(requestString);
     }
 }

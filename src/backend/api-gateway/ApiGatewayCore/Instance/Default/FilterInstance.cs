@@ -10,7 +10,7 @@ public abstract class FilterInstnace : IFilterInstance
 {
     #region Abstract
     public abstract void Init();
-    
+
     #endregion
     protected List<Func<RequestDelegate, RequestDelegate>> _filters = new List<Func<RequestDelegate, RequestDelegate>>();
     public void UseFilter<T>()
@@ -40,7 +40,7 @@ public abstract class FilterInstnace : IFilterInstance
     }
 
     // 무조건 RouteFilter가 마지막
-    public void FilterStart(Adapter adapter, HttpContext context)
+    public async Task FilterStartAsync(Adapter adapter, HttpContext context)
     {
         RequestDelegate last = async (adapter, context) =>
         {
@@ -53,6 +53,6 @@ public abstract class FilterInstnace : IFilterInstance
             last = _filters[i](last);
         }
 
-        last(adapter, context);
+        await last(adapter, context);
     }
 }

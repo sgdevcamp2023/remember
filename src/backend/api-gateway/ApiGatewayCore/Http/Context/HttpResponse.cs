@@ -29,25 +29,26 @@ public class HttpResponse
         // HttpContext 분리 생성
         for (int i = 1; i < responseLines.Length; i++)
         {
-            if (responseLines[i] == "\n")
+            if (responseLines[i] == "")
             {
-                Body = string.Join("\n", responseLines, i + 1, responseLines.Length - i - 1);
+                Body = string.Join("\r\n", responseLines, i, responseLines.Length - i);
                 break;
             }
 
-            if (responseLine[i] == "Set-Cookie")
-            {
-                Header.SetCookie = responseLines[i];
-                continue;
-            }
-            if (responseLine[i] == "Content-Length")
-            {
-                _responseFeatrue.ContentLength = int.Parse(responseLines[i]);
-                continue;
-            }
-
             string[] header = responseLines[i].Split(": ");
-            Header.Add(header[0], header[1]);
+
+            if (header[0] == "Set-Cookie")
+            {
+                Header.SetCookie = header[1];
+                continue;
+            }
+            if (header[0] == "Content-Length")
+            {
+                _responseFeatrue.ContentLength = int.Parse(header[1]);
+                continue;
+            }
+            if(header.Length > 1)
+                Header.Add(header[0], header[1]);
         }
 
         _responseCookie = new ResponseCookie(Header);
@@ -89,15 +90,13 @@ public class HttpResponse
     public override string ToString()
     {
         // Emulator 고쳐야함.
-        // string responseString = $"{Protocol} {StatusCode} {StatusMessage}\r\n";
-        // foreach (var header in Header.)
-        // {
-        //     responseString += $"{header.Key}: {header.Value}\r\n";
-        // }
-        // responseString += $"\n{Body}";
-        // return responseString;
-
-        return "";
+        string responseString = $"{Protocol} {StatusCode} {StatusMessage}\r\n";
+        foreach (var header in Header)
+        {
+            responseString += $"{header.Key}: {header.Value}\r\n";
+        }
+        responseString += $"{Body}";
+        return responseString;
     }
 
     public byte[] GetStringToBytes()

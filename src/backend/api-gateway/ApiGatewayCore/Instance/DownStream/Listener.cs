@@ -8,7 +8,6 @@ using ApiGatewayCore.Manager;
 
 namespace ApiGatewayCore.Instance.DownStream;
 
-
 // 1. Accept
 // 2. 필터
 internal class Listener : NetworkInstance
@@ -19,7 +18,7 @@ internal class Listener : NetworkInstance
     public ClusterManager _clusterManager;
     Dictionary<string, Cluster> _clusters = new Dictionary<string, Cluster>();
     public ListenerConfig Config { get; private set; }
-
+    
     public Listener(ClusterManager clusterManager, ListenerConfig config)
     {
         _clusterManager = clusterManager;
@@ -61,7 +60,7 @@ internal class Listener : NetworkInstance
         await Receive(socket);
     }
 
-    protected override void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
+    protected override async void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
         string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, recvLen);
 
@@ -72,14 +71,16 @@ internal class Listener : NetworkInstance
         if(adapter == null)
             throw new Exception();
 
-        _filterChains.FilterStart(adapter, context);
+        await _filterChains.FilterStartAsync(adapter, context);
 
-        Send(socket, System.Text.Encoding.UTF8.GetBytes(context.Response.ToString()));
+        await Send(socket, System.Text.Encoding.UTF8.GetBytes(context.Response.ToString()));
     }
 
     protected override void OnSend(Socket socket, int size)
     {
-        throw new NotImplementedException();
+        System.Console.WriteLine($"Send {size} bytes");
+
+        Disconnect(socket);
     }
 
     private Adapter? MakeAdapter(string clusterPath)
