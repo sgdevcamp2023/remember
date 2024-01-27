@@ -27,11 +27,12 @@ public class HttpResponse
         StatusMessage = responseLine[2];
 
         // HttpContext 분리 생성
-        for (int i = 1; i < responseLines.Length; i++)
+        // Body 형태가 다름. 그래서 따로 해줘야함.
+        for (int i = 1; i < responseLines.Count(); i++)
         {
             if (responseLines[i] == "")
             {
-                Body = string.Join("\r\n", responseLines, i, responseLines.Length - i);
+                Body = string.Join("\r\n", responseLines, i + 1, responseLines.Length - i - 1);
                 break;
             }
 
@@ -95,12 +96,14 @@ public class HttpResponse
         {
             responseString += $"{header.Key}: {header.Value}\r\n";
         }
-        responseString += $"{Body}";
+        responseString += $"\r\n{Body}";
         return responseString;
     }
 
     public byte[] GetStringToBytes()
     {
-        return System.Text.Encoding.UTF8.GetBytes(ToString());
+        string responseString = ToString();
+        System.Console.WriteLine(responseString);
+        return System.Text.Encoding.UTF8.GetBytes(responseString);
     }
 }

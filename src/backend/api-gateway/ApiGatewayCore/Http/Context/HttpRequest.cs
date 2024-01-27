@@ -32,11 +32,15 @@ public class HttpRequest
         {
             if (requestLines[i] == "")
             {
-                Body = string.Join("\r\n", requestLines, i, requestLines.Length - i);
+                Body = string.Join("\r\n", requestLines, i + 1, requestLines.Length - i - 1);
                 break;
             }
             string[] header = requestLines[i].Split(": ");
-            // if(header[0] == )
+            if(header[0] == "Host")
+            {
+                Header["Host"] = "127.0.0.1:5000";
+                continue;
+            }
             if (header[0] == "Cookie")
             {
                 _requestCookie = new RequestCookie(header[1]);
@@ -102,7 +106,7 @@ public class HttpRequest
             requestString += $"{header.Key}: {header.Value}\r\n";
         }
         
-        requestString += $"{Body}"; 
+        requestString += $"\r\n{Body}"; 
         return requestString;
     }
 

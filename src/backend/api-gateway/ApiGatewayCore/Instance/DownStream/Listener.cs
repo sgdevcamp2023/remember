@@ -58,6 +58,8 @@ internal class Listener : NetworkInstance
             throw new Exception();
 
         await Receive(socket);
+
+        RegisterAccept();
     }
 
     protected override async void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
