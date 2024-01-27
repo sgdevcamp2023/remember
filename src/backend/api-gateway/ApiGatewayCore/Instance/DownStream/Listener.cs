@@ -75,7 +75,7 @@ internal class Listener : NetworkInstance
 
         await _filterChains.FilterStartAsync(adapter, context);
 
-        await Send(socket, System.Text.Encoding.UTF8.GetBytes(context.Response.ToString()));
+        await Send(socket, context.Response.GetStringToBytes());
     }
 
     protected override void OnSend(Socket socket, int size)

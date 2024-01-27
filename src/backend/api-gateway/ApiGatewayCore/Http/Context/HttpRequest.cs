@@ -15,17 +15,29 @@ public class HttpRequest
     {
         _requestFeature = new RequestFeature();
         string[] requestLines = requestString.Split("\r\n");
-        string[] requestLine = requestLines[0].Split(" ");
-        Method = requestLine[0];
-        Path = requestLine[1].Split("?")[0];
-        // QueryString = requestLine[1].Split("?");
-        string[] temp = requestLine[1].Split("?");
-        if (temp.Length > 1)
+
+        try
         {
-            QueryString = temp[1];
+            string[] requestInfo = requestLines[0].Split(" ");
+            Method = requestInfo[0];
+
+            string[] temp = requestInfo[1].Split("?");
+            Path = temp[0];
+            // QueryString = requestInfo[1].Split("?");
+
+            if (temp.Length > 1)
+            {
+                QueryString = temp[1];
+            }
+
+            Protocol = requestInfo[2];
+        }
+        catch (System.Exception)
+        {
+            System.Console.WriteLine(requestString);
+            throw new System.Exception();
         }
 
-        Protocol = requestLine[2];
 
         // HttpContext 분리 생성
         for (int i = 1; i < requestLines.Count(); i++)
@@ -36,9 +48,10 @@ public class HttpRequest
                 break;
             }
             string[] header = requestLines[i].Split(": ");
-            if(header[0] == "Host")
+
+            if (header[0] == "Host")
             {
-                Header["Host"] = "127.0.0.1:5000";
+                Header.Add("Host", "127.0.0.1:5000");
                 continue;
             }
             if (header[0] == "Cookie")
@@ -93,6 +106,12 @@ public class HttpRequest
         set => _requestFeature.QueryString = value;
     }
 
+    public int ContentLength
+    {
+        get => _requestFeature.ContentLength;
+        set => _requestFeature.ContentLength = value;
+    }
+
     public IRequestCookie? Cookie
     {
         get => _requestCookie;
@@ -105,8 +124,8 @@ public class HttpRequest
         {
             requestString += $"{header.Key}: {header.Value}\r\n";
         }
-        
-        requestString += $"\r\n{Body}"; 
+        requestString += $"Content-Length: {ContentLength}\r\n";
+        requestString += $"\r\n{Body}";
         return requestString;
     }
 
