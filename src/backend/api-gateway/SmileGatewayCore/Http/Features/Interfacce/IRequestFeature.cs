@@ -1,4 +1,4 @@
-namespace ApiGatewayCore.Http.Feature;
+namespace SmileGatewayCore.Http.Feature;
 
 public interface IRequestFeature : IBaseFeature
 {

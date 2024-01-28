@@ -1,4 +1,4 @@
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 public class ClusterConfig
 {
     public string Name { get; set; } = null!;

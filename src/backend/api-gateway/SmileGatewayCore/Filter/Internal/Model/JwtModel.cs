@@ -1,4 +1,4 @@
-namespace ApiGatewayCore.Filter.Internal;
+namespace SmileGatewayCore.Filter.Internal;
 
 public class JwtModel
 {

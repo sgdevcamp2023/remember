@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace ApiGatewayCore.Utils;
+namespace SmileGatewayCore.Utils;
 
 public class ErrorCodeReader
 {

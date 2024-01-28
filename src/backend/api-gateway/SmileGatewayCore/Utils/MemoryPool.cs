@@ -1,8 +1,8 @@
 using System.Buffers;
-using ApiGatewayCore.Http.Context;
+using SmileGatewayCore.Http.Context;
 using Microsoft.Extensions.ObjectPool;
 
-namespace ApiGatewayCore.Utils;
+namespace SmileGatewayCore.Utils;
 
 public class MemoryPool
 {

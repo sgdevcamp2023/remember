@@ -1,6 +1,6 @@
 using System.Net.Sockets;
 
-namespace ApiGatewayCore.Instance.DownStream;
+namespace SmileGatewayCore.Instance.DownStream;
 
 internal interface IListener
 {

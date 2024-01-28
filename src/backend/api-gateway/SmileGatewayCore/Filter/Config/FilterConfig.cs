@@ -1,6 +1,6 @@
-using ApiGatewayCore.Config;
+using SmileGatewayCore.Config;
 
-namespace ApiGatewayCore.Filter.Config;
+namespace SmileGatewayCore.Filter.Config;
 
 // 필터 처리에 필요한 설정을 담는 클래스
 public class FilterConfig

@@ -1,4 +1,4 @@
-namespace ApiGatewayCore.Utils;
+namespace SmileGatewayCore.Utils;
 
 public class ErrorCodeModel
 {

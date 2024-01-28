@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace ApiGatewayCore.Http.Feature;
+namespace SmileGatewayCore.Http.Feature;
 
 public class RequestCookie : IRequestCookie
 {

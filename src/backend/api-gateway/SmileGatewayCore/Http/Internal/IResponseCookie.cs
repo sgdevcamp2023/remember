@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace ApiGatewayCore.Http.Features;
+namespace SmileGatewayCore.Http.Features;
 
 public interface IResponseCookie
 {

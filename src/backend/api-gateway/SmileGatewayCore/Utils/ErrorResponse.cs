@@ -1,7 +1,7 @@
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Utils;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Utils;
 
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 
 public static class ErrorResponse
 {

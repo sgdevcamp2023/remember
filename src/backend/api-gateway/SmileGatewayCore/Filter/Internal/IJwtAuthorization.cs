@@ -1,9 +1,9 @@
 using System.Security.Claims;
-using ApiGatewayCore.Config;
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Instance;
+using SmileGatewayCore.Config;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Instance;
 
-namespace ApiGatewayCore.Filter.Internal;
+namespace SmileGatewayCore.Filter.Internal;
 
 internal interface IJwtAuthorization
 {

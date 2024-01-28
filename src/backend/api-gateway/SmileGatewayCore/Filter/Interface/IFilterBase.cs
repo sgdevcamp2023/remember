@@ -1,7 +1,7 @@
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Instance;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Instance;
 
-namespace ApiGatewayCore.Filter;
+namespace SmileGatewayCore.Filter;
 
 public interface IFilterBase
 {

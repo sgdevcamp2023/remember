@@ -1,0 +1,1 @@
+namespace SmileGatewayCore.Http.Features;

@@ -1,7 +1,7 @@
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 
 internal class ConfigReader
 {
@@ -13,11 +13,11 @@ internal class ConfigReader
                                                 .WithNamingConvention(HyphenatedNamingConvention.Instance)
                                                 .Build();
 
-    // private string directoryPath = Directory.GetCurrentDirectory();
-    private string directoryPath = "C:\\github\\remember\\src\\backend\\api-gateway\\ApiGatewayCore";
+    private string directoryPath = "C:\\github\\remember\\src\\backend\\api-gateway\\SmileGateway\\";
     public ConfigReader(string path)
     {
-        _path = directoryPath + "\\" + path;
+        // _path = ".\\SmileGateway\\" + path;
+        _path = directoryPath + path;
     }
 
     public T Load<T>()

@@ -1,8 +1,8 @@
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Instance;
-using ApiGatewayCore.Filter.Internal;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Instance;
+using SmileGatewayCore.Filter.Internal;
 
-namespace ApiGatewayCore.Filter.Listner;
+namespace SmileGatewayCore.Filter.Listner;
 
 internal class AuthorizationFilter : DefaultFilter
 {

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ApiGatewayCore.Http.Header;
+namespace SmileGatewayCore.Http.Header;
 
 public class HeaderDictionary : IDictionary<string, string>
 {

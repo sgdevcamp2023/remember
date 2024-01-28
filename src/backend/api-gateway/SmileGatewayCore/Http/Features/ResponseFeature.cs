@@ -1,6 +1,6 @@
-using ApiGatewayCore.Http.Header;
+using SmileGatewayCore.Http.Header;
 
-namespace ApiGatewayCore.Http.Feature;
+namespace SmileGatewayCore.Http.Feature;
 
 public sealed class ResponseFeature : IResponseFeature
 {

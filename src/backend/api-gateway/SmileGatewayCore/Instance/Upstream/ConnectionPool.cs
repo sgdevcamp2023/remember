@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 
-namespace ApiGatewayCore.Instance.Upstream;
+namespace SmileGatewayCore.Instance.Upstream;
 
 // 연결 관리는 어떻게?
 public class ConnectionPool

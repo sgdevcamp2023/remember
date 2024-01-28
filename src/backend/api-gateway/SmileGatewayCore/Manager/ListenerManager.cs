@@ -1,7 +1,7 @@
-using ApiGatewayCore.Config;
-using ApiGatewayCore.Instance.DownStream;
+using SmileGatewayCore.Config;
+using SmileGatewayCore.Instance.DownStream;
 
-namespace ApiGatewayCore.Manager;
+namespace SmileGatewayCore.Manager;
 
 internal class ListenerManager
 {

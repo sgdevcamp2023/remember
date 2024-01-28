@@ -1,4 +1,4 @@
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 public class AddressConfig
 {
     public string Address { get; set; } = null!;

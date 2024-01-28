@@ -1,4 +1,4 @@
-namespace ApiGatewayCore.Http.Context;
+namespace SmileGatewayCore.Http.Context;
 
 public class HttpContext
 {

@@ -1,8 +1,8 @@
-using ApiGatewayCore.Config;
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Instance;
+using SmileGatewayCore.Config;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Instance;
 
-namespace ApiGatewayCore.Filter.Listner;
+namespace SmileGatewayCore.Filter.Listner;
 
 internal class ServiceFilter : DefaultFilter
 {

@@ -1,7 +1,7 @@
-using ApiGatewayCore.Config;
-using ApiGatewayCore.Http.Context;
+using SmileGatewayCore.Config;
+using SmileGatewayCore.Http.Context;
 
-namespace ApiGatewayCore.Instance.Upstream;
+namespace SmileGatewayCore.Instance.Upstream;
 
 /// <summary>
 /// 1. 필터

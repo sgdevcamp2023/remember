@@ -1,6 +1,4 @@
-using System.Reflection.Metadata;
-
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 public class Authorization
 {
     public string Type { get; set; } = null!;

@@ -3,14 +3,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using ApiGatewayCore.Config;
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Instance;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Instance;
 using Microsoft.IdentityModel.Tokens;
+using SmileGatewayCore.Config;
 
-namespace ApiGatewayCore.Filter.Internal;
+namespace SmileGatewayCore.Filter.Internal;
 
 internal class JwtAuthorization : IJwtAuthorization
 {

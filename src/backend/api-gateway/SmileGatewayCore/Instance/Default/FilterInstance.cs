@@ -1,10 +1,10 @@
 using System.Net.Sockets;
-using ApiGatewayCore.Filter;
-using ApiGatewayCore.Filter.Listner;
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Utils;
+using SmileGatewayCore.Filter;
+using SmileGatewayCore.Filter.Listner;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Utils;
 
-namespace ApiGatewayCore.Instance;
+namespace SmileGatewayCore.Instance;
 
 public abstract class FilterInstnace : IFilterInstance
 {

@@ -1,7 +1,7 @@
-using ApiGatewayCore.Config;
-using ApiGatewayCore.Instance.Upstream;
+using SmileGatewayCore.Config;
+using SmileGatewayCore.Instance.Upstream;
 
-namespace ApiGatewayCore.Manager;
+namespace SmileGatewayCore.Manager;
 
 internal class ClusterManager
 {

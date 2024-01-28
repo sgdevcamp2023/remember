@@ -1,11 +1,11 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using ApiGatewayCore.Config;
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Instance.Upstream;
+using SmileGatewayCore.Config;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Instance.Upstream;
 
-namespace ApiGatewayCore.Instance;
+namespace SmileGatewayCore.Instance;
 
 public class EndPoint : NetworkInstance
 {

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using YamlDotNet.Core.Tokens;
-using HeaderDictionary = ApiGatewayCore.Http.Header.HeaderDictionary;
+using HeaderDictionary = SmileGatewayCore.Http.Header.HeaderDictionary;
 
-namespace ApiGatewayCore.Http.Features;
+namespace SmileGatewayCore.Http.Features;
 
 public class ResponseCookie : IResponseCookie
 {

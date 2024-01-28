@@ -1,4 +1,4 @@
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 public class JwtValidator
 {
     public string ValidAudience { get; set; } = null!;

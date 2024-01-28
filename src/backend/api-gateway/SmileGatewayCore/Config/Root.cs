@@ -1,6 +1,4 @@
-using YamlDotNet.RepresentationModel;
-
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 public class Root
 {
     public List<ListenerConfig> Listeners { get; set; } = null!;

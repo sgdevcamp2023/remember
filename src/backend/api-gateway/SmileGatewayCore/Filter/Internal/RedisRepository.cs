@@ -1,6 +1,6 @@
 using StackExchange.Redis;
 
-namespace ApiGatewayCore.Filter.Internal;
+namespace SmileGatewayCore.Filter.Internal;
 
 internal class RedisRepository : IRedisRepository
 {

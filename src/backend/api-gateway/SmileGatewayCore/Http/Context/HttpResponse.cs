@@ -1,9 +1,9 @@
-using ApiGatewayCore.Http.Feature;
-using ApiGatewayCore.Http.Features;
-using ApiGatewayCore.Http.Header;
+using SmileGatewayCore.Http.Feature;
+using SmileGatewayCore.Http.Features;
+using SmileGatewayCore.Http.Header;
 using StackExchange.Redis;
 
-namespace ApiGatewayCore.Http.Context;
+namespace SmileGatewayCore.Http.Context;
 
 
 public class HttpResponse

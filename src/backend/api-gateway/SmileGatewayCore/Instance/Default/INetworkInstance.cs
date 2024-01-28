@@ -1,6 +1,6 @@
 using System.Net.Sockets;
 
-namespace ApiGatewayCore.Instance;
+namespace SmileGatewayCore.Instance;
 
 internal interface INetworkInstance
 {

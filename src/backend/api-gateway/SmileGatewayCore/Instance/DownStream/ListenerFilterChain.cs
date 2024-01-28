@@ -1,6 +1,6 @@
-using ApiGatewayCore.Filter.Listner;
+using SmileGatewayCore.Filter.Listner;
 
-namespace ApiGatewayCore.Instance.DownStream;
+namespace SmileGatewayCore.Instance.DownStream;
 
 public class ListenerFilterChains : FilterInstnace
 {

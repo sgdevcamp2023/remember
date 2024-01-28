@@ -1,12 +1,13 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using ApiGatewayCore.Config;
-using ApiGatewayCore.Http.Context;
-using ApiGatewayCore.Instance.Upstream;
-using ApiGatewayCore.Manager;
+using SmileGatewayCore.Config;
+using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Instance.Upstream;
+using SmileGatewayCore.Manager;
 
-namespace ApiGatewayCore.Instance.DownStream;
+namespace SmileGatewayCore.Instance.DownStream;
 
 // 1. Accept
 // 2. 필터
@@ -18,6 +19,8 @@ internal class Listener : NetworkInstance
     public ClusterManager _clusterManager;
     Dictionary<string, Cluster> _clusters = new Dictionary<string, Cluster>();
     public ListenerConfig Config { get; private set; }
+
+    public AsyncLocal<Stopwatch> _stopwatch = new AsyncLocal<Stopwatch>();
     
     public Listener(ClusterManager clusterManager, ListenerConfig config)
     {
@@ -56,6 +59,9 @@ internal class Listener : NetworkInstance
         Socket? socket = await _listenerSocket.AcceptAsync();
         if (socket == null)
             throw new Exception();
+        
+        _stopwatch.Value = new Stopwatch();
+        _stopwatch.Value.Start();
 
         await Receive(socket);
 
@@ -65,7 +71,7 @@ internal class Listener : NetworkInstance
     protected override async void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
         string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, recvLen);
-
+        
         HttpContext context = new HttpContext(request: requestString);
         
         Adapter? adapter = MakeAdapter(context.Request.Path);
@@ -80,7 +86,9 @@ internal class Listener : NetworkInstance
 
     protected override void OnSend(Socket socket, int size)
     {
-        System.Console.WriteLine($"Send {size} bytes");
+        _stopwatch.Value!.Stop();
+
+        System.Console.WriteLine($"Send {size} bytes, Time is {_stopwatch.Value.ElapsedMilliseconds}ms");
 
         Disconnect(socket);
     }

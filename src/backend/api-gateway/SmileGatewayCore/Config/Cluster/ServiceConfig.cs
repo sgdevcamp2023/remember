@@ -1,5 +1,4 @@
-using System.Net.NetworkInformation;
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 
 public class ServiceConfig
 {

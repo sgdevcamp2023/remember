@@ -1,4 +1,4 @@
-namespace ApiGatewayCore.Config;
+namespace SmileGatewayCore.Config;
 public class ListenerConfig
 {
     public string Name { get; set; } = null!;

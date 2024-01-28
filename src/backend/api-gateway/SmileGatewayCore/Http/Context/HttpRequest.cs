@@ -1,7 +1,7 @@
-using ApiGatewayCore.Http.Feature;
-using ApiGatewayCore.Http.Header;
+using SmileGatewayCore.Http.Feature;
+using SmileGatewayCore.Http.Header;
 
-namespace ApiGatewayCore.Http.Context;
+namespace SmileGatewayCore.Http.Context;
 public class HttpRequest
 {
     private IRequestFeature _requestFeature;

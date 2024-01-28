@@ -1,9 +1,9 @@
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Security.Principal;
-using ApiGatewayCore.Utils;
+using SmileGatewayCore.Utils;
 
-namespace ApiGatewayCore.Instance;
+namespace SmileGatewayCore.Instance;
 
 public abstract class NetworkInstance : INetworkInstance
 {

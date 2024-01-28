@@ -1,6 +1,6 @@
-using ApiGatewayCore.Config;
+using SmileGatewayCore.Config;
 
-namespace ApiGatewayCore.Manager;
+namespace SmileGatewayCore.Manager;
 
 public class SmileGateway
 {
@@ -30,7 +30,7 @@ public class SmileGateway
         {
             listener.Run();
         }
-        System.Console.WriteLine("ApiGatewayCore is running...");
+        System.Console.WriteLine("SmileGateway is running...");
         while (true)
         {
             Thread.Sleep(1000);
