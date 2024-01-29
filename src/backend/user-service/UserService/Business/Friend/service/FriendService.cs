@@ -10,7 +10,7 @@ namespace user_service
     {
         namespace service
         {
-            public class FriendService
+            public class FriendService : IFriendService
             {
                 private IConfiguration _config;
                 private IUserRepository _userRepository;

@@ -16,11 +16,26 @@ namespace user_service
 
             public async Task InvokeAsync(HttpContext context)
             {
-                 _logger.Log("Start");
+                string? controller = context.GetRouteData().Values["controller"]!.ToString();
 
+                _logger.LogInformation(
+                    service: controller!,
+                    traceId: "",
+                    method: context.Request.Method,
+                    userId: "",
+                    message: context.Request.Path + " Start",
+                    apiAddr: context.Connection.RemoteIpAddress!.ToString());
+                
                 await _next(context);
 
-                _logger.Log("end");
+                _logger.LogInformation(
+                    service: controller!,
+                    traceId: "",
+                    method: context.Request.Method,
+                    userId: "",
+                    message: context.Request.Path + " End",
+                    apiAddr: context.Connection.RemoteIpAddress!.ToString());
+                        await _next(context);
             }
         }
     }

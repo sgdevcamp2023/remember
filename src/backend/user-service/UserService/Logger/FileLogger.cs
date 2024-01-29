@@ -1,3 +1,6 @@
+using System.Collections.Concurrent;
+using System.Text.Json;
+using Timer = System.Timers.Timer;
 
 namespace user_service
 {
@@ -5,9 +8,7 @@ namespace user_service
     {
         public class FileLogger : IBaseLogger
         {
-            public Object _lock = new object();
-
-            public Queue<string> _queue = new Queue<string>();
+            public ConcurrentQueue<LogModel> _queue = new ConcurrentQueue<LogModel>();
             public string _path = null!;
 
             public IConfiguration _config;
@@ -15,49 +16,79 @@ namespace user_service
             {
                 _config = config;
                 _path = System.IO.Directory.GetCurrentDirectory() + _config["Logger:LogPath"];
-
-                Task.Run(() =>
+                Timer timer = new Timer();
+                timer.Interval = 1000;
+                timer.Elapsed += (sender, args) =>
                 {
-                    while (true)
+                    List<LogModel> logs;
+                    PopAll(out logs);
+                    if (logs.Count > 0)
                     {
-                        List<string> logs;
-                        PopAll(out logs);
-                        if (logs.Count > 0)
+                        using (StreamWriter sw = File.AppendText(_path))
                         {
-                            using (StreamWriter sw = File.AppendText(_path))
+                            foreach (var log in logs)
                             {
-                                foreach (var log in logs)
-                                {
-                                    sw.WriteLine(log);
-                                }
+                                string json = JsonSerializer.Serialize(log);
+                                sw.WriteLine(json);
                             }
                         }
-                        Thread.Sleep(1000);
                     }
-                });
+                };
+                timer.Start();
             }
-            public void Log(string message)
+            private void Log(string type, string service, string traceId, string method, string userId, string message, string apiAddr)
             {
-                Task.Run(() =>
+                string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                
+                _queue.Enqueue(new LogModel
                 {
-                    Push(message);
+                    Time = time,
+                    Level = type,
+                    Service = service,
+                    Trace = traceId,
+                    HttpMethod = method,
+                    UserId = userId,
+                    Message = message,
+                    ApiAddr = ""
                 });
             }
 
-            private void Push(string message)
+            private void PopAll(out List<LogModel> logs)
             {
-                lock (_lock)
+                logs = new List<LogModel>();
+                while(_queue.TryDequeue(out LogModel? data))
                 {
-                    _queue.Enqueue(message);
+                    logs.Add(data!);
                 }
             }
 
-            private void PopAll(out List<string> logs)
+            public void LogInformation(string service, string traceId, string method, string userId, string message, string apiAddr)
             {
-                lock (_lock)
-                {
-                    logs = _queue.ToList();
-                }
+                Log("INFO", service, traceId, method, userId, message, apiAddr);
+            }
+
+            public void LogWarning(string service, string traceId, string method, string userId, string message, string apiAddr)
+            {
+                Log("WARN", service, traceId, method, userId, message, apiAddr);
+            }
+            public void LogDebug(string service, string traceId, string method, string userId, string message, string apiAddr)
+            {
+                Log("DEBUG", service, traceId, method, userId, message, apiAddr);
+            }
+
+            public void LogError(string service, string traceId, string method, string userId, string message, string apiAddr)
+            {
+                Log("ERROR", service, traceId, method, userId, message, apiAddr);
+            }
+
+            public void LogFatal(string service, string traceId, string method, string userId, string message, string apiAddr)
+            {
+                Log("FATAL", service, traceId, method, userId, message, apiAddr);
+            }
+
+            public void LogVerbose(string service, string traceId, string method, string userId, string message, string apiAddr)
+            {
+                Log("VERBOSE", service, traceId, method, userId, message, apiAddr);
             }
         }
     }

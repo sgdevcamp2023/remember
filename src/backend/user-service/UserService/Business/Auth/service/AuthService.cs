@@ -1,15 +1,9 @@
-using System.Net.Mail;
-using System.Security.Cryptography;
-using System.Text;
 using MimeKit;
-using MimeKit.Text;
-
 using user_service.auth.dto;
-using user_service.auth.entity;
 using user_service.auth.repository;
+using user_service.Business.Auth.service;
 using user_service.common;
 using user_service.common.exception;
-using user_service.logger;
 
 namespace user_service
 {
@@ -17,7 +11,7 @@ namespace user_service
     {
         namespace service
         {
-            public class AuthService
+            public class AuthService : IAuthService
             {
                 private readonly IUserRepository _userRepository;
                 private IAuthRedisRepository _redis = null!;

@@ -1,5 +1,3 @@
-using user_service.logger;
-
 namespace user_service
 {
     namespace common

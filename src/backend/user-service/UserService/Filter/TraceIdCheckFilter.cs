@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc.Filters;
-using user_service.auth.exception;
 using user_service.common.exception;
 
 namespace user_service

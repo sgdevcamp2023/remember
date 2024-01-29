@@ -1,9 +1,11 @@
 using user_service.auth.repository;
 using user_service.auth.service;
+using user_service.Business.Auth.service;
 using user_service.common;
 using user_service.error;
 using user_service.friend.repository;
 using user_service.friend.service;
+using user_service.intercepter;
 using user_service.logger;
 using user_service.middleware;
 using user_service.user.service;
@@ -19,6 +21,10 @@ builder.Configuration.AddJsonFile("secretconfig.json", optional: true, reloadOnC
 // 로거 의존성 주입
 builder.Services.AddSingleton<IBaseLogger, FileLogger>();
 
+// 서비스 인터셉터
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<LogInterceptor>();
+
 // DB 의존성 주입
 builder.Services.AddSingleton<DbConnectionManager>();
 builder.Services.AddSingleton<RedisConnectionManager>();
@@ -29,9 +35,9 @@ builder.Services.AddScoped<IAuthRedisRepository, AuthRedisRepository>();
 builder.Services.AddScoped<IFriendRepository, FriendRepository>();
 
 // Service 의존성 주입
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<FriendService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFriendService, FriendService>();
 
 // CORS 설정
 builder.Services.AddCors(options =>
@@ -41,8 +47,14 @@ builder.Services.AddCors(options =>
         builder.WithOrigins("http://localhost:3000") // 리액트 앱의 주소
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .AllowCredentials()
-                .WithExposedHeaders("Authorization");                
+                .AllowCredentials();
+    });
+
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
     });
 });
 

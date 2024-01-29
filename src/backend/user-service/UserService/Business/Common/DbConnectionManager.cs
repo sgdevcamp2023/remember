@@ -33,7 +33,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log(e.Message);
+                    // _logger.Log(e.Message);
 
                     throw new user_service.common.exception.SqlException("Database connection error");
                 }
@@ -47,7 +47,7 @@ namespace user_service
                 }
                 catch(Exception e)
                 {
-                    _logger.Log(e.Message);
+                    // _logger.Log(e.Message);
 
                     throw new user_service.common.exception.SqlException("Database connection error");
                 }
@@ -63,7 +63,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log(e.Message);
+                    // _logger.Log(e.Message);
 
                     throw new user_service.common.exception.SqlException(e.Message);
                 }
@@ -79,7 +79,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log(e.Message);
+                    // _logger.Log(e.Message);
 
                     throw new user_service.common.exception.SqlException(e.Message);
                 }

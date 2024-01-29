@@ -1,8 +1,4 @@
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using StackExchange.Redis;
-using user_service.auth.entity;
 using user_service.common;
-using user_service.logger;
 
 namespace user_service
 {

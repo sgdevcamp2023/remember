@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using user_service.auth.exception;
 using user_service.common.exception;
+using user_service.logger;
 
 namespace user_service
 {
@@ -11,17 +12,20 @@ namespace user_service
     {
         public static class CustomErrorHandler
         {
+
             public static RequestDelegate MyRequestDelegate = async context =>
             {
                 System.Console.WriteLine("MyRequestDelegate");
-                
+
+
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                 if (exceptionHandlerPathFeature != null)
                 {
+
                     var exception = exceptionHandlerPathFeature.Error;
                     if (exception is TokenException tokenException)
                     {
-                        if(context.Response.Headers.TryGetValue("Authorization", out var value))
+                        if (context.Response.Headers.TryGetValue("Authorization", out var value))
                             context.Response.Headers.Remove("Authorization");
                         context.Response.Headers.Add("Authorization", $"Bearer {tokenException.tokenDTO.AccessToken}");
                         HttpBadRequest(context, tokenException.ErrorCode);
@@ -43,15 +47,38 @@ namespace user_service
                         HttpInterealServer(context, exceptionHandlerPathFeature.Error.Message);
                     }
 
+                    var logger = context.RequestServices.GetRequiredService<IBaseLogger>();
+                    // string? controller = context.GetRouteData().Values["controller"]!.ToString();
+
+                    logger.LogWarning(
+                        service: "Error",
+                        traceId: "",
+                        method: context.Request.Method,
+                        userId: "",
+                        message: exceptionHandlerPathFeature.Error.Message,
+                        apiAddr: context.Connection.RemoteIpAddress!.ToString());
+
                     await Task.CompletedTask;
                 }
             };
             public static IActionResult ModelStateErrorHandler(ActionContext context)
             {
                 System.Console.WriteLine("InvalidModelStateResponseFactory");
+
+                var logger = context.HttpContext.RequestServices.GetRequiredService<IBaseLogger>();
+                string? controller = context.HttpContext.GetRouteData().Values["controller"]!.ToString();
+
+                logger.LogWarning(
+                    service: controller!,
+                    traceId: "",
+                    method: context.HttpContext.Request.Method,
+                    userId: "",
+                    message: "INvalidModelStateResponseFactory",
+                    apiAddr: context.HttpContext.Connection.RemoteIpAddress!.ToString());
+
                 // 있는지 체크?
                 var errorList = context.ModelState.Values.SelectMany(x => x.Errors.Select(m => m.ErrorMessage)).ToArray();
-                if(errorList[0].Contains("accessToken"))
+                if (errorList[0].Contains("accessToken"))
                     return ErrorManager.GetErrorCodeResult(4106);
                 int.TryParse(errorList[0], out int errorCode);
                 if (errorCode != 0)

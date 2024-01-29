@@ -1,10 +1,9 @@
-
-
-using System.ComponentModel.DataAnnotations;
+using Castle.DynamicProxy;
 using Microsoft.AspNetCore.Mvc;
 using user_service.Controllers.dto.friend;
-using user_service.filter;
 using user_service.friend.service;
+using user_service.intercepter;
+using user_service.logger;
 using user_service.user.dto;
 
 namespace user_service
@@ -16,10 +15,11 @@ namespace user_service
         [ApiController]
         public class FriendController : ControllerBase
         {
-            private FriendService _friendService;
-            public FriendController(FriendService friendService)
+            private IFriendService _friendService;
+            public FriendController(IFriendService friendService, IBaseLogger logger, IHttpContextAccessor accessor)
             {
-                _friendService = friendService;
+                var generator = new ProxyGenerator();
+                _friendService = generator.CreateInterfaceProxyWithTarget<IFriendService>(friendService, new LogInterceptor(logger, accessor));
             }
 
             [HttpGet("list")]

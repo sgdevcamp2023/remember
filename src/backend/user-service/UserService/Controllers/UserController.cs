@@ -1,8 +1,7 @@
-
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
+using Castle.DynamicProxy;
 using Microsoft.AspNetCore.Mvc;
-using user_service.common;
+using user_service.intercepter;
+using user_service.logger;
 using user_service.user.dto;
 using user_service.user.service;
 
@@ -15,10 +14,11 @@ namespace user_service
         [ApiController]
         public class UserController : ControllerBase
         {
-            UserService _userService;
-            public UserController(UserService userService)
+            IUserService _userService;
+            public UserController(IUserService userService, IBaseLogger logger, IHttpContextAccessor accessor)
             {
-                _userService = userService;
+                var generator = new ProxyGenerator();
+                _userService = generator.CreateInterfaceProxyWithTarget<IUserService>(userService, new LogInterceptor(logger, accessor));
             }
 
             [HttpGet("info/{userId}")]

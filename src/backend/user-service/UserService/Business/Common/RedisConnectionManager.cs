@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using StackExchange.Redis;
 using user_service.common.exception;
 using user_service.logger;
@@ -46,7 +45,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log("Redis connection error");
+                    // _logger.Log("Redis connection error");
 
                     throw new RedisException(e.Message);
                 }
@@ -63,7 +62,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log("Redis insert error");
+                    // _logger.Log("Redis insert error");
 
                     throw new RedisException(e.Message);
                 }
@@ -79,7 +78,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log("Redis insert error");
+                    // _logger.Log("Redis insert error");
 
                     throw new RedisException(e.Message);
                 }
@@ -95,7 +94,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log("Redis delete error");
+                    // _logger.Log("Redis delete error");
 
                     throw new RedisException(e.Message);
                 }
@@ -112,7 +111,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log("Redis delete error");
+                    // _logger.Log("Redis delete error");
 
                     throw new RedisException(e.Message);
                 }
@@ -129,7 +128,7 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    _logger.Log("Redis get list error");
+                    // _logger.Log("Redis get list error");
 
                     throw new RedisException(e.Message);
                 }
@@ -146,7 +145,7 @@ namespace user_service
                     catch (Exception e)
                     {
                         // 에러 처리
-                        _logger.Log(e.Message);
+                        // _logger.Log(e.Message);
                         
                         throw new RedisException(e.Message);
                     }

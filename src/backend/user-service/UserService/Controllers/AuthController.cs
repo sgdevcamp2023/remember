@@ -1,9 +1,10 @@
-
-using System.ComponentModel.DataAnnotations;
+using Castle.DynamicProxy;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Ocsp;
 using user_service.auth.dto;
 using user_service.auth.service;
+using user_service.Business.Auth.service;
+using user_service.intercepter;
+using user_service.logger;
 
 namespace user_service
 {
@@ -13,10 +14,11 @@ namespace user_service
         [ApiController]
         public class AuthController : ControllerBase
         {
-            private AuthService _authService;
-            public AuthController(AuthService authService)
+            private IAuthService _authService;
+            public AuthController(IAuthService authService, IBaseLogger logger, IHttpContextAccessor accessor, LogInterceptor interceptor)
             {
-                _authService = authService;
+                var generator = new ProxyGenerator();
+                _authService = generator.CreateInterfaceProxyWithTarget<IAuthService>(authService, interceptor);
             }
 
             [HttpPost("register")]
@@ -72,6 +74,22 @@ namespace user_service
             {
                 _authService.SendMailResetPassword(email.Email);
 
+                return Ok();
+            }
+
+            [HttpPost("test")]
+            public IActionResult Test()             
+            {
+                System.Console.WriteLine("test");
+                return Ok();
+            }
+
+            [HttpPost("test2")]
+            public IActionResult Test2(
+                    [FromBody] LoginDTO login)
+            {
+                System.Console.WriteLine(login.Email + " " + login.Password);
+                
                 return Ok();
             }
         }

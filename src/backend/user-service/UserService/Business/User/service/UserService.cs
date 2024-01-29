@@ -12,7 +12,8 @@ namespace user_service
     {
         namespace service
         {
-            public class UserService
+            [filter.TraceIdCheckFilter]
+            public class UserService : IUserService
             {
                 private IUserRepository _userRepository;
                 private string _bucketName;
