@@ -1,9 +1,11 @@
+using Castle.DynamicProxy;
 using MimeKit;
 using user_service.auth.dto;
 using user_service.auth.repository;
 using user_service.Business.Auth.service;
 using user_service.common;
 using user_service.common.exception;
+using user_service.intercepter;
 
 namespace user_service
 {
@@ -18,9 +20,12 @@ namespace user_service
                 private IConfiguration _config = null!;
                 public AuthService(IUserRepository userRepository,
                                 IAuthRedisRepository redisRepository,
-                                IConfiguration config)
+                                IConfiguration config,
+                                LogInterceptor interceptor)
                 {
-                    _userRepository = userRepository;
+                    var generator = new ProxyGenerator();
+
+                    _userRepository = generator.CreateInterfaceProxyWithTargetInterface<IUserRepository>(userRepository, interceptor);
                     _redis = redisRepository;
                     _config = config;
                 }
@@ -106,7 +111,7 @@ namespace user_service
 
                     if (user.Password != Utils.SHA256Hash(login.Password))
                         throw new ServiceException(4008);
-                    
+
                     return new ClaimDTO { Name = user.Id.ToString() };
                 }
 

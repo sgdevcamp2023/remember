@@ -27,7 +27,7 @@ namespace user_service
             {
                 if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
                     Connect();
-                
+
                 return _redisDb;
             }
 
@@ -45,8 +45,6 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    // _logger.Log("Redis connection error");
-
                     throw new RedisException(e.Message);
                 }
             }
@@ -55,15 +53,13 @@ namespace user_service
             {
                 try
                 {
-                   if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
+                    if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
                         Connect();
-                    
+
                     return _redisDb.StringSet(key, value, timeSpan);
                 }
                 catch (Exception e)
                 {
-                    // _logger.Log("Redis insert error");
-
                     throw new RedisException(e.Message);
                 }
             }
@@ -78,8 +74,6 @@ namespace user_service
                 }
                 catch (Exception e)
                 {
-                    // _logger.Log("Redis insert error");
-
                     throw new RedisException(e.Message);
                 }
             }
@@ -89,12 +83,11 @@ namespace user_service
                 {
                     if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
                         Connect();
-                    
+
                     return _redisDb.KeyDelete(key);
                 }
                 catch (Exception e)
                 {
-                    // _logger.Log("Redis delete error");
 
                     throw new RedisException(e.Message);
                 }
@@ -106,13 +99,11 @@ namespace user_service
                 {
                     if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
                         Connect();
-                    
+
                     return _redisDb.ListRemove(key, value) > 0;
                 }
                 catch (Exception e)
                 {
-                    // _logger.Log("Redis delete error");
-
                     throw new RedisException(e.Message);
                 }
             }
@@ -123,32 +114,27 @@ namespace user_service
                 {
                     if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
                         Connect();
-                    
+
                     return _redisDb.ListRange(key).Select(x => x.ToString()).ToList();
                 }
                 catch (Exception e)
                 {
-                    // _logger.Log("Redis get list error");
-
                     throw new RedisException(e.Message);
                 }
             }
-            
+
             public string? GetStringByKey(string key)
             {
                 try
-                    {
-                        if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
-                            Connect();
-                        return _redisDb.StringGet(key);
-                    }
-                    catch (Exception e)
-                    {
-                        // 에러 처리
-                        // _logger.Log(e.Message);
-                        
-                        throw new RedisException(e.Message);
-                    }
+                {
+                    if (_redisConnection == null || !_redisConnection.IsConnected || _redisDb.IsConnected(default(RedisKey)) == false)
+                        Connect();
+                    return _redisDb.StringGet(key);
+                }
+                catch (Exception e)
+                {
+                    throw new RedisException(e.Message);
+                }
             }
         }
     }

@@ -5,6 +5,8 @@ using user_service.common.exception;
 using Microsoft.AspNetCore.Mvc;
 using Google.Cloud.Storage.V1;
 using Google.Apis.Auth.OAuth2;
+using Castle.DynamicProxy;
+using user_service.intercepter;
 
 namespace user_service
 {
@@ -12,15 +14,17 @@ namespace user_service
     {
         namespace service
         {
-            [filter.TraceIdCheckFilter]
             public class UserService : IUserService
             {
                 private IUserRepository _userRepository;
                 private string _bucketName;
                 private string _keyPath;
-                public UserService(IUserRepository userRepository, IConfiguration config)
+                public UserService(IUserRepository userRepository,
+                                    IConfiguration config,
+                                    LogInterceptor interceptor)
                 {
-                    _userRepository = userRepository;
+                    var generator = new ProxyGenerator();
+                    _userRepository = generator.CreateInterfaceProxyWithTarget<IUserRepository>(userRepository, interceptor);
                     _bucketName = config["GoogleCloud:BucketName"];
                     _keyPath = config["GoogleCloud:KeyPath"];
                 }

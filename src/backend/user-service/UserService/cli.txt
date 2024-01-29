@@ -1,5 +1,0 @@
-dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 6.0.25
-dotnet add package MailKit --version 4.3.0 // 메일 전용
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.25
-dotnet add package StackExchange.Redis --version 2.7.10
-dotnet add Swashbuckle.AspNetCore --version 6.5.0 // Swagger

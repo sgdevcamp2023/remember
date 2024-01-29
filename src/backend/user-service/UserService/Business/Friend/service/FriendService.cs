@@ -1,7 +1,9 @@
+using Castle.DynamicProxy;
 using user_service.common;
 using user_service.common.exception;
 using user_service.Controllers.dto.friend;
 using user_service.friend.repository;
+using user_service.intercepter;
 using user_service.user.dto;
 
 namespace user_service
@@ -16,10 +18,14 @@ namespace user_service
                 private IUserRepository _userRepository;
                 private IFriendRepository _friendRepository;
 
-                public FriendService(IConfiguration config, IUserRepository userRepository, IFriendRepository friendRepository)
+                public FriendService(IConfiguration config,
+                                    IUserRepository userRepository,
+                                    IFriendRepository friendRepository,
+                                    LogInterceptor interceptor)
                 {
+                    var generator = new ProxyGenerator();
+                    _userRepository = generator.CreateInterfaceProxyWithTargetInterface<IUserRepository>(userRepository, interceptor);
                     _config = config;
-                    _userRepository = userRepository;
                     _friendRepository = friendRepository;
                 }
 

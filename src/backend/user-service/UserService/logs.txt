@@ -1,3 +1,0 @@
-{"Time":"2024-01-29 17:20:34.770","Level":"INFO","Service":"Auth","Trace":"","ApiAddr":"","HttpMethod":"POST","UserId":"","Message":"/api/user/auth/login Start"}
-{"Time":"2024-01-29 17:20:34.774","Level":"INFO","Service":"AuthService","Trace":"","ApiAddr":"","HttpMethod":"POST","UserId":"","Message":"Login start"}
-{"Time":"2024-01-29 17:20:34.780","Level":"WARN","Service":"Error","Trace":"","ApiAddr":"","HttpMethod":"POST","UserId":"","Message":"Service Exception"}

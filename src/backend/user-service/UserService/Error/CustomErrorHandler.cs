@@ -17,7 +17,6 @@ namespace user_service
             {
                 System.Console.WriteLine("MyRequestDelegate");
 
-
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                 if (exceptionHandlerPathFeature != null)
                 {
@@ -46,17 +45,6 @@ namespace user_service
                     {
                         HttpInterealServer(context, exceptionHandlerPathFeature.Error.Message);
                     }
-
-                    var logger = context.RequestServices.GetRequiredService<IBaseLogger>();
-                    // string? controller = context.GetRouteData().Values["controller"]!.ToString();
-
-                    logger.LogWarning(
-                        service: "Error",
-                        traceId: "",
-                        method: context.Request.Method,
-                        userId: "",
-                        message: exceptionHandlerPathFeature.Error.Message,
-                        apiAddr: context.Connection.RemoteIpAddress!.ToString());
 
                     await Task.CompletedTask;
                 }
