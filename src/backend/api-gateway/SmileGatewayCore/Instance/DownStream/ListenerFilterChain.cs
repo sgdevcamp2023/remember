@@ -19,7 +19,7 @@ public class ListenerFilterChains : IListenerFilterChain
 
     public void UseFilter(string filterName)
     {
-        Type? type = Type.GetType(filterName);
+        Type? type = Type.GetType(filterName + ", SmileGateway");
         if(type == null)
             throw new Exception();
 
@@ -44,7 +44,7 @@ public class ListenerFilterChains : IListenerFilterChain
 
                  if (filter == null)
                  {
-                     throw new InvalidOperationException("filter is null");
+                     throw new Exception();
                  }
 
                  await filter.InvokeAsync(instance, context, next);

@@ -46,7 +46,9 @@ public class EndPoint : NetworkInstance
 
         await Send(socket, context.Request.GetStringToBytes());
         await Receive(socket);
-    
+
+        await socket.DisconnectAsync(false);
+
         DecreaseUsingCount();
     }
 

@@ -20,12 +20,20 @@ internal class Cluster
     {
         Config = config;
 
-        foreach(AddressConfig address in config.Address)
+        foreach (AddressConfig address in config.Address)
         {
             endPoints.Add(new EndPoint(address));
         }
 
-        // _filterChains.
+        if (Config.CustomFilters != null)
+        {
+            foreach (CustomFilter filter in Config.CustomFilters)
+            {
+                _filterChains.UseFilter(filter.Name);
+            }
+        }
+
+        _filterChains.Init();
     }
     public async Task Run(HttpContext context)
     {
@@ -43,10 +51,10 @@ internal class Cluster
         long min = int.MaxValue;
         EndPoint endPoint = null!;
 
-        foreach(EndPoint point in endPoints)
+        foreach (EndPoint point in endPoints)
         {
             long count = point.GetUsingCount();
-            if(count < min)
+            if (count < min)
             {
                 min = count;
                 endPoint = point;

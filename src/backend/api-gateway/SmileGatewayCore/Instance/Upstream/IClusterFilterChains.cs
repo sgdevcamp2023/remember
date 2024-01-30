@@ -10,5 +10,5 @@ internal interface IClusterFilterChains
     public void UseFilter<T>();
     public void UseFilter(Type type);
     public void Use(Func<ClusterDelegate, ClusterDelegate> filter);
-    public Task FilterStartAsync(HttpContext context);
+    public Task FilterStartAsync(EndPoint endPoint, HttpContext context);
 }

@@ -9,8 +9,6 @@ listeners:
     - user-service
     - auth-service
   custom-filters:
-    - name: CustomFilter
-      path: /ApiGateway/CustomFilter.cs
   authorization:
     type: JWT
     login-path: /api/user/auth/login
@@ -32,9 +30,7 @@ clusters:
       - address: 127.0.0.1
         port: 5000
     prefix: /api/user/auth
-    custom-filter:
-      - name: CustomFilter
-        path: /ApiGateway/CustomFilter.cs
+    custom-filters:
     connect-timeout: 5s
     authorization: false
 
@@ -53,9 +49,7 @@ clusters:
       - address: 127.0.0.1
         port: 6000
     prefix: /api/community
-    custom-filter:
-      - name: CustomFilter
-        path: /ApiGateway/CustomFilter.cs
+    custom-filters:
     connect-timeout: 5s
     authorization: true
 
@@ -65,6 +59,5 @@ clusters:
       - address: 127.0.0.1
         port: 7000
     prefix: /service2
-    custom-filter: 
-    connect-timeout: 5s
-    authorization: true
+    custom-filters: 
+  

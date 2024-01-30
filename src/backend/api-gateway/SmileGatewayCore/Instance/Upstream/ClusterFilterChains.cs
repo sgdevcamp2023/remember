@@ -7,9 +7,15 @@ public class ClusterFilterChains : IClusterFilterChains
 {
     private List<Func<ClusterDelegate, ClusterDelegate>> _filters = new List<Func<ClusterDelegate, ClusterDelegate>>();
 
+    public void Init()
+    {
+        // UseFilter<TraceFilter>();
+        // UseFilter<LogFilter>();
+    }
+
     public void UseFilter(string filterName)
     {
-        Type? type = Type.GetType(filterName);
+        Type? type = Type.GetType(filterName+ ", SmileGateway");
         if (type == null)
             throw new Exception();
 
@@ -47,15 +53,11 @@ public class ClusterFilterChains : IClusterFilterChains
     }
 
     // 무조건 RouteFilter가 마지막
-    public async Task FilterStartAsync(HttpContext context)
+    public async Task FilterStartAsync(EndPoint endPoint, HttpContext context)
     {
-        // SetLastFilter();
-
         ClusterDelegate last = async (context) =>
         {
-            // Cluster filter = new RouteFilter();
-            // await filter.InvokeAsync(adapter, context);
-            await Task.CompletedTask;
+            await endPoint.StartAsync(context);
         };
 
         for (int i = _filters.Count - 1; i >= 0; i--)

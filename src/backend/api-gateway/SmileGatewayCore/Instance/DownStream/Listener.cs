@@ -18,7 +18,7 @@ internal class Listener : NetworkInstance
 
     public ClusterManager _clusterManager;
     private Dictionary<string, Cluster> _clusters = new Dictionary<string, Cluster>();
-    public ListenerConfig Config { get; private set; }
+    public readonly ListenerConfig Config;
 
     public AsyncLocal<Stopwatch> _stopwatch = new AsyncLocal<Stopwatch>();
     
@@ -115,7 +115,7 @@ internal class Listener : NetworkInstance
         // Clister Select
         foreach(var (name, cluster) in _clusters)
         {
-            if(clusterPath.StartsWith(name))
+            if(clusterPath.StartsWith(cluster.Config.Prefix))
             {
                 return new Adapter(Config, cluster);
             }
