@@ -4,7 +4,7 @@ using SmileGatewayCore.Filter.Internal;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-internal class AuthorizationFilter : DefaultFilter
+internal class AuthorizationFilter : ListenerFilter
 {
     // 생성 관리 벨리데이션 체크깔쥐 다 해주기
     private static JwtAuthorization _jwtAuthorization = new JwtAuthorization();
@@ -12,7 +12,7 @@ internal class AuthorizationFilter : DefaultFilter
     protected override void Working(Adapter adapter, HttpContext context)
     {
         // 해당 서비스가 Authentication Filter가 필요한 서비스인지 확인 필요
-        if (adapter.Cluster.config.Authorization == false)
+        if (adapter.Cluster.Config.Authorization == false)
             return;
 
         if (adapter.Authorization == null)

@@ -5,7 +5,7 @@ public class ListenerConfig
     public string Protocol { get; set; } = null!;
     public AddressConfig Address { get; set; } = null!;
     public RouteConfig RouteConfig { get; set; } = null!;
-    public CustomFilter? CustomFilter { get; set; }
+    public List<CustomFilter>? CustomFilters { get; set; }
     public Authorization? Authorization { get; set; }
     public List<string> DisallowHeaders { get; set; } = null!;
     public int ThreadCount { get; set; }

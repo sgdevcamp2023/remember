@@ -1,7 +1,6 @@
 using SmileGatewayCore.Http.Feature;
 using SmileGatewayCore.Http.Features;
 using SmileGatewayCore.Http.Header;
-using StackExchange.Redis;
 
 namespace SmileGatewayCore.Http.Context;
 
@@ -17,7 +16,7 @@ public class HttpResponse
         _responseCookie = new ResponseCookie(Header);
     }
 
-    public HttpResponse(string responseString)
+    public bool Parse(string responseString)
     {
         _responseFeatrue = new ResponseFeature();
         string[] responseLines = responseString.Split("\r\n");
@@ -63,6 +62,8 @@ public class HttpResponse
         }
 
         _responseCookie = new ResponseCookie(Header);
+
+        return true;
     }
     public string Protocol
     {
@@ -120,7 +121,7 @@ public class HttpResponse
     public byte[] GetStringToBytes()
     {
         string responseString = ToString();
-        System.Console.WriteLine(responseString);
+        // System.Console.WriteLine(responseString);
         return System.Text.Encoding.UTF8.GetBytes(responseString);
     }
 }

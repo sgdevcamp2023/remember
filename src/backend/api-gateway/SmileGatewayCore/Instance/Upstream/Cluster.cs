@@ -12,18 +12,20 @@ namespace SmileGatewayCore.Instance.Upstream;
 /// </summary>
 internal class Cluster
 {
-    public readonly ClusterConfig config;
-
-    public List<EndPoint> EndPoints = new List<EndPoint>();
+    private ClusterFilterChains _filterChains = new ClusterFilterChains();
+    private List<EndPoint> endPoints = new List<EndPoint>();
+    public readonly ClusterConfig Config;
 
     public Cluster(ClusterConfig config)
     {
-        this.config = config;
+        Config = config;
 
         foreach(AddressConfig address in config.Address)
         {
-            EndPoints.Add(new EndPoint(address));
+            endPoints.Add(new EndPoint(address));
         }
+
+        // _filterChains.
     }
     public async Task Run(HttpContext context)
     {
@@ -33,7 +35,7 @@ internal class Cluster
 
     public Cluster Clone()
     {
-        return new Cluster(config);
+        return new Cluster(Config);
     }
 
     public EndPoint GetEndPoint()
@@ -41,7 +43,7 @@ internal class Cluster
         long min = int.MaxValue;
         EndPoint endPoint = null!;
 
-        foreach(EndPoint point in EndPoints)
+        foreach(EndPoint point in endPoints)
         {
             long count = point.GetUsingCount();
             if(count < min)

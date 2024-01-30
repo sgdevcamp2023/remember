@@ -1,11 +1,12 @@
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance;
+using SmileGatewayCore.Instance.DownStream;
 
-namespace SmileGatewayCore.Filter;
+namespace SmileGatewayCore.Filter.Listner;
 
-public class ExceptionFilter : IFilterBase
+public class ExceptionFilter : IListenerFilterBase
 {
-    public async Task InvokeAsync(Adapter adapter, HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(Adapter adapter, HttpContext context, ListenerDelegate next)
     {
         try
         {

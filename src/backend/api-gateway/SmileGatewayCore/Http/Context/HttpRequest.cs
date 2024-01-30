@@ -11,7 +11,7 @@ public class HttpRequest
         _requestFeature = new RequestFeature();
     }
 
-    public HttpRequest(string requestString)
+    public bool Parse(string requestString)
     {
         _requestFeature = new RequestFeature();
         string[] requestLines = requestString.Split("\r\n");
@@ -23,7 +23,6 @@ public class HttpRequest
 
             string[] temp = requestInfo[1].Split("?");
             Path = temp[0];
-            // QueryString = requestInfo[1].Split("?");
 
             if (temp.Length > 1)
             {
@@ -69,6 +68,8 @@ public class HttpRequest
             if (header.Length > 1)
                 Header.Add(header[0], header[1]);
         }
+
+        return true;
     }
 
     public string Method
@@ -133,7 +134,7 @@ public class HttpRequest
     public byte[] GetStringToBytes()
     {
         string requestString = ToString();
-        System.Console.WriteLine(requestString);
+        // System.Console.WriteLine(requestString);
         return System.Text.Encoding.UTF8.GetBytes(requestString);
     }
 }

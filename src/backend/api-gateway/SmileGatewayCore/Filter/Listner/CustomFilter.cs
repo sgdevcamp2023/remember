@@ -1,14 +1,15 @@
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance;
+using SmileGatewayCore.Instance.DownStream;
 
-namespace SmileGatewayCore.Filter;
+namespace SmileGatewayCore.Filter.Listner;
 
-public abstract class CustomDefaultFilter : IFilterBase
+public abstract class CustomFilter : IListenerFilterBase
 {
     public abstract void Working(HttpContext context);
     public abstract void Worked(HttpContext context);
 
-    public async Task InvokeAsync(Adapter adapter, HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(Adapter adapter, HttpContext context, ListenerDelegate next)
     {
         Working(context);
         

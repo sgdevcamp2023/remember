@@ -1,10 +1,9 @@
-using SmileGatewayCore.Config;
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-internal class ServiceFilter : DefaultFilter
+internal class ServiceFilter : ListenerFilter
 {
     protected override void Worked(Adapter adapter, HttpContext context)
     {
