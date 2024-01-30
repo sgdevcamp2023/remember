@@ -19,7 +19,6 @@ namespace user_service
                 string? controller = context.GetRouteData().Values["controller"]!.ToString();
 
                 _logger.LogInformation(
-                    service: controller!,
                     traceId: "",
                     method: context.Request.Method,
                     userId: "",
@@ -29,7 +28,6 @@ namespace user_service
                 await _next(context);
 
                 _logger.LogInformation(
-                    service: controller!,
                     traceId: "",
                     method: context.Request.Method,
                     userId: "",

@@ -57,7 +57,6 @@ namespace user_service
                 string? controller = context.HttpContext.GetRouteData().Values["controller"]!.ToString();
 
                 logger.LogWarning(
-                    service: controller!,
                     traceId: "",
                     method: context.HttpContext.Request.Method,
                     userId: "",

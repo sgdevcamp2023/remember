@@ -17,7 +17,6 @@ public class LogInterceptor : IInterceptor
         HttpContext context = _contextAccessor.HttpContext!;
         // 전2
         _logger.LogInformation(
-            service: invocation.TargetType.Name,
             traceId: "",
             method: context.Request.Method,
             userId: "",
@@ -29,7 +28,6 @@ public class LogInterceptor : IInterceptor
             invocation.Proceed();
 
             _logger.LogInformation(
-                service: invocation.TargetType.Name,
                 traceId: "",
                 method: context.Request.Method,
                 userId: "",
@@ -38,7 +36,7 @@ public class LogInterceptor : IInterceptor
         }
         catch (Exception)
         {
-            _logger.LogWarning(service: invocation.TargetType.Name,
+            _logger.LogWarning(
                 traceId: "",
                 method: context.Request.Method,
                 userId: "",

@@ -7,15 +7,15 @@ namespace user_service
     {
         public class TraceIdCheckFilter : ActionFilterAttribute
         {
-            public override void OnActionExecuted(ActionExecutedContext context)
-            {
-
-            }
-
             public override void OnActionExecuting(ActionExecutingContext context)
             {
                 if(context.HttpContext.Request.Headers.ContainsKey("trace-id") == false)
                     throw new ServiceException(4200);
+            }
+
+            public override void OnActionExecuted(ActionExecutedContext context)
+            {
+
             }
         }
     }
