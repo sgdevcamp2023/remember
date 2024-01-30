@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SignalingGateway } from './signaling/signaling.gateway';
 import { GuildModule } from './guild/guild.module';
+import { MediasoupService } from './mediasoup/mediasoup.service';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { GuildModule } from './guild/guild.module';
     HttpModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SignalingGateway],
+  providers: [AppService, SignalingGateway, MediasoupService],
 })
 export class AppModule {}
