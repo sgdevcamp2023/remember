@@ -9,7 +9,7 @@ namespace SmileGatewayCore.Instance;
 
 public class EndPoint : NetworkInstance
 {
-    private ConnectionPool _connectionPool = new ConnectionPool();
+    private ConnectionPool _connectionPool = new ConnectionPool(10);
     private AsyncLocal<HttpContext> _context = new AsyncLocal<HttpContext>();
     private IPEndPoint _ipEndpoint = null!;
     private long _usingCount = 0;
@@ -35,20 +35,27 @@ public class EndPoint : NetworkInstance
 
     public async Task StartAsync(HttpContext context)
     {
-        IncreaseUsingCount();
-        var socket = _connectionPool.RentSocket();
-        await socket.ConnectAsync(_ipEndpoint);
+        IncreaseUsingCount();;
 
+        // 초기화
+        Socket? socket = _connectionPool.RentSocket();
+        if(socket == null)
+            throw new Exception();
+
+        _context.Value = context;
+
+
+        // 실행    
+        await socket.ConnectAsync(_ipEndpoint);
         if(!socket.Connected)
             throw new Exception();
-        
-        _context.Value = context;
 
         await Send(socket, context.Request.GetStringToBytes());
         await Receive(socket);
 
         await socket.DisconnectAsync(false);
-
+        _connectionPool.ReturnSocket(socket);
+        
         DecreaseUsingCount();
     }
 

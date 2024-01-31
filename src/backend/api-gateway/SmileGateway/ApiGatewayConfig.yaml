@@ -9,6 +9,8 @@ listeners:
     - user-service
     - auth-service
   custom-filters:
+    - name: ListenerTestFilter
+      path: /ApiGateway/CustomFilter.cs
   authorization:
     type: JWT
     login-path: /api/user/auth/login
@@ -31,6 +33,8 @@ clusters:
         port: 5000
     prefix: /api/user/auth
     custom-filters:
+      - name: ClusterTestFilter
+        path: /ApiGateway/ClusterTestFilter.cs
     connect-timeout: 5s
     authorization: false
 
@@ -50,6 +54,8 @@ clusters:
         port: 6000
     prefix: /api/community
     custom-filters:
+      - name: ClusterTestFilter
+        path: /ApiGateway/ClusterTestFilter.cs
     connect-timeout: 5s
     authorization: true
 
@@ -60,4 +66,5 @@ clusters:
         port: 7000
     prefix: /service2
     custom-filters: 
-  
+    connect-timeout: 5s
+    authorization: true

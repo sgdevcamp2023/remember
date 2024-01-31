@@ -6,7 +6,7 @@ namespace SmileGatewayCore.Instance.DownStream;
 public class ListenerFilterChains : IListenerFilterChain
 {
     protected List<Func<ListenerDelegate, ListenerDelegate>> _filters = new List<Func<ListenerDelegate, ListenerDelegate>>();
-
+    private ListenerDelegate? _start = null;
     public void Init()
     {
 
@@ -20,12 +20,12 @@ public class ListenerFilterChains : IListenerFilterChain
     public void UseFilter(string filterName)
     {
         Type? type = Type.GetType(filterName + ", SmileGateway");
-        if(type == null)
+        if (type == null)
             throw new Exception();
 
-        if(type.IsSubclassOf(typeof(IListenerFilterBase)) == false)
+        if (typeof(IListenerFilterBase).IsAssignableFrom(type) == false)
             throw new Exception();
-    
+
         UseFilter(type);
     }
 
@@ -33,7 +33,7 @@ public class ListenerFilterChains : IListenerFilterChain
     {
         UseFilter(typeof(T));
     }
-    
+
     public void UseFilter(Type type)
     {
         Use(next =>
@@ -59,19 +59,23 @@ public class ListenerFilterChains : IListenerFilterChain
     // 무조건 RouteFilter가 마지막
     public async Task FilterStartAsync(Adapter adapter, HttpContext context)
     {
-        SetLastFilter();
-
-        ListenerDelegate last = async (adapter, context) =>
+        if (_start == null)
         {
-            RouteFilter filter = new RouteFilter();
-            await filter.InvokeAsync(adapter, context);
-        };
+            SetLastFilter();
 
-        for (int i = _filters.Count - 1; i >= 0; i--)
-        {
-            last = _filters[i](last);
+            ListenerDelegate last = async (adapter, context) =>
+            {
+                RouteFilter filter = new RouteFilter();
+                await filter.InvokeAsync(adapter, context);
+            };
+
+            for (int i = _filters.Count - 1; i >= 0; i--)
+            {
+                last = _filters[i](last);
+            }
+            _start = last;
         }
 
-        await last(adapter, context);
+        await _start(adapter, context);
     }
 }

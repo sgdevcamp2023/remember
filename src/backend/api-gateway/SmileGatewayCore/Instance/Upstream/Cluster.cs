@@ -38,7 +38,7 @@ internal class Cluster
     public async Task Run(HttpContext context)
     {
         EndPoint endPoint = GetEndPoint();
-        await endPoint.StartAsync(context);
+        await _filterChains.FilterStartAsync(endPoint, context);
     }
 
     public Cluster Clone()

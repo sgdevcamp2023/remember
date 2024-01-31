@@ -81,6 +81,12 @@ internal class Listener : NetworkInstance
 
     protected override async void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
+        if(recvLen == 0)
+        {
+            Disconnect(socket);
+            return;
+        }
+
         IPEndPoint? point = socket.RemoteEndPoint as IPEndPoint;
         if(point == null)
             throw new Exception();

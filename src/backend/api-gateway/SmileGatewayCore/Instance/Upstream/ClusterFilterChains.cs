@@ -6,7 +6,8 @@ namespace SmileGatewayCore.Instance.Upstream;
 public class ClusterFilterChains : IClusterFilterChains
 {
     private List<Func<ClusterDelegate, ClusterDelegate>> _filters = new List<Func<ClusterDelegate, ClusterDelegate>>();
-
+    private ClusterDelegate? _start = null;
+    private AsyncLocal<EndPoint> _endPoint = null!;
     public void Init()
     {
         // UseFilter<TraceFilter>();
@@ -15,11 +16,11 @@ public class ClusterFilterChains : IClusterFilterChains
 
     public void UseFilter(string filterName)
     {
-        Type? type = Type.GetType(filterName+ ", SmileGateway");
+        Type? type = Type.GetType(filterName + ", SmileGateway");
         if (type == null)
             throw new Exception();
 
-        if (type.IsSubclassOf(typeof(IClusterFilterBase)) == false)
+        if (typeof(IClusterFilterBase).IsAssignableFrom(type) == false)
             throw new Exception();
 
         UseFilter(type);
@@ -55,16 +56,24 @@ public class ClusterFilterChains : IClusterFilterChains
     // 무조건 RouteFilter가 마지막
     public async Task FilterStartAsync(EndPoint endPoint, HttpContext context)
     {
-        ClusterDelegate last = async (context) =>
-        {
-            await endPoint.StartAsync(context);
-        };
+        // _endPoint.Value = endPoint;
 
-        for (int i = _filters.Count - 1; i >= 0; i--)
-        {
-            last = _filters[i](last);
-        }
+        // if (_start == null)
+        // {
+        //     ClusterDelegate last = async (context) =>
+        //     {
+        //         await _endPoint.Value.StartAsync(context);
+        //     };
 
-        await last(context);
+        //     for (int i = _filters.Count - 1; i >= 0; i--)
+        //     {
+        //         last = _filters[i](last);
+        //     }
+        //     _start = last;
+        // }
+
+        // await _start(context);
+
+        await endPoint.StartAsync(context);
     }
 }
