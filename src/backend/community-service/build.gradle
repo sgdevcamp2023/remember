@@ -49,6 +49,8 @@ dependencies {
     implementation group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
     implementation group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.4.14'
+    implementation group: 'org.fluentd', name: 'fluent-logger', version: '0.3.4'
+    implementation group: 'com.sndyuk', name: 'logback-more-appenders', version: '1.5.6'
 }
 
 dependencyManagement {
