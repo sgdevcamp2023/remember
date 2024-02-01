@@ -6,14 +6,16 @@ export class MediasoupService implements OnModuleInit {
   private worker: mediasoup.types.Worker;
   private mediaCodecs: mediasoup.types.RtpCodecCapability[];
   private routers = new Map<string, mediasoup.types.Router>();
-  // socketId -> [producer transport / consumer transport]
+  // socketId -> producer transport
   private producerTransports = new Map<
     string,
     mediasoup.types.WebRtcTransport
   >();
+
+  // socketId -> producerId -> consumer transport
   private consumerTransports = new Map<
     string,
-    mediasoup.types.WebRtcTransport
+    Map<string, mediasoup.types.WebRtcTransport>
   >();
   // room Id(parsed_url) -> [producer / consumer, ...]
   private audioProducers = new Map<string, mediasoup.types.Producer[]>();
@@ -81,7 +83,8 @@ export class MediasoupService implements OnModuleInit {
   async createWebRtcTransport(
     data: any,
   ): Promise<mediasoup.types.WebRtcTransport> {
-    const { roomId, consumer, socketId } = data;
+    const { roomId } = data;
+
     try {
       const router = await this.getRouter(roomId);
       const webRtcTransport_options = {
@@ -98,8 +101,9 @@ export class MediasoupService implements OnModuleInit {
       const transport = await router.createWebRtcTransport(
         webRtcTransport_options,
       );
+      const newData = { ...data, transport };
 
-      this.setTransport(consumer, socketId, transport);
+      this.setTransport(newData);
 
       transport.on('dtlsstatechange', (dtlsState) => {
         if (dtlsState === 'closed') {
@@ -112,24 +116,32 @@ export class MediasoupService implements OnModuleInit {
     }
   }
 
-  async setTransport(
-    consumer: boolean,
-    socketId: string,
-    transport: mediasoup.types.WebRtcTransport,
-  ) {
-    if (!consumer) {
-      this.producerTransports.set(socketId, transport);
+  async setTransport(data: any) {
+    const { consumer, socketId, transport } = data;
+
+    if (consumer) {
+      const ProducerIdToConsumerTransportMap = new Map<
+        string,
+        mediasoup.types.WebRtcTransport
+      >();
+      ProducerIdToConsumerTransportMap.set(data.remoteProducerId, transport);
+      this.consumerTransports.set(socketId, ProducerIdToConsumerTransportMap);
     } else {
-      this.consumerTransports.set(socketId, transport);
+      this.producerTransports.set(socketId, transport);
     }
   }
 
   async getTransport(
     socketId: string,
     consumer: boolean,
+    producerId: string = null,
   ): Promise<mediasoup.types.WebRtcTransport> {
     if (consumer) {
-      return this.consumerTransports.get(socketId);
+      const consumerTransports = this.consumerTransports
+        .get(socketId)
+        ?.get(producerId);
+
+      return consumerTransports;
     }
 
     return this.producerTransports.get(socketId);
@@ -192,61 +204,47 @@ export class MediasoupService implements OnModuleInit {
   }
 
   removeTransport(socketId: string) {
-    const producer = this.producerTransports.get(socketId);
-    const consumer = this.consumerTransports.get(socketId);
+    const producerTransport = this.producerTransports.get(socketId);
+    const consumerTransport = this.consumerTransports.get(socketId);
 
     this.producerTransports.delete(socketId);
     this.consumerTransports.delete(socketId);
 
-    producer?.close();
-    consumer?.close();
+    producerTransport?.close();
+    consumerTransport?.forEach((transport) => transport.close());
 
-    console.log('>> transport removed', socketId);
+    console.log('>>> transport removed');
   }
 
-  removeProducer(roomId: string, producerId: string) {
-    const audioProducers = this.audioProducers.get(roomId);
-    const videoProducers = this.videoProducers.get(roomId);
+  removeProducer(kind: string, roomId: string, producerId: string) {
+    const producers =
+      kind === 'audio'
+        ? this.audioProducers.get(roomId)
+        : this.videoProducers.get(roomId);
 
-    if (audioProducers) {
-      const index = audioProducers.findIndex(
-        (producer) => producer.id === producerId,
-      );
-      audioProducers.splice(index, 1);
-      console.log('>> producer removed', audioProducers);
-    }
-
-    if (videoProducers) {
-      const index = videoProducers.findIndex(
-        (producer) => producer.id === producerId,
-      );
-      videoProducers.splice(index, 1);
-      console.log('>> producer removed', audioProducers);
-    }
+    const index = producers.findIndex((producer) => producer.id === producerId);
+    producers.splice(index, 1);
+    console.log('>>> producer removed');
   }
 
-  removeConsumer(roomId: string, producerId: string) {
-    const audioConsumers = this.audioConsumers.get(roomId);
-    const videoConsumers = this.videoConsumers.get(roomId);
+  removeConsumer(kind: string, roomId: string, producerId: string) {
+    const consumers =
+      kind === 'audio'
+        ? this.audioConsumers.get(roomId)
+        : this.videoConsumers.get(roomId);
 
-    if (audioConsumers) {
-      const index = audioConsumers.findIndex(
-        (consumer) => consumer.id === producerId,
-      );
-      audioConsumers.splice(index, 1);
-      console.log('>> consumer removed', audioConsumers);
-    }
-
-    if (videoConsumers) {
-      const index = videoConsumers.findIndex(
-        (consumer) => consumer.id === producerId,
-      );
-      videoConsumers.splice(index, 1);
-      console.log('>> consumer removed', audioConsumers);
-    }
+    const index = consumers.findIndex((consumer) => consumer.id === producerId);
+    consumers.splice(index, 1);
+    console.log('>> consumer removed');
   }
 
   getWorker() {
     return this.worker;
+  }
+
+  viewMap() {
+    this.producerTransports.forEach((value, key) => {
+      console.log(key, value.id);
+    });
   }
 }

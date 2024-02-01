@@ -188,7 +188,7 @@ export class SignalingGateway
     @MessageBody() data: any,
     @ConnectedSocket() client: Socket,
   ) {
-    // data: consumer, roomId;
+    // data: consumer, roomId, prodcuerId(in receive);
     const newData = {
       ...data,
       socketId: client.id,
@@ -251,15 +251,10 @@ export class SignalingGateway
     producer.on('transportclose', () => {
       console.log('producer transport close');
       producer.close();
-      // this.mediasoupService.removeTransport(client.id);
-      // this.mediasoupService.removeProducer(roomId, producer.id);
-      // // 클라이언트에게 producer가 종료됨을 알린다.
-      // this.server
-      //   .to(roomId)
-      //   .emit('producer-closed', { kind, remoteProducerId: producer.id });
+      this.mediasoupService.removeProducer(kind, roomId, producer.id);
+      this.mediasoupService.removeTransport(client.id);
     });
 
-    console.log('>>>> producer id', producer.id);
     this.server.to(roomId).emit('new-producer-init', producer.id);
 
     return { id: producer.id, producerExist };
@@ -274,6 +269,7 @@ export class SignalingGateway
     const transport = await this.mediasoupService.getTransport(
       client.id,
       data.consumer,
+      data.remoteProducerId,
     );
     await transport.connect({ dtlsParameters });
   }
@@ -288,40 +284,50 @@ export class SignalingGateway
       // if (remoteProducerId === undefined) return;
       const router = await this.mediasoupService.getRouter(roomId);
 
-      // 내 수신용 transport와 consume한다.
+      console.log(`\n\n consume전 transport 가져오기`);
+      this.mediasoupService.viewMap();
       const transport = await this.mediasoupService.getTransport(
         client.id,
         true,
+        remoteProducerId,
       );
-      console.log('>> producer ID check', remoteProducerId);
+      console.log(`transport.id: ${transport.id}`);
+
       if (
         router.canConsume({
           producerId: remoteProducerId,
           rtpCapabilities,
         })
       ) {
-        console.log('>> canConsume성공');
         const consumer = await transport.consume({
           producerId: remoteProducerId,
           rtpCapabilities,
           paused: true,
         });
-        console.log(`${consumer.kind}, >> consumer객체 생성`);
+        console.log(`>> consumer객체 생성 ${consumer.kind}`);
 
         this.mediasoupService.setConsumer(consumer.kind, roomId, consumer);
 
         // client의 recvTransport가 종료될 때
         consumer.on('transportclose', () => {
           console.log('consumer transport close');
-          // consumer.close();
-          // this.mediasoupService.removeConsumer(roomId, consumer.id);
+          consumer.close();
+          this.mediasoupService.removeConsumer(
+            consumer.kind,
+            roomId,
+            consumer.id,
+          );
         });
 
         // 연결된 producer가 종료될 때
         consumer.on('producerclose', () => {
           console.log('producer close');
-          // consumer.close();
-          // this.mediasoupService.removeConsumer(roomId, consumer.id);
+          consumer.close();
+          this.mediasoupService.removeConsumer(
+            consumer.kind,
+            roomId,
+            consumer.id,
+          );
         });
         const params = {
           id: consumer.id,
@@ -350,7 +356,6 @@ export class SignalingGateway
       serverConsumerId,
     );
 
-    console.log('>> consumer resume');
     await consumer.resume();
   }
 
@@ -361,8 +366,7 @@ export class SignalingGateway
   ) {
     const { kind, roomId, producerId } = data;
     const producers = this.mediasoupService.getProducers(kind, roomId);
-    console.log('>>>>>>> producers', producers);
-    console.log(producers[0].id);
+
     // 내 아이디를 제외한 다른 producer들의 id를 배열로 반환한다.
     const producerIds = producers
       .map((producer) => producer.id)
