@@ -13,8 +13,8 @@ listeners:
       path: /ApiGateway/CustomFilter.cs
   authorization:
     type: JWT
-    login-path: /api/user/auth/login
-    logout-path: /api/user/auth/logout
+    login-path: /api/auth/login
+    logout-path: /api/auth/logout
     jwt-validator:
       valid-audience: http://localhost:5000
       valid-issuer: http://localhost:5000
@@ -31,7 +31,7 @@ clusters:
     address:
       - address: 127.0.0.1
         port: 5000
-    prefix: /api/user/auth
+    prefix: /api/auth
     custom-filters:
       - name: ClusterTestFilter
         path: /ApiGateway/ClusterTestFilter.cs

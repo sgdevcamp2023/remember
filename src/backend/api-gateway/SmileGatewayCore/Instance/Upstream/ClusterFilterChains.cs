@@ -6,8 +6,8 @@ namespace SmileGatewayCore.Instance.Upstream;
 public class ClusterFilterChains : IClusterFilterChains
 {
     private List<Func<ClusterDelegate, ClusterDelegate>> _filters = new List<Func<ClusterDelegate, ClusterDelegate>>();
-    private ClusterDelegate? _start = null;
-    private AsyncLocal<EndPoint> _endPoint = null!;
+    // private ClusterDelegate? _start = null;
+    // private AsyncLocal<EndPoint> _endPoint = null!;
     public void Init()
     {
         // UseFilter<TraceFilter>();

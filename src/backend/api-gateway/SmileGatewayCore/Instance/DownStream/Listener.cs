@@ -27,6 +27,7 @@ internal class Listener : NetworkInstance
         _clusterManager = clusterManager;
         Config = config;
     }
+
     public override void Init()
     {
         // 기본 필터 설정
@@ -67,6 +68,7 @@ internal class Listener : NetworkInstance
 
     public async void RegisterAccept()
     {
+        // Socket Pool?
         Socket? socket = await _listenerSocket.AcceptAsync();
         if (socket == null)
             throw new Exception();

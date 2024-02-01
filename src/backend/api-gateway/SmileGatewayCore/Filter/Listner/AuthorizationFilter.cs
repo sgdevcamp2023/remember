@@ -66,7 +66,10 @@ internal class AuthorizationFilter : ListenerFilter
 
     private void SetJwtInHeader(HttpContext context, JwtModel jwtModel)
     {
-        context.Response.Header["Authorization"] = jwtModel.AccessToken;
+        context.Response.Header.Add("Authorization", jwtModel.AccessToken);
         context.Response.Cookie.Append("refreshToken", jwtModel.RefreshToken);
+
+        context.Response.Body = "";
+        context.Response.ContentLength = 0;
     }
 }

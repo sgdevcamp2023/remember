@@ -85,6 +85,10 @@ public class HeaderDictionary : IDictionary<string, string>
                 EnsureStore(1);
                 Store?.Add(key, value);
             }
+            else
+            {
+                Store[key] = value;
+            }
         }
     }
 

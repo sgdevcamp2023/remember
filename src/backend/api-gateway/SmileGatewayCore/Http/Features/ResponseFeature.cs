@@ -6,10 +6,12 @@ public sealed class ResponseFeature : IResponseFeature
 {
     public ResponseFeature()
     {
-        StatusMessage = string.Empty;
         Protocol = string.Empty;
-
+        StatusCode = 0;
+        StatusMessage = string.Empty;
+        QueryString = string.Empty;
         Header = new HeaderDictionary();
+        ContentLength = 0;
         Body = string.Empty;
     }
 

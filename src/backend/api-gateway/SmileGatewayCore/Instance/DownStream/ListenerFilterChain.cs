@@ -9,6 +9,9 @@ public class ListenerFilterChains : IListenerFilterChain
     private ListenerDelegate? _start = null;
     public void Init()
     {
+        // 인증 필터
+        UseFilter<ExceptionFilter>();
+        // UseFilter<AuthorizationFilter>();
 
     }
 
