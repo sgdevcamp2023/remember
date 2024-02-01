@@ -24,7 +24,7 @@ class Application {
 
   constructor(private server: NestExpressApplication) {
     this.server = server;
-
+    //
     if (!process.env.SECRET_KEY) this.logger.error('Set "SECRET" env');
     this.DEV_MODE = process.env.NODE_ENV === 'production' ? false : true;
     this.PORT = process.env.PORT || '5000';
@@ -102,11 +102,11 @@ class Application {
 }
 
 async function init(): Promise<void> {
+  // const httpsOptions = {
+  //   key: fs.readFileSync('./ssl/key.pem'),
+  //   cert: fs.readFileSync('./ssl/cert.pem'),
+  // };
   const server = await NestFactory.create<NestExpressApplication>(AppModule, {
-    // const httpsOptions = {
-    //   key: fs.readFileSync('./ssl/key.pem'),
-    //   cert: fs.readFileSync('./ssl/cert.pem'),
-    // };
     logger: winstonLogger,
     // httpsOptions,
   });

@@ -1,22 +1,24 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as mediasoup from 'mediasoup';
+import { CreateWebRtcTransportDTO } from 'src/signaling/dto/create-webRtcTransport.dto';
 
 @Injectable()
 export class MediasoupService implements OnModuleInit {
   private worker: mediasoup.types.Worker;
   private mediaCodecs: mediasoup.types.RtpCodecCapability[];
+  private webRtcTransport_options: mediasoup.types.WebRtcTransportOptions;
   private routers = new Map<string, mediasoup.types.Router>();
   // socketId -> producer transport
   private producerTransports = new Map<
     string,
     mediasoup.types.WebRtcTransport
   >();
-
   // socketId -> producerId -> consumer transport
   private consumerTransports = new Map<
     string,
-    Map<string, mediasoup.types.WebRtcTransport>
+    mediasoup.types.WebRtcTransport
   >();
+
   // room Id(parsed_url) -> [producer / consumer, ...]
   private audioProducers = new Map<string, mediasoup.types.Producer[]>();
   private videoProducers = new Map<string, mediasoup.types.Producer[]>();
@@ -40,6 +42,18 @@ export class MediasoupService implements OnModuleInit {
         },
       },
     ];
+
+    this.webRtcTransport_options = {
+      listenIps: [
+        {
+          ip: '127.0.0.1',
+          // announcedIp: '127.0.0.1'
+        },
+      ],
+      enableUdp: true,
+      enableTcp: true,
+      preferUdp: true,
+    };
   }
 
   async onModuleInit() {
@@ -81,33 +95,30 @@ export class MediasoupService implements OnModuleInit {
   }
 
   async createWebRtcTransport(
-    data: any,
+    data: CreateWebRtcTransportDTO,
   ): Promise<mediasoup.types.WebRtcTransport> {
     const { roomId } = data;
 
     try {
       const router = await this.getRouter(roomId);
-      const webRtcTransport_options = {
-        listenIps: [
-          {
-            ip: '127.0.0.1',
-            // announcedIp: '127.0.0.1'
-          },
-        ],
-        enableUdp: true,
-        enableTcp: true,
-        preferUdp: true,
-      };
       const transport = await router.createWebRtcTransport(
-        webRtcTransport_options,
+        this.webRtcTransport_options,
       );
-      const newData = { ...data, transport };
 
-      this.setTransport(newData);
+      this.setTransport(data.consumer, data.socketId, transport);
 
       transport.on('dtlsstatechange', (dtlsState) => {
-        if (dtlsState === 'closed') {
-          transport.close();
+        switch (dtlsState) {
+          case 'connected':
+            console.log('>> dtlsstatechange connected');
+            break;
+          case 'failed':
+            console.log('>> dtlsstatechange failed');
+            break;
+          case 'closed':
+            console.log('>> dtlsstatechange closed');
+            transport.close();
+            break;
         }
       });
       return transport;
@@ -116,16 +127,13 @@ export class MediasoupService implements OnModuleInit {
     }
   }
 
-  async setTransport(data: any) {
-    const { consumer, socketId, transport } = data;
-
+  async setTransport(
+    consumer: boolean,
+    socketId: string,
+    transport: mediasoup.types.WebRtcTransport,
+  ) {
     if (consumer) {
-      const ProducerIdToConsumerTransportMap = new Map<
-        string,
-        mediasoup.types.WebRtcTransport
-      >();
-      ProducerIdToConsumerTransportMap.set(data.remoteProducerId, transport);
-      this.consumerTransports.set(socketId, ProducerIdToConsumerTransportMap);
+      this.consumerTransports.set(socketId, transport);
     } else {
       this.producerTransports.set(socketId, transport);
     }
@@ -134,16 +142,10 @@ export class MediasoupService implements OnModuleInit {
   async getTransport(
     socketId: string,
     consumer: boolean,
-    producerId: string = null,
   ): Promise<mediasoup.types.WebRtcTransport> {
     if (consumer) {
-      const consumerTransports = this.consumerTransports
-        .get(socketId)
-        ?.get(producerId);
-
-      return consumerTransports;
+      return this.consumerTransports.get(socketId);
     }
-
     return this.producerTransports.get(socketId);
   }
 
@@ -211,9 +213,7 @@ export class MediasoupService implements OnModuleInit {
     this.consumerTransports.delete(socketId);
 
     producerTransport?.close();
-    consumerTransport?.forEach((transport) => transport.close());
-
-    console.log('>>> transport removed');
+    consumerTransport?.close();
   }
 
   removeProducer(kind: string, roomId: string, producerId: string) {
@@ -240,11 +240,5 @@ export class MediasoupService implements OnModuleInit {
 
   getWorker() {
     return this.worker;
-  }
-
-  viewMap() {
-    this.producerTransports.forEach((value, key) => {
-      console.log(key, value.id);
-    });
   }
 }

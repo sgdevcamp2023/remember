@@ -16,10 +16,16 @@ import { ChannelGuildEntity } from './entity/channel.guild.entity';
 import { HttpService } from '@nestjs/axios';
 import { MediasoupService } from '../mediasoup/mediasoup.service';
 import * as mediasoup from 'mediasoup';
+import { CreateWebRtcTransportDTO } from './dto/create-webRtcTransport.dto';
+import { SendTransportConnectDTO } from './dto/send-transport-connect.dto';
+import { SendTransportProduceDTO } from './dto/send-transport-produce.dto';
+import { GetProducersDTO } from './dto/get-producers.dto';
+import { HandleConsumeDTO } from './dto/handle-consume.dto';
+import { RecvTransportConnectDTO } from './dto/recv-transport-connect.dto';
 
 @WebSocketGateway({
   cors: {
-    origin: ['https://localhost:3000', 'https://192.168.0.26:3000'],
+    origin: ['https://localhost:3000', 'https://10.99.4.27:3000'],
     credentials: true,
   },
 })
@@ -35,7 +41,6 @@ export class SignalingGateway
   server: Server;
 
   constructor(
-    private guildService: GuildService,
     private httpService: HttpService,
     private mediasoupService: MediasoupService,
   ) {}
@@ -74,8 +79,7 @@ export class SignalingGateway
     // socketToChannelGuildMap에서 제거한다.
     this.socketToChannelGuildMap.delete(client.id);
 
-    // 테스트 해보는거
-    // 유저가 나가면 해당 유저의 transoprt를 제거하낟.
+    ////////////////////////////// mediasoup 관련 작업
     this.mediasoupService.removeTransport(client.id);
 
     ////////////////////////////// 상태 관리 서버 전달 작업
@@ -185,10 +189,9 @@ export class SignalingGateway
 
   @SubscribeMessage('createWebRtcTransport')
   async createTransport(
-    @MessageBody() data: any,
+    @MessageBody() data: CreateWebRtcTransportDTO,
     @ConnectedSocket() client: Socket,
   ) {
-    // data: consumer, roomId, prodcuerId(in receive);
     const newData = {
       ...data,
       socketId: client.id,
@@ -209,7 +212,7 @@ export class SignalingGateway
 
   @SubscribeMessage('transport-connect')
   async handleConnectTransport(
-    @MessageBody() data: any,
+    @MessageBody() data: SendTransportConnectDTO,
     @ConnectedSocket() client: Socket,
   ) {
     const { dtlsParameters, consumer } = data;
@@ -226,7 +229,7 @@ export class SignalingGateway
 
   @SubscribeMessage('transport-produce')
   async handleProduceTransport(
-    @MessageBody() data: any,
+    @MessageBody() data: SendTransportProduceDTO,
     @ConnectedSocket() client: Socket,
   ) {
     const { kind, rtpParameters, roomId } = data;
@@ -245,9 +248,9 @@ export class SignalingGateway
     let producerExist = false;
     if (this.mediasoupService.getProducers(kind, roomId).length > 1) {
       producerExist = true;
+      this.server.to(roomId).emit('new-producer-init', producer.id);
     }
 
-    // 클라이언트의 sendTransport가 종료될때
     producer.on('transportclose', () => {
       console.log('producer transport close');
       producer.close();
@@ -255,43 +258,40 @@ export class SignalingGateway
       this.mediasoupService.removeTransport(client.id);
     });
 
-    this.server.to(roomId).emit('new-producer-init', producer.id);
-
-    return { id: producer.id, producerExist };
+    return { producerId: producer.id, producerExist };
   }
 
   @SubscribeMessage('transport-recv-connect')
   async handleRedvConnect(
-    @MessageBody() data: any,
+    @MessageBody() data: RecvTransportConnectDTO,
     @ConnectedSocket() client: Socket,
   ) {
     const { dtlsParameters } = data;
+
     const transport = await this.mediasoupService.getTransport(
       client.id,
       data.consumer,
-      data.remoteProducerId,
     );
-    await transport.connect({ dtlsParameters });
+
+    try {
+      await transport.connect({ dtlsParameters });
+    } catch (error) {
+      console.error('Error connecting transport:', error);
+    }
   }
 
   @SubscribeMessage('consume')
   async handleConsume(
-    @MessageBody() data: any,
+    @MessageBody() data: HandleConsumeDTO,
     @ConnectedSocket() client: Socket,
   ) {
     try {
       const { rtpCapabilities, roomId, remoteProducerId } = data;
-      // if (remoteProducerId === undefined) return;
       const router = await this.mediasoupService.getRouter(roomId);
-
-      console.log(`\n\n consume전 transport 가져오기`);
-      this.mediasoupService.viewMap();
       const transport = await this.mediasoupService.getTransport(
         client.id,
         true,
-        remoteProducerId,
       );
-      console.log(`transport.id: ${transport.id}`);
 
       if (
         router.canConsume({
@@ -304,11 +304,9 @@ export class SignalingGateway
           rtpCapabilities,
           paused: true,
         });
-        console.log(`>> consumer객체 생성 ${consumer.kind}`);
 
         this.mediasoupService.setConsumer(consumer.kind, roomId, consumer);
 
-        // client의 recvTransport가 종료될 때
         consumer.on('transportclose', () => {
           console.log('consumer transport close');
           consumer.close();
@@ -319,7 +317,6 @@ export class SignalingGateway
           );
         });
 
-        // 연결된 producer가 종료될 때
         consumer.on('producerclose', () => {
           console.log('producer close');
           consumer.close();
@@ -361,13 +358,12 @@ export class SignalingGateway
 
   @SubscribeMessage('getProducers')
   async handleGetProducers(
-    @MessageBody() data: any,
+    @MessageBody() data: GetProducersDTO,
     @ConnectedSocket() client: Socket,
   ) {
     const { kind, roomId, producerId } = data;
     const producers = this.mediasoupService.getProducers(kind, roomId);
 
-    // 내 아이디를 제외한 다른 producer들의 id를 배열로 반환한다.
     const producerIds = producers
       .map((producer) => producer.id)
       .filter((id) => id !== producerId);
