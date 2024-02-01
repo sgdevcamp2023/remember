@@ -31,7 +31,7 @@ internal class AuthorizationFilter : ListenerFilter
             if (refreshToken == null)
                 throw new Exception();
 
-            SetJwtInHeader(context, _jwtAuthorization.RefreshAccessToken(adapter.Authorization.jwtValidator, new JwtModel(accessToken, refreshToken)));
+            SetJwtInBody(context, _jwtAuthorization.RefreshAccessToken(adapter.Authorization.jwtValidator, new JwtModel(accessToken, refreshToken)));
         }
     }
     protected override void Worked(Adapter adapter, HttpContext context)
@@ -44,7 +44,7 @@ internal class AuthorizationFilter : ListenerFilter
                 case "JWT":
                     if (context.Response.Body == null)
                         throw new Exception();
-                    SetJwtInHeader(context, _jwtAuthorization.CreateToken(adapter, context.Response.Body.ToString()));
+                    SetJwtInBody(context, _jwtAuthorization.CreateToken(adapter, context.Response.Body));
                     break;
                 default:
                     break;
@@ -64,12 +64,10 @@ internal class AuthorizationFilter : ListenerFilter
         }
     }
 
-    private void SetJwtInHeader(HttpContext context, JwtModel jwtModel)
+    private void SetJwtInBody(HttpContext context, JwtModel jwtModel)
     {
-        context.Response.Header.Add("Authorization", jwtModel.AccessToken);
-        context.Response.Cookie.Append("refreshToken", jwtModel.RefreshToken);
-
-        context.Response.Body = "";
-        context.Response.ContentLength = 0;
+        string jwtJson = Newtonsoft.Json.JsonConvert.SerializeObject(jwtModel);
+        context.Response.ContentLength = jwtJson.Length;
+        context.Response.Body = jwtJson;
     }
 }

@@ -1,9 +1,10 @@
+using SmileGatewayCore.Config;
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance.Upstream;
 
 namespace SmileGatewayCore.Filter.Cluster;
 
-internal class ExceptionFilter : IClusterFilterBase
+internal class ClusterExceptionFilter : IClusterFilterBase
 {
     public async Task InvokeAsync(HttpContext context, ClusterDelegate next)
     {
@@ -14,6 +15,7 @@ internal class ExceptionFilter : IClusterFilterBase
         catch (Exception e)
         {
             System.Console.WriteLine(e.Message);
+            ErrorResponse.MakeErrorResponse(context.Response, 4100);
         }
     }
 }

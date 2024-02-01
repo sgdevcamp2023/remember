@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance;
 using Microsoft.IdentityModel.Tokens;
@@ -24,13 +23,12 @@ internal class JwtAuthorization : IJwtAuthorization
             throw new Exception();
 
         // Claim 생성
-        List<Claim> claims = new List<Claim>();
-        
-        JwtClaimsModel? claimsModel = JsonSerializer.Deserialize<JwtClaimsModel>(body);
+        JwtClaimsModel? claimsModel = Newtonsoft.Json.JsonConvert.DeserializeObject<JwtClaimsModel>(body);
         if (claimsModel == null)
             throw new Exception();
-        
-        claims.Add(new Claim(ClaimTypes.Name, claimsModel.Name));
+        List<Claim> claims = new List<Claim>{
+            new Claim(ClaimTypes.Name, claimsModel.Name),
+        };
 
         // 토큰 생성
         string accessToken = CreateAccessToken(adapter.Authorization.jwtValidator, claims);

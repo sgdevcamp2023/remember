@@ -3,16 +3,20 @@ using SmileGatewayCore.Http.Context;
 
 namespace SmileGatewayCore.Instance.Upstream;
 
-public class ClusterFilterChains : IClusterFilterChains
+public delegate Task ClusterDelegate(HttpContext context);
+
+public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
 {
     private List<Func<ClusterDelegate, ClusterDelegate>> _filters = new List<Func<ClusterDelegate, ClusterDelegate>>();
-    // private ClusterDelegate? _start = null;
-    // private AsyncLocal<EndPoint> _endPoint = null!;
+    private ClusterDelegate? _start = null;
+    private AsyncLocal<EndPoint> _endPoint = new AsyncLocal<EndPoint>();
     public void Init()
     {
-        // UseFilter<TraceFilter>();
+        UseFilter<ClusterExceptionFilter>();
+        UseFilter<TraceFilter>();
         // UseFilter<LogFilter>();
     }
+    
 
     public void UseFilter(string filterName)
     {
@@ -56,24 +60,23 @@ public class ClusterFilterChains : IClusterFilterChains
     // 무조건 RouteFilter가 마지막
     public async Task FilterStartAsync(EndPoint endPoint, HttpContext context)
     {
-        // _endPoint.Value = endPoint;
+        _endPoint.Value = endPoint;
 
-        // if (_start == null)
-        // {
-        //     ClusterDelegate last = async (context) =>
-        //     {
-        //         await _endPoint.Value.StartAsync(context);
-        //     };
+        if (_start == null)
+        {
+            ClusterDelegate last = async (context) =>
+            {
+                await _endPoint.Value.StartAsync(context);
+            };
 
-        //     for (int i = _filters.Count - 1; i >= 0; i--)
-        //     {
-        //         last = _filters[i](last);
-        //     }
-        //     _start = last;
-        // }
+            for (int i = _filters.Count - 1; i >= 0; i--)
+            {
+                last = _filters[i](last);
+            }
 
-        // await _start(context);
+            _start = last;
+        }
 
-        await endPoint.StartAsync(context);
+        await _start(context);
     }
 }

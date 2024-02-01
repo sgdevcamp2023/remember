@@ -3,16 +3,17 @@ using SmileGatewayCore.Http.Context;
 
 namespace SmileGatewayCore.Instance.DownStream;
 
-public class ListenerFilterChains : IListenerFilterChain
+public delegate Task ListenerDelegate(Adapter adapter, HttpContext context);
+
+public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
 {
     protected List<Func<ListenerDelegate, ListenerDelegate>> _filters = new List<Func<ListenerDelegate, ListenerDelegate>>();
     private ListenerDelegate? _start = null;
     public void Init()
     {
         // 인증 필터
-        UseFilter<ExceptionFilter>();
-        // UseFilter<AuthorizationFilter>();
-
+        // UseFilter<ListenerExceptionFilter>();
+        UseFilter<AuthorizationFilter>();
     }
 
     public void SetLastFilter()
