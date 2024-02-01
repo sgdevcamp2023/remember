@@ -12,8 +12,10 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
     public void Init()
     {
         // 인증 필터
-        // UseFilter<ListenerExceptionFilter>();
+        UseFilter<TraceFilter>();
+        UseFilter<ListenerExceptionFilter>();
         UseFilter<AuthorizationFilter>();
+        UseFilter<LogFilter>();
     }
 
     public void SetLastFilter()
@@ -25,10 +27,10 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
     {
         Type? type = Type.GetType(filterName + ", SmileGateway");
         if (type == null)
-            throw new Exception();
+            throw new System.Exception();
 
         if (typeof(IListenerFilterBase).IsAssignableFrom(type) == false)
-            throw new Exception();
+            throw new System.Exception();
 
         UseFilter(type);
     }
@@ -48,7 +50,7 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
 
                  if (filter == null)
                  {
-                     throw new Exception();
+                     throw new System.Exception();
                  }
 
                  await filter.InvokeAsync(instance, context, next);

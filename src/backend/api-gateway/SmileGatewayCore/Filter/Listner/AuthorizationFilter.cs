@@ -1,6 +1,7 @@
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance;
 using SmileGatewayCore.Filter.Internal;
+using SmileGatewayCore.Exception;
 
 namespace SmileGatewayCore.Filter.Listner;
 
@@ -16,20 +17,20 @@ internal class AuthorizationFilter : ListenerFilter
             return;
 
         if (adapter.Authorization == null)
-            throw new Exception();
+            throw new ConfigException(3101);
 
-        // 토큰이 없을 경우        
+        // 토큰이 없을 경우
         if (!context.Request.Header.TryGetValue("Authorization", out string? accessToken))
-            throw new Exception();
+            throw new AuthException(3006);
 
         if (!_jwtAuthorization.ValidationToken(adapter.Authorization.jwtValidator, accessToken))
         {
             if (context.Request.Cookie == null)
-                throw new Exception();
+                throw new AuthException(3004);
 
             context.Request.Cookie.TryGetValue("refreshToken", out string? refreshToken);
             if (refreshToken == null)
-                throw new Exception();
+                throw new AuthException(3004);
 
             SetJwtInBody(context, _jwtAuthorization.RefreshAccessToken(adapter.Authorization.jwtValidator, new JwtModel(accessToken, refreshToken)));
         }
@@ -43,7 +44,7 @@ internal class AuthorizationFilter : ListenerFilter
             {
                 case "JWT":
                     if (context.Response.Body == null)
-                        throw new Exception();
+                        throw new AuthException(3007);
                     SetJwtInBody(context, _jwtAuthorization.CreateToken(adapter, context.Response.Body));
                     break;
                 default:

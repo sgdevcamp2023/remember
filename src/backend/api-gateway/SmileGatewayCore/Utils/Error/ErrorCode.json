@@ -1,37 +1,57 @@
 [
     {
-        "code": 4100,
+        "code": 3000,
         "message": "INVALID_ACCESS_TOKEN",
         "description": "엑세스 토큰이 올바르지 않습니다."
     },
     {
-        "code": 4101,
+        "code": 3001,
         "message": "INVALID_REFRESH_TOKEN",
         "description": "리프레시 토큰이 올바르지 않습니다."
     },
     {
-        "code": 4102,
+        "code": 3002,
         "message": "CREATE_FAILED_ACCESS_TOKEN",
         "description": "엑세스 토큰 생성에 실패했습니다."
     },
     {
-        "code": 4103,
+        "code": 3003,
         "message": "NOT_JWT_TOKEN",
         "description": "JWT 토큰이 아닙니다."
     },
     {
-        "code": 4104,
+        "code": 3004,
         "message": "REQUIRED_REFRESH_TOKEN",
         "description": "리프레시 토큰은 필수 입력입니다."
     },
     {
-        "code": 4105,
+        "code": 3005,
         "message": "EXPIRED_ACCESS_TOKEN",
         "description": "엑세스 토큰이 만료되었습니다."
     },
     {
-        "code": 4106,
+        "code": 3006,
         "message": "REQUIRED_ACCESS_TOKEN",
         "description": "엑세스 토큰은 필수 입력입니다."
+    },
+    {
+        "code": 3007,
+        "message": "FAILED_AUTH_SERVICE",
+        "description": "인증 서비스에 실패했습니다."
+    },
+    {
+        "code": 3008,
+        "message": "EXPIRED_REFRESH_TOKEN",
+        "description": "리프레시 토큰이 만료되었습니다."
+    },
+    {
+        "code": 3100,
+        "message": "INVALID_CONFIG",
+        "description": "설정 파일이 올바르지 않습니다."
+    },
+    {
+        "code": 3101,
+        "message": "INVALID_CONFIG_AUTH",
+        "description": "인증 설정이 올바르지 않습니다."
     }
 ]

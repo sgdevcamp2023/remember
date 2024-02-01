@@ -56,21 +56,23 @@ public abstract class NetworkInstance : INetworkInstance
         _memory.ReturnBytes(buffer);
     }
 
-    private async Task ProcessReceiveAsync(Socket socket, ArraySegment<byte> buffer)
+    private async Task ProcessReceiveAsync(Socket socket, ArraySegment<byte>? buffer)
     {
         if (!socket.Connected)
             throw new Exception();
+        if(buffer == null)
+            buffer = _memory.RentBytes();
 
         try
         {
-            int recvLen = await socket.ReceiveAsync(buffer, SocketFlags.None);
+            int recvLen = await socket.ReceiveAsync(buffer.Value, SocketFlags.None);
             if (recvLen < 0)
             {
                 Disconnect(socket);
                 throw new Exception();
             }
 
-            OnReceive(socket, buffer, recvLen);
+            OnReceive(socket, buffer.Value, recvLen);
         }
         catch (Exception e)
         {

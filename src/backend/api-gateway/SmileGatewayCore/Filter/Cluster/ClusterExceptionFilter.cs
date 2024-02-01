@@ -12,10 +12,11 @@ internal class ClusterExceptionFilter : IClusterFilterBase
         {
             await next(context);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            System.Console.WriteLine(e.Message);
-            ErrorResponse.MakeErrorResponse(context.Response, 4100);
+            // Cluster 처리 중 에러가 발생하면 어떤 처리를?
+
+            throw;
         }
     }
 }

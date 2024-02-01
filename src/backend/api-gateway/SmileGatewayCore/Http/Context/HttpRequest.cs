@@ -48,6 +48,11 @@ public class HttpRequest
             }
             string[] header = requestLines[i].Split(": ");
 
+            if(header[0] == "Origin")
+            {
+                Header.Add("Origin", "http://10.99.29.133:3000");
+                continue;
+            }
             if (header[0] == "Host")
             {
                 Header.Add("Host", "127.0.0.1:5000");
@@ -58,7 +63,6 @@ public class HttpRequest
                 _requestCookie = new RequestCookie(header[1]);
                 continue;
             }
-
             if (header[0] == "Content-Length")
             {
                 _requestFeature.ContentLength = int.Parse(header[1]);
@@ -89,7 +93,16 @@ public class HttpRequest
         get => _requestFeature.Protocol;
         set => _requestFeature.Protocol = value;
     }
-
+    public string TraceId
+    {
+        get => _requestFeature.TraceId;
+        set => _requestFeature.TraceId = value;
+    }
+    public string UserId
+    {
+        get => _requestFeature.UserId;
+        set => _requestFeature.UserId = value;
+    }
     public HeaderDictionary Header
     {
         get => _requestFeature.Header;
@@ -122,6 +135,8 @@ public class HttpRequest
     public override string ToString()
     {
         string requestString = $"{Method} {Path} {Protocol}\r\n";
+        requestString += $"trace-id: {TraceId}\r\n";
+        requestString += $"user-id: {UserId}\r\n";
         foreach (var header in Header)
         {
             requestString += $"{header.Key}: {header.Value}\r\n";
@@ -134,7 +149,7 @@ public class HttpRequest
     public byte[] GetStringToBytes()
     {
         string requestString = ToString();
-        // System.Console.WriteLine(requestString);
+        System.Console.WriteLine(requestString);
         return System.Text.Encoding.UTF8.GetBytes(requestString);
     }
 }

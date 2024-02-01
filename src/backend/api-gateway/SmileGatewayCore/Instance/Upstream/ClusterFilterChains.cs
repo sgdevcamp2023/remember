@@ -13,8 +13,6 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
     public void Init()
     {
         UseFilter<ClusterExceptionFilter>();
-        UseFilter<TraceFilter>();
-        // UseFilter<LogFilter>();
     }
     
 
@@ -22,10 +20,10 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
     {
         Type? type = Type.GetType(filterName + ", SmileGateway");
         if (type == null)
-            throw new Exception();
+            throw new System.Exception();
 
         if (typeof(IClusterFilterBase).IsAssignableFrom(type) == false)
-            throw new Exception();
+            throw new System.Exception();
 
         UseFilter(type);
     }

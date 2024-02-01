@@ -1,13 +1,16 @@
+log-path: /ApiGateway/Logs
+
 listeners:
 - name: listener1
   protocol: 
   address:
-    address: 127.0.0.1
+    address: 10.99.29.133
     port: 4000
   route-config:
     clusters:
     - user-service
     - auth-service
+    - community-service
   custom-filters:
     - name: ListenerTestFilter
       path: /ApiGateway/CustomFilter.cs
@@ -16,8 +19,8 @@ listeners:
     login-path: /api/auth/login
     logout-path: /api/auth/logout
     jwt-validator:
-      valid-audience: http://localhost:5000
-      valid-issuer: http://localhost:5000
+      valid-audience: http://10.99.29.133:4000
+      valid-issuer: http://10.99.29.133:4000
       secret-key: JWTRefreshTokenHIGHsecuredPasswordVVVp1OH7Xzyr
       access-token-validity-in-second: 60
       refresh-token-validity-in-second: 86400
@@ -50,8 +53,8 @@ clusters:
   - name: community-service
     protocol: http
     address:
-      - address: 127.0.0.1
-        port: 6000
+      - address: 10.99.19.2
+        port: 8000
     prefix: /api/community
     custom-filters:
       - name: ClusterTestFilter

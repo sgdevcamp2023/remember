@@ -1,4 +1,5 @@
 using SmileGatewayCore.Config;
+using SmileGatewayCore.Utils.Logger;
 
 namespace SmileGatewayCore.Manager;
 
@@ -22,6 +23,8 @@ public class SmileGateway
 
         ListenerManager.Init(config.Listeners);
         ClusterManager.ListenerManager = ListenerManager;
+
+        FileLogger.GetInstance().Init(config.LogPath);
     }
 
     public void Run()

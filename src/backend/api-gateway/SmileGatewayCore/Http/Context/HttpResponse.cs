@@ -1,5 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using SmileGatewayCore.Http.Feature;
 using SmileGatewayCore.Http.Features;
 using SmileGatewayCore.Http.Header;
@@ -27,7 +25,10 @@ public class HttpResponse
             string[] responseInfo = responseLines[0].Split(" ");
             Protocol = responseInfo[0];
             StatusCode = int.Parse(responseInfo[1]);
-            StatusMessage = responseInfo[2];
+            if (responseInfo.Length > 2)
+                StatusMessage = responseInfo[2];
+            else
+                StatusMessage = "";
         }
         catch (System.Exception)
         {
@@ -51,6 +52,17 @@ public class HttpResponse
             }
 
             string[] header = responseLines[i].Split(": ");
+
+            if (header[0] == "Vary")
+            {
+                Varys.Add(responseLines[i]);
+                continue;
+            }
+            if (header[0] == "Access-Control-Allow-Origin")
+            {
+                Header.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+                continue;
+            }
 
             if (header[0] == "Set-Cookie")
             {
@@ -94,34 +106,50 @@ public class HttpResponse
         get => _responseFeatrue.StatusMessage;
         set => _responseFeatrue.StatusMessage = value;
     }
-
+    public string TraceId
+    {
+        get => _responseFeatrue.TraceId;
+        set => _responseFeatrue.TraceId = value;
+    }
+    public string UserId
+    {
+        get => _responseFeatrue.UserId;
+        set => _responseFeatrue.UserId = value;
+    }
     public HeaderDictionary Header
     {
         get => _responseFeatrue.Header;
         set => _responseFeatrue.Header = value;
     }
-
     public string? Body
     {
         get => _responseFeatrue.Body;
         set => _responseFeatrue.Body = value;
     }
-
     public int ContentLength
     {
         get => _responseFeatrue.ContentLength;
         set => _responseFeatrue.ContentLength = value;
     }
-
     public IResponseCookie Cookie
     {
         get => _responseCookie!;
     }
-
+    public List<string> Varys
+    {
+        get => _responseFeatrue.Varys;
+        set => _responseFeatrue.Varys = value;
+    }
     public override string ToString()
     {
         // Emulator 고쳐야함.
         string responseString = $"{Protocol} {StatusCode} {StatusMessage}\r\n";
+        foreach (var vary in Varys)
+        {
+            responseString += $"{vary}\r\n";
+        }
+        responseString += $"trace-id: {TraceId}\r\n";
+        responseString += $"user-id: {UserId}\r\n";
         foreach (var header in Header)
         {
             responseString += $"{header.Key}: {header.Value}\r\n";
@@ -150,6 +178,9 @@ public class HttpResponse
         bool isEnd = false;
         for (int i = 0; i < bodys.Length; i += 2)
         {
+            if (bodys[i] == "")
+                break;
+
             int length = Convert.ToInt32(bodys[i], 16);
             ContentLength += length;
 

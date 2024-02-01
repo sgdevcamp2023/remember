@@ -6,6 +6,7 @@ using SmileGatewayCore.Config;
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance.Upstream;
 using SmileGatewayCore.Manager;
+using SmileGatewayCore.Utils.Logger;
 
 namespace SmileGatewayCore.Instance.DownStream;
 
@@ -15,11 +16,9 @@ internal class Listener : NetworkInstance
 {
     private Socket _listenerSocket = null!;
     private ListenerFilterChains _filterChains = new ListenerFilterChains();
-
     public ClusterManager _clusterManager;
     private Dictionary<string, Cluster> _clusters = new Dictionary<string, Cluster>();
     public readonly ListenerConfig Config;
-
     public AsyncLocal<Stopwatch> _stopwatch = new AsyncLocal<Stopwatch>();
     
     public Listener(ClusterManager clusterManager, ListenerConfig config)
@@ -71,7 +70,7 @@ internal class Listener : NetworkInstance
         // Socket Pool?
         Socket? socket = await _listenerSocket.AcceptAsync();
         if (socket == null)
-            throw new Exception();
+            throw new System.Exception();
         
         _stopwatch.Value = new Stopwatch();
         _stopwatch.Value.Start();
@@ -91,18 +90,20 @@ internal class Listener : NetworkInstance
 
         IPEndPoint? point = socket.RemoteEndPoint as IPEndPoint;
         if(point == null)
-            throw new Exception();
+            throw new System.Exception();
 
         // Context 생성
         HttpContext context = new HttpContext();
         string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, recvLen);
         context.Request.Parse(requestString);
         
+        var endPoint = socket.RemoteEndPoint as IPEndPoint;
+
         // Adapter 생성
-        Adapter? adapter = MakeAdapter(context.Request.Path);
+        Adapter? adapter = MakeAdapter(context.Request.Path, endPoint!.Address.ToString());
 
         if(adapter == null)
-            throw new Exception();
+            throw new System.Exception();
 
         await _filterChains.FilterStartAsync(adapter, context);
 
@@ -118,14 +119,14 @@ internal class Listener : NetworkInstance
         Disconnect(socket);
     }
 
-    private Adapter? MakeAdapter(string clusterPath)
+    private Adapter? MakeAdapter(string clusterPath, string ip)
     {
         // Clister Select
         foreach(var (name, cluster) in _clusters)
         {
             if(clusterPath.StartsWith(cluster.Config.Prefix))
             {
-                return new Adapter(Config, cluster);
+                return new Adapter(Config, cluster, ip);
             }
         }
 

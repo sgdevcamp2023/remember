@@ -6,7 +6,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        SmileGateway gateway = new SmileGateway("ApiGatewayConfig.yaml");
+        SmileGateway gateway = new SmileGateway("SmileGatewayConfig.yaml");
         
         gateway.Init();
 

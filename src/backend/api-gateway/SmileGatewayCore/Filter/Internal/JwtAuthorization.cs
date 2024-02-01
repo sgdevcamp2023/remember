@@ -6,6 +6,7 @@ using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance;
 using Microsoft.IdentityModel.Tokens;
 using SmileGatewayCore.Config;
+using SmileGatewayCore.Exception;
 
 namespace SmileGatewayCore.Filter.Internal;
 
@@ -20,18 +21,19 @@ internal class JwtAuthorization : IJwtAuthorization
     public JwtModel CreateToken(Adapter adapter, string body)
     {
         if (adapter.Authorization!.jwtValidator == null)
-            throw new Exception();
+            throw new ConfigException(3100);
 
         // Claim 생성
         JwtClaimsModel? claimsModel = Newtonsoft.Json.JsonConvert.DeserializeObject<JwtClaimsModel>(body);
         if (claimsModel == null)
-            throw new Exception();
+            throw new AuthException(3007);
+        
         List<Claim> claims = new List<Claim>{
             new Claim(ClaimTypes.Name, claimsModel.Name),
         };
 
         // 토큰 생성
-        string accessToken = CreateAccessToken(adapter.Authorization.jwtValidator, claims);
+        string accessToken = "Bearer " + CreateAccessToken(adapter.Authorization.jwtValidator, claims);
         string refreshToken = CreateRefreshToken();
         
         // 레디스에 토큰 저장
@@ -45,14 +47,14 @@ internal class JwtAuthorization : IJwtAuthorization
     {
         context.Request.Header.TryGetValue("Authorization", out string? accessToken);
         if (accessToken == null)
-            throw new Exception();
+            throw new AuthException(3005);
 
         string[] tokens = accessToken.Split(" ");
         accessToken = tokens[1];
 
         string? id = GetPrincipal(accessToken)?.Identity?.Name;
         if(id == null)
-            throw new Exception();
+            throw new AuthException(3000);
 
         _redis.Delete(id);
     }
@@ -79,18 +81,18 @@ internal class JwtAuthorization : IJwtAuthorization
         // 엑세스 토큰 Claim 가져오기
         var tokenPrincipal = GetPrincipal(token.AccessToken);
         if (tokenPrincipal == null)
-            throw new Exception();
+            throw new AuthException(3000);
 
         string? name = tokenPrincipal.Identity?.Name;
         if (name == null)
-            throw new Exception();
+            throw new AuthException(3000);
 
         string? refreshToken = _redis.GetByKey(name);
         if (refreshToken == null)
-            throw new Exception();
+            throw new AuthException(3008);
 
         if (refreshToken != token.RefreshToken)
-            throw new Exception();
+            throw new AuthException(3001);
 
         string accessToken = CreateAccessToken(validator, tokenPrincipal.Claims.ToList());
         refreshToken = CreateRefreshToken();
@@ -111,7 +113,7 @@ internal class JwtAuthorization : IJwtAuthorization
         accessToken = tokens[1];
 
         if (tokens[0] != "Bearer")
-            throw new Exception();
+            throw new AuthException(3003);
 
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -128,7 +130,7 @@ internal class JwtAuthorization : IJwtAuthorization
         {
             var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
             if (principal == null)
-                throw new Exception();
+                throw new AuthException(3000);
 
             return true;
         }
@@ -155,9 +157,9 @@ internal class JwtAuthorization : IJwtAuthorization
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
-        catch (Exception)
+        catch (System.Exception)
         {
-            throw new Exception();
+            throw new AuthException(3002);
         }
     }
 
