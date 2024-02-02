@@ -1,6 +1,7 @@
 package harmony.communityservice.community.command.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
+import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
 import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
 import harmony.communityservice.community.command.dto.GuildUpdateNicknameRequestDto;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/community")
 public class GuildCommandController {
     private final GuildCommandService guildCommandService;
+    private final ProducerService producerService;
 
     @PostMapping("/registration/guild")
     public BaseResponse<?> registration(
@@ -43,6 +45,7 @@ public class GuildCommandController {
     @DeleteMapping("/delete/guild")
     public BaseResponse<?> delete(@RequestBody @Validated GuildDeleteRequestDto requestDto) {
         guildCommandService.remove(requestDto);
+        producerService.sendDeleteGuild(requestDto.getGuildId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
