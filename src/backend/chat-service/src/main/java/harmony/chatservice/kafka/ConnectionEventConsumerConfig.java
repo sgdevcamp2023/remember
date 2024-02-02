@@ -1,6 +1,6 @@
-package harmony.chatservice.service.kafka;
+package harmony.chatservice.kafka;
 
-import harmony.chatservice.dto.CommunityMessageDto;
+import harmony.chatservice.dto.response.ConnectionEventDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -16,16 +16,16 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 @EnableKafka
 @Configuration
-public class CommunityConsumerConfig {
+public class ConnectionEventConsumerConfig {
 
     @Value("${spring.kafka.consumer.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${spring.kafka.consumer.group-id.community}")
+    @Value("${spring.kafka.consumer.group-id.connection-event}")
     private String groupName;
 
     @Bean
-    public Map<String, Object> consumerConfigurationsForCommunity() {
+    public Map<String, Object> consumerConfigurationsForConnectionEvent() {
         Map<String,Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupName);
@@ -35,14 +35,15 @@ public class CommunityConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, CommunityMessageDto> consumerFactoryForCommunity() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigurationsForCommunity(), new StringDeserializer(), new JsonDeserializer<>(CommunityMessageDto.class));
+    public ConsumerFactory<String, ConnectionEventDto> consumerFactoryForConnectionEvent() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigurationsForConnectionEvent(), new StringDeserializer(),
+                new JsonDeserializer<>(ConnectionEventDto.class));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, CommunityMessageDto> communityListener() {
-        ConcurrentKafkaListenerContainerFactory<String,CommunityMessageDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactoryForCommunity());
+    public ConcurrentKafkaListenerContainerFactory<String, ConnectionEventDto> connectionEventListener() {
+        ConcurrentKafkaListenerContainerFactory<String, ConnectionEventDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactoryForConnectionEvent());
         return factory;
     }
 }

@@ -1,4 +1,4 @@
-package harmony.chatservice.service.kafka;
+package harmony.chatservice.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

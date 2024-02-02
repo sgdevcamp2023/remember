@@ -1,4 +1,4 @@
-package harmony.chatservice.service.kafka;
+package harmony.chatservice.kafka;
 
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;

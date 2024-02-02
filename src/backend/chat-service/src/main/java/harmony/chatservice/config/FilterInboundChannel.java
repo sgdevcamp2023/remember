@@ -5,7 +5,7 @@ import harmony.chatservice.client.StateClient;
 import harmony.chatservice.dto.response.CommunityFeignResponse;
 import harmony.chatservice.dto.response.SessionDto;
 import harmony.chatservice.dto.response.ConnectionEventDto;
-import harmony.chatservice.service.kafka.MessageProducerService;
+import harmony.chatservice.kafka.MessageProducerService;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

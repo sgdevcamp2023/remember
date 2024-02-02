@@ -5,7 +5,7 @@ import harmony.chatservice.dto.request.EmojiDeleteRequest;
 import harmony.chatservice.dto.EmojiDto;
 import harmony.chatservice.dto.request.EmojiRequest;
 import harmony.chatservice.service.EmojiService;
-import harmony.chatservice.service.kafka.MessageProducerService;
+import harmony.chatservice.kafka.MessageProducerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;

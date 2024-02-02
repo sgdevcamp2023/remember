@@ -6,7 +6,7 @@ import harmony.chatservice.dto.request.CommunityMessageModifyRequest;
 import harmony.chatservice.dto.request.CommunityMessageRequest;
 import harmony.chatservice.service.CommunityMessageService;
 import harmony.chatservice.service.FileUploadService;
-import harmony.chatservice.service.kafka.MessageProducerService;
+import harmony.chatservice.kafka.MessageProducerService;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

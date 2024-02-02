@@ -1,6 +1,6 @@
-package harmony.chatservice.service.kafka;
+package harmony.chatservice.kafka;
 
-import harmony.chatservice.dto.EmojiDto;
+import harmony.chatservice.dto.CommunityMessageDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -16,16 +16,16 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 @EnableKafka
 @Configuration
-public class EmojiConsumerConfig {
+public class CommunityConsumerConfig {
 
     @Value("${spring.kafka.consumer.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${spring.kafka.consumer.group-id.emoji}")
+    @Value("${spring.kafka.consumer.group-id.community}")
     private String groupName;
 
     @Bean
-    public Map<String, Object> consumerConfigurationsForEmoji() {
+    public Map<String, Object> consumerConfigurationsForCommunity() {
         Map<String,Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupName);
@@ -35,14 +35,14 @@ public class EmojiConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, EmojiDto> consumerFactoryForEmoji() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigurationsForEmoji(), new StringDeserializer(), new JsonDeserializer<>(EmojiDto.class));
+    public ConsumerFactory<String, CommunityMessageDto> consumerFactoryForCommunity() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigurationsForCommunity(), new StringDeserializer(), new JsonDeserializer<>(CommunityMessageDto.class));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, EmojiDto> emojiListener() {
-        ConcurrentKafkaListenerContainerFactory<String,EmojiDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactoryForEmoji());
+    public ConcurrentKafkaListenerContainerFactory<String, CommunityMessageDto> communityListener() {
+        ConcurrentKafkaListenerContainerFactory<String,CommunityMessageDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactoryForCommunity());
         return factory;
     }
 }
