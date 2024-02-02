@@ -8,8 +8,8 @@ import harmony.communityservice.common.exception.IllegalGcsException;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -39,4 +39,12 @@ public class AllControllerAdvice {
         return new BaseResponse<>(HttpStatus.BAD_REQUEST.value(), "BAD_REQUEST",
                 new BaseExceptionResponse("INVALID_GCS_REQUEST", 5002, "잘못된 GCS 요청입니다"));
     }
+
+//    @ExceptionHandler(HttpMessageNotReadableException.class)
+//    public BaseResponse<BaseExceptionResponse> exceptionHandler(HttpMessageNotReadableException e,
+//                                                                HttpServletRequest request) {
+//        errorLogging(request,"HttpMessageNotReadableException");
+//        return new BaseResponse<>(HttpStatus.BAD_REQUEST.value(), "BAD_REQUEST", new BaseExceptionResponse())
+//    }
+
 }
