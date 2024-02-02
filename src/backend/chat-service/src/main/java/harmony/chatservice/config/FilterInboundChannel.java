@@ -4,7 +4,7 @@ import harmony.chatservice.client.CommunityClient;
 import harmony.chatservice.client.StateClient;
 import harmony.chatservice.dto.response.CommunityFeignResponse;
 import harmony.chatservice.dto.response.SessionDto;
-import harmony.chatservice.dto.response.StateDto;
+import harmony.chatservice.dto.response.ConnectionEventDto;
 import harmony.chatservice.service.kafka.MessageProducerService;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -63,14 +63,14 @@ public class FilterInboundChannel implements ChannelInterceptor {
             messageService.sendMessageForSession(sessionDto);
 
             CommunityFeignResponse ids = communityClient.getGuildAndRoomIds(userId);
-            StateDto stateDto = StateDto.builder()
+            ConnectionEventDto connectionEventDto = ConnectionEventDto.builder()
                     .userId(userId)
                     .type("CONNECT")
                     .state("online")
                     .guildIds(ids.getResultData().getGuildIds())
                     .roomIds(ids.getResultData().getRoomIds())
                     .build();
-            messageService.sendMessageForState(stateDto);
+            messageService.sendMessageForConnectionEvent(connectionEventDto);
         }
 
         if (StompCommand.DISCONNECT.equals(headerAccessor.getCommand())) {
@@ -85,14 +85,14 @@ public class FilterInboundChannel implements ChannelInterceptor {
             Long userId = Long.parseLong(stateClient.updateSession(sessionDto));
 
             CommunityFeignResponse ids = communityClient.getGuildAndRoomIds(userId);
-            StateDto stateDto = StateDto.builder()
+            ConnectionEventDto connectionEventDto = ConnectionEventDto.builder()
                     .userId(userId)
                     .type("DISCONNECT")
                     .state("offline")
                     .guildIds(ids.getResultData().getGuildIds())
                     .roomIds(ids.getResultData().getRoomIds())
                     .build();
-            messageService.sendMessageForState(stateDto);
+            messageService.sendMessageForConnectionEvent(connectionEventDto);
         }
     }
 }

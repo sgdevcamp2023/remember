@@ -4,7 +4,7 @@ import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
 import harmony.chatservice.dto.response.SessionDto;
-import harmony.chatservice.dto.response.StateDto;
+import harmony.chatservice.dto.response.ConnectionEventDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +37,7 @@ public class MessageProducerService {
 
     private final KafkaTemplate<String, EmojiDto> kafkaTemplateForEmoji;
 
-    private final KafkaTemplate<String, StateDto> kafkaTemplateForState;
+    private final KafkaTemplate<String, ConnectionEventDto> kafkaTemplateForState;
 
     private final KafkaTemplate<String, SessionDto> kafkaTemplateForSession;
 
@@ -56,9 +56,9 @@ public class MessageProducerService {
         kafkaTemplateForEmoji.send(emojiChatTopic, emojiDto);
     }
 
-    public void sendMessageForState(StateDto stateDto) {
-        log.info("state {}", stateDto.getType());
-        kafkaTemplateForState.send(stateChatTopic, stateDto);
+    public void sendMessageForConnectionEvent(ConnectionEventDto connectionEventDto) {
+        log.info("state {}", connectionEventDto.getType());
+        kafkaTemplateForState.send(stateChatTopic, connectionEventDto);
     }
 
     public void sendMessageForSession(SessionDto sessionDto) {

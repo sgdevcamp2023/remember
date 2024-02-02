@@ -4,7 +4,7 @@ import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
 import harmony.chatservice.dto.response.SessionDto;
-import harmony.chatservice.dto.response.StateDto;
+import harmony.chatservice.dto.response.ConnectionEventDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -67,15 +67,15 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(producerFactoryForEmoji());
     }
 
-    // 상태 관련 producer
-    public ProducerFactory<String, StateDto> producerFactoryForState() {
+    // 접속 상태 관련 producer
+    public ProducerFactory<String, ConnectionEventDto> producerFactoryForConnectionEvent() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
-    // 상태 관련 producer
+    // 접속 상태 관련 producer
     @Bean
-    public KafkaTemplate<String, StateDto> kafkaTemplateForState() {
-        return new KafkaTemplate<>(producerFactoryForState());
+    public KafkaTemplate<String, ConnectionEventDto> kafkaTemplateForConnectionEvent() {
+        return new KafkaTemplate<>(producerFactoryForConnectionEvent());
     }
 
     // 세션 관련 producer

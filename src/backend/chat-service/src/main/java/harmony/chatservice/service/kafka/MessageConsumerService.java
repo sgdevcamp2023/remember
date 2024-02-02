@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
-import harmony.chatservice.dto.response.StateDto;
+import harmony.chatservice.dto.response.ConnectionEventDto;
 import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,22 +42,22 @@ public class MessageConsumerService {
         }
     }
 
-    @KafkaListener(topics = "stateChatTopic", groupId = "stateGroup", containerFactory = "stateListener")
-    public void consumeForState(StateDto stateDto) throws JsonProcessingException {
-        if (stateDto.getType().equals("CONNECT") || stateDto.getType().equals("DISCONNECT")) {
+    @KafkaListener(topics = "stateChatTopic", groupId = "stateGroup", containerFactory = "connectionEventListener")
+    public void consumeForConnectionEvent(ConnectionEventDto connectionEventDto) throws JsonProcessingException {
+        if (connectionEventDto.getType().equals("CONNECT") || connectionEventDto.getType().equals("DISCONNECT")) {
             HashMap<String,String> stateInfo = new HashMap<>();
-            stateInfo.put("state",stateDto.getState());
-            stateInfo.put("userId", String.valueOf(stateDto.getUserId()));
-            String userState = objectMapper.writeValueAsString(stateInfo);
+            stateInfo.put("state", connectionEventDto.getState());
+            stateInfo.put("userId", String.valueOf(connectionEventDto.getUserId()));
+            String connectionEvent = objectMapper.writeValueAsString(stateInfo);
 
-            if (stateDto.getGuildIds() != null) {
-                for (Long guildId : stateDto.getGuildIds()) {
-                    messagingTemplate.convertAndSend("/topic/guild/" + guildId, userState);
+            if (connectionEventDto.getGuildIds() != null) {
+                for (Long guildId : connectionEventDto.getGuildIds()) {
+                    messagingTemplate.convertAndSend("/topic/guild/" + guildId, connectionEvent);
                 }
             }
-            if (stateDto.getRoomIds() != null) {
-                for (Long roomId : stateDto.getRoomIds()) {
-                    messagingTemplate.convertAndSend("/topic/direct/" + roomId, userState);
+            if (connectionEventDto.getRoomIds() != null) {
+                for (Long roomId : connectionEventDto.getRoomIds()) {
+                    messagingTemplate.convertAndSend("/topic/direct/" + roomId, connectionEvent);
                 }
             }
         }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StateDto {
+public class ConnectionEventDto {
 
     private Long userId;
     private Long guildId;
@@ -20,8 +20,8 @@ public class StateDto {
     private List<Long> roomIds;
 
     @Builder
-    public StateDto(Long userId, Long guildId, Long channelId, String type, String state, List<Long> guildIds,
-                    List<Long> roomIds) {
+    public ConnectionEventDto(Long userId, Long guildId, Long channelId, String type, String state, List<Long> guildIds,
+                              List<Long> roomIds) {
         this.userId = userId;
         this.guildId = guildId;
         this.channelId = channelId;

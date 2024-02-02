@@ -1,6 +1,6 @@
 package harmony.chatservice.service.kafka;
 
-import harmony.chatservice.dto.response.StateDto;
+import harmony.chatservice.dto.response.ConnectionEventDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -25,7 +25,7 @@ public class StateConsumerConfig {
     private String groupName;
 
     @Bean
-    public Map<String, Object> consumerConfigurationsForState() {
+    public Map<String, Object> consumerConfigurationsForConnectionEvent() {
         Map<String,Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupName);
@@ -35,15 +35,15 @@ public class StateConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, StateDto> consumerFactoryForState() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigurationsForState(), new StringDeserializer(),
-                new JsonDeserializer<>(StateDto.class));
+    public ConsumerFactory<String, ConnectionEventDto> consumerFactoryForConnectionEvent() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigurationsForConnectionEvent(), new StringDeserializer(),
+                new JsonDeserializer<>(ConnectionEventDto.class));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, StateDto> stateListener() {
-        ConcurrentKafkaListenerContainerFactory<String,StateDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactoryForState());
+    public ConcurrentKafkaListenerContainerFactory<String, ConnectionEventDto> connectionEventListener() {
+        ConcurrentKafkaListenerContainerFactory<String, ConnectionEventDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactoryForConnectionEvent());
         return factory;
     }
 }
