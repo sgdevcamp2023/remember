@@ -16,12 +16,12 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 @EnableKafka
 @Configuration
-public class StateConsumerConfig {
+public class ConnectionEventConsumerConfig {
 
     @Value("${spring.kafka.consumer.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${spring.kafka.consumer.group-id.state}")
+    @Value("${spring.kafka.consumer.group-id.connection-event}")
     private String groupName;
 
     @Bean

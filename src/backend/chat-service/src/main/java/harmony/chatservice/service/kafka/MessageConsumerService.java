@@ -22,17 +22,17 @@ public class MessageConsumerService {
 
     private final SimpMessageSendingOperations messagingTemplate;
 
-    @KafkaListener(topics = "communityChatTopic", groupId = "communityGroup", containerFactory = "communityListener")
+    @KafkaListener(topics = "communityChat", groupId = "communityChatGroup", containerFactory = "communityListener")
     public void consumeForCommunity(CommunityMessageDto messageDto){
         messagingTemplate.convertAndSend("/topic/guild/" + messageDto.getGuildId(), messageDto);
     }
 
-    @KafkaListener(topics = "directChatTopic", groupId = "directGroup", containerFactory = "directListener")
+    @KafkaListener(topics = "directChat", groupId = "directChatGroup", containerFactory = "directListener")
     public void consumeForDirect(DirectMessageDto messageDto){
         messagingTemplate.convertAndSend("/topic/direct/" + messageDto.getRoomId(), messageDto);
     }
 
-    @KafkaListener(topics = "emojiChatTopic", groupId = "emojiGroup", containerFactory = "emojiListener")
+    @KafkaListener(topics = "emojiChat", groupId = "emojiGroup", containerFactory = "emojiListener")
     public void consumeForEmoji(EmojiDto emojiDto){
         if (emojiDto.getRoomId() > 0) {
             messagingTemplate.convertAndSend("/topic/direct/" + emojiDto.getRoomId(), emojiDto);
@@ -42,7 +42,7 @@ public class MessageConsumerService {
         }
     }
 
-    @KafkaListener(topics = "stateChatTopic", groupId = "stateGroup", containerFactory = "connectionEventListener")
+    @KafkaListener(topics = "connectionEvent", groupId = "connectionEventGroup", containerFactory = "connectionEventListener")
     public void consumeForConnectionEvent(ConnectionEventDto connectionEventDto) throws JsonProcessingException {
         if (connectionEventDto.getType().equals("CONNECT") || connectionEventDto.getType().equals("DISCONNECT")) {
             HashMap<String,String> stateInfo = new HashMap<>();

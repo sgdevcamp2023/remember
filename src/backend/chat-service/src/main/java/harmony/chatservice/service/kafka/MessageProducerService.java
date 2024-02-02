@@ -25,11 +25,11 @@ public class MessageProducerService {
     @Value("${spring.kafka.producer.emoji-chat-topic}")
     private String emojiChatTopic;
 
-    @Value("${spring.kafka.producer.state-chat-topic}")
-    private String stateChatTopic;
+    @Value("${spring.kafka.producer.connection-event-topic}")
+    private String connectionEventTopic;
 
-    @Value("${spring.kafka.producer.session-chat-topic}")
-    private String sessionChatTopic;
+    @Value("${spring.kafka.producer.session-event-topic}")
+    private String sessionEventTopic;
 
     private final KafkaTemplate<String, CommunityMessageDto> kafkaTemplateForCommunity;
 
@@ -37,7 +37,7 @@ public class MessageProducerService {
 
     private final KafkaTemplate<String, EmojiDto> kafkaTemplateForEmoji;
 
-    private final KafkaTemplate<String, ConnectionEventDto> kafkaTemplateForState;
+    private final KafkaTemplate<String, ConnectionEventDto> kafkaTemplateForConnectionEvent;
 
     private final KafkaTemplate<String, SessionDto> kafkaTemplateForSession;
 
@@ -57,12 +57,12 @@ public class MessageProducerService {
     }
 
     public void sendMessageForConnectionEvent(ConnectionEventDto connectionEventDto) {
-        log.info("state {}", connectionEventDto.getType());
-        kafkaTemplateForState.send(stateChatTopic, connectionEventDto);
+        log.info("ConnectionEvent {}", connectionEventDto.getType());
+        kafkaTemplateForConnectionEvent.send(connectionEventTopic, connectionEventDto);
     }
 
     public void sendMessageForSession(SessionDto sessionDto) {
-        log.info("state {}", sessionDto.getType());
-        kafkaTemplateForSession.send(sessionChatTopic, sessionDto);
+        log.info("SessionEvent {}", sessionDto.getType());
+        kafkaTemplateForSession.send(sessionEventTopic, sessionDto);
     }
 }
