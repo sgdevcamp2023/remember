@@ -14,7 +14,7 @@ public class MessageConsumerService {
 
     private final StateService stateService;
 
-    @KafkaListener(topics = "sessionChatTopic", groupId = "sessionGroup", containerFactory = "sessionListener")
+    @KafkaListener(topics = "sessionEvent", groupId = "sessionEventGroup", containerFactory = "sessionListener")
     public void consumeForSession(SessionDto sessionDto){
         stateService.updateSession(sessionDto);
     }

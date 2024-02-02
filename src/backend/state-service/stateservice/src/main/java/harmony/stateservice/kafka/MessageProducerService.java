@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class MessageProducerService {
 
 
-    @Value("${spring.kafka.producer.session-chat-topic}")
+    @Value("${spring.kafka.producer.session-event-topic}")
     private String sessionChatTopic;
 
     private final KafkaTemplate<String, SessionDto> kafkaTemplateForSession;
