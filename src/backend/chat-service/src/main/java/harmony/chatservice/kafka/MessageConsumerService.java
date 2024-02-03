@@ -6,6 +6,7 @@ import harmony.chatservice.dto.CommunityEventDto;
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
+import harmony.chatservice.dto.response.ChannelEventDto;
 import harmony.chatservice.dto.response.ConnectionEventDto;
 import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
@@ -84,5 +85,12 @@ public class MessageConsumerService {
         String communityEvent = objectMapper.writeValueAsString(communityEventInfo);
 
         messagingTemplate.convertAndSend("/topic/guild/" + eventDto.getGuildId(), communityEvent);
+    }
+
+    @KafkaListener(topics = "channelEvent", groupId = "channelEventGroup", containerFactory = "channelEventListener")
+    public void consumeForChannelEvent(ChannelEventDto eventDto) {
+        if (eventDto.getType().equals("JOIN") || eventDto.getType().equals("LEAVE")) {
+            messagingTemplate.convertAndSend("/topic/guild/" + eventDto.getGuildId(), eventDto);
+        }
     }
 }
