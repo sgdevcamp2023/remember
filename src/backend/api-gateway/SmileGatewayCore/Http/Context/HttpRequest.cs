@@ -126,7 +126,7 @@ public class HttpRequest
     public byte[] GetStringToBytes()
     {
         string requestString = ToString();
-        System.Console.WriteLine(requestString);
+        // System.Console.WriteLine(requestString);
         return System.Text.Encoding.UTF8.GetBytes(requestString);
     }
 

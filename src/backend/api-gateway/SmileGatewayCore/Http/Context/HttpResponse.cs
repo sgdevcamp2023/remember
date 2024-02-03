@@ -145,7 +145,7 @@ public class HttpResponse
     public byte[] GetStringToBytes()
     {
         string responseString = ToString();
-        System.Console.WriteLine(responseString);
+        // System.Console.WriteLine(responseString);
         return System.Text.Encoding.UTF8.GetBytes(responseString);
     }
 

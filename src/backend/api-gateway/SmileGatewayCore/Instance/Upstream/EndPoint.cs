@@ -13,7 +13,6 @@ public class EndPoint : NetworkInstance
     private AsyncLocal<HttpContext> _context = new AsyncLocal<HttpContext>();
     private IPEndPoint _ipEndpoint = null!;
     private long _usingCount = 0;
-    Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     public EndPoint(AddressConfig config)
     {
         _ipEndpoint = new IPEndPoint(IPAddress.Parse(config.Address), config.Port);

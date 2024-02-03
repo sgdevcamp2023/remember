@@ -68,11 +68,15 @@ internal class Listener : NetworkInstance
         Socket socket = _socketPool.RentSocket();
         await _listenerSocket.AcceptAsync(socket);
 
-        await Receive(socket);
+        Start(socket);
 
         // 종료
-        _socketPool.ReturnSocket(socket);
         RegisterAccept();
+    }
+
+    private async void Start(Socket socket)
+    {
+        await Receive(socket);
     }
 
     protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
@@ -119,7 +123,7 @@ internal class Listener : NetworkInstance
     protected override Task OnSend(Socket socket, int size)
     {
         System.Console.WriteLine($"Send {size} bytes");
-
+        _socketPool.ReturnSocket(socket);
         return Task.CompletedTask;
     }
 
