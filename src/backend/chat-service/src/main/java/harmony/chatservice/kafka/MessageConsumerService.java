@@ -2,6 +2,7 @@ package harmony.chatservice.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import harmony.chatservice.dto.CommunityEventDto;
 import harmony.chatservice.dto.CommunityMessageDto;
 import harmony.chatservice.dto.DirectMessageDto;
 import harmony.chatservice.dto.EmojiDto;
@@ -61,5 +62,27 @@ public class MessageConsumerService {
                 }
             }
         }
+    }
+
+    @KafkaListener(topics = "communityEvent", groupId = "communityEventGroup", containerFactory = "communityEventListener")
+    public void consumeForCommunityEvent(CommunityEventDto eventDto) throws JsonProcessingException {
+        HashMap<String,String> communityEventInfo = new HashMap<>();
+        if (eventDto.getEventType().equals("DELETE-GUILD")) {
+            communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
+            communityEventInfo.put("eventType", "DELETE-GUILD");
+        } else if (eventDto.getEventType().equals("CREATE-CHANNEL")) {
+            communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
+            communityEventInfo.put("eventType", "CREATE-CHANNEL");
+            communityEventInfo.put("channelType", eventDto.getChannelType());
+            communityEventInfo.put("channelReadId", String.valueOf(eventDto.getChannelReadId()));
+            communityEventInfo.put("categoryId", String.valueOf(eventDto.getCategoryId()));
+        } else if (eventDto.getEventType().equals("DELETE-CHANNEL")) {
+            communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
+            communityEventInfo.put("eventType", "DELETE-CHANNEL");
+            communityEventInfo.put("channelReadId", String.valueOf(eventDto.getChannelReadId()));
+        }
+        String communityEvent = objectMapper.writeValueAsString(communityEventInfo);
+
+        messagingTemplate.convertAndSend("/topic/guild/" + eventDto.getGuildId(), communityEvent);
     }
 }
