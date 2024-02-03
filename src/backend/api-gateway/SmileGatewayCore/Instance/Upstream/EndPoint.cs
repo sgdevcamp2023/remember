@@ -13,12 +13,11 @@ public class EndPoint : NetworkInstance
     private AsyncLocal<HttpContext> _context = new AsyncLocal<HttpContext>();
     private IPEndPoint _ipEndpoint = null!;
     private long _usingCount = 0;
-
+    Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     public EndPoint(AddressConfig config)
     {
         _ipEndpoint = new IPEndPoint(IPAddress.Parse(config.Address), config.Port);
         _connectionPool = new ConnectionPool(10, _ipEndpoint);
-
     }
     private void IncreaseUsingCount()
     {
@@ -40,24 +39,19 @@ public class EndPoint : NetworkInstance
         IncreaseUsingCount();
 
         // 초기화
-        // Socket? socket = _connectionPool.RentSocket();
-        // if (socket == null)
-        //     throw new Exception();
+        Socket? socket = _connectionPool.RentSocket();
+        if (socket == null)
+            throw new System.Exception();
 
         // 임시
-        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         _context.Value = context;
-
-        await socket.ConnectAsync(_ipEndpoint);
 
         // 실행
         // 만약 소켓이 종료되어 있을 경우 종료됨.
         await Send(socket, context.Request.GetStringToBytes());
         await Receive(socket);
-
-        socket.Disconnect(false);
-
-        // _connectionPool.ReturnSocket(socket);
+        
+        _connectionPool.ReturnSocket(socket);
 
         DecreaseUsingCount();
     }
@@ -67,31 +61,33 @@ public class EndPoint : NetworkInstance
 
     }
 
-    protected override void OnSend(Socket socket, int size)
+    protected override Task OnSend(Socket socket, int size)
     {
         System.Console.WriteLine($"Send {size} bytes");
+
+        return Task.CompletedTask;
     }
 
-    protected override void OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
+    protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
         System.Console.WriteLine($"Receive {recvLen} bytes");
         if (_context.Value == null)
-            throw new Exception();
+            throw new System.Exception();
 
-        if(_context.Value.Response.StatusCode == 0)
+        if (_context.Value.Response.StatusCode == 0)
         {
-            if(!_context.Value.Response.Parse(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
+            if (!_context.Value.Response.Parse(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
             {
-                Receive(socket, new ArraySegment<byte>(buffer.Array!, recvLen, buffer.Count - recvLen));
+                await Receive(socket, new ArraySegment<byte>(buffer.Array!, recvLen, buffer.Count - recvLen));
             }
         }
         else
         {
-            if(_context.Value.Response.IsChucked)
+            if (_context.Value.Response.IsChucked)
             {
-                if(!_context.Value.Response.AppendChuckedBody(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
+                if (!_context.Value.Response.AppendChuckedBody(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
                 {
-                    Receive(socket, new ArraySegment<byte>(buffer.Array!, recvLen, buffer.Count - recvLen));
+                    await Receive(socket, new ArraySegment<byte>(buffer.Array!, recvLen, buffer.Count - recvLen));
                 }
             }
         }

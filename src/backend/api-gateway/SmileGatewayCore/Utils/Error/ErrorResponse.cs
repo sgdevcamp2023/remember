@@ -25,6 +25,6 @@ public static class ErrorResponse
         if(_errorCodeReader.ErrorCodes.TryGetValue(errorCode, out string? errorInfo))
             return errorInfo;
 
-        throw new Exception();
+        throw new System.Exception();
     }
 }

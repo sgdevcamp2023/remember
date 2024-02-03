@@ -37,30 +37,31 @@ internal class AuthorizationFilter : ListenerFilter
     }
     protected override void Worked(Adapter adapter, HttpContext context)
     {
-        if (adapter.Authorization!.LoginPath == context.Request.Path &&
-                context.Response.StatusCode == 200)
+        if (context.Response.StatusCode == 200)
         {
-            switch (adapter.Authorization.Type)
+            if (adapter.Authorization!.LoginPath == context.Request.Path)
             {
-                case "JWT":
-                    if (context.Response.Body == null)
-                        throw new AuthException(3007);
-                    SetJwtInBody(context, _jwtAuthorization.CreateToken(adapter, context.Response.Body));
-                    break;
-                default:
-                    break;
+                switch (adapter.Authorization.Type)
+                {
+                    case "JWT":
+                        if (context.Response.Body == null)
+                            throw new AuthException(3007);
+                        SetJwtInBody(context, _jwtAuthorization.CreateToken(adapter, context.Response.Body));
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-        else if (adapter.Authorization.LogoutPath == context.Request.Path &&
-                context.Response.StatusCode == 200)
-        {
-            switch (adapter.Authorization.Type)
+            else if (adapter.Authorization.LogoutPath == context.Request.Path)
             {
-                case "JWT":
-                    _jwtAuthorization.DeleteToken(adapter, context);
-                    break;
-                default:
-                    break;
+                switch (adapter.Authorization.Type)
+                {
+                    case "JWT":
+                        _jwtAuthorization.DeleteToken(adapter, context);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

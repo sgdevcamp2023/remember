@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using SmileGatewayCore.Exception;
 using SmileGatewayCore.Utils;
 
 namespace SmileGatewayCore.Instance;
@@ -6,11 +7,12 @@ namespace SmileGatewayCore.Instance;
 public abstract class NetworkInstance : INetworkInstance
 {
     protected MemoryPool _memory = new MemoryPool(8192);
+    protected SocketPool _socketPool = new SocketPool();
 
     #region Abstract
     public abstract void Init();
-    protected abstract void OnReceive(Socket socket, ArraySegment<byte> buffer, int size);
-    protected abstract void OnSend(Socket socket, int size);
+    protected abstract Task OnReceive(Socket socket, ArraySegment<byte> buffer, int size);
+    protected abstract Task OnSend(Socket socket, int size);
     #endregion
 
     public Task Send(Socket socket, byte[] data)
@@ -30,51 +32,25 @@ public abstract class NetworkInstance : INetworkInstance
 
     private async Task ProcessReceiveAsync(Socket socket)
     {
-        if (!socket.Connected)
-            throw new Exception();
-
         ArraySegment<byte> buffer = _memory.RentBytes();
 
-        try
-        {
-            int recvLen = await socket.ReceiveAsync(buffer, SocketFlags.None);
-            if (recvLen < 0)
-            {
-                Disconnect(socket);
-                throw new Exception();
-            }
-
-            OnReceive(socket, buffer, recvLen);
-        }
-        catch (Exception e)
-        {
-            System.Console.WriteLine(e.Message);
-            Disconnect(socket);
-        }
+        await ProcessReceiveAsync(socket, buffer);
 
         // 수거
         _memory.ReturnBytes(buffer);
     }
 
-    private async Task ProcessReceiveAsync(Socket socket, ArraySegment<byte>? buffer)
+    private async Task ProcessReceiveAsync(Socket socket, ArraySegment<byte> buffer)
     {
-        if (!socket.Connected)
-            throw new Exception();
-        if(buffer == null)
-            buffer = _memory.RentBytes();
-
         try
         {
-            int recvLen = await socket.ReceiveAsync(buffer.Value, SocketFlags.None);
-            if (recvLen < 0)
-            {
-                Disconnect(socket);
-                throw new Exception();
-            }
+            int recvLen = await socket.ReceiveAsync(buffer, SocketFlags.None);
+            if (recvLen <= 0)
+                throw new SocketException((int)SocketError.ConnectionReset);
 
-            OnReceive(socket, buffer.Value, recvLen);
+            await OnReceive(socket, buffer, recvLen);
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             System.Console.WriteLine(e.Message);
             Disconnect(socket);
@@ -83,21 +59,15 @@ public abstract class NetworkInstance : INetworkInstance
 
     private async Task ProcessSendAsync(Socket socket, ArraySegment<byte> data)
     {
-        if (!socket.Connected)
-            throw new Exception();
-
         try
         {
             int sendLen = await socket.SendAsync(data, SocketFlags.None);
-            if (sendLen < 0)
-            {
-                Disconnect(socket);
-                throw new Exception();
-            }
+            if (sendLen <= 0)
+                throw new SocketException((int)SocketError.ConnectionReset);
 
-            OnSend(socket, sendLen);
+            await OnSend(socket, sendLen);
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             System.Console.WriteLine(e.Message);
             Disconnect(socket);
@@ -106,7 +76,7 @@ public abstract class NetworkInstance : INetworkInstance
 
     public void Disconnect(Socket socket)
     {
-        socket.Disconnect(false);
-        // _memory.ReturnSocket(socket);
+        if(socket.Connected)
+            socket.Disconnect(reuseSocket: true);
     }
 }

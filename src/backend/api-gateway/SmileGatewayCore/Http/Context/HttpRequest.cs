@@ -15,28 +15,7 @@ public class HttpRequest
     {
         _requestFeature = new RequestFeature();
         string[] requestLines = requestString.Split("\r\n");
-
-        try
-        {
-            string[] requestInfo = requestLines[0].Split(" ");
-            Method = requestInfo[0];
-
-            string[] temp = requestInfo[1].Split("?");
-            Path = temp[0];
-
-            if (temp.Length > 1)
-            {
-                QueryString = temp[1];
-            }
-
-            Protocol = requestInfo[2];
-        }
-        catch (System.Exception)
-        {
-            System.Console.WriteLine(requestString);
-            throw new System.Exception();
-        }
-
+        MakeRequestInfo(requestLines[0].Split(" "));
 
         // HttpContext 분리 생성
         for (int i = 1; i < requestLines.Count(); i++)
@@ -48,30 +27,27 @@ public class HttpRequest
             }
             string[] header = requestLines[i].Split(": ");
 
-            if(header[0] == "Origin")
-            {
-                Header.Add("Origin", "http://10.99.29.133:3000");
-                continue;
-            }
-            if (header[0] == "Host")
-            {
-                Header.Add("Host", "127.0.0.1:5000");
-                continue;
-            }
             if (header[0] == "Cookie")
             {
-                _requestCookie = new RequestCookie(header[1]);
+                Cookie = new RequestCookie(header[1]);
                 continue;
             }
             if (header[0] == "Content-Length")
             {
-                _requestFeature.ContentLength = int.Parse(header[1]);
+                ContentLength = int.Parse(header[1]);
+                continue;
+            }
+            if(header[0] == "Host")
+            {
+                Header["Host"] = "127.0.0.1:5000";
                 continue;
             }
 
             if (header.Length > 1)
                 Header.Add(header[0], header[1]);
         }
+
+        MakeDeafultHeader();
 
         return true;
     }
@@ -130,6 +106,7 @@ public class HttpRequest
     public IRequestCookie? Cookie
     {
         get => _requestCookie;
+        set => _requestCookie = value;
     }
 
     public override string ToString()
@@ -151,5 +128,28 @@ public class HttpRequest
         string requestString = ToString();
         System.Console.WriteLine(requestString);
         return System.Text.Encoding.UTF8.GetBytes(requestString);
+    }
+
+    private void MakeRequestInfo(string[] requestInfos)
+    {
+        Method = requestInfos[0];
+
+        string[] temp = requestInfos[1].Split("?");
+        Path = temp[0];
+
+        if (temp.Length > 1)
+        {
+            QueryString = temp[1];
+        }
+
+        Protocol = requestInfos[2];
+    }
+
+    private void MakeDeafultHeader()
+    {
+        Header["Connection"] = "keep-alive";
+        
+        // 어떻게 자동으로 할지 생각해봐야될듯
+        Header["Origin"] = "http://localhost:3000";
     }
 }

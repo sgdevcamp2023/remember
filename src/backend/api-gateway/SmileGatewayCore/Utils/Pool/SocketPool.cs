@@ -19,14 +19,17 @@ public class SocketPool
 
     public Socket RentSocket()
     {
+        System.Console.WriteLine("RentSocket");
         return _socketPool.Get();
     }
 
     public void ReturnSocket(Socket socket)
     {
+        System.Console.WriteLine("ReturnSocket");
         _socketPool.Return(socket);
     }
 }
+
 
 class SocketPoolPolicy : IPooledObjectPolicy<Socket>
 {
@@ -42,7 +45,7 @@ class SocketPoolPolicy : IPooledObjectPolicy<Socket>
             if (obj.Connected)
                 obj.Disconnect(reuseSocket: true);
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             System.Console.WriteLine(e.Message);
             return false;

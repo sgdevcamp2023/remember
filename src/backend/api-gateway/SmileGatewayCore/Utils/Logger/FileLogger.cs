@@ -22,26 +22,28 @@ public class FileLogger
 
     public void Init(string path)
     {
+        // 경로 측정 및 확인 해야함.
+        
         _path = path;
-        Timer timer = new Timer();
-        timer.Interval = 1000;
-        timer.Elapsed += (sender, args) =>
-        {
-            List<LogModel> logs;
-            PopAll(out logs);
-            if (logs.Count > 0)
-            {
-                using (StreamWriter sw = File.AppendText(_path))
-                {
-                    foreach (var log in logs)
-                    {
-                        string json = JsonSerializer.Serialize(log);
-                        sw.WriteLine(json);
-                    }
-                }
-            }
-        };
-        timer.Start();
+        // Timer timer = new Timer();
+        // timer.Interval = 1000;
+        // timer.Elapsed += (sender, args) =>
+        // {
+        //     List<LogModel> logs;
+        //     PopAll(out logs);
+        //     if (logs.Count > 0)
+        //     {
+        //         using (StreamWriter sw = File.AppendText(_path))
+        //         {
+        //             foreach (var log in logs)
+        //             {
+        //                 string json = JsonSerializer.Serialize(log);
+        //                 sw.WriteLine(json);
+        //             }
+        //         }
+        //     }
+        // };
+        // timer.Start();
     }
     private void Log(string type, string service, string traceId, string method, string userId, string message, string apiAddr)
     {

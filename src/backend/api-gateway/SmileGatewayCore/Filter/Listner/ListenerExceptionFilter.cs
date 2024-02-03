@@ -16,8 +16,8 @@ public class ListenerExceptionFilter : IListenerFilterBase
         }
         catch(System.Exception e)
         {
-            System.Console.WriteLine(e.Message);
-            ErrorResponse.MakeErrorResponse(context.Response, 4100);
+            System.Console.WriteLine("ListenerExceptionFilter: " + e.Message);
+            ErrorResponse.MakeErrorResponse(context.Response, 3000);
 
             FileLogger.GetInstance().LogError(
                 traceId: context.Request.TraceId,

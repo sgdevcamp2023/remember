@@ -20,21 +20,7 @@ public class HttpResponse
     {
         _responseFeatrue = new ResponseFeature();
         string[] responseLines = responseString.Split("\r\n");
-        try
-        {
-            string[] responseInfo = responseLines[0].Split(" ");
-            Protocol = responseInfo[0];
-            StatusCode = int.Parse(responseInfo[1]);
-            if (responseInfo.Length > 2)
-                StatusMessage = responseInfo[2];
-            else
-                StatusMessage = "";
-        }
-        catch (System.Exception)
-        {
-            System.Console.WriteLine("responseLines");
-            throw new System.Exception();
-        }
+        MakeResponseinfo(responseLines[0].Split(" "));
 
         // HttpContext 분리 생성
         // Body 형태가 다름. 그래서 따로 해줘야함.
@@ -47,7 +33,6 @@ public class HttpResponse
                     isSuccess = MakeChuckedBody(responseLines.Skip(i + 1).ToArray());
                 else
                     Body = string.Join("\r\n", responseLines.ToArray(), i + 1, responseLines.Length - i - 1);
-
                 break;
             }
 
@@ -148,8 +133,6 @@ public class HttpResponse
         {
             responseString += $"{vary}\r\n";
         }
-        responseString += $"trace-id: {TraceId}\r\n";
-        responseString += $"user-id: {UserId}\r\n";
         foreach (var header in Header)
         {
             responseString += $"{header.Key}: {header.Value}\r\n";
@@ -194,5 +177,12 @@ public class HttpResponse
         }
 
         return isEnd;
+    }
+
+    private void MakeResponseinfo(string[] responseInfos)
+    {
+        Protocol = responseInfos[0];
+        StatusCode = int.Parse(responseInfos[1]);
+        StatusMessage = string.Join(" ", responseInfos.Skip(2).ToArray());
     }
 }
