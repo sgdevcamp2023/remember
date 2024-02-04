@@ -1,7 +1,7 @@
 package harmony.stateservice.kafka;
 
 import harmony.stateservice.dto.SessionDto;
-import harmony.stateservice.service.StateService;
+import harmony.stateservice.service.ChatServerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MessageConsumerService {
+public class StateEventConsumerService {
 
-    private final StateService stateService;
+    private final ChatServerService chatServerService;
 
     @KafkaListener(topics = "sessionEvent", groupId = "sessionEventGroup", containerFactory = "sessionListener")
     public void consumeForSession(SessionDto sessionDto){
-        stateService.updateSession(sessionDto);
+        chatServerService.updateSession(sessionDto);
     }
 }
