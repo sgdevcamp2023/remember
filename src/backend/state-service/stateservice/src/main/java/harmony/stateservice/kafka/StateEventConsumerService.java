@@ -1,5 +1,6 @@
 package harmony.stateservice.kafka;
 
+import harmony.stateservice.dto.ChannelEventDto;
 import harmony.stateservice.dto.SessionDto;
 import harmony.stateservice.service.ChatServerService;
 import lombok.RequiredArgsConstructor;
@@ -17,5 +18,10 @@ public class StateEventConsumerService {
     @KafkaListener(topics = "sessionEvent", groupId = "sessionEventGroup", containerFactory = "sessionListener")
     public void consumeForSession(SessionDto sessionDto){
         chatServerService.updateSession(sessionDto);
+    }
+
+    @KafkaListener(topics = "channelEvent", groupId = "channelEventGroup", containerFactory = "channelEventListener")
+    public void consumeForChannelEvent(ChannelEventDto channelEventDto){
+
     }
 }
