@@ -7,7 +7,9 @@ services:
     image: userservice
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.userservice
+    volumes:
+      - logs:/var/log
     container_name: user-service
     ports:
       - 5000:5000
@@ -28,3 +30,19 @@ services:
     container_name: redis
     ports:
       - 6379:6379
+  fluentd:
+    image: fluentd
+    container_name: fluentd
+    build:
+      context: .
+      dockerfile: ./Dockerfile.fluentd
+    environment:
+      - FLUENTD_CONF=fluentd.conf
+    volumes:
+      - C:\github\remember\src\backend\user-service\UserService\fluentd\buffer:/var/buffer
+      - C:\github\remember\src\backend\user-service\UserService\fluentd\pos:/var/pos
+      - logs:/var/log
+    restart: unless-stopped
+
+volumes:
+  logs:

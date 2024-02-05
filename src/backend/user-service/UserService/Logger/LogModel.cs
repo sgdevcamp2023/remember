@@ -2,12 +2,17 @@ namespace user_service.logger;
 
 public class LogModel
 {
-    public string Time { get; set; } = null!;
-    public string Level { get; set; } = null!;
-    public string Service { get; set; } = null!;
-    public string Trace { get; set; } = null!;
-    public string ApiAddr { get; set; } = null!;
-    public string HttpMethod { get; set; } = null!;
-    public string UserId { get; set; } = null!;
-    public string Message { get; set; } = null!;
+    public string timestamp { get; set; } = null!;
+    public string level { get; set; } = null!;
+    public string service { get; set; } = null!;
+    public string trace { get; set; } = null!;
+    public string apiAddr { get; set; } = null!;
+    public string httpMethod { get; set; } = null!;
+    public string userId { get; set; } = null!;
+    public string message { get; set; } = null!;
+
+    public override string ToString()
+    {
+        return $"{{\"@timestamp\":\"{timestamp} \",\"level\":\"{level}\",\"service\":\"{service}\",\"trace\":\"{trace}\",\"apiAddr\":\"{apiAddr}\",\"httpMethod\":\"{httpMethod}\",\"userId\":\"{userId}\",\"message\":\"{message}\"}}";
+    }
 }

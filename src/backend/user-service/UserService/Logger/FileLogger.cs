@@ -30,8 +30,7 @@ namespace user_service
                             {
                                 foreach (var log in logs)
                                 {
-                                    string json = JsonSerializer.Serialize(log);
-                                    sw.WriteLine(json);
+                                    sw.WriteLine(log.ToString());
                                 }
                             }
 
@@ -58,14 +57,14 @@ namespace user_service
 
                 _queue.Enqueue(new LogModel
                 {
-                    Time = time,
-                    Level = type,
-                    Service = service,
-                    Trace = traceId,
-                    HttpMethod = method,
-                    UserId = userId,
-                    Message = message,
-                    ApiAddr = ""
+                    @timestamp = time,
+                    level = type,
+                    service = service,
+                    trace = traceId,
+                    httpMethod = method,
+                    userId = userId,
+                    message = message,
+                    apiAddr = ""
                 });
             }
 
