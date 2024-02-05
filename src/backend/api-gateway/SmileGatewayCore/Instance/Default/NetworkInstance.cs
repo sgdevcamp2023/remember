@@ -42,13 +42,22 @@ public abstract class NetworkInstance : INetworkInstance
 
     private async Task ProcessReceiveAsync(Socket socket, ArraySegment<byte> buffer)
     {
+
         try
         {
-            int recvLen = await socket.ReceiveAsync(buffer, SocketFlags.None);
-            if (recvLen <= 0)
-                throw new SocketException((int)SocketError.ConnectionReset);
+            var delayTask = Task.Delay(TimeSpan.FromSeconds(1));
+            var recvTask = socket.ReceiveAsync(buffer, SocketFlags.None);
+            var completedTask = await Task.WhenAny(delayTask, recvTask);
 
-            await OnReceive(socket, buffer, recvLen);
+            if (completedTask == recvTask)
+            {
+                int recvLen = await recvTask;
+                if (recvLen <= 0)
+                    throw new SocketException((int)SocketError.ConnectionReset);
+                await OnReceive(socket, buffer, recvLen);
+            }
+            else
+                throw new TimeoutException();
         }
         catch (System.Exception e)
         {
@@ -61,7 +70,14 @@ public abstract class NetworkInstance : INetworkInstance
     {
         try
         {
-            int sendLen = await socket.SendAsync(data, SocketFlags.None);
+            var delayTask = Task.Delay(TimeSpan.FromSeconds(1));
+            var sendTask = socket.SendAsync(data, SocketFlags.None);
+            var completedTask = await Task.WhenAny(delayTask, sendTask);
+
+            if (completedTask == delayTask)
+                throw new TimeoutException();
+
+            int sendLen = await sendTask;
             if (sendLen <= 0)
                 throw new SocketException((int)SocketError.ConnectionReset);
 
@@ -76,7 +92,13 @@ public abstract class NetworkInstance : INetworkInstance
 
     public void Disconnect(Socket socket)
     {
-        if(socket.Connected)
+        try
+        {
             socket.Disconnect(reuseSocket: true);
+        }
+        catch (System.Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+        }
     }
 }

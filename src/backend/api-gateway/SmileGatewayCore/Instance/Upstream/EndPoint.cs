@@ -38,17 +38,16 @@ public class EndPoint : NetworkInstance
         IncreaseUsingCount();
 
         // 초기화
-        Socket? socket = _connectionPool.RentSocket();
-        if (socket == null)
-            throw new System.Exception();
+        // Connection Pool 처리를 어떻게 해야될 까?
+        Socket socket = await _connectionPool.RentSocket();
 
         // 임시
         _context.Value = context;
 
         // 실행
         // 만약 소켓이 종료되어 있을 경우 종료됨.
+        // 연결이 끊겨있는 경우라면?
         await Send(socket, context.Request.GetStringToBytes());
-        await Receive(socket);
         
         _connectionPool.ReturnSocket(socket);
 
@@ -60,16 +59,17 @@ public class EndPoint : NetworkInstance
 
     }
 
-    protected override Task OnSend(Socket socket, int size)
+    protected override async Task OnSend(Socket socket, int size)
     {
-        System.Console.WriteLine($"Send {size} bytes");
+        System.Console.WriteLine($"Cluster Send {size} bytes");
 
-        return Task.CompletedTask;
+        await Receive(socket);
     }
 
     protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
-        System.Console.WriteLine($"Receive {recvLen} bytes");
+        // 에러 처리 할 것
+        System.Console.WriteLine($"Cluster Receive {recvLen} bytes");
         if (_context.Value == null)
             throw new System.Exception();
 
