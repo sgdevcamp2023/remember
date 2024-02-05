@@ -1,7 +1,6 @@
 package harmony.stateservice.service;
 
 import harmony.stateservice.dto.ConnectionStateRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,20 +16,18 @@ public class CommunityServerService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public List<Map<String, String>> getUsersConnectionState(ConnectionStateRequest stateRequest) {
+    public Map<Long, String> getUsersConnectionState(ConnectionStateRequest stateRequest) {
 
         String stateKey = "USER:STATE";
         List<Long> userIds = stateRequest.getUserIds();
-        List<Map<String, String>> connectionStates = new ArrayList<>();
+        Map<Long, String> connectionStates = new HashMap<>();
         Map<Object, Object> stateInfos = redisTemplate.opsForHash().entries(stateKey);
         for (Long id : userIds) {
-            Map<String, String> states = new HashMap<>();
             String userId = id.toString();
             String state = stateInfos.get(userId) != null ? stateInfos.get(userId).toString() : "N";
 
             if (!state.equals("N")) {
-                states.put(userId, state);
-                connectionStates.add(states);
+                connectionStates.put(Long.parseLong(userId), state);
             }
         }
 
