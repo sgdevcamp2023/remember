@@ -11,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ChannelEventDto {
 
-    private Long userId;
-    private Long guildId;
-    private Long channelId;
+    private String userId;
+    private String guildId;
+    private String channelId;
     private String type;
 }
