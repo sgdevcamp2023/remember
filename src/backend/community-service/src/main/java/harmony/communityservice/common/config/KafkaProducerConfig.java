@@ -1,10 +1,10 @@
 package harmony.communityservice.common.config;
 
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
-import harmony.communityservice.common.dto.KafkaEventDto;
+import harmony.communityservice.common.dto.CommunityEventDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,12 +30,12 @@ public class KafkaProducerConfig {
         return config;
     }
 
-    public ProducerFactory<String, KafkaEventDto> producerFactoryForCommunity() {
+    public ProducerFactory<String, CommunityEventDto> producerFactoryForCommunity() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
     @Bean
-    public KafkaTemplate<String, KafkaEventDto> kafkaTemplateForCommunity() {
+    public KafkaTemplate<String, CommunityEventDto> kafkaTemplateForCommunity() {
         return new KafkaTemplate<>(producerFactoryForCommunity());
     }
 

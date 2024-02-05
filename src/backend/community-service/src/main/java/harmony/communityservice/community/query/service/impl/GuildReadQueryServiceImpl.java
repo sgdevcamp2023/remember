@@ -18,7 +18,6 @@ public class GuildReadQueryServiceImpl implements GuildReadQueryService {
         for (GuildRead guildRead : guildReadQueryRepository.findGuildsByUserId(userId)) {
             guildReads.put(guildRead.getGuildId(), guildRead);
         }
-
         return guildReads;
     }
 

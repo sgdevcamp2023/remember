@@ -1,6 +1,6 @@
 package harmony.communityservice.common.config;
 
-import harmony.communityservice.common.dto.KafkaEventDto;
+import harmony.communityservice.common.dto.CommunityEventDto;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.common.service.impl.ProducerServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
-    private final KafkaTemplate<String, KafkaEventDto> kafkaEventTemplate;
+    private final KafkaTemplate<String, CommunityEventDto> kafkaEventTemplate;
 
     @Bean
     public ProducerService producerService() {

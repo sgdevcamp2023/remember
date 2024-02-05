@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class KafkaEventDto {
+public class CommunityEventDto {
     private String eventType;
     private Long guildId;
     private String channelName;
@@ -13,8 +13,8 @@ public class KafkaEventDto {
     private Long channelReadId;
 
     @Builder
-    public KafkaEventDto(String eventType, Long guildId, String channelName, String channelType, Long categoryId,
-                         Long channelReadId) {
+    public CommunityEventDto(String eventType, Long guildId, String channelName, String channelType, Long categoryId,
+                             Long channelReadId) {
         this.eventType = eventType;
         this.guildId = guildId;
         this.channelName = channelName;
