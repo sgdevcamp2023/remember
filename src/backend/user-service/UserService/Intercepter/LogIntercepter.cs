@@ -15,38 +15,22 @@ public class LogInterceptor : IInterceptor
     public void Intercept(IInvocation invocation)
     {
         HttpContext context = _contextAccessor.HttpContext!;
-        // 전2
+        // 전
         _logger.LogInformation(
-            traceId: "",
+            traceId: context.Request.Headers["trace-id"],
             method: context.Request.Method,
             userId: "",
             message: invocation.Method.Name + " start",
             apiAddr: context.Connection.RemoteIpAddress!.ToString());
 
-        try
-        {
-            invocation.Proceed();
+        invocation.Proceed();
 
-            _logger.LogInformation(
-                traceId: "",
-                method: context.Request.Method,
-                userId: "",
-                message: invocation.Method.Name + " end",
-                apiAddr: context.Connection.RemoteIpAddress!.ToString());
-        }
-        catch (Exception)
-        {
-            _logger.LogWarning(
-                traceId: "",
-                method: context.Request.Method,
-                userId: "",
-                message: invocation.Method.Name + " Error",
-                apiAddr: context.Connection.RemoteIpAddress!.ToString());
-
-            // 현재 예외를 그대로 던짐
-            throw;
-        }
         // 후
-
+        _logger.LogInformation(
+            traceId: "",
+            method: context.Request.Method,
+            userId: "",
+            message: invocation.Method.Name + " end",
+            apiAddr: context.Connection.RemoteIpAddress!.ToString());
     }
 }

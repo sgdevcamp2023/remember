@@ -39,12 +39,16 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFriendService, FriendService>();
 
+// Controller 소문자로 변경
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 // CORS 설정
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", builder =>
     {
-        builder.WithOrigins("http://localhost:3000") // 리액트 앱의 주소
+        builder.WithOrigins("http://localhost:3000")
+                .WithOrigins("http://10.99.29.133:3000") // 리액트 앱의 주소
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

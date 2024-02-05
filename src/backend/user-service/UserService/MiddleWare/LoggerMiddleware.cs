@@ -33,7 +33,6 @@ namespace user_service
                     userId: "",
                     message: context.Request.Path + " End",
                     apiAddr: context.Connection.RemoteIpAddress!.ToString());
-                        await _next(context);
             }
         }
     }

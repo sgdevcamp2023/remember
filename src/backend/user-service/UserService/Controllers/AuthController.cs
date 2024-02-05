@@ -10,7 +10,7 @@ namespace user_service
 {
     namespace auth
     {
-        [Route("api/user/[controller]")]
+        [Route("api/[controller]")]
         [ApiController]
         public class AuthController : ControllerBase
         {
@@ -32,6 +32,7 @@ namespace user_service
             [HttpPost("login")]
             public ClaimDTO Login([FromBody] LoginDTO login)
             {
+                System.Console.WriteLine(login.Email + " " + login.Password);
                 ClaimDTO claim = _authService.Login(login);
                 
                 return claim;
@@ -55,18 +56,6 @@ namespace user_service
 
                 return Ok();
             }
-
-            // [HttpPost("validation-token")]
-            // public IActionResult ValidationToken(
-            //     [FromHeader(Name = "Authorization")] string accessToken)
-            // {
-            //     string? refreshToken = HttpContext.Request.Cookies["refreshToken"];
-
-            //     // API Gateway를 위한 Custom
-            //     return Ok(
-            //         _jwtService.ValidationToken(
-            //             new TokenDTO(accessToken, refreshToken)));
-            // }
 
             [HttpPost("reset-password")]
             public IActionResult ResetPassword(

@@ -15,7 +15,7 @@ namespace user_service
             public FileLogger(IConfiguration config)
             {
                 _config = config;
-                _path = System.IO.Directory.GetCurrentDirectory() + _config["Logger:LogPath"];
+                _path = _config["Logger:LogPath"];
                 Timer timer = new Timer();
                 timer.Interval = 1000;
                 timer.Elapsed += (sender, args) =>
@@ -24,12 +24,28 @@ namespace user_service
                     PopAll(out logs);
                     if (logs.Count > 0)
                     {
-                        using (StreamWriter sw = File.AppendText(_path))
+                        try
                         {
-                            foreach (var log in logs)
+                            using (StreamWriter sw = File.AppendText(_path))
                             {
-                                string json = JsonSerializer.Serialize(log);
-                                sw.WriteLine(json);
+                                foreach (var log in logs)
+                                {
+                                    string json = JsonSerializer.Serialize(log);
+                                    sw.WriteLine(json);
+                                }
+                            }
+
+                        }
+                        catch
+                        {
+                            // 로그 파일이 없을 경우 생성
+                            using (StreamWriter sw = File.CreateText(_path))
+                            {
+                                foreach (var log in logs)
+                                {
+                                    string json = JsonSerializer.Serialize(log);
+                                    sw.WriteLine(json);
+                                }
                             }
                         }
                     }
@@ -39,7 +55,7 @@ namespace user_service
             private void Log(string type, string service, string traceId, string method, string userId, string message, string apiAddr)
             {
                 string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                
+
                 _queue.Enqueue(new LogModel
                 {
                     Time = time,
@@ -58,7 +74,7 @@ namespace user_service
                 // Lock을 써서 관리?
                 // Count만큼 할당받은 후에 처리?
                 logs = new List<LogModel>(_queue.Count);
-                while(_queue.TryDequeue(out LogModel? data))
+                while (_queue.TryDequeue(out LogModel? data))
                 {
                     logs.Add(data!);
                 }

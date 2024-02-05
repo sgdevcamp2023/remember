@@ -1,0 +1,30 @@
+# Please refer DefaultScema.sql://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  userservice:
+    image: userservice
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: user-service
+    ports:
+      - 5000:5000
+  
+  mssql:
+    image: mssql
+    build:
+      context: .
+      dockerfile: ./Dockerfile.mssql
+    container_name: mssql
+    user: root
+    hostname: mssql-docker
+    ports:
+      - 1433:1433
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379

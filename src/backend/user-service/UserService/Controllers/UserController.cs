@@ -10,7 +10,7 @@ namespace user_service
     namespace user
     {
         [filter.TraceIdCheckFilter]
-        [Route("api/user/[controller]")]
+        [Route("api/[controller]")]
         [ApiController]
         public class UserController : ControllerBase
         {

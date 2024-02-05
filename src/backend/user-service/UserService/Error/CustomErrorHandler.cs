@@ -46,6 +46,13 @@ namespace user_service
                         HttpInterealServer(context, exceptionHandlerPathFeature.Error.Message);
                     }
 
+                    context.RequestServices.GetRequiredService<IBaseLogger>().LogError(
+                        traceId: context.Request.Headers["trace-id"],
+                        method: context.Request.Method,
+                        userId: context.Request.Headers["user-id"],
+                        message: exceptionHandlerPathFeature.Error.Message,
+                        apiAddr: context.Connection.RemoteIpAddress!.ToString());
+
                     await Task.CompletedTask;
                 }
             };
@@ -57,10 +64,10 @@ namespace user_service
                 string? controller = context.HttpContext.GetRouteData().Values["controller"]!.ToString();
 
                 logger.LogWarning(
-                    traceId: "",
+                    traceId: context.HttpContext.Request.Headers["trace-id"],
                     method: context.HttpContext.Request.Method,
-                    userId: "",
-                    message: "INvalidModelStateResponseFactory",
+                    userId: context.HttpContext.Request.Headers["user-id"],
+                    message: "Invalid Model State Error",
                     apiAddr: context.HttpContext.Connection.RemoteIpAddress!.ToString());
 
                 // 있는지 체크?
