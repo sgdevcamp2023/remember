@@ -56,7 +56,7 @@ tasks.named('test') {
 
 task copyPrivate(type: Copy) {
 	copy {
-		from './harmony-private-state'
+		from './harmony-private-state-server'
 		include "*.yml", "*.properties", "*.json"
 		into 'src/main/resources'
 	}
