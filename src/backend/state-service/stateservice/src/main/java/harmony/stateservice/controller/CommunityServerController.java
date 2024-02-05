@@ -1,8 +1,8 @@
 package harmony.stateservice.controller;
 
-import harmony.stateservice.dto.ConnectionStateRequest;
+import harmony.stateservice.dto.UserStateDto;
+import harmony.stateservice.dto.request.UserStateRequest;
 import harmony.stateservice.service.CommunityServerService;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +14,8 @@ public class CommunityServerController {
 
     private final CommunityServerService communityServerService;
 
-    @PostMapping("/api/state/user/connection")
-    public Map<Long, String> updateSession(@RequestBody ConnectionStateRequest stateRequest) {
-        return communityServerService.getUsersConnectionState(stateRequest);
+    @PostMapping("/api/state/community/user/info")
+    public UserStateDto getUsersState(@RequestBody UserStateRequest stateRequest) {
+        return communityServerService.getUsersState(stateRequest);
     }
 }

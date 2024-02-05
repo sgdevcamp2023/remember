@@ -1,4 +1,4 @@
-package harmony.stateservice.dto;
+package harmony.stateservice.dto.request;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConnectionStateRequest {
+public class UserStateRequest {
 
+    private Long guildId;
     private List<Long> userIds;
 }
