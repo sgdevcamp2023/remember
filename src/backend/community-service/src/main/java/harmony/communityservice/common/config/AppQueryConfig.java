@@ -1,5 +1,6 @@
 package harmony.communityservice.common.config;
 
+import harmony.communityservice.common.feign.UserStatusClient;
 import harmony.communityservice.community.query.repository.BoardQueryRepository;
 import harmony.communityservice.community.query.repository.CategoryQueryRepository;
 import harmony.communityservice.community.query.repository.CategoryReadQueryRepository;
@@ -76,6 +77,7 @@ public class AppQueryConfig {
     private final JpaBoardQueryRepository jpaBoardQueryRepository;
     private final JpaCommentQueryRepository jpaCommentQueryRepository;
     private final JpaEmojiQueryRepository jpaEmojiQueryRepository;
+    private final UserStatusClient userStatusClient;
 
     @Bean
     public UserQueryRepository userQueryRepository() {
@@ -94,7 +96,7 @@ public class AppQueryConfig {
 
     @Bean
     public UserReadQueryService userReadQueryService() {
-        return new UserReadQueryServiceImpl(userReadQueryRepository());
+        return new UserReadQueryServiceImpl(userStatusClient, userReadQueryRepository());
     }
 
     @Bean

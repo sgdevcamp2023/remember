@@ -11,4 +11,6 @@ public interface JpaUserReadQueryRepository extends JpaRepository<UserRead, Long
     Optional<UserRead> findByUserIdAndGuildId(Long userId, Long guildId);
 
     List<UserRead> findUserReadByUserId(Long userId);
+
+    List<UserRead> findUserReadsByGuildId(Long guildId);
 }
