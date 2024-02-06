@@ -31,7 +31,7 @@ public class MessageConsumerService {
     private final String emojiGroup = "emojiGroup";
     private final String connectionEventGroup = "connectionEventGroup";
     private final String communityEventGroup = "communityEventGroup";
-    private final String channelEventGroup = "channelEventGroup";
+    private final String channelEventGroupChat = "channelEventGroupChat";
 
     private final ObjectMapper objectMapper;
 
@@ -100,7 +100,7 @@ public class MessageConsumerService {
         messagingTemplate.convertAndSend("/topic/guild/" + eventDto.getGuildId(), communityEvent);
     }
 
-    @KafkaListener(topics = channelEventTopic, groupId = channelEventGroup, containerFactory = "channelEventListener")
+    @KafkaListener(topics = channelEventTopic, groupId = channelEventGroupChat, containerFactory = "channelEventListener")
     public void consumeForChannelEvent(ChannelEventDto eventDto) {
         if (eventDto.getType().equals("JOIN") || eventDto.getType().equals("LEAVE")) {
             messagingTemplate.convertAndSend("/topic/guild/" + eventDto.getGuildId(), eventDto);
