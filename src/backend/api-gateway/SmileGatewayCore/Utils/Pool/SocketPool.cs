@@ -19,13 +19,11 @@ public class SocketPool
 
     public Socket RentSocket()
     {
-        System.Console.WriteLine("RentSocket");
         return _socketPool.Get();
     }
 
     public void ReturnSocket(Socket socket)
     {
-        System.Console.WriteLine("ReturnSocket");
         _socketPool.Return(socket);
     }
 }

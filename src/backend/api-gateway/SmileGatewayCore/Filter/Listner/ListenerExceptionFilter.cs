@@ -1,4 +1,5 @@
 using SmileGatewayCore.Config;
+using SmileGatewayCore.Exception;
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance;
 using SmileGatewayCore.Instance.DownStream;
@@ -14,10 +15,18 @@ public class ListenerExceptionFilter : IListenerFilterBase
         {
             await next(adapter, context);
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             System.Console.WriteLine("ListenerExceptionFilter: " + e.Message);
-            ErrorResponse.MakeErrorResponse(context.Response, 3000);
+
+            if (e is DefaultException exception)
+            {
+                ErrorResponse.MakeErrorResponse(context.Response, exception.ErrorCode);
+            }
+            else
+            {
+                ErrorResponse.MakeErrorResponse(context.Response, 3000);
+            }
 
             FileLogger.GetInstance().LogError(
                 traceId: context.Request.TraceId,

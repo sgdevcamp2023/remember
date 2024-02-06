@@ -39,7 +39,7 @@ public class EndPoint : NetworkInstance
 
         // 초기화
         // Connection Pool 처리를 어떻게 해야될 까?
-        Socket socket = await _connectionPool.RentSocket();
+        Socket socket = _connectionPool.RentSocket();
 
         // 임시
         _context.Value = context;
@@ -47,8 +47,9 @@ public class EndPoint : NetworkInstance
         // 실행
         // 만약 소켓이 종료되어 있을 경우 종료됨.
         // 연결이 끊겨있는 경우라면?
+
         await Send(socket, context.Request.GetStringToBytes());
-        
+
         _connectionPool.ReturnSocket(socket);
 
         DecreaseUsingCount();

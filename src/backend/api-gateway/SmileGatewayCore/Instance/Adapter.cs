@@ -11,10 +11,10 @@ public class Adapter
     internal AddressConfig Address { get; set; } = null!;
     internal Cluster Cluster { get; set; } = null!;
     internal string UserIP { get; set; } = null!;
+    
     internal Adapter(ListenerConfig config, Cluster cluster, string userIP)
     {
         Authorization = config.Authorization;
-        DisallowHeaders = config.DisallowHeaders;
         Address = config.Address;
         Cluster = cluster;
         UserIP = userIP;

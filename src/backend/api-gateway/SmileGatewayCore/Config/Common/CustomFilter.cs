@@ -1,5 +1,5 @@
 namespace SmileGatewayCore.Config;
-public class CustomFilter
+public class CustomFilterConfig
 {
     public string Name { get; set; } = null!;
     public string Path { get; set; } = null!;

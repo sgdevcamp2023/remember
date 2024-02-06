@@ -2,12 +2,11 @@ using SmileGatewayCore.Config;
 
 namespace SmileGatewayCore.Exception;
 
-public class AuthException : System.Exception
+public class AuthException : DefaultException
 {
-    public int ErrorCode { get; set; }
-    public AuthException(int errorCode) : base("Auth Failed")
+    public AuthException(int errorCode) : base(errorCode, "Auth Failed")
     {
-        ErrorCode = errorCode;
+        
     }
 
     public override string ToString()

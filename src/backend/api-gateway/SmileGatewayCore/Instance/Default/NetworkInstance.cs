@@ -8,7 +8,8 @@ public abstract class NetworkInstance : INetworkInstance
 {
     protected MemoryPool _memory = new MemoryPool(8192);
     protected SocketPool _socketPool = new SocketPool();
-
+    private TimeSpan _timeout = TimeSpan.FromSeconds(1);
+    
     #region Abstract
     public abstract void Init();
     protected abstract Task OnReceive(Socket socket, ArraySegment<byte> buffer, int size);
@@ -45,7 +46,7 @@ public abstract class NetworkInstance : INetworkInstance
 
         try
         {
-            var delayTask = Task.Delay(TimeSpan.FromSeconds(1));
+            var delayTask = Task.Delay(_timeout);
             var recvTask = socket.ReceiveAsync(buffer, SocketFlags.None);
             var completedTask = await Task.WhenAny(delayTask, recvTask);
 
@@ -70,7 +71,7 @@ public abstract class NetworkInstance : INetworkInstance
     {
         try
         {
-            var delayTask = Task.Delay(TimeSpan.FromSeconds(1));
+            var delayTask = Task.Delay(_timeout);
             var sendTask = socket.SendAsync(data, SocketFlags.None);
             var completedTask = await Task.WhenAny(delayTask, sendTask);
 

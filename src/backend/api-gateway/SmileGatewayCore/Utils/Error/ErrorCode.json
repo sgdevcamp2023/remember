@@ -78,5 +78,15 @@
         "code": 3106,
         "message": "NOT_FOUND_SERVICE",
         "description": "리스너에 해당하지 않는 서비스 요청입니다."
+    },
+    {
+        "code": 3107,
+        "message": "INVALID_CONFIG_SERVICE_PATH",
+        "description": "서비스 경로 설정이 올바르지 않습니다."
+    },
+    {
+        "code": 3108,
+        "message": "DISALLOW_REQUEST_HEADER",
+        "description": "허용되지 않은 요청 헤더입니다."
     }
 ]

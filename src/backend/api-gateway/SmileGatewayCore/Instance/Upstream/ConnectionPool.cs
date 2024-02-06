@@ -7,27 +7,32 @@ namespace SmileGatewayCore.Instance.Upstream;
 // 연결 관리는 어떻게?
 public class ConnectionPool
 {
+    // 서버가 죽어있을 때는 어떻게 체크할 것인가?
     private ConcurrentQueue<Socket> _connections = new ConcurrentQueue<Socket>();
     private int _capacity;
     private IPEndPoint _endPoint;
-    
+
     public ConnectionPool(int capacity, IPEndPoint endPoint)
     {
         // _capacity = capacity;
-        _capacity = 1;
+        _capacity = capacity;
         _endPoint = endPoint;
 
-        Init();
+        InitAsync().Wait();
     }
 
-    private void Init()
+    private async Task InitAsync()
     {
         for (int i = 0; i < _capacity; i++)
         {
             // 설정 통해서 커넥션 유지
             try
             {
-                _connections.Enqueue(CreateSocket());
+                Socket socket = CreateSocket();
+
+                await ConnectSocket(socket);
+
+                _connections.Enqueue(socket);
             }
             catch (SocketException e)
             {
@@ -35,29 +40,19 @@ public class ConnectionPool
             }
         }
     }
-    public async Task<Socket> RentSocket()
+    public Socket RentSocket()
     {
-        // CancellationTokenSource cts = new CancellationTokenSource();
-        // cts.CancelAfter(TimeSpan.FromSeconds(1));
-
         // 타임 제한을 건다?
-        int retryCount = 0;
         while (true)
         {
             try
             {
                 if (_connections.TryDequeue(out Socket? socket))
                 {
-                    if (++retryCount > 5)
-                        throw new TimeoutException();
-
-                    if (!socket.Connected)
-                        await ConnectSocket(socket);
-                    
                     return socket;
                 }
             }
-            catch(TimeoutException)
+            catch (TimeoutException)
             {
                 _connections.Enqueue(CreateSocket());
 
@@ -69,12 +64,6 @@ public class ConnectionPool
 
                 continue;
             }
-
-            // Task.Delay(1000, cts.Token).Wait();
-            // catch (AggregateException ae) when (ae.InnerExceptions.All(e => e is TaskCanceledException))
-            // {
-            //     return null;
-            // }
         }
     }
 
@@ -103,19 +92,48 @@ public class ConnectionPool
 
         // 딜레이 제거
         socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+
         return socket;
     }
 
     private async Task ConnectSocket(Socket socket)
     {
         // 부하가 심할 것인데?
-        var delayTask = Task.Delay(TimeSpan.FromMilliseconds(1));
-        var connectTask = socket.ConnectAsync(_endPoint);
-        var completedTask = await Task.WhenAny(delayTask, connectTask);
+        try
+        {
+            var delayTask = Task.Delay(TimeSpan.FromSeconds(1));
+            var connectTask = socket.ConnectAsync(_endPoint);
+            var completedTask = await Task.WhenAny(delayTask, connectTask);
 
-        if (completedTask == delayTask)
-            throw new TimeoutException();
+            if (completedTask == delayTask)
+            {
+                System.Console.WriteLine(_endPoint.Address.ToString());
+                throw new TimeoutException();
+            }
 
-        await connectTask;
+            await connectTask;
+        }
+        catch(System.Exception)
+        {
+            
+        }
+    }
+
+    public async Task CheckSocketConnect()
+    {
+        byte[] buffer = new byte[1024];
+        foreach (Socket socket in _connections)
+        {
+            var delayTask = Task.Delay(TimeSpan.FromMilliseconds(10));
+            var recvTask = socket.ReceiveAsync(buffer, SocketFlags.Peek);
+            var completedTask = await Task.WhenAny(delayTask, recvTask);
+
+            if (completedTask == delayTask)
+                throw new TimeoutException();
+
+            int recvLen = await recvTask;
+            if (recvLen <= 0)
+                throw new SocketException((int)SocketError.ConnectionReset);
+        }
     }
 }

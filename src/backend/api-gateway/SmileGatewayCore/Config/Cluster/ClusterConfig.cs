@@ -6,7 +6,7 @@ public class ClusterConfig
     // 스케일 아웃 생각
     public List<AddressConfig> Address { get; set; } = null!;
     public string Prefix { get; set; } = null!;
-    public List<CustomFilter>? CustomFilters { get; set; }
+    public List<CustomFilterConfig>? CustomFilters { get; set; }
     public string ConnectTimeout { get; set; } = null!;
     public bool Authorization { get; set; }
 }

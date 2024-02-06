@@ -21,6 +21,21 @@ internal class ListenerManager
 
     public void Run()
     {
-        
+        foreach (var listener in Listeners)
+        {
+            listener.Run();
+        }
+    }
+
+    public void Changed(List<ListenerConfig> configs)
+    {
+        // foreach(ListenerConfig config in configs)
+        // {
+        //     var listener = Listeners.Find(x => x.c.Name == config.Name);
+        //     if (listener != null)
+        //     {
+        //         listener.Changed(config);
+        //     }
+        // }
     }
 }

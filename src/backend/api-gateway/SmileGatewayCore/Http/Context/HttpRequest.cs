@@ -11,7 +11,7 @@ public class HttpRequest
         _requestFeature = new RequestFeature();
     }
 
-    public bool Parse(string requestString)
+    public bool Parse(string requestString, string hostIp, int hostPort)
     {
         _requestFeature = new RequestFeature();
         string[] requestLines = requestString.Split("\r\n");
@@ -39,7 +39,8 @@ public class HttpRequest
             }
             if(header[0] == "Host")
             {
-                Header["Host"] = "127.0.0.1:5000";
+                Header["Host"] = $"{hostIp}:{hostPort}";
+                Header["Origin"] = $"http://{hostIp}:3000";
                 continue;
             }
 
@@ -148,8 +149,5 @@ public class HttpRequest
     private void MakeDeafultHeader()
     {
         Header["Connection"] = "keep-alive";
-        
-        // 어떻게 자동으로 할지 생각해봐야될듯
-        Header["Origin"] = "http://localhost:3000";
     }
 }

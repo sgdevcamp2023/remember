@@ -5,6 +5,7 @@ using SmileGatewayCore.Config;
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance.Upstream;
 using SmileGatewayCore.Manager;
+using SmileGatewayCore.Utils.Logger;
 
 namespace SmileGatewayCore.Instance.DownStream;
 
@@ -39,7 +40,7 @@ internal class Listener : NetworkInstance
 
         if (Config.CustomFilters != null)
         {
-            foreach (CustomFilter? filter in Config.CustomFilters)
+            foreach (CustomFilterConfig? filter in Config.CustomFilters)
             {
                 _filterChains.UseFilter(filter.Name);
             }
@@ -48,6 +49,7 @@ internal class Listener : NetworkInstance
 
         // 소켓 설정
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Config.Address.Address), Config.Address.Port);
 
         _listenerSocket.Bind(endPoint);
@@ -59,6 +61,15 @@ internal class Listener : NetworkInstance
         for (int i = 0; i < Config.ThreadCount; i++)
         {
             RegisterAccept();
+        }
+    }
+
+    public void Changed(ListenerConfig config)
+    {
+        // 1. 새로운 클러스터 추가 및 삭제
+        foreach (string cluster in Config.RouteConfig.Clusters)
+        {
+
         }
     }
 
@@ -76,7 +87,21 @@ internal class Listener : NetworkInstance
 
     private async void Start(Socket socket)
     {
-        await Receive(socket);
+        try
+        {
+            await Receive(socket);
+        }
+        catch (System.Exception e)
+        {
+            // Listener에서 Exception 발생시
+            FileLogger.GetInstance().LogError(
+                traceId: "-1",
+                method: "Listener.Start",
+                userId: "-1",
+                message: e.Message,
+                apiAddr: "127.0.0.1"
+            );
+        }
     }
 
     protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
@@ -84,7 +109,8 @@ internal class Listener : NetworkInstance
         if (recvLen == 0)
         {
             Disconnect(socket);
-            return;
+
+            throw new System.Exception();
         }
 
         IPEndPoint? point = socket.RemoteEndPoint as IPEndPoint;
@@ -93,13 +119,15 @@ internal class Listener : NetworkInstance
             ErrorResponse.MakeErrorResponse(new HttpResponse(), 3106);
             await Send(socket, new HttpResponse().GetStringToBytes());
 
-            return;
+            throw new System.Exception();
         }
+
+        System.Console.WriteLine($"Listener Receive {recvLen} bytes");
 
         // Context 생성
         HttpContext context = new HttpContext();
         string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, recvLen);
-        context.Request.Parse(requestString);
+        context.Request.Parse(requestString, Config.Address.Address, Config.Address.Port);
 
         var endPoint = socket.RemoteEndPoint as IPEndPoint;
 
@@ -111,8 +139,7 @@ internal class Listener : NetworkInstance
             ErrorResponse.MakeErrorResponse(context.Response, 3106);
             await Send(socket, context.Response.GetStringToBytes());
             // Error 저장 해야됨.
-
-            return;
+            throw new System.Exception();
         }
 
         await _filterChains.FilterStartAsync(adapter, context);
@@ -122,7 +149,7 @@ internal class Listener : NetworkInstance
 
     protected override Task OnSend(Socket socket, int size)
     {
-        System.Console.WriteLine($"Send {size} bytes");
+        System.Console.WriteLine($"Listener Send {size} bytes");
         _socketPool.ReturnSocket(socket);
         return Task.CompletedTask;
     }

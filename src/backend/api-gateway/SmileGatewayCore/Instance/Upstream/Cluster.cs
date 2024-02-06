@@ -27,13 +27,19 @@ internal class Cluster
 
         if (Config.CustomFilters != null)
         {
-            foreach (CustomFilter filter in Config.CustomFilters)
+            foreach (CustomFilterConfig filter in Config.CustomFilters)
             {
                 _filterChains.UseFilter(filter.Name);
             }
         }
 
         _filterChains.Init();
+    }
+
+    public void ChangedCluster(ClusterConfig config)
+    {
+        // 클러스터 동기화
+        
     }
     public async Task Run(HttpContext context)
     {

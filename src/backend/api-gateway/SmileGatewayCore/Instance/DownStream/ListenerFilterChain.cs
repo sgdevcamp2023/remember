@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using SmileGatewayCore.Filter.Listner;
 using SmileGatewayCore.Http.Context;
 
@@ -14,13 +15,8 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
         // 인증 필터
         UseFilter<TraceFilter>();
         UseFilter<ListenerExceptionFilter>();
-        UseFilter<AuthorizationFilter>();
+        // UseFilter<AuthorizationFilter>();
         UseFilter<LogFilter>();
-    }
-
-    public void SetLastFilter()
-    {
-
     }
 
     public void UseFilter(string filterName)
@@ -67,8 +63,6 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
     {
         if (_start == null)
         {
-            SetLastFilter();
-
             ListenerDelegate last = async (adapter, context) =>
             {
                 RouteFilter filter = new RouteFilter();

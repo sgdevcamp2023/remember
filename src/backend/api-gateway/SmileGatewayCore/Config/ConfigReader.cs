@@ -12,12 +12,10 @@ internal class ConfigReader
     private readonly ISerializer serializer = new SerializerBuilder()
                                                 .WithNamingConvention(HyphenatedNamingConvention.Instance)
                                                 .Build();
-
-    private string directoryPath = "C:\\github\\remember\\src\\backend\\api-gateway\\SmileGateway\\";
     public ConfigReader(string path)
     {
         // _path = ".\\SmileGateway\\" + path;
-        _path = directoryPath + path;
+        _path = path;
     }
 
     public T Load<T>()
