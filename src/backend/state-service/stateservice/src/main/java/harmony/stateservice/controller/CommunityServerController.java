@@ -16,6 +16,6 @@ public class CommunityServerController {
 
     @PostMapping("/api/state/community/user/info")
     public UserStateDto getCommunityUsersState(@RequestBody CommunityUserStateRequest stateRequest) {
-        return communityServerService.getUsersState(stateRequest);
+        return communityServerService.getCommunityUsersState(stateRequest);
     }
 }

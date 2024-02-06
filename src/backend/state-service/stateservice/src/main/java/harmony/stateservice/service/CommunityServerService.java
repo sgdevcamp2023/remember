@@ -21,7 +21,7 @@ public class CommunityServerService {
     private final String GUILD = "GUILD";
     private final String SEP = ":";
 
-    public UserStateDto getUsersState(CommunityUserStateRequest stateRequest) {
+    public UserStateDto getCommunityUsersState(CommunityUserStateRequest stateRequest) {
         Map<Long, String> connectionStates = getConnectionState(stateRequest.getUserIds());
         Map<String, Set<String>> channelStates = getChannelState(stateRequest.getGuildId());
         return new UserStateDto(connectionStates, channelStates);
