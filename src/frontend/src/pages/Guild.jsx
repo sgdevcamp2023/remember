@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default function Guild({guild}) {
 
-  const apiAddr = "http://localhost:8000";
+  const apiAddr = "http://10.99.29.133:4000";
   const reactAddr = "http://localhost:3000";
   const userId = 1;
   const bearerToken = "Bearer " + localStorage.getItem("access_token");

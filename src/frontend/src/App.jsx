@@ -18,22 +18,24 @@ const AppElement = styled.div`
 `;
 
 function App() {
+  const isLogin = localStorage.getItem("access_token") !== null;
+
   return (
     <AppElement>
+      {isLogin ? <Guilds /> : <></>}
+      <Guilds/>
       <Routes>
-        <Route path={`/`} element={<LogIn />}>
-          <Route path={'register'} element={<Register />} />
-          <Route path={'forget-password'} element={<ForgetPassword />} />
-        </Route>
-
-        <Route path={`/main`} element={<Main />}>
+        <Route path={`/`} element={<LogIn />} />
+        <Route path={'register'} element={<Register />} />
+        <Route path={'forget-password'} element={<ForgetPassword />} />
+        {/* <Route path={`/main`} element={<Main />}>
           <Route path={`room/:roomid`} element={<DM />} />
         </Route>
-        <Route path={`/guild/:guildId/`} element={<Channels />}>
+        <Route path={`guild/:guildId/`} element={<Channels />}>
           <Route path={`channel/forum/:channelId`} element={<Forum />} />
           <Route path={`channel/text/:channelId`} element={<Text />} />
           <Route path={`channel/voice/:channelId`} element={<Voice />} />
-        </Route>
+        </Route> */}
       </Routes>
     </AppElement>
   );

@@ -4,7 +4,7 @@ import "../css/auth.css";
 import backImg from "../img/backImg.webp";
 import { registerRequest } from "../server/server";
 import { checksumRequest } from "../server/server";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
     display: flex;
@@ -25,16 +25,16 @@ const FormContainer = styled.div`
 `;
 
 const Content = styled.form`
-    height: 80%;
-    margin-top: 50px;
-    margin-right: 50px;
-    margin-left: 50px;
+    height: 90%;
+    margin-top: 30px;
+    margin-right: 30px;
+    margin-left: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 `;
 
-export default function Register () {
+export default function Register() {
 
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
@@ -64,7 +64,7 @@ export default function Register () {
         registerRequest(email, password, userName, checksum)
             .then((status) => {
                 if (status === 200)
-                    navigate("/login");
+                    navigate("/");
             })
 
     };
@@ -72,7 +72,7 @@ export default function Register () {
     const handleChecksum = (e) => {
         e.preventDefault();
 
-        if(email === ""){
+        if (email === "") {
             alert("이메일을 입력해주세요.");
             return;
         }
@@ -85,7 +85,7 @@ export default function Register () {
             <FormContainer>
                 <Content onSubmit={handleRegister}>
                     <label name="email">
-                        이메일 또는 전화번호
+                        이메일
                         <input
                             type="email"
                             value={email}
@@ -131,7 +131,8 @@ export default function Register () {
                     <button id="submit" type="submit">
                         회원가입
                     </button>
-
+                    <br />
+                    <Link to="/" style={{ color: "white" }}>뒤로</Link>
                 </Content>
             </FormContainer>
         </Wrapper>

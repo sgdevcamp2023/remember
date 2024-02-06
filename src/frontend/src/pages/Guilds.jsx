@@ -11,7 +11,7 @@ import DmRoomsStore from "../store/DmRoomsStore";
 
 export default function Guilds() {
 
-  const apiAddr = "http://localhost:8000";
+  const apiAddr = "http://10.99.29.133:4000";
   const commonImageUrl = "https://storage.googleapis.com/remember-harmony/d68c3d6c-4683-4ddf-892b-8a73e3678145";
   // const userId = localStorage.getItem("user_id");
   const {channels, registerChannels, removeChannels} = ChannelsStore();

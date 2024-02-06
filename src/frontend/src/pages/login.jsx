@@ -82,7 +82,7 @@ export default function LogIn () {
                     </label>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Link to="/register" style={{ color: "white" }}>회원가입이 필요하신가요?</Link>
+                        <Link to="register" style={{ color: "white" }}>회원가입이 필요하신가요?</Link>
                         <Link to="/forget-Password" style={{ color: "white" }}>비밀번호를 잊으셨나요?</Link>
                     </div>
 

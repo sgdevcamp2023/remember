@@ -10,6 +10,7 @@ import ChannelsStore from "../store/ChannelsStore";
 import CategoriesStore from "../store/CategoriesStore";
 
 export default function Channels() {
+  const apiAddr = "http://10.99.29.133:4000"
 
 
   const userId = 1;
@@ -20,7 +21,6 @@ export default function Channels() {
   const {channels, registerChannels, removeChannels} = ChannelsStore();
   const {categories, registerCategories, removeCategories} = CategoriesStore();
   const [collapsedCategories, setCollapsedCategories] = useState([]);
-  const apiAddr = "http://localhost:8000"
   const bearerToken = "Bearer " + localStorage.getItem("access_token");
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import "../css/auth.css";
 import backImg from "../img/backImg.webp";
 import { forgetPasswordRequest } from "../server/server";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
     display: flex;
@@ -24,8 +24,10 @@ const FormContainer = styled.div`
 `;
 
 const Content = styled.form`
-    height: 45%;
+    height: 55%;
     margin-top: 60px;
+    margin-right: 30px;
+    margin-left: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -69,6 +71,8 @@ export default function ForgetPassword() {
                     <button id="submit" type="submit">
                         비밀번호 찾기
                     </button>
+                    <br />
+                    <Link to="/" style={{ color: "white" }}>뒤로</Link>
                 </Content>
             </FormContainer>
         </Wrapper>
