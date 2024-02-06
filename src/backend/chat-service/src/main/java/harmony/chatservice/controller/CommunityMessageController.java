@@ -53,19 +53,19 @@ public class CommunityMessageController {
         messageProducerService.sendMessageForCommunity(messageDto);
     }
 
-    @GetMapping("/api/community/messages/channel/{channelId}")
+    @GetMapping("/api/chat-service/community/messages/channel/{channelId}")
     public Page<CommunityMessageDto> getMessages(@PathVariable("channelId") Long channelId) {
 
         return messageService.getMessages(channelId);
     }
 
-    @GetMapping("/api/community/comments/{parentId}")
+    @GetMapping("/api/chat-service/community/comments/{parentId}")
     public Page<CommunityMessageDto> getComments(@PathVariable("parentId") Long parentId) {
 
         return messageService.getComments(parentId);
     }
 
-    @PostMapping("/api/community/message/file")
+    @PostMapping("/api/chat-service/community/message/file")
     public void uploadFile(@RequestPart CommunityMessageRequest communityMessageRequest,
                            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
 

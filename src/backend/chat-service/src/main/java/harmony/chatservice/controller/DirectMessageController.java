@@ -57,19 +57,19 @@ public class DirectMessageController {
         messageProducerService.sendMessageForDirect(messageDto);
     }
 
-    @GetMapping("/api/direct/messages/room/{roomId}")
+    @GetMapping("/api/chat-service/direct/messages/room/{roomId}")
     public Page<DirectMessageDto> getMessages(@PathVariable("roomId") Long roomId) {
 
         return messageService.getDirectMessages(roomId);
     }
 
-    @GetMapping("/api/direct/comments/{parentId}")
+    @GetMapping("/api/chat-service/direct/comments/{parentId}")
     public Page<DirectMessageDto> getComments(@PathVariable("parentId") Long parentId) {
 
         return messageService.getComments(parentId);
     }
 
-    @PostMapping("/api/direct/message/file")
+    @PostMapping("/api/chat-service/direct/message/file")
     public void uploadFile(@RequestPart DirectMessageRequest directMessageRequest,
                            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
 
