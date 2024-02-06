@@ -4,7 +4,9 @@ using SmileGatewayCore.Instance.DownStream;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-internal abstract class ListenerFilter : IListenerFilterBase
+
+// 기본 필터(상속용)
+public abstract class ListenerFilter : IListenerFilterBase
 {
     protected abstract void Working(Adapter adapter, HttpContext context);
     protected abstract void Worked(Adapter adapter, HttpContext context);

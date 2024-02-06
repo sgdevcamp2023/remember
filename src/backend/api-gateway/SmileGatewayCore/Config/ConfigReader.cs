@@ -15,7 +15,7 @@ internal class ConfigReader
     public ConfigReader(string path)
     {
         // _path = ".\\SmileGateway\\" + path;
-        _path = path;
+        _path = "C:\\github\\remember\\src\\backend\\api-gateway\\" + path;
     }
 
     public T Load<T>()

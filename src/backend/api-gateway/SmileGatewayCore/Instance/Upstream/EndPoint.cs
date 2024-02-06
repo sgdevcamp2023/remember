@@ -11,12 +11,14 @@ public class EndPoint : NetworkInstance
 {
     private ConnectionPool _connectionPool;
     private AsyncLocal<HttpContext> _context = new AsyncLocal<HttpContext>();
-    private IPEndPoint _ipEndpoint = null!;
     private long _usingCount = 0;
+    public IPEndPoint IpEndPoint { get; private set; } = null!;
+    public bool IsAlive { get; private set; } = true;
+
     public EndPoint(AddressConfig config)
     {
-        _ipEndpoint = new IPEndPoint(IPAddress.Parse(config.Address), config.Port);
-        _connectionPool = new ConnectionPool(10, _ipEndpoint);
+        IpEndPoint = new IPEndPoint(IPAddress.Parse(config.Address), config.Port);
+        _connectionPool = new ConnectionPool(10, IpEndPoint);
     }
     private void IncreaseUsingCount()
     {
@@ -36,18 +38,15 @@ public class EndPoint : NetworkInstance
     public async Task StartAsync(HttpContext context)
     {
         IncreaseUsingCount();
+        _context.Value = context;
+
 
         // 초기화
-        // Connection Pool 처리를 어떻게 해야될 까?
         Socket socket = _connectionPool.RentSocket();
-
-        // 임시
-        _context.Value = context;
 
         // 실행
         // 만약 소켓이 종료되어 있을 경우 종료됨.
         // 연결이 끊겨있는 경우라면?
-
         await Send(socket, context.Request.GetStringToBytes());
 
         _connectionPool.ReturnSocket(socket);
@@ -71,6 +70,7 @@ public class EndPoint : NetworkInstance
     {
         // 에러 처리 할 것
         System.Console.WriteLine($"Cluster Receive {recvLen} bytes");
+
         if (_context.Value == null)
             throw new System.Exception();
 
@@ -91,5 +91,10 @@ public class EndPoint : NetworkInstance
                 }
             }
         }
+    }
+
+    public void HealthCheck()
+    {
+
     }
 }

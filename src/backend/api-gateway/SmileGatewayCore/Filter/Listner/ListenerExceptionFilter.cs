@@ -21,14 +21,17 @@ public class ListenerExceptionFilter : IListenerFilterBase
 
             if (e is DefaultException exception)
             {
-                ErrorResponse.MakeErrorResponse(context.Response, exception.ErrorCode);
+                if(exception.ErrorCode == 3109)
+                    ErrorResponse.MakeInternalServerError(context.Response, exception.ErrorCode);
+                else
+                    ErrorResponse.MakeBadRequest(context.Response, exception.ErrorCode);
             }
             else
             {
-                ErrorResponse.MakeErrorResponse(context.Response, 3000);
+                ErrorResponse.MakeBadRequest(context.Response, 3000);
             }
 
-            FileLogger.GetInstance().LogError(
+            FileLogger.Instance.LogError(
                 traceId: context.Request.TraceId,
                 method: context.Request.Method,
                 userId: context.Request.UserId,

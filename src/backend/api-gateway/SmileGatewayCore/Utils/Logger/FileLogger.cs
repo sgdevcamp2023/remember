@@ -6,15 +6,7 @@ namespace SmileGatewayCore.Utils.Logger;
 
 public class FileLogger
 {
-    private static FileLogger Instance { get; set; } = null!;
-
-    public static FileLogger GetInstance()
-    {
-        if(Instance == null)
-            Instance = new FileLogger();
-        
-        return Instance;
-    }
+    public static FileLogger Instance { get; set; } = new FileLogger();
 
     private string _serviceName = "gateway-service";
     public ConcurrentQueue<LogModel> _queue = new ConcurrentQueue<LogModel>();

@@ -4,13 +4,14 @@ listeners:
 - name: listener1
   protocol: 
   address:
-    address: 10.99.29.133
+    address: 127.0.0.1
     port: 4000
   route-config:
     clusters:
     - user-service
     - auth-service
     # - community-service
+    - chat-service
   custom-filters:
     - name: ListenerTestFilter
       path: /ApiGateway/CustomFilter.cs
@@ -32,7 +33,7 @@ clusters:
   - name: auth-service
     protocol: http
     address:
-      - address: 10.99.29.133
+      - address: 127.0.0.1
         port: 5000
     prefix: /api/auth
     custom-filters:
@@ -44,7 +45,7 @@ clusters:
   - name: user-service
     protocol: http
     address:
-      - address: 10.99.29.133
+      - address: 127.0.0.1
         port: 5000
     prefix: /api/user
     connect-timeout: 5s
@@ -65,9 +66,9 @@ clusters:
   # - name: chat-service
   #   protocol: http
   #   address:
-  #     - address: 127.0.0.1
+  #     - address: 10.99.14.176
   #       port: 7000
-  #   prefix: /service2
+  #   prefix: /api/chat-service
   #   custom-filters: 
   #   connect-timeout: 5s
-  #   authorization: true
+  #   authorization: false

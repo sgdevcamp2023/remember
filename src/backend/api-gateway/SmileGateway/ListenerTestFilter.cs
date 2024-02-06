@@ -1,15 +1,16 @@
 using SmileGatewayCore.Filter.Listner;
 using SmileGatewayCore.Http.Context;
+using SmileGatewayCore.Instance;
 
-public class ListenerTestFilter : CustomFilter
+public class ListenerTestFilter : ListenerFilter
 {
-    public override void Worked(HttpContext context)
+    protected override void Working(Adapter adapter, HttpContext context)
     {
-        // Console.WriteLine("ListenerTestFilter Worked");
+        // throw new NotImplementedException();
+    }
+    protected override void Worked(Adapter adapter, HttpContext context)
+    {
+        // throw new NotImplementedException();
     }
 
-    public override void Working(HttpContext context)
-    {
-        // Console.WriteLine("ListenerTestFilter Working");
-    }
 }

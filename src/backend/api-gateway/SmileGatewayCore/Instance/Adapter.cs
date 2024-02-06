@@ -11,11 +11,11 @@ public class Adapter
     internal AddressConfig Address { get; set; } = null!;
     internal Cluster Cluster { get; set; } = null!;
     internal string UserIP { get; set; } = null!;
-    
-    internal Adapter(ListenerConfig config, Cluster cluster, string userIP)
+
+    internal Adapter(Authorization? auth, AddressConfig address, Cluster cluster, string userIP)
     {
-        Authorization = config.Authorization;
-        Address = config.Address;
+        Authorization = auth;
+        Address = address;
         Cluster = cluster;
         UserIP = userIP;
     }

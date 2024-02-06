@@ -5,7 +5,7 @@ using System.Net.Sockets;
 namespace SmileGatewayCore.Instance.Upstream;
 
 // 연결 관리는 어떻게?
-public class ConnectionPool
+internal class ConnectionPool
 {
     // 서버가 죽어있을 때는 어떻게 체크할 것인가?
     private ConcurrentQueue<Socket> _connections = new ConcurrentQueue<Socket>();
@@ -18,10 +18,10 @@ public class ConnectionPool
         _capacity = capacity;
         _endPoint = endPoint;
 
-        InitAsync().Wait();
+        Init();
     }
 
-    private async Task InitAsync()
+    private void Init()
     {
         for (int i = 0; i < _capacity; i++)
         {
@@ -29,9 +29,7 @@ public class ConnectionPool
             try
             {
                 Socket socket = CreateSocket();
-
-                await ConnectSocket(socket);
-
+                socket.Connect(_endPoint);
                 _connections.Enqueue(socket);
             }
             catch (SocketException e)
@@ -42,28 +40,15 @@ public class ConnectionPool
     }
     public Socket RentSocket()
     {
-        // 타임 제한을 건다?
+        CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(1)); // 타임 제한
+        // 타임 제한
         while (true)
         {
-            try
+            if (_connections.TryDequeue(out Socket? socket))
             {
-                if (_connections.TryDequeue(out Socket? socket))
-                {
-                    return socket;
-                }
+                return socket;
             }
-            catch (TimeoutException)
-            {
-                _connections.Enqueue(CreateSocket());
 
-                throw;
-            }
-            catch (System.Exception)
-            {
-                _connections.Enqueue(CreateSocket());
-
-                continue;
-            }
         }
     }
 
@@ -94,46 +79,5 @@ public class ConnectionPool
         socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
 
         return socket;
-    }
-
-    private async Task ConnectSocket(Socket socket)
-    {
-        // 부하가 심할 것인데?
-        try
-        {
-            var delayTask = Task.Delay(TimeSpan.FromSeconds(1));
-            var connectTask = socket.ConnectAsync(_endPoint);
-            var completedTask = await Task.WhenAny(delayTask, connectTask);
-
-            if (completedTask == delayTask)
-            {
-                System.Console.WriteLine(_endPoint.Address.ToString());
-                throw new TimeoutException();
-            }
-
-            await connectTask;
-        }
-        catch(System.Exception)
-        {
-            
-        }
-    }
-
-    public async Task CheckSocketConnect()
-    {
-        byte[] buffer = new byte[1024];
-        foreach (Socket socket in _connections)
-        {
-            var delayTask = Task.Delay(TimeSpan.FromMilliseconds(10));
-            var recvTask = socket.ReceiveAsync(buffer, SocketFlags.Peek);
-            var completedTask = await Task.WhenAny(delayTask, recvTask);
-
-            if (completedTask == delayTask)
-                throw new TimeoutException();
-
-            int recvLen = await recvTask;
-            if (recvLen <= 0)
-                throw new SocketException((int)SocketError.ConnectionReset);
-        }
     }
 }

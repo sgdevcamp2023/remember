@@ -88,5 +88,10 @@
         "code": 3108,
         "message": "DISALLOW_REQUEST_HEADER",
         "description": "허용되지 않은 요청 헤더입니다."
+    },
+    {
+        "code": 3109,
+        "message": "SERVICE_DOWN",
+        "description": "서버 에러입니다."
     }
 ]

@@ -16,6 +16,7 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
         UseFilter<TraceFilter>();
         UseFilter<ListenerExceptionFilter>();
         // UseFilter<AuthorizationFilter>();
+        UseFilter<OriginalFilter>();
         UseFilter<LogFilter>();
     }
 
@@ -78,4 +79,6 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
 
         await _start(adapter, context);
     }
+    // 처리해야될게, HttpContext를 Filter로 만들어서 넘길 것인가?
+    // 아니면 Listener에서 처리해서 넘길 것인가?
 }

@@ -43,11 +43,6 @@ public class HttpResponse
                 Varys.Add(responseLines[i]);
                 continue;
             }
-            if (header[0] == "Access-Control-Allow-Origin")
-            {
-                Header.Add("Access-Control-Allow-Origin", "http://localhost:3000");
-                continue;
-            }
 
             if (header[0] == "Set-Cookie")
             {
@@ -163,7 +158,7 @@ public class HttpResponse
         {
             if (bodys[i] == "")
                 break;
-
+            
             int length = Convert.ToInt32(bodys[i], 16);
             ContentLength += length;
 
@@ -173,7 +168,7 @@ public class HttpResponse
                 break;
             }
             else
-                Body += bodys[i + 1] + "\r\n";
+                Body += bodys[i + 1];
         }
 
         return isEnd;

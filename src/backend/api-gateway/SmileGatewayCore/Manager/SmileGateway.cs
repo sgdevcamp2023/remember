@@ -32,7 +32,7 @@ public class SmileGateway
         ListenerManager.Init(config.Listeners);
         ClusterManager.ListenerManager = ListenerManager;
 
-        FileLogger.GetInstance().Init(config.LogPath);
+        FileLogger.Instance.Init(config.LogPath);
 
     }
 

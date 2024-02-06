@@ -1,7 +1,7 @@
 using System.Net.Sockets;
 using Microsoft.Extensions.ObjectPool;
 
-namespace SmileGatewayCore.Utils;
+namespace SmileGatewayCore.Instance.DownStream;
 
 public class SocketPool
 {

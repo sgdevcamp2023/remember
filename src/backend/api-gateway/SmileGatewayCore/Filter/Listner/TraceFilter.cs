@@ -3,6 +3,7 @@ using SmileGatewayCore.Instance;
 
 namespace SmileGatewayCore.Filter.Listner;
 
+// Request 요청에 TraceID를 부여하는 필터
 internal class TraceFilter : ListenerFilter
 {
     static long TraceId = 1;

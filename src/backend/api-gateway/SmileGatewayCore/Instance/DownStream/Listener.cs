@@ -14,9 +14,11 @@ namespace SmileGatewayCore.Instance.DownStream;
 internal class Listener : NetworkInstance
 {
     private Socket _listenerSocket = null!;
+    private SocketPool _socketPool = new SocketPool();
     private ListenerFilterChains _filterChains = new ListenerFilterChains();
-    public ClusterManager _clusterManager;
     private Dictionary<string, Cluster> _clusters = new Dictionary<string, Cluster>();
+    public ClusterManager _clusterManager;
+    public AsyncLocal<HttpContext?> _context = new AsyncLocal<HttpContext?>() { Value = null };
     public readonly ListenerConfig Config;
 
     public Listener(ClusterManager clusterManager, ListenerConfig config)
@@ -87,21 +89,9 @@ internal class Listener : NetworkInstance
 
     private async void Start(Socket socket)
     {
-        try
-        {
-            await Receive(socket);
-        }
-        catch (System.Exception e)
-        {
-            // Listener에서 Exception 발생시
-            FileLogger.GetInstance().LogError(
-                traceId: "-1",
-                method: "Listener.Start",
-                userId: "-1",
-                message: e.Message,
-                apiAddr: "127.0.0.1"
-            );
-        }
+        await Receive(socket);
+
+        _socketPool.ReturnSocket(socket);
     }
 
     protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
@@ -112,39 +102,29 @@ internal class Listener : NetworkInstance
 
             throw new System.Exception();
         }
-
-        IPEndPoint? point = socket.RemoteEndPoint as IPEndPoint;
-        if (point == null)
-        {
-            ErrorResponse.MakeErrorResponse(new HttpResponse(), 3106);
-            await Send(socket, new HttpResponse().GetStringToBytes());
-
-            throw new System.Exception();
-        }
-
         System.Console.WriteLine($"Listener Receive {recvLen} bytes");
 
         // Context 생성
-        HttpContext context = new HttpContext();
-        string requestString = Encoding.UTF8.GetString(buffer.Array!, 0, recvLen);
-        context.Request.Parse(requestString, Config.Address.Address, Config.Address.Port);
-
-        var endPoint = socket.RemoteEndPoint as IPEndPoint;
-
-        // Adapter 생성
-        Adapter? adapter = MakeAdapter(context.Request.Path, endPoint!.Address.ToString());
-
-        if (adapter == null)
+        if (_context.Value == null)
         {
-            ErrorResponse.MakeErrorResponse(context.Response, 3106);
-            await Send(socket, context.Response.GetStringToBytes());
-            // Error 저장 해야됨.
-            throw new System.Exception();
+            _context.Value = new HttpContext();
+
+            if (!_context.Value.Request.ByteParse(new ArraySegment<byte>(buffer.Array!, buffer.Offset, recvLen)))
+                await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
+
+            // var endPoint = socket.RemoteEndPoint as IPEndPoint;
+            // if (endPoint == null)
+            //     throw new System.Exception();
+
+            await RequestStart();
+
+            await Send(socket, _context.Value.Response.GetStringToBytes());
         }
-
-        await _filterChains.FilterStartAsync(adapter, context);
-
-        await Send(socket, context.Response.GetStringToBytes());
+        else
+        {
+            if (!_context.Value.Request.AppendMultipartBody(new ArraySegment<byte>(buffer.Array!, buffer.Offset, recvLen)))
+                await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
+        }
     }
 
     protected override Task OnSend(Socket socket, int size)
@@ -161,10 +141,28 @@ internal class Listener : NetworkInstance
         {
             if (clusterPath.StartsWith(cluster.Config.Prefix))
             {
-                return new Adapter(Config, cluster, ip);
+                return new Adapter(Config.Authorization, Config.Address, cluster, ip);
             }
         }
 
         return null;
+    }
+
+    private async Task RequestStart()
+    {
+        Adapter? adapter = MakeAdapter(_context.Value!.Request.Path, "127.0.0.1:3000");
+
+        if (adapter == null)
+        {
+            return;
+        }
+        // {
+        //     ErrorResponse.MakeBadRequest(_context.Value!.Response, 3106);
+        //     await Send(socket, _context.Value!.Response.GetStringToBytes());
+        //     // Error 저장 해야됨.
+        //     throw new System.Exception();
+        // }
+
+        await _filterChains.FilterStartAsync(adapter, _context.Value!);
     }
 }

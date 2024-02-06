@@ -6,10 +6,9 @@ namespace SmileGatewayCore.Instance;
 
 public abstract class NetworkInstance : INetworkInstance
 {
-    protected MemoryPool _memory = new MemoryPool(8192);
-    protected SocketPool _socketPool = new SocketPool();
+    protected MemoryPool _memory = new MemoryPool(1000 * 1000 * 10);
     private TimeSpan _timeout = TimeSpan.FromSeconds(1);
-    
+
     #region Abstract
     public abstract void Init();
     protected abstract Task OnReceive(Socket socket, ArraySegment<byte> buffer, int size);
@@ -95,6 +94,7 @@ public abstract class NetworkInstance : INetworkInstance
     {
         try
         {
+            System.Console.WriteLine("Disconnect");
             socket.Disconnect(reuseSocket: true);
         }
         catch (System.Exception e)

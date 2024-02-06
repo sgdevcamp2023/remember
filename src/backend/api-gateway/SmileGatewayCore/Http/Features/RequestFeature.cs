@@ -16,6 +16,7 @@ public sealed class RequestFeature : IRequestFeature
         Header = new HeaderDictionary();
         ContentLength = 0;
         Body = string.Empty;
+        MultipartBody = new List<byte>();
     }
 
     public string Method { get; set; } = null!;
@@ -28,4 +29,5 @@ public sealed class RequestFeature : IRequestFeature
     public HeaderDictionary Header { get; set; } = null!;
     public int ContentLength { get; set; }
     public string? Body { get; set; } = null!;
+    public List<Byte> MultipartBody { get; set; } = null!;
 }
