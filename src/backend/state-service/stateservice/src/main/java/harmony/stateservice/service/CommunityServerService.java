@@ -1,7 +1,7 @@
 package harmony.stateservice.service;
 
 import harmony.stateservice.dto.UserStateDto;
-import harmony.stateservice.dto.request.UserStateRequest;
+import harmony.stateservice.dto.request.CommunityUserStateRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class CommunityServerService {
     private final String GUILD = "GUILD";
     private final String SEP = ":";
 
-    public UserStateDto getUsersState(UserStateRequest stateRequest) {
+    public UserStateDto getUsersState(CommunityUserStateRequest stateRequest) {
         Map<Long, String> connectionStates = getConnectionState(stateRequest.getUserIds());
         Map<String, Set<String>> channelStates = getChannelState(stateRequest.getGuildId());
         return new UserStateDto(connectionStates, channelStates);

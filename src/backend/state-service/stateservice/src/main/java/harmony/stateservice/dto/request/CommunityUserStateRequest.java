@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserStateRequest {
+public class CommunityUserStateRequest {
 
     private Long guildId;
     private List<Long> userIds;
