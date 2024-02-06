@@ -165,6 +165,7 @@ export class MediasoupService implements OnModuleInit {
       }
       this.videoProducers.get(roomId).push(producer);
     }
+    console.log('>>> ', this.audioProducers, this.videoProducers);
   }
 
   getProducers(kind: string, roomId: string) {

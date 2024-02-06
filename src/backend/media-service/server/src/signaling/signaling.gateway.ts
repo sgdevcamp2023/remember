@@ -1,4 +1,3 @@
-import { GuildService } from './../guild/guild.service';
 import {
   ConnectedSocket,
   MessageBody,
@@ -154,6 +153,8 @@ export class SignalingGateway
     const response = await this.httpService
       .post('http://localhost:6001/guild/update', data)
       .toPromise();
+
+    console.log(this.voiceChannelStatusMap);
   }
 
   @SubscribeMessage('leave-channel')
