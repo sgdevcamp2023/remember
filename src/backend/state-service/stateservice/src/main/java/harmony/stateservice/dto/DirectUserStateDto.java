@@ -1,4 +1,4 @@
-package harmony.stateservice.dto.request;
+package harmony.stateservice.dto;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;

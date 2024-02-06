@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserStateDto {
+public class CommunityUserStateDto {
 
     Map<Long, String> connectionStates;
     Map<String, Set<String>> channelStates;
