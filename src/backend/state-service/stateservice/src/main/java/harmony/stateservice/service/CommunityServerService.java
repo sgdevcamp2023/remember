@@ -2,6 +2,8 @@ package harmony.stateservice.service;
 
 import harmony.stateservice.dto.UserStateDto;
 import harmony.stateservice.dto.request.CommunityUserStateRequest;
+import harmony.stateservice.dto.request.DirectUserStateDto;
+import harmony.stateservice.dto.request.DirectUserStateRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ public class CommunityServerService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final String GUILD = "GUILD";
     private final String SEP = ":";
+    private final String stateKey = "USER:STATE";
 
     public UserStateDto getCommunityUsersState(CommunityUserStateRequest stateRequest) {
         Map<Long, String> connectionStates = getConnectionState(stateRequest.getUserIds());
@@ -27,8 +30,12 @@ public class CommunityServerService {
         return new UserStateDto(connectionStates, channelStates);
     }
 
+    public DirectUserStateDto getDirectUsersState(DirectUserStateRequest stateRequest) {
+        Map<Long, String> connectionStates = getConnectionState(stateRequest.getUserIds());
+        return new DirectUserStateDto(connectionStates);
+    }
+
     public Map<Long, String> getConnectionState(List<Long> userIds) {
-        String stateKey = "USER:STATE";
         Map<Long, String> connectionStates = new HashMap<>();
         Map<Object, Object> stateInfos = redisTemplate.opsForHash().entries(stateKey);
         for (Long id : userIds) {
