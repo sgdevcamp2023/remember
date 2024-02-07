@@ -1,28 +1,28 @@
 import axios from "axios";
 
-const UserAuthServerAddr = "http://localhost:4000/api/user/auth/";
-const UserServerAddr = "http://localhost:4000/api/user/user";
+const UserAuthServerAddr = "http://127.0.0.1:4000/api/auth/";
+const UserServerAddr = "http://127.0.0.1:4000/api/user";
 
 export const logInRequest = async (email, password) => {
-    let data = {
+
+    axios.post(UserAuthServerAddr + "login", {
         email: email,
         password: password,
-    }
-
-    axios.post(UserAuthServerAddr + "login", data)
+    })
         .then(response => {
-            // Body에 accessToken, refreshToken이 담김
-            const data = response.body.json();
+            // Body에 accessToken, refreshToken이 담김  
             if (response.status !== 200) {
                 alert(data.description);
             }
             else {
-                localStorage.setItem("accessToken", data.accessToken);
-                document.cookie = `refreshToken=${data.refreshToken}`;
-                alert("로그인이 완료되었습니다");
+                // TODO
+                const { AccessToken, RefreshToken } = response.data;
+                console.log("로그인이 완료되었습니다");
+
+                localStorage.setItem("access-token", AccessToken);
+                localStorage.setItem("refresh-token", RefreshToken);
             }
-            console.log(response);
-        return response.status;
+            return response.status;
         })
         .catch(error => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
@@ -30,13 +30,12 @@ export const logInRequest = async (email, password) => {
 };
 
 export const registerRequest = async (email, password, userName, checksum) => {
-    axios.post(UserAuthServerAddr + "register")
-        .body({
-            email: email,
-            password: password,
-            userName: userName,
-            checksum: checksum
-        })
+    axios.post(UserAuthServerAddr + "register", {
+        email: email,
+        userName: userName,
+        password: password,
+        emailChecksum: checksum
+    })
         .then(response => {
             console.log(response);
 
@@ -46,7 +45,6 @@ export const registerRequest = async (email, password, userName, checksum) => {
             }
             else
                 alert("회원가입이 완료되었습니다");
-
             return response.status;
         })
         .catch(error => {
@@ -55,10 +53,9 @@ export const registerRequest = async (email, password, userName, checksum) => {
 }
 
 export const checksumRequest = async (email) => {
-    axios.post(UserAuthServerAddr + "send-email",
-        new URLSearchParams({
-            email: email
-        }))
+    axios.post(UserAuthServerAddr + "send-email", {
+        email: email
+    })
         .then(response => {
             if (response.status !== 200) {
                 const data = response.json();
@@ -73,8 +70,7 @@ export const checksumRequest = async (email) => {
 }
 
 export const forgetPasswordRequest = async (email) => {
-    axios.post(UserAuthServerAddr + "reset-password")
-        .body({
+    axios.post(UserAuthServerAddr + "reset-password", {
             email: email
         })
         .then(response => {

@@ -15,6 +15,8 @@ const AppElement = styled.div`
 `;
 
 function App() {
+  const isLogin = localStorage.getItem("access_token") !== null;
+
   return (
     // <AppElement>
     <Routes>
