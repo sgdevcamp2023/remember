@@ -5,6 +5,7 @@ using SmileGatewayCore.Exception;
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance.Upstream;
 using SmileGatewayCore.Manager;
+using SmileGatewayCore.Utils;
 
 namespace SmileGatewayCore.Instance.DownStream;
 
@@ -51,6 +52,7 @@ internal class Listener : NetworkInstance
 
         // 소켓 설정
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveBuffer, Buffers.bufferSize);
 
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Config.Address.Address), Config.Address.Port);
 
@@ -111,7 +113,17 @@ internal class Listener : NetworkInstance
             _context.Value = new HttpContext();
 
             if (!_context.Value.Request.ByteParse(new ArraySegment<byte>(buffer.Array!, buffer.Offset, recvLen)))
+            {
+                // Multipart의 경우 용량이 커지는 경우가 있기에 Buffer의 크기를 추가 할당
+                if (_context.Value.Request.IsMultipart)
+                {
+                    var multipartBytes = _memory.RentMultipartBytes();
+                    buffer = new ArraySegment<byte>(buffer.Array!.Concat(multipartBytes).ToArray());
+                    socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveBuffer, Buffers.multipartSize);
+                }
+
                 await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
+            }
 
             try
             {
@@ -138,6 +150,7 @@ internal class Listener : NetworkInstance
     protected override Task OnSend(Socket socket, int size)
     {
         System.Console.WriteLine($"Listener Send {size} bytes");
+        
         _socketPool.ReturnSocket(socket);
         return Task.CompletedTask;
     }

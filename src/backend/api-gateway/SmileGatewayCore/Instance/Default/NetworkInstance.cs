@@ -1,12 +1,11 @@
 using System.Net.Sockets;
-using SmileGatewayCore.Exception;
 using SmileGatewayCore.Utils;
 
 namespace SmileGatewayCore.Instance;
 
 public abstract class NetworkInstance : INetworkInstance
 {
-    protected MemoryPool _memory = new MemoryPool(1000 * 1000 * 10);
+    protected MemoryPool _memory = new MemoryPool();
     private TimeSpan _timeout = TimeSpan.FromSeconds(5);
 
     #region Abstract
