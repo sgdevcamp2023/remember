@@ -31,7 +31,7 @@ public abstract class NetworkInstance : INetworkInstance
 
     private async Task ProcessReceiveAsync(Socket socket)
     {
-        ArraySegment<byte> buffer = _memory.RentBytes();
+        ArraySegment<byte> buffer = _memory.RentDefaultBytes();
 
         await ProcessReceiveAsync(socket, buffer);
 

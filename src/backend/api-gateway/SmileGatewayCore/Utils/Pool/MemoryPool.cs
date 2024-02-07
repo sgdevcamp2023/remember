@@ -7,7 +7,7 @@ public class MemoryPool
     // Thread Safe Pool
     private ArrayPool<byte> _arrayPool = ArrayPool<byte>.Shared;
 
-    public ArraySegment<byte> RentBytes()
+    public ArraySegment<byte> RentDefaultBytes()
     {
         return _arrayPool.Rent(Buffers.bufferSize);
     }

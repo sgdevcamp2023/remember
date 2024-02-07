@@ -68,14 +68,7 @@ internal class Listener : NetworkInstance
         }
     }
 
-    public void Changed(ListenerConfig config)
-    {
-        // 1. 새로운 클러스터 추가 및 삭제
-        foreach (string cluster in Config.RouteConfig.Clusters)
-        {
-
-        }
-    }
+    public void Changed(ListenerConfig config) { }
 
     public async void RegisterAccept()
     {
@@ -125,10 +118,11 @@ internal class Listener : NetworkInstance
                 await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
             }
 
+            // DownStream 시작
             try
             {
                 var endPoint = socket.RemoteEndPoint as IPEndPoint;
-                await RequestStart(endPoint);
+                await DownstreamStart(endPoint);
             }
             catch(System.Exception e)
             {
@@ -150,7 +144,7 @@ internal class Listener : NetworkInstance
     protected override Task OnSend(Socket socket, int size)
     {
         System.Console.WriteLine($"Listener Send {size} bytes");
-        
+
         _socketPool.ReturnSocket(socket);
         return Task.CompletedTask;
     }
@@ -169,7 +163,7 @@ internal class Listener : NetworkInstance
         return null;
     }
 
-    private async Task RequestStart(IPEndPoint? endPoint)
+    private async Task DownstreamStart(IPEndPoint? endPoint)
     {
         Adapter? adapter = MakeAdapter(_context.Value!.Request.Path, $"{endPoint?.Address}:{endPoint?.Port}");
 
