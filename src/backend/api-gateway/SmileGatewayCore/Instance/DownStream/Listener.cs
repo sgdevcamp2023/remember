@@ -1,16 +1,16 @@
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using SmileGatewayCore.Config;
+using SmileGatewayCore.Exception;
 using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance.Upstream;
 using SmileGatewayCore.Manager;
-using SmileGatewayCore.Utils.Logger;
 
 namespace SmileGatewayCore.Instance.DownStream;
 
-// 1`. Accept
-// 2. 필터
+/// <summary>
+/// Down Stream으로부터 온 연결을 응답하는 클래스입니다.
+/// </summary>
 internal class Listener : NetworkInstance
 {
     private Socket _listenerSocket = null!;
@@ -78,7 +78,8 @@ internal class Listener : NetworkInstance
     public async void RegisterAccept()
     {
         // 시작
-        Socket socket = _socketPool.RentSocket();
+        // Socket socket = _socketPool.RentSocket();
+        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         await _listenerSocket.AcceptAsync(socket);
 
         Start(socket);
@@ -91,7 +92,7 @@ internal class Listener : NetworkInstance
     {
         await Receive(socket);
 
-        _socketPool.ReturnSocket(socket);
+        // _socketPool.ReturnSocket(socket);
     }
 
     protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
@@ -99,9 +100,9 @@ internal class Listener : NetworkInstance
         if (recvLen == 0)
         {
             Disconnect(socket);
-
-            throw new System.Exception();
+            return;
         }
+
         System.Console.WriteLine($"Listener Receive {recvLen} bytes");
 
         // Context 생성
@@ -112,13 +113,20 @@ internal class Listener : NetworkInstance
             if (!_context.Value.Request.ByteParse(new ArraySegment<byte>(buffer.Array!, buffer.Offset, recvLen)))
                 await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
 
-            // var endPoint = socket.RemoteEndPoint as IPEndPoint;
-            // if (endPoint == null)
-            //     throw new System.Exception();
+            try
+            {
+                var endPoint = socket.RemoteEndPoint as IPEndPoint;
+                await RequestStart(endPoint);
+            }
+            catch(System.Exception e)
+            {
+                if(e is ListenerException listenerException)
+                    ErrorResponse.MakeBadRequest(_context.Value.Response, listenerException.ErrorCode);
+            }
 
-            await RequestStart();
-
-            await Send(socket, _context.Value.Response.GetStringToBytes());
+            // 연결이 끊겨있는지 여부 확인
+            if(socket.Connected)
+                await Send(socket, _context.Value.Response.GetStringToBytes());
         }
         else
         {
@@ -148,20 +156,12 @@ internal class Listener : NetworkInstance
         return null;
     }
 
-    private async Task RequestStart()
+    private async Task RequestStart(IPEndPoint? endPoint)
     {
-        Adapter? adapter = MakeAdapter(_context.Value!.Request.Path, "127.0.0.1:3000");
+        Adapter? adapter = MakeAdapter(_context.Value!.Request.Path, $"{endPoint?.Address}:{endPoint?.Port}");
 
         if (adapter == null)
-        {
-            return;
-        }
-        // {
-        //     ErrorResponse.MakeBadRequest(_context.Value!.Response, 3106);
-        //     await Send(socket, _context.Value!.Response.GetStringToBytes());
-        //     // Error 저장 해야됨.
-        //     throw new System.Exception();
-        // }
+            throw new ListenerException(3107);
 
         await _filterChains.FilterStartAsync(adapter, _context.Value!);
     }

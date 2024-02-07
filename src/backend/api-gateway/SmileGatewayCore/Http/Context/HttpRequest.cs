@@ -39,7 +39,6 @@ public class HttpRequest
         else
         {
             Body = Encoding.UTF8.GetString(bytes.Array!, bytes.Offset + i, bytes.Count - i) + "\r\n";
-            System.Console.WriteLine(Body);
         }
 
         return true;
@@ -89,6 +88,7 @@ public class HttpRequest
         bool contains = false;
         for (int i = 0; i <= bodys.Count - _endBoundary.Length; i++)
         {
+
             if (bodys.Array!.Skip(bodys.Offset + i).Take(_endBoundary.Length).SequenceEqual(_endBoundary))
             {
                 contains = true;
@@ -135,11 +135,9 @@ public class HttpRequest
             buffer = buffer.Concat(MultipartBody.ToArray()).ToArray();
         else
             buffer = buffer.Concat(Encoding.UTF8.GetBytes(Body!)).ToArray();
-        System.Console.WriteLine(requestString + Body);
+
         return buffer;
     }
-
-    
 
     private void MakeDeafultHeader()
     {

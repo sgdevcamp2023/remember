@@ -7,7 +7,7 @@ namespace SmileGatewayCore.Instance;
 public abstract class NetworkInstance : INetworkInstance
 {
     protected MemoryPool _memory = new MemoryPool(1000 * 1000 * 10);
-    private TimeSpan _timeout = TimeSpan.FromSeconds(1);
+    private TimeSpan _timeout = TimeSpan.FromSeconds(5);
 
     #region Abstract
     public abstract void Init();
@@ -42,7 +42,9 @@ public abstract class NetworkInstance : INetworkInstance
 
     private async Task ProcessReceiveAsync(Socket socket, ArraySegment<byte> buffer)
     {
-
+        if(!socket.Connected)
+            return;
+            
         try
         {
             var delayTask = Task.Delay(_timeout);
@@ -54,6 +56,7 @@ public abstract class NetworkInstance : INetworkInstance
                 int recvLen = await recvTask;
                 if (recvLen <= 0)
                     throw new SocketException((int)SocketError.ConnectionReset);
+
                 await OnReceive(socket, buffer, recvLen);
             }
             else
@@ -68,6 +71,9 @@ public abstract class NetworkInstance : INetworkInstance
 
     private async Task ProcessSendAsync(Socket socket, ArraySegment<byte> data)
     {
+        if(!socket.Connected)
+            return;
+
         try
         {
             var delayTask = Task.Delay(_timeout);

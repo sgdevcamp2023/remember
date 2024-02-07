@@ -78,7 +78,7 @@ public class EndPoint : NetworkInstance
         {
             if (!_context.Value.Response.Parse(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
             {
-                await Receive(socket, new ArraySegment<byte>(buffer.Array!, recvLen, buffer.Count - recvLen));
+                await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
             }
         }
         else
@@ -87,7 +87,7 @@ public class EndPoint : NetworkInstance
             {
                 if (!_context.Value.Response.AppendChuckedBody(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
                 {
-                    await Receive(socket, new ArraySegment<byte>(buffer.Array!, recvLen, buffer.Count - recvLen));
+                    await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
                 }
             }
         }
@@ -95,6 +95,6 @@ public class EndPoint : NetworkInstance
 
     public void HealthCheck()
     {
-
+        
     }
 }
