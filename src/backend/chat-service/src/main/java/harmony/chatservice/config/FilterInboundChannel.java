@@ -82,17 +82,21 @@ public class FilterInboundChannel implements ChannelInterceptor {
                     .type("DISCONNECT")
                     .state("offline")
                     .build();
-            Long userId = Long.parseLong(stateClient.updateSession(sessionDto));
 
-            CommunityFeignResponse ids = communityClient.getGuildAndRoomIds(userId);
-            ConnectionEventDto connectionEventDto = ConnectionEventDto.builder()
-                    .userId(userId)
-                    .type("DISCONNECT")
-                    .state("offline")
-                    .guildIds(ids.getResultData().getGuildIds())
-                    .roomIds(ids.getResultData().getRoomIds())
-                    .build();
-            messageService.sendMessageForConnectionEvent(connectionEventDto);
+            String checkUserId = stateClient.updateSession(sessionDto).getResult();
+            if (checkUserId != null) {
+                Long userId = Long.parseLong(checkUserId);
+
+                CommunityFeignResponse ids = communityClient.getGuildAndRoomIds(userId);
+                ConnectionEventDto connectionEventDto = ConnectionEventDto.builder()
+                        .userId(userId)
+                        .type("DISCONNECT")
+                        .state("offline")
+                        .guildIds(ids.getResultData().getGuildIds())
+                        .roomIds(ids.getResultData().getRoomIds())
+                        .build();
+                messageService.sendMessageForConnectionEvent(connectionEventDto);
+            }
         }
     }
 }
