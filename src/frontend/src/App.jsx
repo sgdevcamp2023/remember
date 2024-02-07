@@ -1,41 +1,39 @@
 import { Route, Routes } from "react-router-dom";
-import Guilds from "./pages/Guilds";
-import Channels from "./pages/Channels";
-import Forum from "./pages/type/Forum";
-import Text from "./pages/type/Text";
-import Voice from "./pages/type/Voice";
-import Main from "./pages/Main";
-import DM from "./pages/dm/DM";
 import LogIn from "./pages/login";
 import Register from "./pages/register";
+import MainPage from "./pages/MainPage";
+import Layout from "./pages/Layout";
 import ForgetPassword from "./pages/forgetPassword";
 import styled from "styled-components";
 import backImg from "./img/backImg.webp";
+import RedirectPage from "./pages/RedirectPage";
+import FriendPage from "./pages/dm/FriendPage";
 
 const AppElement = styled.div`
-    background-image: url(${backImg});
-    background-size: cover; 
+  background-image: url(${backImg});
+  background-size: cover;
 `;
 
 function App() {
   return (
-    <AppElement>
-      <Routes>
-        <Route path={`/`} element={<LogIn />}>
-          <Route path={'register'} element={<Register />} />
-          <Route path={'forget-password'} element={<ForgetPassword />} />
-        </Route>
+    // <AppElement>
+    <Routes>
+      <Route path={`/`}>
+        <Route index element={<RedirectPage />} />
+        <Route path={"login"} element={<LogIn />} />
+        <Route path={"register"} element={<Register />} />
+        <Route path={"forget-password"} element={<ForgetPassword />} />
 
-        <Route path={`/main`} element={<Main />}>
-          <Route path={`room/:roomid`} element={<DM />} />
+        {/* Guild and Channel */}
+        <Route path="/channels" element={<Layout />}>
+          <Route path={`:guildId/:channelId`} element={<MainPage />} />
+          <Route path={`@me`} element={<FriendPage />} />
         </Route>
-        <Route path={`/guild/:guildId/`} element={<Channels />}>
-          <Route path={`channel/forum/:channelId`} element={<Forum />} />
-          <Route path={`channel/text/:channelId`} element={<Text />} />
-          <Route path={`channel/voice/:channelId`} element={<Voice />} />
-        </Route>
-      </Routes>
-    </AppElement>
+        {/* Catch all - replace with 404 component if you want */}
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+      </Route>
+    </Routes>
+    // </AppElement>
   );
 }
 
