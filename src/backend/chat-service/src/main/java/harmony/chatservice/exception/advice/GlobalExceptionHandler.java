@@ -1,7 +1,7 @@
 package harmony.chatservice.exception.advice;
 
 import harmony.chatservice.exception.DataNotFoundException;
-import harmony.chatservice.exception.ExceptionResponse;
+import harmony.chatservice.dto.response.ExceptionResponse;
 import harmony.chatservice.exception.ExceptionStatus;
 import harmony.chatservice.exception.FileException;
 import lombok.RequiredArgsConstructor;
