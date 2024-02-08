@@ -7,16 +7,15 @@ import {
 import CurrentStore from "../store/CurrentStore";
 import CommunityStore from "../store/CommunityStore";
 import { useNavigate } from "react-router-dom";
-import VoiceChatUser from "./VoiceChatUser";
+import ChannelButton from "./ChannelButton";
+import VoiceChannelButton from "./VoiceChannelButton";
 
 const Channel = () => {
   const navigate = useNavigate();
   const {
     CURRENT_VIEW_GUILD,
-    CURRENT_VIEW_CHANNEL,
+
     CURRENT_VIEW_GUILD_NAME,
-    setCurrentViewChannel,
-    setCurrentViewChannelType,
   } = CurrentStore();
   const { CHANNEL_LIST, setChannelList } = CommunityStore();
   const [members, setMembers] = useState([]);
@@ -28,15 +27,15 @@ const Channel = () => {
       const channelResponse = mock_channel_list.resultData.filter((element) => {
         return element.guildId === CURRENT_VIEW_GUILD;
       });
-      const memberResponse = mock_member_list.resultData;
+      const memberResponse = mock_member_list.resultData; //
 
       // response를 세팅
       setChannelList(channelResponse);
       setMembers(memberResponse);
 
-      // tpye이 voice가 아닌 첫번째 채널로 이동
+      // 첫 번째 채팅 채널로 이동
       const channel = channelResponse?.find(
-        (element) => element.type !== "VOICE"
+        (element) => element.type === "TEXT"
       );
       if (channel) {
         navigate(`/channels/${CURRENT_VIEW_GUILD}/${channel?.channelReadId}`);
@@ -45,48 +44,24 @@ const Channel = () => {
     return () => {};
   }, [CURRENT_VIEW_GUILD]);
 
-  const handleChangeChannel = (channelId, type) => {
-    setCurrentViewChannel(channelId);
-    setCurrentViewChannelType(type);
-    navigate(`/channels/${CURRENT_VIEW_GUILD}/${channelId}`);
-  };
-
-  const handleVoiceChannel = () => {
-    // 만약 voice 채널 조인중이라면 현재 View채널을 보이스 채널id로 바꾼다.
-    console.log("voice");
-  };
-
   return (
     <div className="channel-container">
-      <div className="channel-title-container channel">
+      <div className="channel-title-container">
         <p className="channel-title">{CURRENT_VIEW_GUILD_NAME}</p>
       </div>
 
       <div className="channel-list-container">
         {CHANNEL_LIST ? (
-          CHANNEL_LIST?.map((channel) => (
-            <div key={channel.channelReadId}>
-              <div
-                onClick={
-                  channel.type !== "VOICE"
-                    ? () =>
-                        handleChangeChannel(channel.channelReadId, channel.type)
-                    : handleVoiceChannel
-                }
-                className={`channel-btn channel ${
-                  CURRENT_VIEW_CHANNEL === channel.channelReadId
-                    ? "channel-selected"
-                    : ""
-                }`}
-              >
-                <p>{channel.name}</p>
-              </div>
-              {members?.[channel.channelReadId] &&
-                members[channel.channelReadId].map((member, index) => {
-                  <VoiceChatUser key={index} props={member} />;
-                })}
-            </div>
-          ))
+          CHANNEL_LIST?.map((channel) =>
+            channel.type !== "VOICE" ? (
+              <ChannelButton key={channel.channelReadId} channel={channel} />
+            ) : (
+              <VoiceChannelButton
+                key={channel.channelReadId}
+                channel={channel}
+              />
+            )
+          )
         ) : (
           <></>
         )}
