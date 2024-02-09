@@ -1,6 +1,6 @@
 namespace SmileGatewayCore.Exception;
 
-public class NetworkException : DefaultException
+public class NetworkException : InternalException
 {
     public NetworkException(int errorCode) : base(errorCode, "Network Error")
     {

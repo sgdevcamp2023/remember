@@ -7,7 +7,7 @@ using SmileGatewayCore.Utils.Logger;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-public class ListenerExceptionFilter : IListenerFilterBase
+public class ExceptionFilter : IListenerFilterBase
 {
     public async Task InvokeAsync(Adapter adapter, HttpContext context, ListenerDelegate next)
     {
@@ -17,14 +17,15 @@ public class ListenerExceptionFilter : IListenerFilterBase
         }
         catch (System.Exception e)
         {
-            System.Console.WriteLine("ListenerExceptionFilter: " + e.Message);
+            System.Console.WriteLine("ExceptionFilter: " + e.Message);
 
-            if (e is DefaultException exception)
+            if (e is DefaultException d)
             {
-                if(exception.ErrorCode == 3109)
-                    ErrorResponse.MakeInternalServerError(context.Response, exception.ErrorCode);
-                else
-                    ErrorResponse.MakeBadRequest(context.Response, exception.ErrorCode);
+                ErrorResponse.MakeBadRequest(context.Response, d.ErrorCode);
+            }
+            else if (e is InternalException i)
+            {
+                ErrorResponse.MakeInternalServerError(context.Response, i.ErrorCode);
             }
             else
             {
