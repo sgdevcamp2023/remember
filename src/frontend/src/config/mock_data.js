@@ -120,6 +120,13 @@ export const channelList = {
       name: "최성민의 토크쇼",
       type: "VOICE",
     },
+    {
+      channelReadId: 6,
+      categoryId: 0,
+      guildId: 1,
+      name: "최성민의 토크쇼2",
+      type: "VOICE",
+    },
   ],
 };
 

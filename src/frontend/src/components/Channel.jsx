@@ -9,15 +9,20 @@ import CommunityStore from "../store/CommunityStore";
 import { useNavigate } from "react-router-dom";
 import ChannelButton from "./ChannelButton";
 import VoiceChannelButton from "./VoiceChannelButton";
+import useVoiceSocket from "../hooks/useVoiceSocket";
 
 const Channel = () => {
   const navigate = useNavigate();
-  const {
-    CURRENT_VIEW_GUILD,
 
-    CURRENT_VIEW_GUILD_NAME,
-  } = CurrentStore();
+  const {
+    connectSocket,
+    addEventListeners,
+    validateUserInChannel,
+    voice_socket,
+  } = useVoiceSocket(process.env.REACT_APP_MEDIA_URL);
+  const { CURRENT_VIEW_GUILD, CURRENT_VIEW_GUILD_NAME } = CurrentStore();
   const { CHANNEL_LIST, setChannelList } = CommunityStore();
+
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
@@ -27,7 +32,8 @@ const Channel = () => {
       const channelResponse = mock_channel_list.resultData.filter((element) => {
         return element.guildId === CURRENT_VIEW_GUILD;
       });
-      const memberResponse = mock_member_list.resultData; //
+      //memebers axios
+      const memberResponse = mock_member_list.resultData;
 
       // response를 세팅
       setChannelList(channelResponse);
@@ -44,6 +50,14 @@ const Channel = () => {
     return () => {};
   }, [CURRENT_VIEW_GUILD]);
 
+  const handleVoiceChannel = (guildId, channelId) => {
+    if (!voice_socket || !voice_socket.connected) {
+      connectSocket();
+      addEventListeners();
+    }
+    validateUserInChannel(guildId, channelId);
+  };
+
   return (
     <div className="channel-container">
       <div className="channel-title-container">
@@ -59,6 +73,8 @@ const Channel = () => {
               <VoiceChannelButton
                 key={channel.channelReadId}
                 channel={channel}
+                members={members}
+                onClick={handleVoiceChannel}
               />
             )
           )
