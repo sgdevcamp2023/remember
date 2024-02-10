@@ -20,28 +20,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MessageConsumerService {
 
-    private final String communityChatGroup = "communityChatGroup";
-    private final String directChatGroup = "directChatGroup";
-    private final String emojiGroup = "emojiGroup";
-    private final String connectionEventGroup = "connectionEventGroup";
-    private final String communityEventGroup = "communityEventGroup";
-    private final String channelEventGroupChat = "channelEventGroupChat";
-
     private final ObjectMapper objectMapper;
 
     private final SimpMessageSendingOperations messagingTemplate;
 
-    @KafkaListener(topics = "${spring.kafka.topic.community-chat}", groupId = communityChatGroup, containerFactory = "communityListener")
+    @KafkaListener(topics = "${spring.kafka.topic.community-chat}", groupId = "${spring.kafka.consumer.group-id.community}", containerFactory = "communityListener")
     public void consumeForCommunity(CommunityMessageDto messageDto){
         messagingTemplate.convertAndSend("/topic/guild/" + messageDto.getGuildId(), messageDto);
     }
 
-    @KafkaListener(topics = "${spring.kafka.topic.direct-chat}", groupId = directChatGroup, containerFactory = "directListener")
+    @KafkaListener(topics = "${spring.kafka.topic.direct-chat}", groupId = "${spring.kafka.consumer.group-id.direct}", containerFactory = "directListener")
     public void consumeForDirect(DirectMessageDto messageDto){
         messagingTemplate.convertAndSend("/topic/direct/" + messageDto.getRoomId(), messageDto);
     }
 
-    @KafkaListener(topics = "${spring.kafka.topic.emoji-chat}", groupId = emojiGroup, containerFactory = "emojiListener")
+    @KafkaListener(topics = "${spring.kafka.topic.emoji-chat}", groupId = "${spring.kafka.consumer.group-id.emoji}", containerFactory = "emojiListener")
     public void consumeForEmoji(EmojiDto emojiDto){
         if (emojiDto.getRoomId() > 0) {
             messagingTemplate.convertAndSend("/topic/direct/" + emojiDto.getRoomId(), emojiDto);
@@ -51,7 +44,7 @@ public class MessageConsumerService {
         }
     }
 
-    @KafkaListener(topics = "${spring.kafka.topic.connection-event}", groupId = connectionEventGroup, containerFactory = "connectionEventListener")
+    @KafkaListener(topics = "${spring.kafka.topic.connection-event}", groupId = "${spring.kafka.consumer.group-id.connection-event}", containerFactory = "connectionEventListener")
     public void consumeForConnectionEvent(ConnectionEventDto connectionEventDto) throws JsonProcessingException {
         if (connectionEventDto.getType().equals("CONNECT") || connectionEventDto.getType().equals("DISCONNECT")) {
             HashMap<String,String> stateInfo = new HashMap<>();
@@ -72,7 +65,7 @@ public class MessageConsumerService {
         }
     }
 
-    @KafkaListener(topics = "${spring.kafka.topic.community-event}", groupId = communityEventGroup, containerFactory = "communityEventListener")
+    @KafkaListener(topics = "${spring.kafka.topic.community-event}", groupId = "${spring.kafka.consumer.group-id.community-event}", containerFactory = "communityEventListener")
     public void consumeForCommunityEvent(CommunityEventDto eventDto) throws JsonProcessingException {
         HashMap<String,String> communityEventInfo = new HashMap<>();
         if (eventDto.getEventType().equals("DELETE-GUILD")) {
@@ -94,7 +87,7 @@ public class MessageConsumerService {
         messagingTemplate.convertAndSend("/topic/guild/" + eventDto.getGuildId(), communityEvent);
     }
 
-    @KafkaListener(topics = "${spring.kafka.topic.channel-event}", groupId = channelEventGroupChat, containerFactory = "channelEventListener")
+    @KafkaListener(topics = "${spring.kafka.topic.channel-event}", groupId = "${spring.kafka.consumer.group-id.channel-event}", containerFactory = "channelEventListener")
     public void consumeForChannelEvent(ChannelEventDto eventDto) {
         if (eventDto.getType().equals("JOIN") || eventDto.getType().equals("LEAVE")) {
             messagingTemplate.convertAndSend("/topic/guild/" + eventDto.getGuildId(), eventDto);
