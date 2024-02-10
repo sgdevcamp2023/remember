@@ -16,19 +16,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MessageProducerService {
 
-    @Value("${spring.kafka.producer.community-chat-topic}")
+    @Value("${spring.kafka.topic.community-chat}")
     private String communityChatTopic;
 
-    @Value("${spring.kafka.producer.direct-chat-topic}")
+    @Value("${spring.kafka.topic.direct-chat}")
     private String directChatTopic;
 
-    @Value("${spring.kafka.producer.emoji-chat-topic}")
+    @Value("${spring.kafka.topic.emoji-chat}")
     private String emojiChatTopic;
 
-    @Value("${spring.kafka.producer.connection-event-topic}")
+    @Value("${spring.kafka.topic.connection-event}")
     private String connectionEventTopic;
 
-    @Value("${spring.kafka.producer.session-event-topic}")
+    @Value("${spring.kafka.topic.session-event}")
     private String sessionEventTopic;
 
     private final KafkaTemplate<String, CommunityMessageDto> kafkaTemplateForCommunity;
