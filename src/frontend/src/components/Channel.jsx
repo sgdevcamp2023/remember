@@ -10,9 +10,12 @@ import { useNavigate } from "react-router-dom";
 import ChannelButton from "./ChannelButton";
 import VoiceChannelButton from "./VoiceChannelButton";
 import useVoiceSocket from "../hooks/useVoiceSocket";
+import AuthStore from "../store/AuthStore";
+import { useMediaStream } from "../contexts/MediaStreamContext";
 
 const Channel = () => {
   const navigate = useNavigate();
+  const { mediaStreams } = useMediaStream();
 
   const {
     connectSocket,
@@ -23,7 +26,10 @@ const Channel = () => {
   const { CURRENT_VIEW_GUILD, CURRENT_VIEW_GUILD_NAME } = CurrentStore();
   const { CHANNEL_LIST, setChannelList } = CommunityStore();
 
+  const { setUserId } = AuthStore();
+
   const [members, setMembers] = useState([]);
+  const [testId, setTestId] = useState("");
 
   useEffect(() => {
     // ****************** 길드 채널 최초 접속 시 ******************
@@ -50,6 +56,10 @@ const Channel = () => {
     return () => {};
   }, [CURRENT_VIEW_GUILD]);
 
+  useEffect(() => {
+    console.log(mediaStreams);
+  }, [mediaStreams]);
+
   const handleVoiceChannel = (guildId, channelId) => {
     if (!voice_socket || !voice_socket.connected) {
       connectSocket();
@@ -60,6 +70,40 @@ const Channel = () => {
 
   return (
     <div className="channel-container">
+      <div>
+        <input
+          type="text"
+          onChange={(e) => setTestId(e.target.value)}
+          value={testId}
+        />
+        <button
+          onClick={() => {
+            setUserId(testId);
+            console.log(AuthStore.getState().USER_ID);
+          }}
+        >
+          로긴
+        </button>
+      </div>
+      <div>
+        {Object.entries(mediaStreams).map(([id, { kind, stream }]) =>
+          kind === "video" ? (
+            <video
+              key={id}
+              ref={(ref) => ref && (ref.srcObject = stream)}
+              autoPlay
+              className="video"
+            />
+          ) : (
+            <audio
+              key={id}
+              ref={(ref) => ref && (ref.srcObject = stream)}
+              autoPlay
+            />
+          )
+        )}
+      </div>
+
       <div className="channel-title-container">
         <p className="channel-title">{CURRENT_VIEW_GUILD_NAME}</p>
       </div>

@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import CurrentStore from "../store/CurrentStore";
 import AuthStore from "../store/AuthStore";
 import SocketStore from "../store/SocketStore";
+import useMediasoup from "./useMediasoup";
 
 function useVoiceSocket(url) {
   const {
@@ -13,8 +14,11 @@ function useVoiceSocket(url) {
     removeCurrentJoinChannel,
     removeParsedRoomUrl,
   } = CurrentStore();
-  const { USER_ID } = AuthStore();
+  // const { USER_ID } = AuthStore();
   const { setVoiceSocket, removeVoiceSocket } = SocketStore();
+
+  const { getLocalAudioStream, signalNewConsumerTransport, closeAll } =
+    useMediasoup();
 
   let voice_socket = useRef();
   let join_guild = useRef();
@@ -37,13 +41,16 @@ function useVoiceSocket(url) {
 
   const addEventListeners = () => {
     if (voice_socket.current) {
-      voice_socket.current.on("new-producer-init", () => {});
+      voice_socket.current.on("new-producer-init", (producerId) => {
+        signalNewConsumerTransport(producerId);
+      });
       voice_socket.current.on("message", (msg) => {
         console.log(msg);
       });
 
       voice_socket.current.on("disconnect", () => {
         removeGlobalState();
+        closeAll();
         if (isUserInChannel) {
           if (!voice_socket.current || !voice_socket.current.connected) {
             connectSocket();
@@ -68,7 +75,6 @@ function useVoiceSocket(url) {
           try_channel.current = null;
           return;
         }
-
         isUserInChannel = true;
         leaveChannel();
       });
@@ -78,13 +84,8 @@ function useVoiceSocket(url) {
         console.log(
           `join in : ${join_guild.current}-${join_channel.current}\nsocket : ${voice_socket.current.id}`
         );
-        voice_socket.current.emit("start-voice-call", {
-          guildId: join_guild.current,
-          channelId: join_channel.current,
-          userId: USER_ID,
-        });
 
-        // getLocalAudioStream();
+        if (SocketStore.getState().VOICE_SOCKET) getLocalAudioStream();
       });
     }
   };
@@ -107,6 +108,7 @@ function useVoiceSocket(url) {
   };
 
   const validateUserInGuild = (guildId) => {
+    const { USER_ID } = AuthStore.getState();
     if (voice_socket.current) {
       voice_socket.current.emit("validate-user-in-guild", {
         guildId,
@@ -118,9 +120,9 @@ function useVoiceSocket(url) {
   const setJoinGuildAndChannel = (guildId, channelId) => {
     join_guild.current = guildId;
     join_channel.current = channelId;
-    setCurrentJoinGuild(join_guild);
-    setCurrentJoinChannel(join_channel);
-    setParsedRoomUrl(`${join_guild}-${join_channel}`);
+    setCurrentJoinGuild(join_guild.current);
+    setCurrentJoinChannel(join_channel.current);
+    setParsedRoomUrl(`${join_guild.current}-${join_channel.current}`);
   };
 
   const removeGlobalState = () => {

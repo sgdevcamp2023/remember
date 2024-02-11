@@ -5,8 +5,12 @@ const MediaStore = create((set) => ({
   RTP_CAPABILITIES: null,
   AUDIO_PRODUCER: null,
   VIDEO_PRODUCER: null,
+  RECV_AUDIO_CONSUMER: [],
+  RECV_VIDEO_CONSUMER: [],
   SEND_TRANSPORT: null,
   RECV_TRANSPORT: null,
+  AUDIO_PARAMS: null,
+  VIDEO_PARAMS: null,
   TRY_GUILD: null,
   TRY_CHANNEL: null,
 
@@ -27,7 +31,14 @@ const MediaStore = create((set) => ({
   removeTryGuild: () => set({ TRY_GUILD: null }),
   setTryChannel: (channel) => set({ TRY_CHANNEL: channel }),
   removeTryChannel: () => set({ TRY_CHANNEL: null }),
-  
+  setAudioParams: (params) => set({ AUDIO_PARAMS: params }),
+  removeAudioParams: () => set({ AUDIO_PARAMS: null }),
+  setVideoParams: (params) => set({ VIDEO_PARAMS: params }),
+  removeVideoParams: () => set({ VIDEO_PARAMS: null }),
+  setRecvAudioConsumer: (obj) =>
+    set((state) => ({
+      RECV_AUDIO_CONSUMER: [...state.RECV_AUDIO_CONSUMER, obj],
+    })),
 }));
 
 export default MediaStore;
