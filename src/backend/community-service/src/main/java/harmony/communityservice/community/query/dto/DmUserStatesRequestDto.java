@@ -5,12 +5,10 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class UserStatusRequestDto {
-    private Long guildId;
+public class DmUserStatesRequestDto {
     private List<Long> userIds = new ArrayList<>();
 
-    public UserStatusRequestDto(Long guildId, List<Long> userIds) {
-        this.guildId = guildId;
+    public DmUserStatesRequestDto(List<Long> userIds) {
         this.userIds = userIds;
     }
 }

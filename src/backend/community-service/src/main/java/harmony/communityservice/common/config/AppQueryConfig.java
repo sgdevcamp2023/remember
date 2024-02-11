@@ -10,6 +10,7 @@ import harmony.communityservice.community.query.repository.CommentQueryRepositor
 import harmony.communityservice.community.query.repository.EmojiQueryRepository;
 import harmony.communityservice.community.query.repository.GuildQueryRepository;
 import harmony.communityservice.community.query.repository.GuildReadQueryRepository;
+import harmony.communityservice.community.query.repository.RoomQueryRepository;
 import harmony.communityservice.community.query.repository.UserQueryRepository;
 import harmony.communityservice.community.query.repository.UserReadQueryRepository;
 import harmony.communityservice.community.query.repository.impl.BoardQueryRepositoryImpl;
@@ -21,6 +22,7 @@ import harmony.communityservice.community.query.repository.impl.CommentQueryRepo
 import harmony.communityservice.community.query.repository.impl.EmojiQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.GuildQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.GuildReadQueryRepositoryImpl;
+import harmony.communityservice.community.query.repository.impl.RoomQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.UserQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.UserReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.jpa.JpaBoardQueryRepository;
@@ -32,6 +34,7 @@ import harmony.communityservice.community.query.repository.jpa.JpaCommentQueryRe
 import harmony.communityservice.community.query.repository.jpa.JpaEmojiQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaGuildQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaGuildReadQueryRepository;
+import harmony.communityservice.community.query.repository.jpa.JpaRoomQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaUserQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaUserReadQueryRepository;
 import harmony.communityservice.community.query.service.BoardQueryService;
@@ -77,6 +80,7 @@ public class AppQueryConfig {
     private final JpaBoardQueryRepository jpaBoardQueryRepository;
     private final JpaCommentQueryRepository jpaCommentQueryRepository;
     private final JpaEmojiQueryRepository jpaEmojiQueryRepository;
+    private final JpaRoomQueryRepository jpaRoomQueryRepository;
     private final UserStatusClient userStatusClient;
 
     @Bean
@@ -190,7 +194,12 @@ public class AppQueryConfig {
     }
 
     @Bean
+    public RoomQueryRepository roomQueryRepository() {
+        return new RoomQueryRepositoryImpl(jpaRoomQueryRepository);
+    }
+
+    @Bean
     public RoomQueryService roomQueryService() {
-        return new RoomQueryServiceImpl(userQueryService());
+        return new RoomQueryServiceImpl(userQueryService(), roomQueryRepository(),userStatusClient);
     }
 }
