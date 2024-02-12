@@ -8,9 +8,9 @@ public interface IFriendService
     List<UserDTO> GetFriendList(long id);
     List<UserDTO> GetSendRequestList(long id);
     List<UserDTO> GetReceiveRequestList(long id);
-    void SendFriendAddRequest(long id, FriendDTO friend);
-    void CancleFriendAddRequest(long id, FriendDTO friend);
-    void AcceptFriendAddRequest(long id, FriendDTO friend);
-    void RefuseFriendAddRequest(long id, FriendDTO friend);
-    bool DeleteFriend(long id, FriendDTO friend);
+    void SendFriendAddRequest(FriendDTO friend);
+    void CancleFriendAddRequest(FriendDTO friend);
+    void AcceptFriendAddRequest(FriendDTO friend);
+    void RefuseFriendAddRequest(FriendDTO friend);
+    bool DeleteFriend(FriendDTO friend);
 }

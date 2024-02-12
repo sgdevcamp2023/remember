@@ -44,8 +44,9 @@ namespace user_service
                     return _friendRepository.ShowAllReceiveRequesttList(id);
                 }
 
-                public void SendFriendAddRequest(long id, FriendDTO friend)
+                public void SendFriendAddRequest(FriendDTO friend)
                 {
+                    long id = friend.MyId;
                     long friendId = GetFriendId(friend.FriendEmail);
 
                     if(_friendRepository.CheckAlreadyFriend(id, friendId))
@@ -55,32 +56,36 @@ namespace user_service
                         throw new ServiceException(4017); 
                 }
 
-                public void CancleFriendAddRequest(long id, FriendDTO friend)
+                public void CancleFriendAddRequest(FriendDTO friend)
                 {
+                    long id = friend.MyId;
                     long friendId = GetFriendId(friend.FriendEmail);
 
                     if(!_friendRepository.CancleFriendRequest(id, friendId))
                         throw new ServiceException(4020);
                 }
 
-                public void AcceptFriendAddRequest(long id, FriendDTO friend)
+                public void AcceptFriendAddRequest(FriendDTO friend)
                 {
+                    long id = friend.MyId;
                     long friendId = GetFriendId(friend.FriendEmail);
                     
                     if(!_friendRepository.AcceptFriendRequest(id, friendId))
                         throw new ServiceException(4018);
                 }
 
-                public void RefuseFriendAddRequest(long id, FriendDTO friend)
+                public void RefuseFriendAddRequest(FriendDTO friend)
                 {
+                    long id = friend.MyId;
                     long friendId = GetFriendId(friend.FriendEmail);
 
                     if(!_friendRepository.RefuseFriendRequest(id, friendId))
                         throw new ServiceException(4019);
                 }
 
-                public bool DeleteFriend(long id, FriendDTO friend)
+                public bool DeleteFriend(FriendDTO friend)
                 {
+                    long id = friend.MyId;
                     long friendId = GetFriendId(friend.FriendEmail);
 
                     return _friendRepository.DeleteFriend(id, friendId);

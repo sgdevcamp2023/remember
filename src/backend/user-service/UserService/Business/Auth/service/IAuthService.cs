@@ -4,7 +4,7 @@ namespace user_service.Business.Auth.service;
 
 public interface IAuthService
 {
-    public void Register(RegisterDTO registerDTO);
+    public bool Register(RegisterDTO registerDTO);
     public void SendEmailChecksum(string email);
     public void SendMailResetPassword(string email);
     public void CheckEmailChecksum(string email, string checksum);

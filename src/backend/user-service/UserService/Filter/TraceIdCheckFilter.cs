@@ -10,12 +10,12 @@ namespace user_service
             public override void OnActionExecuting(ActionExecutingContext context)
             {
                 if(context.HttpContext.Request.Headers.ContainsKey("trace-id") == false)
-                    throw new ServiceException(4200);
+                    throw new ServiceException(4100);
             }
 
             public override void OnActionExecuted(ActionExecutedContext context)
             {
-                
+                    
             }
         }
     }

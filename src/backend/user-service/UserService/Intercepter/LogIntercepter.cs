@@ -19,7 +19,7 @@ public class LogInterceptor : IInterceptor
         _logger.LogInformation(
             traceId: context.Request.Headers["trace-id"],
             method: context.Request.Method,
-            userId: "",
+            userId: context.Request.Headers["user-id"],
             message: invocation.Method.Name + " start",
             apiAddr: context.Connection.RemoteIpAddress!.ToString());
 
@@ -27,9 +27,9 @@ public class LogInterceptor : IInterceptor
 
         // 후
         _logger.LogInformation(
-            traceId: "",
+            traceId: context.Request.Headers["trace-id"],
             method: context.Request.Method,
-            userId: "",
+            userId: context.Request.Headers["user-id"],
             message: invocation.Method.Name + " end",
             apiAddr: context.Connection.RemoteIpAddress!.ToString());
     }

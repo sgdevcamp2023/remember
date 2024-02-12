@@ -30,7 +30,7 @@ namespace user_service
                     _config = config;
                 }
 
-                public void Register(RegisterDTO register)
+                public bool Register(RegisterDTO register)
                 {
                     // 체크
                     SameEmailCheck(register.Email);
@@ -43,6 +43,8 @@ namespace user_service
 
                     if (_userRepository.InsertUser(register) == false)
                         throw new ServiceException(4010);
+                    
+                    return true;
                 }
 
                 public void SendEmailChecksum(string email)

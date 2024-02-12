@@ -1,7 +1,6 @@
 using Castle.DynamicProxy;
 using Microsoft.AspNetCore.Mvc;
 using user_service.auth.dto;
-using user_service.auth.service;
 using user_service.Business.Auth.service;
 using user_service.intercepter;
 using user_service.logger;
@@ -24,9 +23,12 @@ namespace user_service
             [HttpPost("register")]
             public IActionResult Register([FromBody] RegisterDTO register)
             {
-                _authService.Register(register);
+                if (_authService.Register(register))
+                {
+                    return Ok();
+                }
 
-                return Ok();
+                return BadRequest();
             }
 
             [HttpPost("login")]
@@ -34,7 +36,7 @@ namespace user_service
             {
                 System.Console.WriteLine(login.Email + " " + login.Password);
                 ClaimDTO claim = _authService.Login(login);
-                
+
                 return claim;
             }
 
@@ -63,22 +65,6 @@ namespace user_service
             {
                 _authService.SendMailResetPassword(email.Email);
 
-                return Ok();
-            }
-
-            [HttpPost("test")]
-            public IActionResult Test()             
-            {
-                System.Console.WriteLine("test");
-                return Ok();
-            }
-
-            [HttpPost("test2")]
-            public IActionResult Test2(
-                    [FromBody] LoginDTO login)
-            {
-                System.Console.WriteLine(login.Email + " " + login.Password);
-                
                 return Ok();
             }
         }

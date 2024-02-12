@@ -22,76 +22,69 @@ namespace user_service
                 _friendService = generator.CreateInterfaceProxyWithTarget<IFriendService>(friendService, new LogInterceptor(logger, accessor));
             }
 
-            [HttpGet("list")]
+            [HttpGet("list/{userId}")]
             public List<UserDTO> GetFriendList(
-                [FromHeader(Name = "trace-id")] int traceId)
+                long userId)
             {
-                return _friendService.GetFriendList(traceId);
+                return _friendService.GetFriendList(userId);
             }
 
-            [HttpGet("request/send-list")]
+            [HttpGet("request/send-list/{userId}")]
             public List<UserDTO> GetFriendSendRequestList(
-                [FromHeader(Name = "trace-id")] int traceId)
+                long userId)
             {
-                return _friendService.GetSendRequestList(traceId);
+                return _friendService.GetSendRequestList(userId);
             }
 
-            [HttpGet("request/receive-list")]
+            [HttpGet("request/receive-list/{userId}")]
             public List<UserDTO> GetFriendReceiveRequestList(
-               [FromHeader(Name = "trace-id")] int traceId)
+               long userId)
             {
-                return _friendService.GetReceiveRequestList(traceId);
+                return _friendService.GetReceiveRequestList(userId);
             }
 
             [HttpPost("request/send")]
             public IActionResult SendFriendRequest(
-                [FromHeader(Name = "trace-id")] int traceId,
                 [FromBody] FriendDTO friendDTO)
             {
-                _friendService.SendFriendAddRequest(traceId, friendDTO);
+                _friendService.SendFriendAddRequest(friendDTO);
 
                 return Ok();
             }
 
             [HttpPost("request/accept")]
             public IActionResult AcceptFriendRequest(
-                [FromHeader(Name = "trace-id")] int traceId,
                 [FromBody] FriendDTO friendDTO)
             {
-                _friendService.AcceptFriendAddRequest(traceId, friendDTO);
+                _friendService.AcceptFriendAddRequest(friendDTO);
 
                 return Ok();
             }
 
             [HttpPost("request/refuse")]
             public IActionResult RefuseFriendRequest(
-                [FromHeader(Name = "trace-id")] int traceId,
                 [FromBody] FriendDTO friendDTO)
             {
-                _friendService.RefuseFriendAddRequest(traceId, friendDTO);
+                _friendService.RefuseFriendAddRequest(friendDTO);
                 return Ok();
             }
 
             [HttpDelete("request/cancle")]
             public IActionResult CancleFriendRequest(
-                [FromHeader(Name = "trace-id")] int traceId,
                 [FromBody] FriendDTO friendDTO)
             {
-                _friendService.CancleFriendAddRequest(traceId, friendDTO);
+                _friendService.CancleFriendAddRequest(friendDTO);
 
                 return Ok();
             }
-
             [HttpDelete("delete")]
             public IActionResult DeleteFriend(
-                [FromHeader(Name = "trace-id")] int traceId,
                 [FromBody] FriendDTO friendDTO)
             {
-                _friendService.DeleteFriend(traceId, friendDTO);
+                _friendService.DeleteFriend(friendDTO);
 
                 return Ok();
             }
-
         }
     }
 }
