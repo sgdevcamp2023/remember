@@ -18,7 +18,7 @@ internal class JwtAuthorization : IJwtAuthorization
         _redis = new RedisRepository("localhost:6379");
     }
 
-    public JwtModel CreateToken(Adapter adapter, string body)
+    public JwtResponseModel CreateToken(Adapter adapter, string body)
     {
         if (adapter.Authorization!.jwtValidator == null)
             throw new ConfigException(3100);
@@ -40,7 +40,7 @@ internal class JwtAuthorization : IJwtAuthorization
         _redis.Insert(claimsModel.Name, refreshToken);
 
         // 리턴
-        return new JwtModel(accessToken, refreshToken);
+        return new JwtResponseModel(accessToken, refreshToken, claimsModel.Name);
     }
 
     public void DeleteToken(Adapter adapter, HttpContext context)
@@ -76,7 +76,7 @@ internal class JwtAuthorization : IJwtAuthorization
         return principal;
     }
 
-    public JwtModel RefreshAccessToken(JwtValidator validator, JwtModel token)
+    public JwtResponseModel RefreshAccessToken(JwtValidator validator, JwtModel token)
     {
         // 엑세스 토큰 Claim 가져오기
         var tokenPrincipal = GetPrincipal(token.AccessToken);
@@ -101,7 +101,7 @@ internal class JwtAuthorization : IJwtAuthorization
             name, refreshToken,
             new TimeSpan(0, 0, validator.RefreshTokenValidityInSecond));
 
-        return new JwtModel(accessToken, refreshToken);
+        return new JwtResponseModel(accessToken, refreshToken, name);
     }
 
     // 성공이냐?

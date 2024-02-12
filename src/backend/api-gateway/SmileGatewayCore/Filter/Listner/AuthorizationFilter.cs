@@ -66,7 +66,7 @@ internal class AuthorizationFilter : ListenerFilter
         }
     }
 
-    private void SetJwtInBody(HttpContext context, JwtModel jwtModel)
+    private void SetJwtInBody(HttpContext context, JwtResponseModel jwtModel)
     {
         string jwtJson = Newtonsoft.Json.JsonConvert.SerializeObject(jwtModel);
         context.Response.ContentLength = jwtJson.Length;
