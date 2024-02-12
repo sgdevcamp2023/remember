@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import "../css/auth.css";
 import backImg from "../img/backImg.webp";
-import { registerRequest, checksumRequest } from "../Request/userRequest";
+import { registerRequest, checksumRequest } from "../Request/authRequest";
 
 import { useNavigate } from "react-router-dom";
 
@@ -34,7 +34,7 @@ const Content = styled.form`
   justify-content: space-around;
 `;
 
-export default function Register() {
+export default function RegisterPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

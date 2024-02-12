@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const AuthStore = create((set) => ({
-  ACCESS_TOKEN: "null",
+  ACCESS_TOKEN: "NULL",
   USER_ID: 1,
   FRIEND_LIST: [],
 

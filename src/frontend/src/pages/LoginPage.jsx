@@ -3,13 +3,17 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import "../css/auth.css";
 import backImg from "../img/backImg.webp";
-import { logInRequest } from "../Request/userRequest";
+import { logInRequest } from "../Request/authRequest";
+import AuthStore from "../store/AuthStore";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  background-image: url(${backImg});
+  background-size: cover;
 `;
 
 const FormContainer = styled.div`
@@ -29,10 +33,12 @@ const Content = styled.form`
   justify-content: space-around;
 `;
 
-export default function LogIn() {
+export default function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { setAccessToken, setUserId } = AuthStore();
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -45,8 +51,11 @@ export default function LogIn() {
     e.preventDefault();
 
     // 여기서 logInRequest 함수를 호출
-    logInRequest(email, password).then((status) => {
-      if (status === 200) alert("로그인에 성공했습니다!");
+    logInRequest(email, password).then((accessToken, refreshToken, userId) => {
+      setAccessToken(accessToken);
+      setUserId(userId);
+      localStorage.setItem("RefreshToken", refreshToken);
+      navigate("/");
       // 추후 페이지 전환
     });
   };

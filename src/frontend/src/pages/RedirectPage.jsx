@@ -9,10 +9,10 @@ const RedirectPage = () => {
   useEffect(() => {
     if (USER_ID && ACCESS_TOKEN) {
     // *************** 메인 소켓 연결 **************
-
       navigate("/channels/@me");
       return;
     }
+
     navigate("/login");
 
     return () => {};

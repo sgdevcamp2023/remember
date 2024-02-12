@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import "../css/auth.css";
 import backImg from "../img/backImg.webp";
-import { forgetPasswordRequest } from "../Request/userRequest";
+import { forgetPasswordRequest } from "../Request/authRequest";
 import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -31,9 +31,8 @@ const Content = styled.form`
   justify-content: space-around;
 `;
 
-export default function ForgetPassword() {
+export default function ForgetPasswordPage() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
 
   const handleEmailChange = (e) => {
