@@ -28,7 +28,7 @@ const MainPage = () => {
     }
 
     return () => {};
-  }, [CURRENT_VIEW_CHANNEL]);
+  }, [CURRENT_VIEW_CHANNEL_TYPE]);
 
   return <div className="main-section">{selectedComponent}</div>;
 };
