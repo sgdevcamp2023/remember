@@ -15,4 +15,4 @@ services:
 
 networks:
   elasticsearch_efk:
-    driver: bridg
+    driver: bridge

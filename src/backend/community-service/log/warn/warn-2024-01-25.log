@@ -1,0 +1,176 @@
+{"@timestamp":"2024-01-26T00:18:27.553+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=52m24s640ms)."}
+{"@timestamp":"2024-01-26T00:29:14.556+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=1h3m4s295ms)."}
+{"@timestamp":"2024-01-26T01:36:46.529+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h18m18s971ms)."}
+{"@timestamp":"2024-01-26T01:53:23.477+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=1h24m8s922ms)."}
+{"@timestamp":"2024-01-26T03:16:38.641+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h39m52s117ms)."}
+{"@timestamp":"2024-01-26T03:32:17.576+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=1h38m54s100ms)."}
+{"@timestamp":"2024-01-26T04:21:35.473+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h4m56s832ms)."}
+{"@timestamp":"2024-01-26T04:56:19.722+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=1h24m2s145ms)."}
+{"@timestamp":"2024-01-26T05:52:03.750+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h30m28s277ms)."}
+{"@timestamp":"2024-01-26T06:08:31.701+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=1h12m11s980ms)."}
+{"@timestamp":"2024-01-26T06:26:21.451+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=34m17s674ms)."}
+{"@timestamp":"2024-01-26T06:43:39.949+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=35m8s247ms)."}
+{"@timestamp":"2024-01-26T07:18:21.502+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=52m77ms)."}
+{"@timestamp":"2024-01-26T07:23:30.132+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=39m50s181ms)."}
+{"@timestamp":"2024-01-26T07:41:29.667+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=23m8s166ms)."}
+{"@timestamp":"2024-01-26T07:41:36.836+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=18m6s706ms)."}
+{"@timestamp":"2024-01-26T07:45:51.048+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m21s382ms)."}
+{"@timestamp":"2024-01-26T07:45:58.215+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=4m21s380ms)."}
+{"@timestamp":"2024-01-26T07:48:45.739+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m54s690ms)."}
+{"@timestamp":"2024-01-26T08:04:38.145+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=18m39s929ms)."}
+{"@timestamp":"2024-01-26T08:56:19.928+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h7m34s189ms)."}
+{"@timestamp":"2024-01-26T09:25:31.724+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=1h20m53s580ms)."}
+{"@timestamp":"2024-01-26T10:26:33.248+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h30m13s320ms)."}
+{"@timestamp":"2024-01-26T10:42:33.179+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=1h17m1s442ms)."}
+{"@timestamp":"2024-01-26T10:43:09.814+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m36s567ms)."}
+{"@timestamp":"2024-01-26T10:44:50.714+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=2m17s546ms)."}
+{"@timestamp":"2024-01-26T10:48:44.943+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m35s128ms)."}
+{"@timestamp":"2024-01-26T10:48:52.133+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=4m1s419ms)."}
+{"@timestamp":"2024-01-26T11:59:43.502+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m51s868ms)."}
+{"@timestamp":"2024-01-26T11:59:50.730+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=16m51s860ms)."}
+{"@timestamp":"2024-01-26T12:42:52.303+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m8s203ms)."}
+{"@timestamp":"2024-01-26T12:42:59.502+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=2m8s200ms)."}
+{"@timestamp":"2024-01-26T12:45:37.216+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=2m37s710ms)."}
+{"@timestamp":"2024-01-26T12:46:00.041+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m37s707ms)."}
+{"@timestamp":"2024-01-26T12:48:01.079+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m1s37ms)."}
+{"@timestamp":"2024-01-26T12:48:08.270+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=2m1s39ms)."}
+{"@timestamp":"2024-01-26T12:50:58.340+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m27s245ms)."}
+{"@timestamp":"2024-01-26T12:51:05.578+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=2m27s241ms)."}
+{"@timestamp":"2024-01-26T12:53:32.885+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m34s511ms)."}
+{"@timestamp":"2024-01-26T12:53:39.963+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=2m34s383ms)."}
+{"@timestamp":"2024-01-26T13:26:13.343+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m40s49ms)."}
+{"@timestamp":"2024-01-26T13:26:20.414+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=5m40s51ms)."}
+{"@timestamp":"2024-01-26T13:43:03.471+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-1 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m20s109ms)."}
+{"@timestamp":"2024-01-26T13:43:10.537+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"HikariPool-2 housekeeper", "logger":"com.zaxxer.hikari.pool.HikariPool",
+                "message":"HikariPool-2 - Thread starvation or clock leap detected (housekeeper delta=16m20s109ms)."}

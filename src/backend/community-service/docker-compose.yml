@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  community-service:
+    image: 0chord/communityservice
+    container_name: community-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - logs:/log/info
+    environment:
+      - SPRING_DATASOURCE_SOURCE_HIKARI_JDBC_URL=jdbc:mysql://source:3307/harmony?useSSL=false&characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
+      - SPRING_DATASOURCE_REPLICA_HIKARI_JDBC_URL=jdbc:mysql://replica:3307/harmony?useSSL=false&characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
