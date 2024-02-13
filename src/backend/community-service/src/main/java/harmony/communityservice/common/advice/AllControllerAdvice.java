@@ -40,11 +40,12 @@ public class AllControllerAdvice {
                 new BaseExceptionResponse("INVALID_GCS_REQUEST", 5002, "잘못된 GCS 요청입니다"));
     }
 
-//    @ExceptionHandler(HttpMessageNotReadableException.class)
-//    public BaseResponse<BaseExceptionResponse> exceptionHandler(HttpMessageNotReadableException e,
-//                                                                HttpServletRequest request) {
-//        errorLogging(request,"HttpMessageNotReadableException");
-//        return new BaseResponse<>(HttpStatus.BAD_REQUEST.value(), "BAD_REQUEST", new BaseExceptionResponse())
-//    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public BaseResponse<BaseExceptionResponse> exceptionHandler(HttpMessageNotReadableException e,
+                                                                HttpServletRequest request) {
+        errorLogging(request,"HttpMessageNotReadableException");
+        return new BaseResponse<>(HttpStatus.BAD_REQUEST.value(), "BAD_REQUEST",
+                new BaseExceptionResponse("INVALID_INPUT", 5001, "잘못된 입력입니다"));
+    }
 
 }
