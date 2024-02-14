@@ -1,10 +1,12 @@
 package harmony.stateservice.controller;
 
+import harmony.stateservice.dto.ChannelEventDto;
 import harmony.stateservice.dto.CommunityUserStateDto;
 import harmony.stateservice.dto.request.CommunityUserStateRequest;
 import harmony.stateservice.dto.DirectUserStateDto;
 import harmony.stateservice.dto.request.DirectUserStateRequest;
 import harmony.stateservice.service.CommunityServerService;
+import harmony.stateservice.service.SignalingServerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommunityServerController {
 
     private final CommunityServerService communityServerService;
+    private final SignalingServerService signalingServerService;
 
     @PostMapping("/api/state/community/user/info")
     public CommunityUserStateDto getCommunityUsersState(@RequestBody CommunityUserStateRequest stateRequest) {
@@ -24,5 +27,10 @@ public class CommunityServerController {
     @PostMapping("/api/state/direct/user/info")
     public DirectUserStateDto getCommunityUsersState(@RequestBody DirectUserStateRequest stateRequest) {
         return communityServerService.getDirectUsersState(stateRequest);
+    }
+
+    @PostMapping("/api/state/voice/channel/test")
+    public void testVoiceChannelEvent(@RequestBody ChannelEventDto channelEventDto) {
+        signalingServerService.updateChannelEvent(channelEventDto);
     }
 }
