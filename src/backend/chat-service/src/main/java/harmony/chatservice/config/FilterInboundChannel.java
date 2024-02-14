@@ -36,14 +36,6 @@ public class FilterInboundChannel implements ChannelInterceptor {
 //            }
 //        }
 
-        log.info("================================");
-        log.info("preSend");
-        log.info("getSessionId {}", headerAccessor.getSessionId());
-        log.info("getSubscriptionId {}", headerAccessor.getSubscriptionId());
-        log.info("getMessageHeaders {}", headerAccessor.getMessageHeaders());
-        log.info("getCommand {}", headerAccessor.getCommand());
-        log.info("userId {}", headerAccessor.getFirstNativeHeader("user-id"));
-        log.info("================================");
         return message;
     }
 
@@ -52,7 +44,7 @@ public class FilterInboundChannel implements ChannelInterceptor {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
-            Long userId = Long.parseLong(Objects.requireNonNull(headerAccessor.getFirstNativeHeader("user-id")));
+            Long userId = Long.parseLong(Objects.requireNonNull(headerAccessor.getFirstNativeHeader("userId")));
             String sessionId = headerAccessor.getSessionId();
             SessionDto sessionDto = SessionDto.builder()
                     .userId(userId)
@@ -75,8 +67,6 @@ public class FilterInboundChannel implements ChannelInterceptor {
 
         if (StompCommand.DISCONNECT.equals(headerAccessor.getCommand())) {
             String sessionId = headerAccessor.getSessionId();
-            log.info("postSend");
-            log.info("disconnect sessionId {}", sessionId);
             SessionDto sessionDto = SessionDto.builder()
                     .sessionId(sessionId)
                     .type("DISCONNECT")
