@@ -36,6 +36,7 @@
 .server-add-modal-body {
     margin-top: 20px;
 }
+
 .server-add-modal-body input {
     font-size: 16px; /* 글씨 크기 조절 */
     background-color: #282c34; /* 어두운 회색 */

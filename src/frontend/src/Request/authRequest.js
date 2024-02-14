@@ -1,9 +1,10 @@
 import axios from "axios";
+import AuthStore from "../store/AuthStore";
 
 const UserAuthServerAddr = "http://127.0.0.1:4000/api/auth/";
 
 export const logInRequest = async (email, password) => {
-  axios
+  return await axios
     .post(UserAuthServerAddr + "login", {
       email: email,
       password: password,
@@ -14,7 +15,7 @@ export const logInRequest = async (email, password) => {
         alert(response.description);
       } else {
         // TODO
-        return response.data;
+        return response;
       }
       return response.status;
     })
@@ -24,7 +25,7 @@ export const logInRequest = async (email, password) => {
 };
 
 export const registerRequest = async (email, password, userName, checksum) => {
-  axios
+  return await axios
     .post(UserAuthServerAddr + "register", {
       email: email,
       userName: userName,
@@ -33,12 +34,7 @@ export const registerRequest = async (email, password, userName, checksum) => {
     })
     .then((response) => {
       console.log(response);
-
-      if (response.status !== 200) {
-        const data = response.json();
-        alert(data.description);
-      } else alert("회원가입이 완료되었습니다");
-      return response.status;
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
@@ -46,15 +42,12 @@ export const registerRequest = async (email, password, userName, checksum) => {
 };
 
 export const checksumRequest = async (email) => {
-  axios
+  return await axios
     .post(UserAuthServerAddr + "send-email", {
       email: email,
     })
     .then((response) => {
-      if (response.status !== 200) {
-        const data = response.json();
-        alert(data.description);
-      } else alert("인증번호가 이메일로 전송되었습니다");
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
@@ -62,19 +55,15 @@ export const checksumRequest = async (email) => {
 };
 
 export const forgetPasswordRequest = async (email) => {
-  axios
+  return await axios
     .post(UserAuthServerAddr + "reset-password", {
       email: email,
     })
     .then((response) => {
-      if (response.status !== 200) {
-        const data = response.json();
-        alert(data.description);
-      } else alert("초기화된 비밀번호가 이메일로 전송되었습니다.");
-      return response.status;
+      console.log(response);
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
     });
 };
-// 서버 통신 로직

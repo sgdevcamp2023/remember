@@ -1,15 +1,18 @@
 import { useEffect } from "react";
 import AuthStore from "../../store/AuthStore";
-import { friendList } from "../../config/mock_data";
+import { GetFriendListRequest } from "../../Request/friendRequest";
 import { FriendList } from "../../components/FriendList";
 
 export function AllView() {
   const { FRIEND_LIST, setFriendList } = AuthStore();
 
   useEffect(() => {
-    // const friendList = GetFriendListRequest();
-    // if(friendList != null)
-    setFriendList(friendList.resultData);
+    GetFriendListRequest().then((response) => {
+      if (Array.isArray(response))
+        setFriendList(response);
+    }).catch((error) => {
+      setFriendList([]);
+    });
   }, []);
 
   return (

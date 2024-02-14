@@ -1,0 +1,52 @@
+.profile-change-modal-content {
+    position: relative;
+    background-color: #36393f;
+    border: 1px solid #202225;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #fff;
+}
+
+.profile-change-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-change-modal-header {
+    text-align: center;
+}
+
+.profile-change-modal-body {
+    margin-top: 20px;
+}
+
+.profile-change-modal-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.profile-change-modal-footer button {
+    background-color: #7289da;
+    color: #fff;
+    padding: 8px 16px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.profile-change-modal-footer button:hover {
+    background-color: #677bc4;
+}

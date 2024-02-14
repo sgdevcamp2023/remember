@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { PostAddFriendReqeust } from "../../Request/friendRequest";
+import AuthStore from "../../store/AuthStore";
 
 const AddDiv = styled.div`
   display: flex;
@@ -32,7 +34,7 @@ const AddButton = styled.button`
 `
 
 export function SendAddView() {
-
+  const { USER_ID } = AuthStore();
   const [email, setEmail] = useState("");
 
   const handleEmailChange = (e) => {
@@ -43,7 +45,17 @@ export function SendAddView() {
     e.preventDefault();
     if (email === "") return;
 
-    console.log(`Add friend ${email}`);
+    PostAddFriendReqeust({ myId: USER_ID, friendEmail: email })
+      .then((response) => {
+        if (response.status === 200) {
+          alert("친구 추가 성공");
+        } else {
+          alert("친구 추가 실패");
+        }
+      })
+      .catch((error) => {
+        alert("친구 추가 실패")
+      });
   }
 
   return (

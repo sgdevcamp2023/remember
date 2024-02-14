@@ -1,27 +1,17 @@
 import axios from "axios";
 import AuthStore from "../store/AuthStore";
 
-const FriendServerAddr = "http://127.0.0.1:4000/api/user/friends/";
+const FriendServerAddr = "http://127.0.0.1:4000/api/user/friend/";
 
-let accessToken = AuthStore.getState().ACCESS_TOKEN;
-let userId = AuthStore.getState().USER_ID;
-
-AuthStore.subscribe(
-  (newAccessToken) => {
-    accessToken = newAccessToken;
-  },
-  (state) => state.accessToken
-);
-
-export const GetFriendListRequest = () => {
-  axios
-    .get(FriendServerAddr + `list/${userId}`, {
+export const GetFriendListRequest = async () => {
+  return await axios
+    .get(FriendServerAddr + `list/${AuthStore.getState().USER_ID}`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     })
     .then((response) => {
-      console.log(response);
+      console.log(response.data);
       return response.data;
     })
     .catch((error) => {
@@ -29,15 +19,14 @@ export const GetFriendListRequest = () => {
     });
 };
 
-export const GetFriendSendListRequest = () => {
-  axios
-    .get(FriendServerAddr + `request/send-list/${userId}`, {
+export const GetFriendSendListRequest = async () => {
+  return await axios
+    .get(FriendServerAddr + `request/send-list/${AuthStore.getState().USER_ID}`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     })
     .then((response) => {
-      console.log(response);
       return response.data;
     })
     .catch((error) => {
@@ -45,15 +34,14 @@ export const GetFriendSendListRequest = () => {
     });
 };
 
-export const GetFriendReceiveListRequest = () => {
-  axios
-    .get(FriendServerAddr + `request/receive-list/${userId}`, {
+export const GetFriendReceiveListRequest = async () => {
+  return await axios
+    .get(FriendServerAddr + `request/receive-list/${AuthStore.getState().USER_ID}`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     })
     .then((response) => {
-      console.log(response);
       return response.data;
     })
     .catch((error) => {
@@ -61,15 +49,14 @@ export const GetFriendReceiveListRequest = () => {
     });
 };
 
-export const PostAddFriendReqeust = (data) => {
-  axios
+export const PostAddFriendReqeust = async (data) => {
+  return await axios
     .post(FriendServerAddr + "request/send", data, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     })
     .then((response) => {
-      console.log(response);
       return response.status;
     })
     .catch((error) => {
@@ -77,15 +64,14 @@ export const PostAddFriendReqeust = (data) => {
     });
 };
 
-export const PostAcceptFriendReqeust = (data) => {
-  axios
+export const PostAcceptFriendReqeust = async (data) => {
+  return await axios
     .post(FriendServerAddr + "request/Accept", data, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     })
     .then((response) => {
-      console.log(response);
       return response.status;
     })
     .catch((error) => {
@@ -93,15 +79,14 @@ export const PostAcceptFriendReqeust = (data) => {
     });
 }
 
-export const PostRefuseFriendReqeust = (data) => {
-  axios
+export const PostRefuseFriendReqeust = async (data) => {
+  return await axios
     .post(FriendServerAddr + "request/refuse", data, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     })
     .then((response) => {
-      console.log(response);
       return response.status;
     })
     .catch((error) => {
@@ -109,31 +94,15 @@ export const PostRefuseFriendReqeust = (data) => {
     });
 };
 
-export const PostRemoveFriendReqeust = (data) => {
-  axios
-    .post(FriendServerAddr + "request/refuse", data, {
+export const CancleAddFriendRequest = async (data) => {
+  return await axios
+    .delete(FriendServerAddr + "request/cancle", {
+      data: data,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     })
     .then((response) => {
-      console.log(response);
-      return response.status;
-    })
-    .catch((error) => {
-      console.error("데이터를 받아오는 데 실패했습니다:", error);
-    });
-};
-
-export const CancleAddFriendRequest = (data) => {
-  axios
-    .delete(FriendServerAddr + "request/cancle", data, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-    .then((response) => {
-      console.log(response);
       return response.status;
     })
     .catch((error) => {
@@ -141,15 +110,15 @@ export const CancleAddFriendRequest = (data) => {
     });
 }
 
-export const DeleteFriendRequest = (data) => {
-  axios
-    .delete(FriendServerAddr + "delete", data, {
+export const DeleteFriendRequest = async (data) => {
+  return await axios
+    .delete(FriendServerAddr + "delete", {
+      data: data,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     })
     .then((response) => {
-      console.log(response);
       return response.status;
     })
     .catch((error) => {
