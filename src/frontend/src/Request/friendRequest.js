@@ -11,11 +11,12 @@ export const GetFriendListRequest = async () => {
       },
     })
     .then((response) => {
-      console.log(response.data);
-      return response.data;
+      console.log(response);
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };
 
@@ -27,10 +28,11 @@ export const GetFriendSendListRequest = async () => {
       },
     })
     .then((response) => {
-      return response.data;
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };
 
@@ -42,10 +44,11 @@ export const GetFriendReceiveListRequest = async () => {
       },
     })
     .then((response) => {
-      return response.data;
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };
 
@@ -57,10 +60,11 @@ export const PostAddFriendReqeust = async (data) => {
       },
     })
     .then((response) => {
-      return response.status;
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };
 
@@ -72,10 +76,11 @@ export const PostAcceptFriendReqeust = async (data) => {
       },
     })
     .then((response) => {
-      return response.status;
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 }
 
@@ -87,10 +92,11 @@ export const PostRefuseFriendReqeust = async (data) => {
       },
     })
     .then((response) => {
-      return response.status;
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };
 
@@ -103,10 +109,11 @@ export const CancleAddFriendRequest = async (data) => {
       },
     })
     .then((response) => {
-      return response.status;
+      return response;
     })
     .catch((error) => {
-      console.error("데이터를 받아오는 데 실패했습니다:", error);
+      console.error("데이터를 받아오는 데 실패했습니다:", error.response);
+      return error.response;
     });
 }
 
@@ -119,9 +126,10 @@ export const DeleteFriendRequest = async (data) => {
       },
     })
     .then((response) => {
-      return response.status;
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 }

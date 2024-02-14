@@ -15,6 +15,7 @@ export const GetUserInfoRequest = async () => {
         })
         .catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
+            return error.response;
         });
 };
 
@@ -30,6 +31,7 @@ export const PatchChangeProfileRequest = async (data) => {
         })
         .catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
+            return error.response;
         });
 };
 
@@ -45,6 +47,7 @@ export const PatchUserNameRequest = async (data) => {
         })
         .catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
+            return error.response;
         });
 };
 
@@ -60,6 +63,7 @@ export const PatchPasswordRequest = async (data) => {
         })
         .catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
+            return error.response;
         });
 };
 
@@ -75,5 +79,6 @@ export const logoutRequest = async (data) => {
         })
         .catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
+            return error.response;
         });
 }

@@ -45,6 +45,8 @@ export function SendAddView() {
     e.preventDefault();
     if (email === "") return;
 
+    console.log(email);
+    
     PostAddFriendReqeust({ myId: USER_ID, friendEmail: email })
       .then((response) => {
         if (response.status === 200) {
@@ -67,7 +69,7 @@ export function SendAddView() {
             type="email"
             value={email}
             onChange={handleEmailChange}
-            name="userId"
+            name="email"
             placeholder="추가하고 싶은 친구의 이메일을 입력하세요"
             required
           ></AddInput>

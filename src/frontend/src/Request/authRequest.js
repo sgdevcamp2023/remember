@@ -21,6 +21,7 @@ export const logInRequest = async (email, password) => {
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };
 
@@ -38,6 +39,7 @@ export const registerRequest = async (email, password, userName, checksum) => {
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };
 
@@ -51,6 +53,7 @@ export const checksumRequest = async (email) => {
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };
 
@@ -65,5 +68,6 @@ export const forgetPasswordRequest = async (email) => {
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
+      return error.response;
     });
 };

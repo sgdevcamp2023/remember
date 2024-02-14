@@ -74,7 +74,7 @@ export const MyInfoView = () => {
 
         PatchChangeProfileRequest(formData)
             .then((response) => {
-                if (response === 200) {
+                if (response.status === 200) {
                     alert("프로필 변경 성공");
                     closeImageModal(false);
                 }
