@@ -47,8 +47,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", builder =>
     {
-        builder.WithOrigins("http://localhost:3000")
+        builder.WithOrigins("http://localhost:3000")    // 리액트 앱의 주소
                 .WithOrigins("http://10.99.29.133:3000") // 리액트 앱의 주소
+                .WithOrigins("http://127.0.0.1:3000") // 리액트 앱의 주소
+                .WithOrigins("https://127.0.0.1:3000") // 리액트 앱의 주소
+                .WithOrigins("https://localhost:3000")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

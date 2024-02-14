@@ -40,25 +40,6 @@ namespace user_service
                 return claim;
             }
 
-            [HttpPost("send-email")]
-            public IActionResult SendEmailCheck(
-                [FromBody] EmailRequestDTO email)
-            {
-                _authService.SendEmailChecksum(email.Email);
-
-                return Ok();
-            }
-
-            [filter.TraceIdCheckFilter]
-            [HttpPost("logout")]
-            public IActionResult Logout(
-                [FromHeader(Name = "user-id")] long userId)
-            {
-                _authService.Logout(userId);
-
-                return Ok();
-            }
-
             [HttpPost("reset-password")]
             public IActionResult ResetPassword(
                 [FromBody] EmailRequestDTO email)

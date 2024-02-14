@@ -123,5 +123,35 @@
         "code": 4024,
         "message": "FAILED_UPLOAD_PROFILE",
         "description": "프로필 업로드에 실패했습니다."
+    },
+    {
+        "code": 4025,
+        "message": "FAILED_GET_FRIEND_LIST",
+        "description": "친구 목록을 가져오는데 실패했습니다."
+    },
+    {
+        "code": 4026,
+        "message": "FAILED_ADD_MYSELF_FRIEND",
+        "description": "자기 자신을 친구로 추가할 수 없습니다."
+    },
+    {
+        "code": 4027,
+        "message": "FAILED_DELETE_MYSELF_FRIEND",
+        "description": "자기 자신을 삭제할 수 없습니다."
+    },
+    {
+        "code": 4028,
+        "message": "FAILED_LOGOUT",
+        "description": "로그아웃에 실패했습니다."
+    },
+    {
+        "code": 4029,
+        "message": "SAME_PASSWORD",
+        "description": "기존 비밀번호와 새로운 비밀번호가 같습니다."
+    },
+    {
+        "code": 4100,
+        "messae": "REQUIRED_TRACE_ID",
+        "description": "Trace ID는 필수 입력입니다."
     }
 ]

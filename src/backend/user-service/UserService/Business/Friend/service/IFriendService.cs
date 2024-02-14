@@ -5,9 +5,9 @@ namespace user_service.friend.service;
 
 public interface IFriendService
 {
-    List<UserDTO> GetFriendList(long id);
-    List<UserDTO> GetSendRequestList(long id);
-    List<UserDTO> GetReceiveRequestList(long id);
+    Task<List<FriendInfoDTO>> GetFriendList(long id);
+    List<FriendInfoDTO> GetSendRequestList(long id);
+    List<FriendInfoDTO> GetReceiveRequestList(long id);
     void SendFriendAddRequest(FriendDTO friend);
     void CancleFriendAddRequest(FriendDTO friend);
     void AcceptFriendAddRequest(FriendDTO friend);

@@ -1,4 +1,4 @@
-using user_service.user.dto;
+using user_service.Controllers.dto.friend;
 
 namespace user_service
 {
@@ -8,9 +8,9 @@ namespace user_service
         {
             public interface IFriendRepository
             {
-                public List<UserDTO> GetFriendList(long id);
-                public List<UserDTO> ShowAllSendRequestList(long id);
-                public List<UserDTO> ShowAllReceiveRequesttList(long id);
+                public List<FriendInfoDTO> GetFriendList(long id);
+                public List<FriendInfoDTO> ShowAllSendRequestList(long id);
+                public List<FriendInfoDTO> ShowAllReceiveRequesttList(long id);
                 public long GetFriendId(string email);
                 public bool CheckAlreadyFriend(long id, long friendId);
                 public bool SendFriendRequest(long id, long friendId);

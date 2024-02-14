@@ -30,6 +30,7 @@ services:
     container_name: redis
     ports:
       - 6379:6379
+    
   fluentd:
     image: fluentd
     container_name: fluentd

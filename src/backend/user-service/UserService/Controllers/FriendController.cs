@@ -4,13 +4,12 @@ using user_service.Controllers.dto.friend;
 using user_service.friend.service;
 using user_service.intercepter;
 using user_service.logger;
-using user_service.user.dto;
 
 namespace user_service
 {
     namespace friend
     {
-        [filter.TraceIdCheckFilter]
+        // [filter.TraceIdCheckFilter]
         [Route("api/user/[controller]")]
         [ApiController]
         public class FriendController : ControllerBase
@@ -23,21 +22,21 @@ namespace user_service
             }
 
             [HttpGet("list/{userId}")]
-            public List<UserDTO> GetFriendList(
+            public async Task<List<FriendInfoDTO>> GetFriendListAsync(
                 long userId)
             {
-                return _friendService.GetFriendList(userId);
+                return await _friendService.GetFriendList(userId);
             }
 
             [HttpGet("request/send-list/{userId}")]
-            public List<UserDTO> GetFriendSendRequestList(
+            public List<FriendInfoDTO> GetFriendSendRequestList(
                 long userId)
             {
                 return _friendService.GetSendRequestList(userId);
             }
 
             [HttpGet("request/receive-list/{userId}")]
-            public List<UserDTO> GetFriendReceiveRequestList(
+            public List<FriendInfoDTO> GetFriendReceiveRequestList(
                long userId)
             {
                 return _friendService.GetReceiveRequestList(userId);

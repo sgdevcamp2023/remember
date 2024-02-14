@@ -1,6 +1,5 @@
 using System.Data;
 using user_service.auth.dto;
-using user_service.user.dto;
 
 namespace user_service
 {
@@ -16,10 +15,9 @@ namespace user_service
             public bool IsEmailExist(string email)
             {
                 string query = $"SELECT * FROM users WHERE email = '{email}'";
-                using (var reader = _db.ExecuteReader(query))
-                {
-                    return reader.Read();
-                }
+                var readers = _db.ExecuteReader<UserModel>(query, GetUserModel);
+                
+                return readers.Count > 0;
             }
 
             public UserModel? GetUserByEmail(string email)
@@ -37,10 +35,14 @@ namespace user_service
             private UserModel? GetUserModel(string query)
             {
                 UserModel? user = null;
-                using (var reader = _db.ExecuteReader(query))
+                List<UserModel> datas = _db.ExecuteReader<UserModel>(query, GetUserModel);
+                if (datas.Count == 1)
                 {
-                   if (reader.Read())
-                        user = GetUserModel(reader);
+                    user = datas[0];
+                }
+                else
+                {
+                    
                 }
 
                 return user;
@@ -81,17 +83,7 @@ namespace user_service
             {
                 string query = $"SELECT * FROM test WHERE id IN (SELECT first_user_id FROM friend WHERE second_user_id = {id} UNION SELECT second_user_id FROM friend WHERE first_user_id = {id})";
 
-                List<UserModel> friends = new List<UserModel>();
-                using (var reader = _db.ExecuteReader(query))
-                {
-                    while (reader.Read())
-                    {
-                        UserModel user = GetUserModel(reader);
-
-                        friends.Add(user);
-                    }
-                }
-
+                List<UserModel> friends = _db.ExecuteReader<UserModel>(query, GetUserModel);
                 return friends;
             }
 
@@ -141,7 +133,7 @@ namespace user_service
                 return true;
             }
 
-           
+
         }
     }
 }

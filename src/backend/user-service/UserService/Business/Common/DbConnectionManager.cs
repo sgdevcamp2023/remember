@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Data;
 using Microsoft.Data.SqlClient;
 using user_service.logger;
 
@@ -8,7 +10,6 @@ namespace user_service
         public class DbConnectionManager
         {
             private IConfiguration _config;
-            private SqlConnection _connection = null!;
             private IBaseLogger _logger;
             private string? _connectionString;
             public DbConnectionManager(IConfiguration config, IBaseLogger logger)
@@ -16,34 +17,33 @@ namespace user_service
                 _config = config;
                 _logger = logger;
                 _connectionString = _config.GetConnectionString("MSSQLConnection");
-                _connection = new SqlConnection(_connectionString);
             }
 
             ~DbConnectionManager()
             {
-                Close();
+                // Close();
             }
 
-            public void Connect()
+            public void Connect(SqlConnection connection)
             {
                 try
                 {
-                    if(_connection.State != System.Data.ConnectionState.Open)
-                        _connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        connection.Open();
                 }
                 catch (Exception e)
                 {
                     throw new user_service.common.exception.SqlException(e.Message);
                 }
             }
-            
-            public void Close()
+
+            public void Close(SqlConnection connection)
             {
                 try
                 {
-                    _connection.Close();
+                    connection.Close();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     throw new user_service.common.exception.SqlException(e.Message);
                 }
@@ -53,9 +53,13 @@ namespace user_service
             {
                 try
                 {
-                    Connect();
-                    SqlCommand command = new SqlCommand(query, _connection);
-                    command.ExecuteNonQuery();
+                    using (SqlConnection connection = new SqlConnection(_connectionString))
+                    {
+                        connection.Open();
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                            command.ExecuteNonQuery();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -63,13 +67,27 @@ namespace user_service
                 }
             }
 
-            public SqlDataReader ExecuteReader(string query)
+            public List<T> ExecuteReader<T>(string query, Func<IDataReader, T> createInstance)
             {
                 try
                 {
-                    Connect();
-                    SqlCommand command = new SqlCommand(query, _connection);
-                    return command.ExecuteReader();
+                    using (SqlConnection connection = new SqlConnection(_connectionString))
+                    {
+                        connection.Open();
+
+                        List<T> datas = new List<T>();
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                datas.Add(createInstance(reader));
+                            }
+                        }
+
+                        return datas;
+                    }
                 }
                 catch (Exception e)
                 {

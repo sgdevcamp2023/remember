@@ -16,8 +16,6 @@ namespace user_service
 
             public async Task InvokeAsync(HttpContext context)
             {
-                string? controller = context.GetRouteData().Values["controller"]!.ToString();
-
                 _logger.LogInformation(
                     traceId: "",
                     method: context.Request.Method,
