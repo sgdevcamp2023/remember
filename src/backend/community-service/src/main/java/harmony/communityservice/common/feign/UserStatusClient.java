@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
-@FeignClient(name = "userStatus", url = "http://10.99.14.176:9090", configuration = HeaderConfig.class)
+@FeignClient(name = "userStatus", url = "http://34.22.109.45:9090", configuration = HeaderConfig.class)
 public interface UserStatusClient {
 
     @PostMapping("/api/state/community/user/info")
