@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "CommunityClient", url = "http://10.99.19.2:8000/api")
+@FeignClient(name = "CommunityClient", url = "http://34.22.109.45:8000/api")
 public interface CommunityClient {
 
     @GetMapping("/community/check/room/guild/{userId}")
