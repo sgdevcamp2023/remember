@@ -35,6 +35,7 @@ public class FilterInboundChannel implements ChannelInterceptor {
 //                throw new RuntimeException("예외 발생");
 //            }
 //        }
+
         return message;
     }
 
