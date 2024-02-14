@@ -4,6 +4,7 @@ import {
   channelList as mock_channel_list,
   memberList as mock_member_list,
 } from "../config/mock_data";
+import MediaContainer from "./MediaContainer";
 import CurrentStore from "../store/CurrentStore";
 import CommunityStore from "../store/CommunityStore";
 import { useNavigate } from "react-router-dom";
@@ -12,10 +13,11 @@ import VoiceChannelButton from "./VoiceChannelButton";
 import useVoiceSocket from "../hooks/useVoiceSocket";
 import AuthStore from "../store/AuthStore";
 import { useMediaStream } from "../contexts/MediaStreamContext";
+import SocketStore from "../store/SocketStore";
 
 const Channel = () => {
   const navigate = useNavigate();
-  const { mediaStreams } = useMediaStream();
+  const { audioStream } = useMediaStream();
 
   const {
     connectSocket,
@@ -23,10 +25,16 @@ const Channel = () => {
     validateUserInChannel,
     voice_socket,
   } = useVoiceSocket(process.env.REACT_APP_MEDIA_URL);
-  const { CURRENT_VIEW_GUILD, CURRENT_VIEW_GUILD_NAME } = CurrentStore();
-  const { CHANNEL_LIST, setChannelList } = CommunityStore();
-
+  const {
+    CURRENT_VIEW_GUILD,
+    CURRENT_VIEW_GUILD_NAME,
+    setCurrentViewChannel,
+    setCurrentViewChannelType,
+  } = CurrentStore();
   const { setUserId } = AuthStore();
+  const { CHANNEL_LIST, setChannelList } = CommunityStore();
+  const { VOICE_SOCKET } = SocketStore.getState();
+  const { CURRENT_JOIN_CHANNEL } = CurrentStore.getState();
 
   const [members, setMembers] = useState([]);
   const [testId, setTestId] = useState("");
@@ -56,11 +64,14 @@ const Channel = () => {
     return () => {};
   }, [CURRENT_VIEW_GUILD]);
 
-  useEffect(() => {
-    console.log(mediaStreams);
-  }, [mediaStreams]);
-
   const handleVoiceChannel = (guildId, channelId) => {
+    if (channelId === CURRENT_JOIN_CHANNEL) {
+      setCurrentViewChannel(channelId);
+      setCurrentViewChannelType("VOICE");
+      navigate(`/channels/${CURRENT_VIEW_GUILD}/${channelId}`);
+      return;
+    }
+
     if (!voice_socket || !voice_socket.connected) {
       connectSocket();
       addEventListeners();
@@ -79,27 +90,21 @@ const Channel = () => {
         <button
           onClick={() => {
             setUserId(testId);
-            console.log(AuthStore.getState().USER_ID);
           }}
         >
           로긴
         </button>
       </div>
       <div>
-        {Object.entries(mediaStreams).map(([id, { kind, stream }]) =>
-          kind === "video" ? (
-            <video
-              key={id}
-              ref={(ref) => ref && (ref.srcObject = stream)}
-              autoPlay
-              className="video"
-            />
-          ) : (
+        {Object.entries(audioStream).map(([id, { kind, stream }]) =>
+          kind === "audio" ? (
             <audio
               key={id}
               ref={(ref) => ref && (ref.srcObject = stream)}
               autoPlay
             />
+          ) : (
+            <></>
           )
         )}
       </div>
@@ -126,6 +131,7 @@ const Channel = () => {
           <></>
         )}
       </div>
+      <div>{VOICE_SOCKET ? <MediaContainer /> : <></>}</div>
     </div>
   );
 };

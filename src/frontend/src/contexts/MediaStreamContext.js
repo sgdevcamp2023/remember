@@ -3,10 +3,14 @@ import React, { createContext, useState, useContext } from "react";
 export const MediaStreamContext = createContext();
 
 export const MediaStreamProvider = ({ children }) => {
-  const [mediaStreams, setMediaStreams] = useState({});
+  const [audioStream, setAudioStream] = useState({});
+  // "type" : {track, track....}
+  const [videoStream, setVideoStream] = useState({});
 
   return (
-    <MediaStreamContext.Provider value={{ mediaStreams, setMediaStreams }}>
+    <MediaStreamContext.Provider
+      value={{ audioStream, setAudioStream, videoStream, setVideoStream }}
+    >
       {children}
     </MediaStreamContext.Provider>
   );

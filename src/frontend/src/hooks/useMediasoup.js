@@ -8,14 +8,17 @@ import { useMediaStream } from "../contexts/MediaStreamContext";
 function useMediasoup() {
   const {
     setAudioParams,
+    setVideoParams,
     setRtpCapabilities,
     setDevice,
     setSendTransport,
     setAudioProducer,
+    setVideoProducer,
     setRecvTransport,
     setRecvAudioConsumer,
+    setDisplayProducer,
   } = MediaStore();
-  const { setMediaStreams } = useMediaStream();
+  const { setAudioStream, setVideoStream, videoStream } = useMediaStream();
 
   const getLocalAudioStream = () => {
     navigator.mediaDevices
@@ -26,6 +29,50 @@ function useMediasoup() {
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  const getLocalDisplayStream = () => {
+    navigator.mediaDevices
+      .getDisplayMedia({
+        video: {
+          cursor: "always",
+        },
+        audio: false,
+      })
+      .then((stream) => videoStreamSuccess(stream, "display"))
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const getLocalCameraStream = () => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: {
+          width: { min: 640, max: 1920 },
+          height: { min: 400, max: 1080 },
+        },
+      })
+      .then((stream) => videoStreamSuccess(stream, "camera"))
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const videoStreamSuccess = (stream, type) => {
+    let videoParams = { track: stream.getVideoTracks()[0], type: type };
+
+    setVideoParams(videoParams);
+    const videoStream = {
+      [type]: {
+        track: stream.getVideoTracks()[0],
+      },
+    };
+    setVideoStream((prevStream) => ({
+      ...prevStream,
+      ...videoStream,
+    }));
+    connectSendTransport("video");
   };
 
   const audioStreamSuccess = (stream) => {
@@ -91,7 +138,6 @@ function useMediasoup() {
                 consumer: false,
               });
               callback();
-              console.log(">> audio producer connected");
             } catch (error) {
               errback(error);
             }
@@ -111,9 +157,6 @@ function useMediasoup() {
               ({ producerId, producerExist }) => {
                 callback({ producerId });
 
-                console.log(">> audio produce!!");
-
-                // 추후 switch case로 교체?
                 if (parameters.kind === "audio") {
                   if (producerExist) {
                     console.log(">> producer exist, get Producers");
@@ -125,11 +168,12 @@ function useMediasoup() {
                     userId: USER_ID,
                   });
                 }
-                // else if (parameters.kind === "video") {
-                //   videoRef.current.srcObject = new MediaStream([
-                //     videoParamsRef.current.track,
-                //   ]);
-                // }
+                if (parameters.kind === "video") {
+                  if (producerExist) {
+                    console.log(">> producer exist, get Producers");
+                    // getProducers("video", producerId);
+                  }
+                }
               }
             );
           } catch (error) {
@@ -183,7 +227,8 @@ function useMediasoup() {
   };
 
   const connectSendTransport = async (media) => {
-    const { SEND_TRANSPORT, AUDIO_PARAMS } = MediaStore.getState();
+    const { SEND_TRANSPORT, AUDIO_PARAMS, VIDEO_PARAMS } =
+      MediaStore.getState();
     if (media === "audio") {
       const audioProducer = await SEND_TRANSPORT.produce(AUDIO_PARAMS);
 
@@ -195,6 +240,23 @@ function useMediasoup() {
         console.log("audioProducer transport ended");
       });
       setAudioProducer(audioProducer);
+    }
+
+    if (media === "video") {
+      const videoProducer = await SEND_TRANSPORT.produce(VIDEO_PARAMS);
+
+      videoProducer.on("trackended", () => {
+        console.log("videoProducer track ended");
+      });
+
+      videoProducer.on("transportclose", () => {
+        console.log("videoProducer transport ended");
+      });
+
+      console.log(">> videoParams", VIDEO_PARAMS.type);
+      VIDEO_PARAMS.type === "camera"
+        ? setVideoProducer(videoProducer)
+        : setDisplayProducer(videoProducer);
     }
   };
 
@@ -264,13 +326,13 @@ function useMediasoup() {
           console.log(">> consuming audio");
 
           // 이부분
-          const mediaStream = new MediaStream([track]);
+          const audioStream = new MediaStream([track]);
 
-          setMediaStreams((prevStreams) => ({
+          setAudioStream((prevStreams) => ({
             ...prevStreams,
             [remoteProducerId]: {
               kind: params.kind,
-              stream: mediaStream,
+              stream: audioStream,
             },
           }));
           VOICE_SOCKET.emit("consumer-resume", {
@@ -311,7 +373,7 @@ function useMediasoup() {
   };
 
   const closeAll = async () => {
-    setMediaStreams({});
+    setAudioStream({});
     const {
       AUDIO_PRODUCER,
       VIDEO_PRODUCER,
@@ -336,7 +398,13 @@ function useMediasoup() {
 
   // end of code
 
-  return { getLocalAudioStream, signalNewConsumerTransport, closeAll };
+  return {
+    getLocalAudioStream,
+    signalNewConsumerTransport,
+    closeAll,
+    getLocalCameraStream,
+    getLocalDisplayStream,
+  };
 }
 
 export default useMediasoup;

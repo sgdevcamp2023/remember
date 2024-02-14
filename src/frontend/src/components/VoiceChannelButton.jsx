@@ -2,16 +2,13 @@ import React, { useEffect } from "react";
 import VoiceChatUser from "./VoiceChatUser";
 import CurrentStore from "../store/CurrentStore";
 
-
 const VoiceChannelButton = ({ channel, members, onClick }) => {
-
   const { CURRENT_VIEW_GUILD, CURRENT_VIEW_CHANNEL } = CurrentStore();
 
   const handleVoiceChannel = (guildId, channelId) => {
     onClick(guildId, channelId);
   };
-
-
+  
 
   return (
     <div>
