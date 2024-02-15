@@ -153,5 +153,10 @@
         "code": 4100,
         "messae": "REQUIRED_TRACE_ID",
         "description": "Trace ID는 필수 입력입니다."
+    },
+    {
+        "code": 4101,
+        "message": "REQUIRED_USER_ID",
+        "description": "User ID는 필수 입력입니다."
     }
 ]

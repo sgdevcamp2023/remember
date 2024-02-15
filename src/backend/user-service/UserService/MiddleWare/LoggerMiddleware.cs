@@ -16,19 +16,22 @@ namespace user_service
 
             public async Task InvokeAsync(HttpContext context)
             {
+                string traceId = context.Request.Headers["trace-id"];
+                string userId = context.Request.Headers["user-id"];
+
                 _logger.LogInformation(
-                    traceId: "",
+                    traceId: traceId,
                     method: context.Request.Method,
-                    userId: "",
+                    userId: userId,
                     message: context.Request.Path + " Start",
                     apiAddr: context.Connection.RemoteIpAddress!.ToString());
                 
                 await _next(context);
 
                 _logger.LogInformation(
-                    traceId: "",
+                    traceId: traceId,
                     method: context.Request.Method,
-                    userId: "",
+                    userId: userId,
                     message: context.Request.Path + " End",
                     apiAddr: context.Connection.RemoteIpAddress!.ToString());
             }

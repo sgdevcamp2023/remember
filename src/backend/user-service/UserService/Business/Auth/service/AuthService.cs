@@ -29,14 +29,6 @@ public class AuthService : IAuthService
     public bool Register(RegisterDTO register)
     {
         // 체크
-        #if DEBUG
-
-        register.Password = Utils.SHA256Hash(register.Password);
-
-        _userRepository.InsertUser(register);
-
-        return true;
-        #else
         SameEmailCheck(register.Email);
         CheckEmailChecksum(register.Email, register.EmailChecksum);
 
@@ -49,7 +41,6 @@ public class AuthService : IAuthService
             throw new ServiceException(4010);
 
         return true;
-        #endif
     }
 
     public void SendEmailChecksum(string email)

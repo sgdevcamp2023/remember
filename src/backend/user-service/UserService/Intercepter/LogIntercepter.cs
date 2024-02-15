@@ -15,11 +15,14 @@ public class LogInterceptor : IInterceptor
     public void Intercept(IInvocation invocation)
     {
         HttpContext context = _contextAccessor.HttpContext!;
+        string traceId = context.Request.Headers["trace-id"];
+        string userId = context.Request.Headers["user-id"];
+
         // 전
         _logger.LogInformation(
-            traceId: context.Request.Headers["trace-id"],
+            traceId: traceId,
             method: context.Request.Method,
-            userId: context.Request.Headers["user-id"],
+            userId: userId,
             message: invocation.Method.Name + " start",
             apiAddr: context.Connection.RemoteIpAddress!.ToString());
 
@@ -27,9 +30,9 @@ public class LogInterceptor : IInterceptor
 
         // 후
         _logger.LogInformation(
-            traceId: context.Request.Headers["trace-id"],
+            traceId: traceId,
             method: context.Request.Method,
-            userId: context.Request.Headers["user-id"],
+            userId: userId,
             message: invocation.Method.Name + " end",
             apiAddr: context.Connection.RemoteIpAddress!.ToString());
     }

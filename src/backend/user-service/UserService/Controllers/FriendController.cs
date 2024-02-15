@@ -9,7 +9,7 @@ namespace user_service
 {
     namespace friend
     {
-        // [filter.TraceIdCheckFilter]
+        [filter.DefaultHeaderFilter]
         [Route("api/user/[controller]")]
         [ApiController]
         public class FriendController : ControllerBase
