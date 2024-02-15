@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using YamlDotNet.Core.Tokens;
-using HeaderDictionary = SmileGatewayCore.Http.Header.HeaderDictionary;
 
 namespace SmileGatewayCore.Http.Features;
 
 public class ResponseCookie : IResponseCookie
 {
-    private HeaderDictionary _header;
-    public ResponseCookie(HeaderDictionary header)
+    private List<string> _setCookie = new List<string>();
+    public ResponseCookie()
     {
-        _header = header;
+
     }
 
     public void Append(string key, string value, CookieOptions options)
@@ -26,10 +25,8 @@ public class ResponseCookie : IResponseCookie
             HttpOnly = options.HttpOnly
         };
 
-        var cookieValue = setCookieHeaderValue.ToString();
-
-        // _header = StringValues.Concat(_header.SetCookie, cookieValue);
-        _header.SetCookie = cookieValue;        
+        string cookieValue = setCookieHeaderValue.ToString();
+        _setCookie.Add(cookieValue);
     }
 
     public void Append(string key, string value)
@@ -39,8 +36,24 @@ public class ResponseCookie : IResponseCookie
             Path = "/",
         };
 
-        var cookieValue = setCookieHeaderValue.ToString();
+        string cookieValue = setCookieHeaderValue.ToString();
+        _setCookie.Add(cookieValue);
+    }
 
-        _header.SetCookie = cookieValue;
+    public void Append(string header)
+    {
+        string cookieValue = "Set-Cookie: " + header;
+        _setCookie.Add(cookieValue);
+    }
+
+    public override string ToString()
+    {
+        string result = "";
+        foreach (var cookie in _setCookie)
+        {
+            result += cookie + "\r\n";
+        }
+
+        return result;
     }
 }

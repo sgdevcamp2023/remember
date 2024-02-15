@@ -43,7 +43,7 @@ internal class JwtAuthorization : IJwtAuthorization
         return new JwtResponseModel(accessToken, refreshToken, claimsModel.Name);
     }
 
-    public void DeleteToken(Adapter adapter, HttpContext context)
+    public void DeleteToken(JwtValidator validator, HttpContext context)
     {
         context.Request.Header.TryGetValue("Authorization", out string? accessToken);
         if (accessToken == null)
@@ -52,26 +52,28 @@ internal class JwtAuthorization : IJwtAuthorization
         string[] tokens = accessToken.Split(" ");
         accessToken = tokens[1];
 
-        string? id = GetPrincipal(accessToken)?.Identity?.Name;
+        string? id = GetPrincipal(validator, accessToken)?.Identity?.Name;
         if(id == null)
             throw new AuthException(3000);
 
         _redis.Delete(id);
     }
 
-    public ClaimsPrincipal? GetPrincipal(string accessToken)
+    public ClaimsPrincipal? GetPrincipal(JwtValidator validator, string accessToken)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false,
             ValidateIssuer = false,
-            ValidateLifetime = false
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(validator.SecretKey))
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
         if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-            throw new SecurityTokenException("Invalid token");
+            throw new AuthException(3000);
 
         return principal;
     }
@@ -79,7 +81,7 @@ internal class JwtAuthorization : IJwtAuthorization
     public JwtResponseModel RefreshAccessToken(JwtValidator validator, JwtModel token)
     {
         // 엑세스 토큰 Claim 가져오기
-        var tokenPrincipal = GetPrincipal(token.AccessToken);
+        var tokenPrincipal = GetPrincipal(validator, token.AccessToken);
         if (tokenPrincipal == null)
             throw new AuthException(3000);
 
@@ -109,12 +111,6 @@ internal class JwtAuthorization : IJwtAuthorization
     // 토큰이 JWT가 맞는지
     public bool ValidationToken(JwtValidator validator, string accessToken)
     {
-        string[] tokens = accessToken.Split(" ");
-        accessToken = tokens[1];
-
-        if (tokens[0] != "Bearer")
-            throw new AuthException(3003);
-
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = true,

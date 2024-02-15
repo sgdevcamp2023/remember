@@ -2,6 +2,7 @@ using SmileGatewayCore.Http.Context;
 using SmileGatewayCore.Instance;
 using SmileGatewayCore.Filter.Internal;
 using SmileGatewayCore.Exception;
+using System.Security.Claims;
 
 namespace SmileGatewayCore.Filter.Listner;
 
@@ -16,6 +17,9 @@ internal class AuthorizationFilter : ListenerFilter
         if (adapter.Cluster.Config.Authorization == false)
             return;
 
+        if (context.Request.Method == "OPTIONS")
+            return;
+
         if (adapter.Authorization == null)
             throw new ConfigException(3101);
 
@@ -23,8 +27,16 @@ internal class AuthorizationFilter : ListenerFilter
         if (!context.Request.Header.TryGetValue("Authorization", out string? accessToken))
             throw new AuthException(3006);
 
-        if (!_jwtAuthorization.ValidationToken(adapter.Authorization.jwtValidator, accessToken))
+        string[] tokens = accessToken.Split(" ");
+        accessToken = tokens[1];
+
+        if (tokens[0] != "Bearer")
+            throw new AuthException(3003);
+        
+        if (!_jwtAuthorization.ValidationToken(adapter.JwtValidator, accessToken))
         {
+            System.Console.WriteLine("Authorization Filter : Token Validation Failed");
+            // 실패시 Refresh Token을 확인
             if (context.Request.Cookie == null)
                 throw new AuthException(3004);
 
@@ -32,7 +44,21 @@ internal class AuthorizationFilter : ListenerFilter
             if (refreshToken == null)
                 throw new AuthException(3004);
 
-            SetJwtInBody(context, _jwtAuthorization.RefreshAccessToken(adapter.Authorization.jwtValidator, new JwtModel(accessToken, refreshToken)));
+            // throw
+            SetJwtInBody(context, _jwtAuthorization.RefreshAccessToken(adapter.JwtValidator, new JwtModel(accessToken, refreshToken)));
+        }
+        else
+        {
+            // 성공시 토큰에서 id를 추출, 헤더에 저장
+            ClaimsPrincipal? claims = _jwtAuthorization.GetPrincipal(adapter.JwtValidator, accessToken);
+            if (claims == null)
+                throw new AuthException(3000);
+
+            string? id = claims.Identity?.Name;
+            if (id == null)
+                throw new AuthException(3000);
+
+            context.Request.UserId = id;
         }
     }
     protected override void Worked(Adapter adapter, HttpContext context)
@@ -57,7 +83,7 @@ internal class AuthorizationFilter : ListenerFilter
                 switch (adapter.Authorization.Type)
                 {
                     case "JWT":
-                        _jwtAuthorization.DeleteToken(adapter, context);
+                        _jwtAuthorization.DeleteToken(adapter.JwtValidator, context);
                         break;
                     default:
                         break;

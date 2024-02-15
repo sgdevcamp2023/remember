@@ -9,7 +9,10 @@ internal class ServiceFilter : ListenerFilter
 {
     protected override void Working(Adapter adapter, HttpContext context)
     {
-        foreach (string header in adapter.DisallowHeaders!)
+        if(adapter.DisallowHeaders == null)
+            return;
+        
+        foreach (string header in adapter.DisallowHeaders)
         {
             if (context.Request.Header.ContainsKey(header) == true)
                 throw new FilterException(3108);
@@ -19,5 +22,4 @@ internal class ServiceFilter : ListenerFilter
     {
         
     }
-
 }

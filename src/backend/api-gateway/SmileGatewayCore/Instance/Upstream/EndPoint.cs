@@ -2,24 +2,29 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using SmileGatewayCore.Config;
+using SmileGatewayCore.Exception;
 using SmileGatewayCore.Http.Context;
-using SmileGatewayCore.Instance.Upstream;
 
-namespace SmileGatewayCore.Instance;
+// using Timer = System.Timers.Timer;
 
-public class EndPoint : NetworkInstance
+namespace SmileGatewayCore.Instance.Upstream;
+
+public partial class EndPoint : NetworkInstance
 {
-    private ConnectionPool _connectionPool;
+    private ConnectionPool _connectPool;
     private AsyncLocal<HttpContext> _context = new AsyncLocal<HttpContext>();
     private long _usingCount = 0;
     public IPEndPoint IpEndPoint { get; private set; } = null!;
-    public bool IsAlive { get; private set; } = true;
-
     public EndPoint(AddressConfig config)
     {
+        // ConnectionPool이 꽉찼을 때가 문제임.
+        // 많은 양의 데이터가 올 때 말하는것.
         IpEndPoint = new IPEndPoint(IPAddress.Parse(config.Address), config.Port);
-        _connectionPool = new ConnectionPool(10, IpEndPoint);
+        _connectPool = new ConnectionPool(100, IpEndPoint);
+
+        Init();
     }
+
     private void IncreaseUsingCount()
     {
         Interlocked.Increment(ref _usingCount);
@@ -40,28 +45,67 @@ public class EndPoint : NetworkInstance
         IncreaseUsingCount();
         _context.Value = context;
 
+        // Socket? socket = _connectPool.GetAliveSocket();
+        // if(socket == null)
+        //     return;
 
-        // 초기화
-        Socket socket = _connectionPool.RentSocket();
+        // await Send(socket, context.Request.GetStringToBytes());
+        // _connectPool.EnqueueAliveSocket(socket);
 
-        // 실행
-        // 만약 소켓이 종료되어 있을 경우 종료됨.
-        // 연결이 끊겨있는 경우라면?
-        await Send(socket, context.Request.GetStringToBytes());
+        // while (true)
+        // {
+        //     Socket? socket = _connectPool.GetAliveSocket();
+        //     if (socket == null)
+        //     {
+        //         if(IsHealthCheck == false)
+        //         {
+        //             IsHealthCheck = true;
+        //             _timer.Enabled = true;
+        //         }
 
-        _connectionPool.ReturnSocket(socket);
+        //         IsAlive = false;
+        //         throw new NetworkException(3200);
+        //     }
+
+        //     try
+        //     {
+        //         // 실행
+        //         // 만약 소켓이 종료되어 있을 경우 종료됨.
+        //         // 연결이 끊겨있는 경우라면?
+        //         await Send(socket, context.Request.GetStringToBytes());
+        //         _connectPool.EnqueueAliveSocket(socket);
+        //     }
+        //     catch (System.Exception)
+        //     {
+        //         System.Console.WriteLine("Dead Socket");
+
+        //         if(socket.Poll(100, SelectMode.SelectRead))
+        //             await _connectPool.ConnectAsync(socket, 1000);  
+
+        //         _connectPool.EnqueueDeadSocket(socket);
+        //         continue;
+        //     }
+
+        //     break;
+        // }
+        Socket socket = new Socket(IpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        try
+        {
+            await _connectPool.ConnectAsync(socket, 1000);
+            await Send(socket, context.Request.GetStringToBytes());
+            socket.Close();
+        }
+        catch (System.Exception)
+        {
+            throw new NetworkException(3200);
+        }
 
         DecreaseUsingCount();
     }
 
-    public override void Init()
-    {
-
-    }
-
     protected override async Task OnSend(Socket socket, int size)
     {
-        System.Console.WriteLine($"Cluster Send {size} bytes");
+        System.Console.WriteLine($"Cluster Send({socket.Handle}) {size} bytes");
 
         await Receive(socket);
     }
@@ -69,32 +113,29 @@ public class EndPoint : NetworkInstance
     protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
     {
         // 에러 처리 할 것
-        System.Console.WriteLine($"Cluster Receive {recvLen} bytes");
+        System.Console.WriteLine($"Cluster Receive({socket.Handle}) {recvLen} bytes");
 
         if (_context.Value == null)
             throw new System.Exception();
 
-        if (_context.Value.Response.StatusCode == 0)
+        HttpResponse response = _context.Value.Response;
+
+        if (response.StatusCode == 0)
         {
-            if (!_context.Value.Response.Parse(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
+            if (!response.Parse(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
             {
                 await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
             }
         }
         else
         {
-            if (_context.Value.Response.IsChucked)
+            if (response.IsChucked)
             {
-                if (!_context.Value.Response.AppendChuckedBody(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
+                if (!response.AppendChuckedBody(Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, recvLen)))
                 {
                     await Receive(socket, new ArraySegment<byte>(buffer.Array!, buffer.Offset + recvLen, buffer.Count - recvLen));
                 }
             }
         }
-    }
-
-    public void HealthCheck()
-    {
-        
     }
 }

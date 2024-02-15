@@ -6,16 +6,14 @@ namespace SmileGatewayCore.Http.Context;
 
 public partial class HttpResponse
 {
-
     public HttpResponse()
     {
         _responseFeatrue = new ResponseFeature();
-        _responseCookie = new ResponseCookie(Header);
     }
 
     public bool Parse(string responseString)
     {
-        _responseFeatrue = new ResponseFeature();
+        // System.Console.WriteLine(responseString);
         string[] responseLines = responseString.Split("\r\n");
         MakeResponseinfo(responseLines[0].Split(" "));
 
@@ -43,7 +41,10 @@ public partial class HttpResponse
 
             if (header[0] == "Set-Cookie")
             {
-                Header.SetCookie = header[1];
+                if (Cookie == null)
+                    Cookie = new ResponseCookie();
+
+                Cookie.Append(header[1]);
                 continue;
             }
             if (header[0] == "Content-Length")
@@ -56,12 +57,12 @@ public partial class HttpResponse
                 IsChucked = true;
                 continue;
             }
+            if (header[0] == "Access-Control-Allow-Origin")
+                continue;
 
             if (header.Length > 1)
-                Header.Add(header[0], header[1]);
+                Header[header[0]] = header[1];
         }
-
-        _responseCookie = new ResponseCookie(Header);
 
         return isSuccess;
     }
@@ -78,6 +79,10 @@ public partial class HttpResponse
         {
             responseString += $"{header.Key}: {header.Value}\r\n";
         }
+        if (Cookie != null)
+        {
+            responseString += $"{Cookie.ToString()}\r\n";
+        }
         responseString += $"Content-Length: {ContentLength}\r\n";
         responseString += $"\r\n{Body}";
         return responseString;
@@ -86,7 +91,7 @@ public partial class HttpResponse
     public byte[] GetStringToBytes()
     {
         string responseString = ToString();
-        // System.Console.WriteLine(responseString);
+        System.Console.WriteLine(Body);
         return System.Text.Encoding.UTF8.GetBytes(responseString);
     }
 

@@ -1,4 +1,5 @@
 using System.Collections;
+using YamlDotNet.Core.Tokens;
 
 namespace SmileGatewayCore.Http.Feature;
 
@@ -38,5 +39,16 @@ public class RequestCookie : IRequestCookie
     public bool TryGetValue(string key, out string? value)
     {
         return _cookies.TryGetValue(key, out value);
+    }
+
+    public override string ToString()
+    {
+        string result = "";
+        foreach(var (key, value) in _cookies)
+        {
+            result += key + "=" + value + "; ";
+        }
+
+        return result;
     }
 }

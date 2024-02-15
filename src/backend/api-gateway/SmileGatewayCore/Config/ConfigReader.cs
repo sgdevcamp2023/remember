@@ -1,3 +1,4 @@
+using SmileGatewayCore.Exception;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -20,24 +21,38 @@ internal class ConfigReader
 
     public T Load<T>()
     {
-        using (var stream = File.Open(_path, FileMode.Open, FileAccess.Read))
+        try
         {
-            using (var reader = new StreamReader(stream))
+            using (var stream = File.Open(_path, FileMode.Open, FileAccess.Read))
             {
-                return deserializer.Deserialize<T>(reader);
+                using (var reader = new StreamReader(stream))
+                {
+                    return deserializer.Deserialize<T>(reader);
+                }
             }
+        }
+        catch (System.Exception)
+        {
+            throw new ConfigException(3110);
         }
     }
 
     public bool Save<T>(T value)
     {
-        using (var stream = File.Create(_path))
+        try
         {
-            using (var writer = new StreamWriter(stream))
+            using (var stream = File.Create(_path))
             {
-                serializer.Serialize(writer, value);
-                return true;
+                using (var writer = new StreamWriter(stream))
+                {
+                    serializer.Serialize(writer, value);
+                    return true;
+                }
             }
+        }
+        catch(System.Exception)
+        {
+            throw new ConfigException(3111);
         }
     }
 }

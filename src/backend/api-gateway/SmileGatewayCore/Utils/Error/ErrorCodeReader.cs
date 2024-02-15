@@ -17,6 +17,7 @@ public class ErrorCodeReader
         var json = JsonSerializer.Deserialize<List<ErrorCodeModel>>(File.ReadAllText(Path));
         if (json == null)
             return;
+        
         foreach (var item in json)
         {
             string? str = JsonSerializer.Serialize(item);

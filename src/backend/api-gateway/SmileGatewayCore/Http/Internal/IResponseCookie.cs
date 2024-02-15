@@ -6,4 +6,5 @@ public interface IResponseCookie
 {
     public void Append(string key, string value, CookieOptions options);
     public void Append(string key, string value);
+    public void Append(string header);
 }

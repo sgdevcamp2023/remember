@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using SmileGatewayCore.Config;
 using SmileGatewayCore.Instance.DownStream;
 
@@ -6,22 +7,19 @@ namespace SmileGatewayCore.Manager;
 internal class ListenerManager
 {
     public ClusterManager ClusterManager { get; set; } = null!;
-    public List<Listener> Listeners { get; set; } = new List<Listener>();
+    public ConcurrentDictionary<string, Listener> Listeners { get; set; } = new ConcurrentDictionary<string, Listener>();
 
-    public void Init(List<ListenerConfig> models)
+    public void Init(List<ListenerConfig> configs)
     {
-        foreach (var model in models)
+        foreach (var config in configs)
         {
-            var listener = new Listener(ClusterManager, model);
-            listener.Init();
-
-            Listeners.Add(listener);
+            Listeners.TryAdd(config.Name, CreateListener(config));
         }
     }
 
     public void Run()
     {
-        foreach (var listener in Listeners)
+        foreach (var (name, listener) in Listeners)
         {
             listener.Run();
         }
@@ -29,13 +27,25 @@ internal class ListenerManager
 
     public void Changed(List<ListenerConfig> configs)
     {
-        // foreach(ListenerConfig config in configs)
-        // {
-        //     var listener = Listeners.Find(x => x.c.Name == config.Name);
-        //     if (listener != null)
-        //     {
-        //         listener.Changed(config);
-        //     }
-        // }
+        foreach (ListenerConfig config in configs)
+        {
+            if (Listeners.TryGetValue(config.Name, out Listener? listener))
+            {
+                if (listener != null)
+                    listener.Changed(config);
+            }
+            else
+            {
+                Listeners.TryAdd(config.Name, CreateListener(config));
+            }
+        }
+    }
+
+    private Listener CreateListener(ListenerConfig config)
+    {
+        Listener listener = new Listener(ClusterManager, config);
+        listener.Init();
+
+        return listener;
     }
 }

@@ -16,7 +16,7 @@ internal class Cluster
 {
     private ClusterFilterChains _filterChains = new ClusterFilterChains();
     private List<EndPoint> endPoints = new List<EndPoint>();
-    public readonly ClusterConfig Config;
+    public ClusterConfig Config { get; private set; } = null!;
 
     public Cluster(ClusterConfig config)
     {
@@ -43,20 +43,16 @@ internal class Cluster
     public void ChangedCluster(ClusterConfig config)
     {
         // 클러스터 동기화
-
+        
     }
+
     public async Task Run(HttpContext context)
     {
         EndPoint? endPoint = GetEndPoint();
         if(endPoint == null)
-            throw new ClusterException(3109);
+            throw new NetworkException(3200);
 
         await _filterChains.FilterStartAsync(endPoint, context);
-    }
-
-    public Cluster Clone()
-    {
-        return new Cluster(Config);
     }
 
     public EndPoint? GetEndPoint()
@@ -78,5 +74,10 @@ internal class Cluster
         }
 
         return endPoint;
+    }
+
+    public void DeleteCluster()
+    {
+        
     }
 }

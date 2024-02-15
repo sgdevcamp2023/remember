@@ -11,10 +11,11 @@ public class Adapter
     internal AddressConfig Address { get; set; } = null!;
     internal Cluster Cluster { get; set; } = null!;
     internal string UserIP { get; set; } = null!;
-
-    internal Adapter(Authorization? auth, AddressConfig address, Cluster cluster, string userIP)
+    internal JwtValidator JwtValidator { get => Authorization!.jwtValidator; }
+    internal Adapter(Authorization? auth, List<string> disallowHeaders, AddressConfig address, Cluster cluster, string userIP)
     {
         Authorization = auth;
+        DisallowHeaders = disallowHeaders;
         Address = address;
         Cluster = cluster;
         UserIP = userIP;

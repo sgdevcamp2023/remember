@@ -11,9 +11,10 @@ public static class ErrorResponse
         response.StatusCode = 400;
         response.StatusMessage = "Bad Request";
         response.Protocol = "HTTP/1.1";
-        response.Header.Add("Content-Type", "applicatoin/json");
-        response.Header.Add("Date", DateTime.Now.ToString("r"));
-        response.Header.Add("Connection", "close");
+        response.Header["Content-Type"] = "applicatoin/json";
+        response.Header["Date"] = DateTime.Now.ToString("r");
+        response.Header["Connection"] = "close";
+        response.Header["Access-Control-Allow-Credentials"] = "true";
 
         string errorString = GetErrorInfo(errorCode);
         response.ContentLength = errorString.Length;

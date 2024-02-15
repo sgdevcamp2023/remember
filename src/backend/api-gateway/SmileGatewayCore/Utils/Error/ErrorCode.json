@@ -94,4 +94,19 @@
         "message": "SERVICE_DOWN",
         "description": "서버 에러입니다."
     },
+    {
+        "code": 3110,
+        "message": "READ_CONFIG_FAILED",
+        "description": "설정 파일을 읽는데 실패했습니다."
+    },
+    {
+        "code": 3111,
+        "message": "WRITE_CONFIG_FAILED",
+        "description": "설정 파일을 쓰는데 실패했습니다."
+    },
+    {
+        "code": 3200,
+        "message": "DISCONNECT_SOCKET",
+        "description": "소켓 연결이 끊겼습니다."
+    }
 ]

@@ -12,7 +12,7 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
     private AsyncLocal<EndPoint> _endPoint = new AsyncLocal<EndPoint>();
     public void Init()
     {
-        UseFilter<ClusterExceptionFilter>();
+        // UseFilter<ClusterExceptionFilter>();
     }
     
 

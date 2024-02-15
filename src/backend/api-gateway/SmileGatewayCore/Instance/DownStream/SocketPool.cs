@@ -24,6 +24,8 @@ public class SocketPool
 
     public void ReturnSocket(Socket socket)
     {
+        if(socket.Connected == true)
+            socket.Disconnect(reuseSocket: true);
         _socketPool.Return(socket);
     }
 }
@@ -33,7 +35,10 @@ class SocketPoolPolicy : IPooledObjectPolicy<Socket>
 {
     public Socket Create()
     {
-        return new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+
+        return socket;
     }
 
     public bool Return(Socket obj)

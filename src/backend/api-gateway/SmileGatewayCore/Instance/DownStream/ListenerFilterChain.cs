@@ -13,10 +13,11 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
     public void Init()
     {
         // 인증 필터
+        UseFilter<ExceptionFilter>();
+        UseFilter<ServiceFilter>();
         UseFilter<TraceFilter>();
-        UseFilter<ListenerExceptionFilter>();
-        // UseFilter<AuthorizationFilter>();
         UseFilter<OriginalFilter>();
+        UseFilter<AuthorizationFilter>();
         UseFilter<LogFilter>();
     }
 

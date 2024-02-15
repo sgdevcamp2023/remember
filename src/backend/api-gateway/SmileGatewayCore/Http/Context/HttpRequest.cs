@@ -38,7 +38,7 @@ public partial class HttpRequest
 
     private void ParseHeader(string requestString)
     {
-        _requestFeature = new RequestFeature();
+        // System.Console.WriteLine("\n" + requestString + "\n");
         string[] requestLines = requestString.Split("\r\n");
         MakeRequestInfo(requestLines[0].Split(" "));
 
@@ -46,7 +46,7 @@ public partial class HttpRequest
         for (int i = 1; i < requestLines.Count(); i++)
         {
             string[] header = requestLines[i].Split(": ");
-
+            // System.Console.WriteLine(header[0] + ": " + header[1]);
             if (header[0] == "Cookie")
             {
                 Cookie = new RequestCookie(header[1]);
@@ -68,8 +68,16 @@ public partial class HttpRequest
                 continue;
             }
 
+            if (header[0] == "Origin")
+            {
+                if (header[1].StartsWith("https"))
+                    IsHttps = true;
+                else
+                    IsHttps = false;
+            }
+
             if (header.Length > 1)
-                Header.Add(header[0], header[1]);
+                Header[header[0]] = header[1];
         }
 
         MakeDeafultHeader();
@@ -109,11 +117,13 @@ public partial class HttpRequest
         string requestString = $"{Method} {Path} {Protocol}\r\n";
         requestString += $"trace-id: {TraceId}\r\n";
         requestString += $"user-id: {UserId}\r\n";
+
         foreach (var header in Header)
         {
             requestString += $"{header.Key}: {header.Value}\r\n";
         }
-        requestString += $"Content-Length: {ContentLength}";
+        if (ContentLength != -1)
+            requestString += $"Content-Length: {ContentLength}";
 
         return requestString;
     }
@@ -124,10 +134,11 @@ public partial class HttpRequest
 
         byte[] buffer = System.Text.Encoding.UTF8.GetBytes(requestString);
         if (IsMultipart)
-            buffer = buffer.Concat(MultipartBody.ToArray()).ToArray();
+            buffer = buffer.Concat(MultipartBody).ToArray();
         else
             buffer = buffer.Concat(Encoding.UTF8.GetBytes(Body!)).ToArray();
 
+        System.Console.WriteLine(requestString);
         return buffer;
     }
 

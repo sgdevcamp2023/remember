@@ -17,18 +17,21 @@ public class ExceptionFilter : IListenerFilterBase
         }
         catch (System.Exception e)
         {
-            System.Console.WriteLine("ExceptionFilter: " + e.Message);
-
             if (e is DefaultException d)
             {
+                System.Console.WriteLine($"ExceptionFilter: {d.Message} {d.ErrorCode}");
+
                 ErrorResponse.MakeBadRequest(context.Response, d.ErrorCode);
             }
             else if (e is InternalException i)
             {
+                System.Console.WriteLine($"ExceptionFilter: {i.Message} {i.ErrorCode}");
+
                 ErrorResponse.MakeInternalServerError(context.Response, i.ErrorCode);
             }
             else
             {
+                System.Console.WriteLine($"ExceptionFilter: {e.Message}");
                 ErrorResponse.MakeBadRequest(context.Response, 3000);
             }
 

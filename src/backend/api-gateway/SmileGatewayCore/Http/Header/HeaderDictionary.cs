@@ -8,30 +8,16 @@ public class HeaderDictionary : IDictionary<string, string>
     private readonly string[] EmptyKeys = Array.Empty<string>();
     private readonly string[] EmptyValues = Array.Empty<string>();
 
-    private Dictionary<string, string>? Store { get; set; }
+    private Dictionary<string, string> Store { get; set; }
 
     public HeaderDictionary()
     {
         Store = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     }
 
-    public HeaderDictionary(Dictionary<string, string>? keyValuePairs)
+    public HeaderDictionary(Dictionary<string, string> keyValuePairs)
     {
         Store = keyValuePairs;
-    }
-
-    public HeaderDictionary(int capacity)
-    {
-        // 대 소문자 비교 X
-        EnsureStore(capacity);
-    }
-
-    public void EnsureStore(int capacity)
-    {
-        if (Store == null)
-        {
-            Store = new Dictionary<string, string>(capacity, StringComparer.OrdinalIgnoreCase);
-        }
     }
 
     public ICollection<string> Keys
@@ -56,7 +42,7 @@ public class HeaderDictionary : IDictionary<string, string>
     {
         get
         {
-            return Store?.Count ?? 0;
+            return Store.Count;
         }
     }
 
@@ -80,10 +66,9 @@ public class HeaderDictionary : IDictionary<string, string>
         }
         set
         {
-            if (Store == null)
+            if (Store.ContainsKey(key) == false)
             {
-                EnsureStore(1);
-                Store?.Add(key, value);
+                Store.Add(key, value);
             }
             else
             {
@@ -95,7 +80,7 @@ public class HeaderDictionary : IDictionary<string, string>
 
     public void Add(string key, string value)
     {
-        Store?.Add(key, value);
+        Store.Add(key, value);
     }
 
     public bool ContainsKey(string key)
@@ -129,19 +114,18 @@ public class HeaderDictionary : IDictionary<string, string>
     {
         if (item.Key != null && item.Value != null)
         {
-            EnsureStore(1);
-            Store?.Add(item.Key, item.Value);
+            Store.Add(item.Key, item.Value);
         }
     }
 
     public void Clear()
     {
-        Store?.Clear();
+        Store.Clear();
     }
 
     public bool Contains(KeyValuePair<string, string> item)
     {
-        return Store?.Contains(item) ?? false;
+        return Store.Contains(item);
     }
     public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
     {
@@ -150,7 +134,7 @@ public class HeaderDictionary : IDictionary<string, string>
 
     public bool Remove(KeyValuePair<string, string> item)
     {
-        return Store?.Remove(item.Key) ?? false;
+        return Store.Remove(item.Key);
     }
 
     public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
@@ -160,13 +144,7 @@ public class HeaderDictionary : IDictionary<string, string>
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        // return Store?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, string>>().GetEnumerator();
+        // return Store.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, string>>().GetEnumerator();
         return GetEnumerator();
-    }
-
-    public string? SetCookie
-    {
-        get { return Store!["Set-Cookie"] == null ? String.Empty : Store["Set-Cookie"]; }
-        set { Store!["Set-Cookie"] = value!; }
     }
 }

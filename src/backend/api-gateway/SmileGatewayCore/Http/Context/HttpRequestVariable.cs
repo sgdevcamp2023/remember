@@ -39,6 +39,13 @@ public partial class HttpRequest
         get => _requestFeature.UserId;
         set => _requestFeature.UserId = value;
     }
+
+    public bool IsHttps
+    {
+        get => _requestFeature.IsHttps;
+        set => _requestFeature.IsHttps = value;
+    }
+    
     public HeaderDictionary Header
     {
         get => _requestFeature.Header;

@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using SmileGatewayCore.Exception;
 using SmileGatewayCore.Utils;
 
 namespace SmileGatewayCore.Instance;
@@ -6,7 +7,7 @@ namespace SmileGatewayCore.Instance;
 public abstract class NetworkInstance : INetworkInstance
 {
     protected MemoryPool _memory = new MemoryPool();
-    private TimeSpan _timeout = TimeSpan.FromSeconds(5);
+    protected TimeSpan _timeout = TimeSpan.FromSeconds(5);
 
     #region Abstract
     public abstract void Init();
@@ -32,7 +33,6 @@ public abstract class NetworkInstance : INetworkInstance
     private async Task ProcessReceiveAsync(Socket socket)
     {
         ArraySegment<byte> buffer = _memory.RentDefaultBytes();
-
         await ProcessReceiveAsync(socket, buffer);
 
         // 수거
@@ -41,13 +41,13 @@ public abstract class NetworkInstance : INetworkInstance
 
     private async Task ProcessReceiveAsync(Socket socket, ArraySegment<byte> buffer)
     {
-        if(!socket.Connected)
+        if (!socket.Connected)
             return;
-            
+
         try
         {
-            var delayTask = Task.Delay(_timeout);
             var recvTask = socket.ReceiveAsync(buffer, SocketFlags.None);
+            var delayTask = Task.Delay(_timeout);
             var completedTask = await Task.WhenAny(delayTask, recvTask);
 
             if (completedTask == recvTask)
@@ -64,19 +64,20 @@ public abstract class NetworkInstance : INetworkInstance
         catch (System.Exception e)
         {
             System.Console.WriteLine(e.Message);
-            Disconnect(socket);
+            await Disconnect(socket);
+            throw new NetworkException(3200);
         }
     }
 
     private async Task ProcessSendAsync(Socket socket, ArraySegment<byte> data)
     {
-        if(!socket.Connected)
+        if (!socket.Connected)
             return;
 
         try
         {
-            var delayTask = Task.Delay(_timeout);
             var sendTask = socket.SendAsync(data, SocketFlags.None);
+            var delayTask = Task.Delay(_timeout);
             var completedTask = await Task.WhenAny(delayTask, sendTask);
 
             if (completedTask == delayTask)
@@ -91,20 +92,23 @@ public abstract class NetworkInstance : INetworkInstance
         catch (System.Exception e)
         {
             System.Console.WriteLine(e.Message);
-            Disconnect(socket);
+            await Disconnect(socket);
+            throw new NetworkException(3200);
         }
     }
 
-    public void Disconnect(Socket socket)
+    public async Task Disconnect(Socket socket)
     {
         try
         {
             System.Console.WriteLine("Disconnect");
-            socket.Disconnect(reuseSocket: true);
+            socket.Shutdown(SocketShutdown.Both);
+
+            await socket.DisconnectAsync(reuseSocket: true);
         }
-        catch (System.Exception e)
+        catch (System.Exception)
         {
-            System.Console.WriteLine(e.Message);
+            throw new NetworkException(3200);
         }
     }
 }

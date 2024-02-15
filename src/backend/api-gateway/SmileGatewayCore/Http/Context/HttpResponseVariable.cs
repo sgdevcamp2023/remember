@@ -6,7 +6,8 @@ namespace SmileGatewayCore.Http.Context;
 public partial class HttpResponse
 {
     IResponseFeature _responseFeatrue;
-    IResponseCookie _responseCookie;
+    IResponseCookie? _responseCookie = null;
+
     public bool IsChucked { get; set; } = false;
     public string Protocol
     {
@@ -50,9 +51,10 @@ public partial class HttpResponse
         get => _responseFeatrue.ContentLength;
         set => _responseFeatrue.ContentLength = value;
     }
-    public IResponseCookie Cookie
+    public IResponseCookie? Cookie
     {
-        get => _responseCookie!;
+        get => _responseCookie;
+        set => _responseCookie = value;
     }
     public List<string> Varys
     {
