@@ -57,6 +57,7 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
                 .collect(Collectors.toList());
         UserStatusRequestDto userStatusRequestDto = new UserStatusRequestDto(guildId, userIds);
         UserStateFeignResponseDto userState = userStatusClient.userStatus(userStatusRequestDto);
+        log.info("{}", userState);
         Map<Long, UserStateResponseDto> guildStates = makeGuildStates(
                 responseDtos, userState);
         Map<Long, Map<Long, ?>> voiceChannelStates = getVoiceChannelStates(guildId, userState);
