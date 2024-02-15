@@ -15,4 +15,7 @@ export class SendTransportProduceDTO {
   @IsNotEmpty()
   @IsBoolean()
   consumer: boolean;
+
+  @IsString()
+  mediaTag: string;
 }

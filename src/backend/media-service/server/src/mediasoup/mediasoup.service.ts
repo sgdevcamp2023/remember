@@ -13,11 +13,14 @@ export class MediasoupService implements OnModuleInit {
     string,
     mediasoup.types.WebRtcTransport
   >();
-  // socketId -> producerId -> consumer transport
+  // socketId -> consumer transport
   private consumerTransports = new Map<
     string,
     mediasoup.types.WebRtcTransport
   >();
+
+  // socketId -> mediatag -> producerId
+  private socketProducerList: Map<string, Map<string, string>> = new Map();
 
   // room Id(parsed_url) -> [producer / consumer, ...]
   private audioProducers = new Map<string, mediasoup.types.Producer[]>();
@@ -121,6 +124,7 @@ export class MediasoupService implements OnModuleInit {
             break;
         }
       });
+
       return transport;
     } catch (error) {
       console.error(error);
@@ -165,7 +169,6 @@ export class MediasoupService implements OnModuleInit {
       }
       this.videoProducers.get(roomId).push(producer);
     }
-    console.log('>>> ', this.audioProducers, this.videoProducers);
   }
 
   getProducers(kind: string, roomId: string) {
@@ -174,6 +177,26 @@ export class MediasoupService implements OnModuleInit {
     } else {
       return this.videoProducers.get(roomId);
     }
+  }
+
+  setProdcuerIdByMediaTag(
+    socketId: string,
+    mediaTag: string,
+    producerId: string,
+  ) {
+    if (!this.socketProducerList.has(socketId)) {
+      this.socketProducerList.set(socketId, new Map());
+    }
+    this.socketProducerList.get(socketId).set(mediaTag, producerId);
+  }
+
+  getProducerIdByMediaTag(socketId: string, mediaTag: string) {
+    return this.socketProducerList?.get(socketId)?.get(mediaTag);
+  }
+
+  removeProducerIdByMediaTag(socketId: string, mediaTag: string) {
+    // console.log(this.socketProducerList?.get(socketId).delete(mediaTag));
+    this.socketProducerList?.get(socketId).delete(mediaTag);
   }
 
   async setConsumer(
@@ -200,9 +223,18 @@ export class MediasoupService implements OnModuleInit {
         .get(roomId)
         .find((consumer) => consumer.id === consumerId);
     } else {
-      return this.videoConsumers
+      const consumer = this.videoConsumers
         .get(roomId)
         .find((consumer) => consumer.id === consumerId);
+      return consumer;
+    }
+  }
+
+  getConsumers(kind: string, roomId: string) {
+    if (kind === 'audio') {
+      return this.audioProducers.get(roomId);
+    } else {
+      return this.videoProducers.get(roomId);
     }
   }
 
@@ -223,9 +255,13 @@ export class MediasoupService implements OnModuleInit {
         ? this.audioProducers.get(roomId)
         : this.videoProducers.get(roomId);
 
-    const index = producers.findIndex((producer) => producer.id === producerId);
+    const index = producers?.findIndex(
+      (producer) => producer.id === producerId,
+    );
     producers.splice(index, 1);
-    console.log('>>> producer removed');
+    console.log(
+      `>>> producer removed : ${roomId}, ${this.audioProducers.get(roomId)}`,
+    );
   }
 
   removeConsumer(kind: string, roomId: string, producerId: string) {
@@ -236,10 +272,13 @@ export class MediasoupService implements OnModuleInit {
 
     const index = consumers.findIndex((consumer) => consumer.id === producerId);
     consumers.splice(index, 1);
-    console.log('>> consumer removed');
   }
 
   getWorker() {
     return this.worker;
+  }
+
+  getSocketProducerList() {
+    return this.socketProducerList;
   }
 }

@@ -9,6 +9,5 @@ export class GetProducersDTO {
   @IsNotEmpty()
   kind: mediasoup.types.MediaKind;
 
-  @IsNotEmpty()
   producerId: mediasoup.types.Producer['id'];
 }

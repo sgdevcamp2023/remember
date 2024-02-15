@@ -79,14 +79,38 @@ export class SignalingGateway
     this.socketToChannelGuildMap.delete(client.id);
 
     ////////////////////////////// mediasoup 관련 작업
+    const myProducer = this.mediasoupService.getSocketProducerList();
+    if (myProducer.has(client.id)) {
+      myProducer.get(client.id).forEach((producer, mediaTag) => {
+        console.log('disconnect producer', producer, mediaTag);
+
+        if (mediaTag === 'audio') {
+          console.log('>> audio producer closed');
+          this.mediasoupService.removeProducer('audio', parsedRoomId, producer);
+          this.mediasoupService.removeProducerIdByMediaTag(client.id, mediaTag);
+        }
+        if (mediaTag === 'camera' || mediaTag === 'display') {
+          console.log('>> video producer closed');
+          this.mediasoupService.removeProducer('video', parsedRoomId, producer);
+          this.mediasoupService.removeProducerIdByMediaTag(client.id, mediaTag);
+        }
+        // 해당유저가 나갔음을 알린다.
+        client.broadcast.to(parsedRoomId).emit('producer-closed', {
+          mediaTag,
+          kind: mediaTag === 'audio' ? 'audio' : 'video',
+          producerId: producer,
+        });
+      });
+    }
     this.mediasoupService.removeTransport(client.id);
 
     ////////////////////////////// 상태 관리 서버 전달 작업
     const data = { channelId, guildId, userId };
     try {
-      const response = await this.httpService
-        .post('http://localhost:6001/guild/delete', data)
-        .toPromise();
+      // const response = await this.httpService
+      //   .post('http://localhost:6001/guild/delete', data)
+      //   .toPromise();
+      console.log('disconnected', data, client.id);
     } catch (error) {
       console.error(error);
     }
@@ -150,9 +174,9 @@ export class SignalingGateway
     this.server.to(parsedRoomId).emit('message', `${userId}님이 입장했습니다.`);
 
     ////////////////////////////////////////// 상태관리 서버 전달 작업
-    const response = await this.httpService
-      .post('http://localhost:6001/guild/update', data)
-      .toPromise();
+    // const response = await this.httpService
+    //   .post('http://localhost:6001/guild/update', data)
+    //   .toPromise();
 
     console.log(this.voiceChannelStatusMap);
   }
@@ -233,7 +257,7 @@ export class SignalingGateway
     @MessageBody() data: SendTransportProduceDTO,
     @ConnectedSocket() client: Socket,
   ) {
-    const { kind, rtpParameters, roomId } = data;
+    const { kind, rtpParameters, roomId, mediaTag } = data;
     const transport = await this.mediasoupService.getTransport(
       client.id,
       data.consumer,
@@ -245,17 +269,23 @@ export class SignalingGateway
     });
 
     this.mediasoupService.setProducer(kind, roomId, producer);
+    this.mediasoupService.setProdcuerIdByMediaTag(
+      client.id,
+      mediaTag,
+      producer.id,
+    );
 
     let producerExist = false;
-    if (this.mediasoupService.getProducers(kind, roomId).length > 1) {
+    if (this.mediasoupService.getProducers('audio', roomId).length > 1) {
       producerExist = true;
-      this.server.to(roomId).emit('new-producer-init', producer.id);
+      if (kind === 'audio')
+        this.server.to(roomId).emit('new-producer-init', producer.id);
     }
 
     producer.on('transportclose', () => {
       console.log('producer transport close');
       producer.close();
-      this.mediasoupService.removeProducer(kind, roomId, producer.id);
+      // this.mediasoupService.removeProducer(kind, roomId, producer.id);
       this.mediasoupService.removeTransport(client.id);
     });
 
@@ -305,7 +335,6 @@ export class SignalingGateway
           rtpCapabilities,
           paused: true,
         });
-
         this.mediasoupService.setConsumer(consumer.kind, roomId, consumer);
 
         consumer.on('transportclose', () => {
@@ -357,18 +386,73 @@ export class SignalingGateway
     await consumer.resume();
   }
 
+  @SubscribeMessage('new-video-producer')
+  async handleNewVideoProducer(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { roomId, producerId } = data;
+
+    client.broadcast.to(roomId).emit('new-video-producer-init', producerId);
+  }
+
+  @SubscribeMessage('consumer-toggle')
+  async handleConsumerToggle(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { kind, roomId, serverConsumerId } = data;
+    const consumer = await this.mediasoupService.getConsumer(
+      kind,
+      roomId,
+      serverConsumerId,
+    );
+
+    let paused = false;
+    if (consumer.paused) {
+      await consumer.resume();
+      paused = false;
+    } else {
+      await consumer.pause();
+      paused = true;
+    }
+    return { paused };
+  }
+
   @SubscribeMessage('getProducers')
   async handleGetProducers(
     @MessageBody() data: GetProducersDTO,
     @ConnectedSocket() client: Socket,
   ) {
-    const { kind, roomId, producerId } = data;
+    const { kind, roomId, producerId = null } = data;
     const producers = this.mediasoupService.getProducers(kind, roomId);
 
-    const producerIds = producers
-      .map((producer) => producer.id)
-      .filter((id) => id !== producerId);
+    let producerIds = producers?.map((producer) => producer.id);
+    if (producerId) {
+      producerIds = producerIds.filter((id) => id !== producerId);
+    }
 
     return producerIds;
+  }
+
+  @SubscribeMessage('producer-close')
+  async handleProducerClose(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { roomId, kind, mediaTag } = data;
+    const myProducerId = this.mediasoupService.getProducerIdByMediaTag(
+      client.id,
+      mediaTag,
+    );
+    const producers = this.mediasoupService.getProducers(kind, roomId);
+    const producer = producers.find((producer) => producer.id === myProducerId);
+    producer.close();
+    this.mediasoupService.removeProducer(kind, roomId, myProducerId);
+    this.mediasoupService.removeProducerIdByMediaTag(client.id, mediaTag);
+
+    client.broadcast
+      .to(roomId)
+      .emit('producer-closed', { mediaTag, kind, producerId: myProducerId });
   }
 }
