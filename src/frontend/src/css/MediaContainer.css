@@ -1,0 +1,60 @@
+.media-container {
+  position: fixed;
+  bottom: 0;
+  width: 240px;
+  padding-bottom: 20px;
+  background-color: #27282c;
+}
+.media-status {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 5px;
+}
+
+.voice-connection p {
+  margin: 0;
+}
+
+.connected {
+  color: #34e718;
+  font-weight: bold;
+}
+
+.channel-name {
+  font-size: small;
+  color: darkgray;
+}
+
+.media-tools {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.media_button {
+  background-color: #2f3136;
+  color: #ffffff;
+  border-radius: 3px;
+  margin: 0 3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 12px;
+  height: 30px;
+}
+
+.media_button:hover {
+  background-color: #5865f2;
+}
+
+.disconnect-button {
+  background-color: #2f3136;
+  color: #ffffff;
+  border-radius: 5px;
+  padding: 5px 10px;
+  height: 35px;
+  transition: background-color 0.2s ease;
+}
+
+.disconnect-button:hover {
+  background-color: #5865f2;
+}
