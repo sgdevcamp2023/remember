@@ -120,10 +120,57 @@ export const channelList = {
       name: "최성민의 토크쇼",
       type: "VOICE",
     },
+    {
+      channelReadId: 6,
+      categoryId: 0,
+      guildId: 1,
+      name: "최성민의 토크쇼2",
+      type: "VOICE",
+    },
   ],
 };
 
 // key : channelId, value : [ {userId, userNickname, profile}, {...}, {...} ]
 export const memberList = {
   resultData: {},
+};
+
+export const friendList = {
+  resultData : [
+    {
+      id: 1,
+      email: "Hong@adlfajn.com",
+      name: "Hong",
+      profileURL: "",
+      isOnline: true,
+    },  
+    {
+      id: 2,
+      email: "Hong@adlfajn.com",
+      name: "Namu",
+      profileURL: "",
+      isOnline: false,
+    },  
+    {
+      id: 3,
+      email: "Hong@adlfajn.com",
+      name: "킹 황 성 민",
+      profileURL: "",
+      isOnline: false,
+    },  
+    {
+      id: 4,
+      email: "Hong@adlfajn.com",
+      name: "영헌씨",
+      profileURL: "",
+      isOnline: true,
+    },  
+    {
+      id: 5,
+      email: "Hong@adlfajn.com",
+      name: "지헌씨",
+      profileURL: "",
+      isOnline: true,
+    },  
+  ],
 };

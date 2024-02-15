@@ -1,30 +1,21 @@
 import { Route, Routes } from "react-router-dom";
-import LogIn from "./pages/login";
-import Register from "./pages/register";
+import RegisterPage from "./pages/RegisterPage";
 import MainPage from "./pages/MainPage";
 import Layout from "./pages/Layout";
-import ForgetPassword from "./pages/forgetPassword";
-import styled from "styled-components";
-import backImg from "./img/backImg.webp";
+import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 import RedirectPage from "./pages/RedirectPage";
 import FriendPage from "./pages/dm/FriendPage";
-
-const AppElement = styled.div`
-  background-image: url(${backImg});
-  background-size: cover;
-`;
+import LoginPage from "./pages/LoginPage";
 
 function App() {
-  const isLogin = localStorage.getItem("access_token") !== null;
-
   return (
     // <AppElement>
     <Routes>
       <Route path={`/`}>
         <Route index element={<RedirectPage />} />
-        <Route path={"login"} element={<LogIn />} />
-        <Route path={"register"} element={<Register />} />
-        <Route path={"forget-password"} element={<ForgetPassword />} />
+        <Route path={"login"} element={<LoginPage />} />
+        <Route path={"register"} element={<RegisterPage />} />
+        <Route path={"forget-password"} element={<ForgetPasswordPage />} />
 
         {/* Guild and Channel */}
         <Route path="/channels" element={<Layout />}>

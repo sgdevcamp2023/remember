@@ -5,6 +5,6 @@
   position: fixed;
   top: 0;
   left: 312px; /* 첫 번째 사이드바의 너비에 맞춰 설정 */
-  padding: 8px;
+  /* padding: 8px; */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
