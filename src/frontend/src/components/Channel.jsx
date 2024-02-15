@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import "../css/Channels.css";
-import {
-  channelList as mock_channel_list,
-  memberList as mock_member_list,
-} from "../config/mock_data";
+import {channelList as mock_channel_list, memberList as mock_member_list,} from "../config/mock_data";
 import MediaContainer from "./MediaContainer";
 import CurrentStore from "../store/CurrentStore";
 import CommunityStore from "../store/CommunityStore";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import ChannelButton from "./ChannelButton";
 import VoiceChannelButton from "./VoiceChannelButton";
 import useVoiceSocket from "../hooks/useVoiceSocket";
 import AuthStore from "../store/AuthStore";
-import { useMediaStream } from "../contexts/MediaStreamContext";
+import {useMediaStream} from "../contexts/MediaStreamContext";
 import SocketStore from "../store/SocketStore";
+import {getUserStateAndVoice} from "../Request/communityRequest";
 
 const Channel = () => {
   const navigate = useNavigate();
-  const { audioStream } = useMediaStream();
+  const {audioStream} = useMediaStream();
 
   const {
     connectSocket,
@@ -31,10 +29,12 @@ const Channel = () => {
     setCurrentViewChannel,
     setCurrentViewChannelType,
   } = CurrentStore();
-  const { setUserId } = AuthStore();
-  const { CHANNEL_LIST, setChannelList } = CommunityStore();
-  const { VOICE_SOCKET } = SocketStore.getState();
-  const { CURRENT_JOIN_CHANNEL } = CurrentStore.getState();
+  const {setUserId, USER_ID} = AuthStore();
+  const {CHANNEL_LIST, setChannelList, setUserStateMap, setVoiceUserStateMap} = CommunityStore();
+  const {VOICE_SOCKET} = SocketStore.getState();
+  const {CURRENT_JOIN_CHANNEL} = CurrentStore.getState();
+
+  let accessToken = AuthStore.getState().ACCESS_TOKEN;
 
   const [members, setMembers] = useState([]);
   const [testId, setTestId] = useState("");
@@ -49,7 +49,15 @@ const Channel = () => {
       //memebers axios
       const memberResponse = mock_member_list.resultData;
 
-      // response를 세팅
+      const fetchData = async () => {
+        const data = await getUserStateAndVoice(CURRENT_VIEW_GUILD, USER_ID);
+        setUserStateMap(data.data.resultData.guildStates);
+        setVoiceUserStateMap(data.data.resultData.voiceChannelStates);
+      }
+
+      fetchData();
+
+      // setUserStateMap(fetchMembers());
       setChannelList(channelResponse);
       setMembers(memberResponse);
 
@@ -61,8 +69,10 @@ const Channel = () => {
         navigate(`/channels/${CURRENT_VIEW_GUILD}/${channel?.channelReadId}`);
       }
     }
-    return () => {};
+    return () => {
+    };
   }, [CURRENT_VIEW_GUILD]);
+  // console.log(USER_STATE_MAP);
 
   const handleVoiceChannel = (guildId, channelId) => {
     if (channelId === CURRENT_JOIN_CHANNEL) {
@@ -96,7 +106,7 @@ const Channel = () => {
         </button>
       </div>
       <div>
-        {Object.entries(audioStream).map(([id, { kind, stream }]) =>
+        {Object.entries(audioStream).map(([id, {kind, stream}]) =>
           kind === "audio" ? (
             <audio
               key={id}
@@ -117,7 +127,7 @@ const Channel = () => {
         {CHANNEL_LIST ? (
           CHANNEL_LIST?.map((channel) =>
             channel.type !== "VOICE" ? (
-              <ChannelButton key={channel.channelReadId} channel={channel} />
+              <ChannelButton key={channel.channelReadId} channel={channel}/>
             ) : (
               <VoiceChannelButton
                 key={channel.channelReadId}
@@ -131,7 +141,7 @@ const Channel = () => {
           <></>
         )}
       </div>
-      <div>{VOICE_SOCKET ? <MediaContainer /> : <></>}</div>
+      <div>{VOICE_SOCKET ? <MediaContainer/> : <></>}</div>
     </div>
   );
 };
