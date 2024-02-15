@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,16 +53,20 @@ public class CommunityMessageController {
         messageProducerService.sendMessageForCommunity(messageDto);
     }
 
-    @GetMapping("/api/chat-service/community/messages/channel/{channelId}")
-    public Page<CommunityMessageDto> getMessages(@PathVariable("channelId") Long channelId) {
+    @GetMapping("/api/chat-service/community/messages/channel")
+    public Page<CommunityMessageDto> getMessages(@RequestParam(value = "channelId") Long channelId,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "30") int size) {
 
-        return messageService.getMessages(channelId);
+        return messageService.getMessages(channelId, page, size);
     }
 
-    @GetMapping("/api/chat-service/community/comments/{parentId}")
-    public Page<CommunityMessageDto> getComments(@PathVariable("parentId") Long parentId) {
+    @GetMapping("/api/chat-service/community/comments")
+    public Page<CommunityMessageDto> getComments(@RequestParam(value = "parentId") Long parentId,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "30") int size) {
 
-        return messageService.getComments(parentId);
+        return messageService.getComments(parentId, page, size);
     }
 
     @PostMapping("/api/chat-service/community/message/file")

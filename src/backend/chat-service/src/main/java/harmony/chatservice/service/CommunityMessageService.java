@@ -12,7 +12,6 @@ import harmony.chatservice.exception.ExceptionStatus;
 import harmony.chatservice.repository.CommunityMessageRepository;
 import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,8 +95,8 @@ public class CommunityMessageService {
         return new CommunityMessageDto(messageRepository.save(communityMessage));
     }
 
-    public Page<CommunityMessageDto> getMessages(Long channelId) {
-        Page<CommunityMessageDto> messageDtos = messagesToMessageDtos("message", channelId);
+    public Page<CommunityMessageDto> getMessages(Long channelId, int page, int size) {
+        Page<CommunityMessageDto> messageDtos = messagesToMessageDtos("message", channelId, page, size);
         for (CommunityMessageDto messageDto : messageDtos) {
             List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
             messageDto.setEmojis(emojiDtos);
@@ -108,8 +106,8 @@ public class CommunityMessageService {
         return messageDtos;
     }
 
-    public Page<CommunityMessageDto> getComments(Long parentId) {
-        Page<CommunityMessageDto> messageDtos = messagesToMessageDtos("comment", parentId);
+    public Page<CommunityMessageDto> getComments(Long parentId, int page, int size) {
+        Page<CommunityMessageDto> messageDtos = messagesToMessageDtos("comment", parentId, page, size);
         for (CommunityMessageDto messageDto : messageDtos) {
             List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
             messageDto.setEmojis(emojiDtos);
@@ -118,9 +116,8 @@ public class CommunityMessageService {
         return messageDtos;
     }
 
-    public Page<CommunityMessageDto> messagesToMessageDtos(String type, Long id) {
-        List<Order> sorts = Collections.singletonList(Sort.Order.desc("createdAt"));
-        Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
+    public Page<CommunityMessageDto> messagesToMessageDtos(String type, Long id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<CommunityMessage> messages = null;
         if (type.equals("message")) {
             messages = messageRepository.findByChannelIdAndDelCheckAndParentId(id, pageable);
