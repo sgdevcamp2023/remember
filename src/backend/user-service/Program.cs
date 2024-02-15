@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configurationBinder = builder.Configuration;
 
 // secretconfig
-builder.Configuration.AddJsonFile("secretconfig.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddJsonFile("./SecretZuZu/secretconfig.json", optional: true, reloadOnChange: true);
 
 // 로거 의존성 주입
 builder.Services.AddSingleton<IBaseLogger, FileLogger>();
@@ -51,7 +51,7 @@ builder.Services.AddCors(options =>
                 .WithOrigins("http://10.99.29.133:3000") // 리액트 앱의 주소
                 .WithOrigins("http://127.0.0.1:3000") // 리액트 앱의 주소
                 .WithOrigins("https://127.0.0.1:3000") // 리액트 앱의 주소
-                .WithOrigins("https://localhost:3000")
+                .WithOrigins("https://l1ocalhost:3000")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

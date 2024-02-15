@@ -1,11 +1,14 @@
+using System.Text;
 using Castle.DynamicProxy;
 using MimeKit;
+using Newtonsoft.Json;
 using user_service.auth.dto;
 using user_service.auth.repository;
 using user_service.Business.Auth.service;
 using user_service.common;
 using user_service.common.exception;
 using user_service.intercepter;
+using user_service.user.dto;
 
 namespace user_service.auth.service;
 
@@ -14,6 +17,7 @@ public class AuthService : IAuthService
     private readonly IUserRepository _userRepository;
     private IAuthRedisRepository _redis = null!;
     private IConfiguration _config = null!;
+    private HttpClient _communityClient = null!;
     public AuthService(IUserRepository userRepository,
                     IAuthRedisRepository redisRepository,
                     IConfiguration config,
@@ -24,9 +28,11 @@ public class AuthService : IAuthService
         _userRepository = generator.CreateInterfaceProxyWithTargetInterface<IUserRepository>(userRepository, interceptor);
         _redis = redisRepository;
         _config = config;
+        _communityClient = new HttpClient();
+        _communityClient.BaseAddress = new Uri("http://34.22.109.45:8000/api/community/registration/user");
     }
 
-    public bool Register(RegisterDTO register)
+    public async Task RegisterAsync(RegisterDTO register)
     {
         // 체크
         SameEmailCheck(register.Email);
@@ -36,11 +42,49 @@ public class AuthService : IAuthService
 
         // 비밀번호 암호화
         register.Password = Utils.SHA256Hash(register.Password);
-
         if (_userRepository.InsertUser(register) == false)
             throw new ServiceException(4010);
+        
+        UserModel? user = _userRepository.GetUserByEmail(register.Email);
+        if(user == null)
+            throw new ServiceException(4010);
 
-        return true;
+        using StringContent jsonContent = new(
+            JsonConvert.SerializeObject(new CommunityDTO(){
+                userId = user.Id,
+                email = user.Email,
+                name = user.Name,
+                profile = user.Profile
+            }),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        CancellationTokenSource cts = new CancellationTokenSource();
+        cts.CancelAfter(100); // Cancel after 1 second
+        CancellationToken cancellationToken = cts.Token;
+
+        try
+        {
+            HttpResponseMessage response = await _communityClient.PostAsync("", jsonContent, cancellationToken);
+            string str = await response.Content.ReadAsStringAsync();
+            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO<CommunityBaseException>>(str);
+
+            if(dto!.ResultCode != 200)
+            {
+                System.Console.WriteLine(dto.ResultData!.Exception);
+                // var error = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
+                // System.Console.WriteLine(error!.Exception);
+                throw new ServiceException(4010);
+            }
+        }
+        catch (Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+            _userRepository.DeleteUser(user.Id);
+
+            throw new ServiceException(4010);
+        }
     }
 
     public void SendEmailChecksum(string email)

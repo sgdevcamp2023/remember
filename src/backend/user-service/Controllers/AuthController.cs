@@ -21,14 +21,11 @@ namespace user_service
             }
 
             [HttpPost("register")]
-            public IActionResult Register([FromBody] RegisterDTO register)
+            public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO register)
             {
-                if (_authService.Register(register))
-                {
-                    return Ok();
-                }
+                await _authService.RegisterAsync(register);
 
-                return BadRequest();
+                return Ok();
             }
 
             [HttpPost("login")]
@@ -45,6 +42,15 @@ namespace user_service
                 [FromBody] EmailRequestDTO email)
             {
                 _authService.SendMailResetPassword(email.Email);
+
+                return Ok();
+            }
+
+            [HttpPost("send-email")]
+            public IActionResult SendEmail(
+                [FromBody] EmailRequestDTO email)
+            {
+                _authService.SendEmailChecksum(email.Email);
 
                 return Ok();
             }

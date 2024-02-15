@@ -7,7 +7,7 @@ namespace user_service
     {
         public class UserModel
         {
-            public UserModel(long Id, string Email, string Password, string Name, string? Profile, DateTime CreatedAt, DateTime UpdatedAt, bool IsDeleted = false)
+            public UserModel(long Id, string Email, string Password, string Name, string Profile, DateTime CreatedAt, DateTime UpdatedAt, bool IsDeleted = false)
             {
                 this.Id = Id;
                 this.Email = Email;
@@ -25,7 +25,7 @@ namespace user_service
             public string Name { get; set; } = null!;
             public DateTime CreatedAt { get; set; }
             public DateTime UpdatedAt { get; set; }
-            public string? Profile { get; set; }
+            public string Profile { get; set; }
             public bool IsDeleted { get; set; }
         }
     }

@@ -40,8 +40,8 @@ services:
     environment:
       - FLUENTD_CONF=fluentd.conf
     volumes:
-      - C:\github\remember\src\backend\user-service\UserService\fluentd\buffer:/var/buffer
-      - C:\github\remember\src\backend\user-service\UserService\fluentd\pos:/var/pos
+      - C:\github\remember\src\backend\user-service\fluentd\buffer:/var/buffer
+      - C:\github\remember\src\backend\user-service\fluentd\pos:/var/pos
       - logs:/var/log
     restart: unless-stopped
 

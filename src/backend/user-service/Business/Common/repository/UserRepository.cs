@@ -50,7 +50,7 @@ namespace user_service
 
             public bool InsertUser(RegisterDTO user)
             {
-                string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '')";
+                string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '{"https://storage.googleapis.com/remember-harmony/d68c3d6c-4683-4ddf-892b-8a73e3678145"}')";
                 _db.ExecuteNonQuery(query);
 
                 return true;
@@ -94,7 +94,7 @@ namespace user_service
                     reader.GetString(reader.GetOrdinal("email")),
                     reader.GetString(reader.GetOrdinal("password")),
                     reader.GetString(reader.GetOrdinal("name")),
-                    reader.IsDBNull(reader.GetOrdinal("profile")) ? null : reader.GetString(reader.GetOrdinal("profile")),
+                    reader.GetString(reader.GetOrdinal("profile")),
                     reader.GetDateTime(reader.GetOrdinal("created_at")),
                     reader.GetDateTime(reader.GetOrdinal("updated_at")),
                     reader.GetBoolean(reader.GetOrdinal("is_deleted"))

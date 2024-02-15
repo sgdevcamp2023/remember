@@ -145,7 +145,7 @@ namespace user_service
                         Id = reader.GetInt64(reader.GetOrdinal("id")),
                         Email = reader.GetString(reader.GetOrdinal("email")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
-                        ProfileUrl = reader.IsDBNull(reader.GetOrdinal("profile")) ? null : reader.GetString(reader.GetOrdinal("profile")),
+                        ProfileUrl = reader.GetString(reader.GetOrdinal("profile")),
                         IsOnline = false
                     };
                 }
