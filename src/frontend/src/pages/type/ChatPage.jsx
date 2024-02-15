@@ -85,6 +85,8 @@ const ChatPage = () => {
       }
     };
 
+    console.log("일하는 중");
+
     //처음 구독
     socketIdRef.current = mainSocket.subscribe('/topic/guild/1', handleReceiveMessage);
     console.log(socketIdRef.current)
