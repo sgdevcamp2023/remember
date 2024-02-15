@@ -12,7 +12,7 @@ export const logInRequest = async (email, password) => {
         .then(response => {
             // Body에 accessToken, refreshToken이 담김  
             if (response.status !== 200) {
-                alert(data.description);
+                // alert(data.description);
             }
             else {
                 // TODO
