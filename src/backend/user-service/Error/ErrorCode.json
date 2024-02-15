@@ -1,0 +1,162 @@
+[
+    {
+        "code": 4000,
+        "message": "REQUIRED_EMAIL",
+        "description": "이메일은 필수 입력입니다."
+    },
+    {
+        "code": 4001,
+        "message": "INVALID_EMAIL",
+        "description": "이메일 형식이 올바르지 않습니다."
+    },
+    {
+        "code": 4002,
+        "message": "REQUIRED_PASSWORD",
+        "description": "비밀번호는 필수 입력입니다."
+    },
+    {
+        "code": 4003,
+        "message": "INVALID_PASSWORD",
+        "description": "비밀번호는 8~20이며, 숫자, 특수문자를 포함해야 합니다."
+    },
+    {
+        "code": 4004,
+        "message": "REQUIRED_EMAIL_CHECK",
+        "description": "Email 체크를 넣어주세요."
+    },
+    {
+        "code": 4005,
+        "message": "REQUIRED_USERNAME",
+        "description": "유저 이름은 필수 입력입니다."
+    },
+    {
+        "code": 4006,
+        "message": "INVALID_USERNAME",
+        "description": "유저 이름은 영문, 언더스코어(_), 대시(-)만 포함해야 합니다."
+    },
+    {
+        "code": 4007,
+        "message": "NON_EXISTENT_USER",
+        "description": "존재하지 않는 유저입니다."
+    },
+    {
+        "code": 4008,
+        "message": "INVALID_PASSWORD",
+        "description": "비밀번호가 올바르지 않습니다."
+    },
+    {
+        "code": 4009,
+        "message": "SAME_EMAIL",
+        "description": "이미 존재하는 이메일입니다."
+    },
+    {
+        "code": 4010,
+        "message": "FAILED_REGISTER",
+        "description": "회원가입에 실패했습니다."
+    },
+    {
+        "code": 4011,
+        "message": "FAILED_SEND_EMAIL",
+        "description": "이메일 전송에 실패했습니다."
+    },
+    {
+        "code": 4012,
+        "message": "EXPIRED_EMAIL_CHECKSUM",
+        "description": "이메일 인증 시간이 만료되었습니다."
+    },
+    {
+        "code": 4013,
+        "message": "INVALID_EMAIL_CHECKSUM",
+        "description": "이메일 인증 번호가 올바르지 않습니다."
+    },
+    {
+        "code": 4014,
+        "message": "ALREADY_LOGOUT",
+        "description": "이미 로그아웃된 유저입니다."
+    },
+    {
+        "code": 4015,
+        "message": "FAILED_LOGIN",
+        "description": "로그인에 실패했습니다."
+    },
+    {
+        "code": 4016,
+        "message": "ALREADY_FRIEND",
+        "description": "이미 친구 추가된 유저입니다."
+    },
+    {
+        "code": 4017,
+        "message": "ALREADY_SEND_FRIEND_REQUEST",
+        "description": "이미 친구 요청을 보낸 유저입니다."
+    },
+    {
+        "code": 4018,
+        "message": "FAILED_REQUEST_ACCEPT",
+        "description": "친구 수락에 실패하였습니다."
+    },
+    {
+        "code": 4019,
+        "message": "FAILED_REQUEST_REFUSE",
+        "description": "친구 거절에 실패하였습니다."
+    },
+    {
+        "code": 4020,
+        "message": "FAILED_REQUEST_CANCLE",
+        "description": "친구 요청 취소에 실패하였습니다."
+    },
+    {
+        "code": 4021,
+        "message": "REQUIRED_USER_ID",
+        "description": "User ID는 필수 입력입니다."
+    },
+    {
+        "code": 4022,
+        "message": "REQUIRED_NEW_NAME",
+        "description": "새로운 이름은 필수 입력입니다."
+    },
+    {
+        "code": 4023,
+        "message": "REQUIRED_NEW_PROFILE",
+        "description": "새로운 프로필은 필수 입력입니다."
+    },
+    {
+        "code": 4024,
+        "message": "FAILED_UPLOAD_PROFILE",
+        "description": "프로필 업로드에 실패했습니다."
+    },
+    {
+        "code": 4025,
+        "message": "FAILED_GET_FRIEND_LIST",
+        "description": "친구 목록을 가져오는데 실패했습니다."
+    },
+    {
+        "code": 4026,
+        "message": "FAILED_ADD_MYSELF_FRIEND",
+        "description": "자기 자신을 친구로 추가할 수 없습니다."
+    },
+    {
+        "code": 4027,
+        "message": "FAILED_DELETE_MYSELF_FRIEND",
+        "description": "자기 자신을 삭제할 수 없습니다."
+    },
+    {
+        "code": 4028,
+        "message": "FAILED_LOGOUT",
+        "description": "로그아웃에 실패했습니다."
+    },
+    {
+        "code": 4029,
+        "message": "SAME_PASSWORD",
+        "description": "기존 비밀번호와 새로운 비밀번호가 같습니다."
+    },
+    {
+        "code": 4100,
+        "messae": "REQUIRED_TRACE_ID",
+        "description": "Trace ID는 필수 입력입니다."
+    },
+    {
+        "code": 4101,
+        "message": "REQUIRED_USER_ID",
+        "description": "User ID는 필수 입력입니다."
+    }
+]

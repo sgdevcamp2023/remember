@@ -1,0 +1,3 @@
+[submodule "src/backend/user-service/SecretZuZu"]
+	path = src/backend/user-service/SecretZuZu
+	url = https://github.com/Hong-Study/SecretZuZu.git

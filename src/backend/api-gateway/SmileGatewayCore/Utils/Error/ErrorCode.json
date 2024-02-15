@@ -1,0 +1,112 @@
+[
+    {
+        "code": 3000,
+        "message": "INVALID_ACCESS_TOKEN",
+        "description": "엑세스 토큰이 올바르지 않습니다."
+    },
+    {
+        "code": 3001,
+        "message": "INVALID_REFRESH_TOKEN",
+        "description": "리프레시 토큰이 올바르지 않습니다."
+    },
+    {
+        "code": 3002,
+        "message": "CREATE_FAILED_ACCESS_TOKEN",
+        "description": "엑세스 토큰 생성에 실패했습니다."
+    },
+    {
+        "code": 3003,
+        "message": "NOT_JWT_TOKEN",
+        "description": "JWT 토큰이 아닙니다."
+    },
+    {
+        "code": 3004,
+        "message": "REQUIRED_REFRESH_TOKEN",
+        "description": "리프레시 토큰은 필수 입력입니다."
+    },
+    {
+        "code": 3005,
+        "message": "EXPIRED_ACCESS_TOKEN",
+        "description": "엑세스 토큰이 만료되었습니다."
+    },
+    {
+        "code": 3006,
+        "message": "REQUIRED_ACCESS_TOKEN",
+        "description": "엑세스 토큰은 필수 입력입니다."
+    },
+    {
+        "code": 3007,
+        "message": "FAILED_AUTH_SERVICE",
+        "description": "인증 서비스에 실패했습니다."
+    },
+    {
+        "code": 3008,
+        "message": "EXPIRED_REFRESH_TOKEN",
+        "description": "리프레시 토큰이 만료되었습니다."
+    },
+    {
+        "code": 3100,
+        "message": "INVALID_CONFIG",
+        "description": "설정 파일이 올바르지 않습니다."
+    },
+    {
+        "code": 3101,
+        "message": "INVALID_CONFIG_AUTH",
+        "description": "인증 설정이 올바르지 않습니다."
+    },
+    {
+        "code": 3102,
+        "message": "INVALID_CONFIG_CLUSTER",
+        "description": "클러스터 설정이 올바르지 않습니다."
+    },
+    {
+        "code": 3103,
+        "message": "INVALID_CONFIG_LISTENER",
+        "description": "리스너 설정이 올바르지 않습니다."
+    },
+    {
+        "code": 3104,
+        "message": "INVALID_CONFIG_ROUTE",
+        "description": "라우트 설정이 올바르지 않습니다."
+    },
+    {
+        "code": 3105,
+        "message": "INVALID_CONFIG_SERVICE",
+        "description": "서비스 설정이 올바르지 않습니다."
+    },
+    {
+        "code": 3106,
+        "message": "NOT_FOUND_SERVICE",
+        "description": "리스너에 해당하지 않는 서비스 요청입니다."
+    },
+    {
+        "code": 3107,
+        "message": "INVALID_CONFIG_SERVICE_PATH",
+        "description": "서비스 경로 설정이 올바르지 않습니다."
+    },
+    {
+        "code": 3108,
+        "message": "DISALLOW_REQUEST_HEADER",
+        "description": "허용되지 않은 요청 헤더입니다."
+    },
+    {
+        "code": 3109,
+        "message": "SERVICE_DOWN",
+        "description": "서버 에러입니다."
+    },
+    {
+        "code": 3110,
+        "message": "READ_CONFIG_FAILED",
+        "description": "설정 파일을 읽는데 실패했습니다."
+    },
+    {
+        "code": 3111,
+        "message": "WRITE_CONFIG_FAILED",
+        "description": "설정 파일을 쓰는데 실패했습니다."
+    },
+    {
+        "code": 3200,
+        "message": "DISCONNECT_SOCKET",
+        "description": "소켓 연결이 끊겼습니다."
+    }
+]
