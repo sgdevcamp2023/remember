@@ -30,6 +30,7 @@ const RedirectPage = () => {
       navigate("/channels/@me");
       return;
     }
+
     navigate("/login");
 
     return () => {};

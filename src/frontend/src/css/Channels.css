@@ -1,7 +1,6 @@
 .channel-container {
   width: 240px;
   height: 100vh;
-
   background-color: #2f3136;
   position: fixed;
   top: 0;
@@ -32,7 +31,6 @@
 .channel-btn {
   width: 100%;
   height: 40px;
-
   border-radius: 5px;
   display: flex;
   align-items: center;

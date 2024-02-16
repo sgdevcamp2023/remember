@@ -1,27 +1,62 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import "../css/Guilds.css";
 import { guildList as mock_guild_list } from "../config/mock_data";
 import AuthStore from "../store/AuthStore";
 import CommunityStore from "../store/CommunityStore";
+import CurrentStore from "../store/CurrentStore";
+import useSocketStore from '../store/SocketStore';
 import GuildBtn from "./GuildBtn";
 import DmRoomBtn from "./DmRoomBtn";
 import GuildModal from "./GuildModal";
 import GuildSeperator from "./GuildSeperator";
+import ChatStore from "../store/ChatStore";
 
 const Guild = () => {
   const { USER_ID } = AuthStore();
   const { GUILD_LIST, setGuildList } = CommunityStore();
-
+  const { CURRENT_VIEW_GUILD} = CurrentStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { setMessage } = ChatStore(); 
+  const mainSocket = useSocketStore(state => state.MAIN_SOCKET); 
+  const socketIdRef = useRef('');
+
 
   const appendServer =
     "https://storage.googleapis.com/remember-harmony/fe2f6651-10c4-444c-a336-3740dd4a5890";
+
+  useEffect(() => {   
+    if (CURRENT_VIEW_GUILD) {
+      console.log("현재 보고 있는 길드 id", CURRENT_VIEW_GUILD);
+  
+    // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
+    const handleReceiveMessage = (data) => {
+      console.log("handleReceiveMessage");
+    
+      const parsedMessage = JSON.parse(data.body);
+      setMessage(parsedMessage);
+    };
+  
+    //처음 구독
+    console.log("처음 구독",CURRENT_VIEW_GUILD);
+  
+    socketIdRef.current = mainSocket.subscribe(`/topic/guild/${CURRENT_VIEW_GUILD}`, handleReceiveMessage);
+    console.log(socketIdRef.current)
+    console.log("구독후");
+    }
+
+    return () => {
+      mainSocket.unsubscribe(socketIdRef.current.id);
+      socketIdRef.current = ''
+    }
+  }, [CURRENT_VIEW_GUILD]); 
+  
 
   useEffect(() => {
     // axios를 통한 길드 리스트 요청
     const response = mock_guild_list.resultData.filter((element) => {
       return element.userId === USER_ID;
     });
+    console.log(response);
     // response를 세팅
     setGuildList(response);
     return () => {};

@@ -4,6 +4,8 @@ import CurrentStore from "../store/CurrentStore";
 import AuthStore from "../store/AuthStore";
 import SocketStore from "../store/SocketStore";
 import useMediasoup from "./useMediasoup";
+import { useMediaStream } from "../contexts/MediaStreamContext";
+import MediaStore from "../store/MediaStore";
 
 function useVoiceSocket(url) {
   const {
@@ -16,9 +18,10 @@ function useVoiceSocket(url) {
   } = CurrentStore();
   // const { USER_ID } = AuthStore();
   const { setVoiceSocket, removeVoiceSocket } = SocketStore();
-
+  const { setPeerVideoStream, setAudioStream } = useMediaStream();
   const { getLocalAudioStream, signalNewConsumerTransport, closeAll } =
     useMediasoup();
+  const { removeRecvAudioConsumer, removeRecvVideoConsumer } = MediaStore();
 
   let voice_socket = useRef();
   let join_guild = useRef();
@@ -44,13 +47,40 @@ function useVoiceSocket(url) {
       voice_socket.current.on("new-producer-init", (producerId) => {
         signalNewConsumerTransport(producerId);
       });
+
+      voice_socket.current.on("new-video-producer-init", (producerId) => {
+        signalNewConsumerTransport(producerId);
+      });
+
+      voice_socket.current.on("producer-closed", ({ kind, producerId }) => {
+        console.log("유저 나감: ", producerId, kind);
+        if (kind === "audio") {
+          removeRecvAudioConsumer(producerId);
+          setAudioStream((prevStreams) => {
+            const updatedStreams = { ...prevStreams };
+            delete updatedStreams[producerId];
+            return updatedStreams;
+          });
+        }
+        if (kind === "video") {
+          removeRecvVideoConsumer(producerId);
+          setPeerVideoStream((prevStreams) => {
+            const updatedStreams = { ...prevStreams };
+            delete updatedStreams[producerId];
+            return updatedStreams;
+          });
+        }
+        const { RECV_TRANSPORT } = MediaStore.getState();
+        console.log("RECV_TRANSPORT", RECV_TRANSPORT);
+      });
+
       voice_socket.current.on("message", (msg) => {
         console.log(msg);
       });
 
-      voice_socket.current.on("disconnect", () => {
-        removeGlobalState();
+      voice_socket.current.on("disconnect", async () => {
         closeAll();
+        removeGlobalState();
         if (isUserInChannel) {
           if (!voice_socket.current || !voice_socket.current.connected) {
             connectSocket();
@@ -81,9 +111,6 @@ function useVoiceSocket(url) {
 
       voice_socket.current.on("join-channel", () => {
         setJoinGuildAndChannel(try_guild.current, try_channel.current);
-        console.log(
-          `join in : ${join_guild.current}-${join_channel.current}\nsocket : ${voice_socket.current.id}`
-        );
 
         if (SocketStore.getState().VOICE_SOCKET) getLocalAudioStream();
       });
@@ -129,7 +156,6 @@ function useVoiceSocket(url) {
     removeVoiceSocket();
     removeCurrentJoinGuild();
     removeCurrentJoinChannel();
-    removeParsedRoomUrl();
   };
 
   return {
