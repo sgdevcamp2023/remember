@@ -14,7 +14,7 @@ export const MyInfoView = () => {
     const navigate = useNavigate();
     const [newName, setNewName] = useState('');
 
-    const { setAccessToken, setUserId } = AuthStore();
+    const { setAccessToken, setUserId, setUserName, setUserProfile } = AuthStore();
     const [isImageModalOpen, setImageModalOpen] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
 
@@ -151,8 +151,13 @@ export const MyInfoView = () => {
 
     useEffect(() => {
         GetUserInfoRequest().then((response) => {
-            if (response) {
-                setMyInfo(response);
+            if (response.status === 200) {
+                setMyInfo(response.data);
+                setUserName(response.data.name);
+                setUserProfile(response.data.profileUrl);
+            }
+            else {
+                alert(response.data.description);
             }
         }).catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);

@@ -11,7 +11,7 @@ export const GetUserInfoRequest = async () => {
             },
         })
         .then((response) => {
-            return response.data;
+            return response;
         })
         .catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
