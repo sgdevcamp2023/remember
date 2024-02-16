@@ -1,0 +1,35 @@
+.status {
+    width: 300px; /* 좌측 너비만큼 + 상태 만큼 뺀다. */
+    height: 100vh;
+    background-color: #1e1f22;
+    position: fixed;
+    top: 0;
+    right: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    color: white;
+    font-size: 20px;
+}
+
+.status img {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    position: relative;
+}
+
+.status .status-indicator {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    bottom: 0;
+    right: 0;
+}
+
+.status .online {
+    background-color: green;
+}
+
+.status .offline {
+    background-color: grey;
+}

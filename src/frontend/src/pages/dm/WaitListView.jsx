@@ -1,23 +1,33 @@
 import { useEffect, useState } from "react";
 import { GetFriendReceiveListRequest, GetFriendSendListRequest } from "../../Request/friendRequest";
 import { AddSendList, AddReceiveList } from "../../components/FriendList";
-import { friendList } from "../../config/mock_data";
 
 export function WaitListView() {
-  const [ SendList, setSendList ] = useState([]);
-  const [ ReceiveList, setReceiveList ] = useState([]);
+  const [SendList, setSendList] = useState([]);
+  const [ReceiveList, setReceiveList] = useState([]);
 
   useEffect(() => {
-    // var sendList = GetFriendSendListRequest();
-    var sendList = friendList.resultData;
-    if (sendList != null)
-      setSendList(sendList);
+    GetFriendSendListRequest().then((response) => {
+      if (response.status === 200) {
+        if (Array.isArray(response.data))
+          setSendList(response.data);
+        else
+          setSendList([]);
+      }
+    }).catch((error) => {
+      console.error("데이터를 받아오는 데 실패했습니다:", error);
+    });
 
-    // var receiveList = GetFriendReceiveListRequest();
-    var receiveList = friendList.resultData; 
-    if (receiveList != null)
-      setReceiveList(receiveList);
-
+    GetFriendReceiveListRequest().then((response) => {
+      if (response.status === 200) {
+        if (Array.isArray(response.data))
+          setReceiveList(response.data);
+        else
+          setReceiveList([]);
+      }
+    }).catch((error) => {
+      console.error("데이터를 받아오는 데 실패했습니다:", error);
+    });
   }, []);
 
   return (

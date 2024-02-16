@@ -5,9 +5,10 @@ import { AllView } from "./AllView";
 import { OnlineView } from "./OnlineView";
 import { WaitListView } from "./WaitListView";
 import { SendAddView } from "./SendAddView";
+import { MyInfoView } from "./MyInfoView";
 
 const Navigation = styled.nav`
-    width: 50%;
+    width: 95%;
     color: #fff;
     li {
         list-style: none;
@@ -34,6 +35,7 @@ const FriendPage = () => {
     { name: "온라인", content: <OnlineView /> },
     { name: "친구 대기 목록", content: <WaitListView /> },
     { name: "친구 추가하기", content: <SendAddView /> },
+    { name: "내 정보", content: <MyInfoView /> }
   ];
 
   const TabView = TabLists.map((el, idx) => {
@@ -52,12 +54,12 @@ const FriendPage = () => {
     <Wrapper>
       <MainContainer>
         <div className="main-section">
-            <Navigation>
-              <ul>
-                {TabView}
-              </ul>
-            </Navigation>
-            {TabLists[crntTab].content}
+          <Navigation>
+            <ul>
+              {TabView}
+            </ul>
+          </Navigation>
+          {TabLists[crntTab].content}
         </div>
       </MainContainer>
     </Wrapper>

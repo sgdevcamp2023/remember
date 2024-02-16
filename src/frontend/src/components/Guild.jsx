@@ -22,6 +22,7 @@ const Guild = () => {
     const response = mock_guild_list.resultData.filter((element) => {
       return element.userId === USER_ID;
     });
+    console.log(response);
     // response를 세팅
     setGuildList(response);
     return () => {};

@@ -39,6 +39,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const { setAccessToken, setUserId } = AuthStore();
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -51,12 +52,19 @@ export default function LoginPage() {
     e.preventDefault();
 
     // 여기서 logInRequest 함수를 호출
-    logInRequest(email, password).then((accessToken, refreshToken, userId) => {
-      setAccessToken(accessToken);
-      setUserId(userId);
-      localStorage.setItem("RefreshToken", refreshToken);
-      navigate("/");
-      // 추후 페이지 전환
+    logInRequest(email, password).then((response) => {
+      if (response.status === 200) {
+        const { UserId, AccessToken, RefreshToken } = response.data;
+        setAccessToken(AccessToken);
+        setUserId(UserId);
+        localStorage.setItem("RefreshToken", RefreshToken);
+        navigate("/");
+      }else
+      {
+        alert("로그인 실패");
+      }
+    }).catch((error) => {
+      console.error("로그인 실패", error);
     });
   };
 
