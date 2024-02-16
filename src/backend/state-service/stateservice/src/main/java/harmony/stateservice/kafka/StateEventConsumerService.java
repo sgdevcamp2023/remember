@@ -23,7 +23,11 @@ public class StateEventConsumerService {
     }
 
     @KafkaListener(topics = "channelEvent", groupId = "channelEventGroupState", containerFactory = "channelEventListener")
-    public void consumeForChannelEvent(ChannelEventDto channelEventDto){
+    public void consumeForChannelEvent(ChannelEventDto channelEventDto) {
+        log.info("getChannelId {}", channelEventDto.getChannelId());
+        log.info("getType {}", channelEventDto.getType());
+        log.info("getGuildId {}", channelEventDto.getGuildId());
+        log.info("getUserId {}", channelEventDto.getUserId());
         signalingServerService.updateChannelEvent(channelEventDto);
     }
 }
