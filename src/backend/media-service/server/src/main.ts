@@ -11,6 +11,7 @@ import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as expressBasicAuth from 'express-basic-auth';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 // import * as fs from 'fs';
 
 class Application {
@@ -27,7 +28,7 @@ class Application {
     //
     if (!process.env.SECRET_KEY) this.logger.error('Set "SECRET" env');
     this.DEV_MODE = process.env.NODE_ENV === 'production' ? false : true;
-    this.PORT = process.env.PORT || '5000';
+    this.PORT = process.env.PORT || '6001';
     this.corsOriginList = process.env.CORS_ORIGIN_LIST
       ? process.env.CORS_ORIGIN_LIST.split(',').map((origin) => origin.trim())
       : ['*'];
@@ -112,6 +113,17 @@ async function init(): Promise<void> {
   });
   const app = new Application(server);
   await app.bootstrap();
+
+  const microservice =
+    await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          brokers: ['34.22.109.45:9092'],
+        },
+      },
+    });
+  microservice.listen();
   app.startLog();
 }
 

@@ -21,6 +21,7 @@ import { SendTransportProduceDTO } from './dto/send-transport-produce.dto';
 import { GetProducersDTO } from './dto/get-producers.dto';
 import { HandleConsumeDTO } from './dto/handle-consume.dto';
 import { RecvTransportConnectDTO } from './dto/recv-transport-connect.dto';
+import { KafkaService } from 'src/kafka/kafka.service';
 
 @WebSocketGateway({
   cors: {
@@ -40,8 +41,8 @@ export class SignalingGateway
   server: Server;
 
   constructor(
-    private httpService: HttpService,
     private mediasoupService: MediasoupService,
+    private kafkaService: KafkaService,
   ) {}
 
   afterInit(server: Server) {
@@ -105,12 +106,19 @@ export class SignalingGateway
     this.mediasoupService.removeTransport(client.id);
 
     ////////////////////////////// 상태 관리 서버 전달 작업
-    const data = { channelId, guildId, userId };
     try {
       // const response = await this.httpService
       //   .post('http://localhost:6001/guild/delete', data)
       //   .toPromise();
-      console.log('disconnected', data, client.id);
+
+      const kafka_event = {
+        guildId: Number(guildId),
+        channelId: Number(channelId),
+        userId: Number(userId),
+        type: 'LEAVE',
+      };
+
+      await this.kafkaService.send(kafka_event);
     } catch (error) {
       console.error(error);
     }
@@ -178,7 +186,14 @@ export class SignalingGateway
     //   .post('http://localhost:6001/guild/update', data)
     //   .toPromise();
 
-    console.log(this.voiceChannelStatusMap);
+    const kafka_event = {
+      guildId: Number(guildId),
+      channelId: Number(channelId),
+      userId: Number(userId),
+      type: 'JOIN',
+    };
+
+    await this.kafkaService.send(kafka_event);
   }
 
   @SubscribeMessage('leave-channel')

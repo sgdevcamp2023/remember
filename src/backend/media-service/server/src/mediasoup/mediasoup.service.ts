@@ -1,10 +1,12 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as mediasoup from 'mediasoup';
+import * as os from 'os';
 import { CreateWebRtcTransportDTO } from 'src/signaling/dto/create-webRtcTransport.dto';
 
 @Injectable()
 export class MediasoupService implements OnModuleInit {
-  private worker: mediasoup.types.Worker;
+  private workers: mediasoup.types.Worker[] = [];
+  private nextWorkerIndex = 0;
   private mediaCodecs: mediasoup.types.RtpCodecCapability[];
   private webRtcTransport_options: mediasoup.types.WebRtcTransportOptions;
   private routers = new Map<string, mediasoup.types.Router>();
@@ -49,8 +51,8 @@ export class MediasoupService implements OnModuleInit {
     this.webRtcTransport_options = {
       listenIps: [
         {
-          ip: '127.0.0.1',
-          // announcedIp: '127.0.0.1'
+          ip: process.env.WEBRTC_LISTEN_IP || '127.0.0.1',
+          announcedIp: process.env.WEBRTC_ANNOUNCED_IP || '127.0.0.1',
         },
       ],
       enableUdp: true,
@@ -60,24 +62,31 @@ export class MediasoupService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    await this.createWorker();
+    const numWorkers = os.cpus().length;
+
+    for (let i = 0; i < numWorkers; ++i) {
+      await this.createWorker();
+    }
   }
 
   async createWorker() {
-    this.worker = await mediasoup.createWorker({
-      rtcMinPort: 2000,
-      rtcMaxPort: 2020,
+    const worker = await mediasoup.createWorker({
+      rtcMinPort: 6002,
+      rtcMaxPort: 6202,
     });
-    this.worker.on('died', () => {
+
+    worker.on('died', () => {
       console.error('mediasoup worker has died');
       setTimeout(() => process.exit(1), 2000);
     });
 
-    return this.worker;
+    this.workers.push(worker);
+    return worker;
   }
 
   async createRouter(roomId: string): Promise<mediasoup.types.Router> {
-    const router = await this.worker.createRouter({
+    const worker = this.getWorker();
+    const router = await worker.createRouter({
       mediaCodecs: this.mediaCodecs,
     });
 
@@ -275,7 +284,9 @@ export class MediasoupService implements OnModuleInit {
   }
 
   getWorker() {
-    return this.worker;
+    const worker = this.workers[this.nextWorkerIndex];
+    this.nextWorkerIndex = (this.nextWorkerIndex + 1) % this.workers.length;
+    return worker;
   }
 
   getSocketProducerList() {
