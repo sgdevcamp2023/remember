@@ -15,7 +15,8 @@ import {getUserStateAndVoice} from "../Request/communityRequest";
 
 const Channel = () => {
   const navigate = useNavigate();
-  const {audioStream} = useMediaStream();
+
+  const { audioStream, setVideoStream, setPeerVideoStream } = useMediaStream();
 
   const {
     connectSocket,

@@ -73,6 +73,23 @@ const MediaStore = create((set) => ({
     set((state) => ({
       RECV_AUDIO_CONSUMER: [...state.RECV_AUDIO_CONSUMER, obj],
     })),
+
+  removeRecvAudioConsumer: (producerId) =>
+    set((state) => ({
+      RECV_AUDIO_CONSUMER: state.RECV_AUDIO_CONSUMER.filter(
+        (consumer) => consumer.remoteProducerId !== producerId
+      ),
+    })),
+  setRecvVideoConsumer: (obj) =>
+    set((state) => ({
+      RECV_VIDEO_CONSUMER: [...state.RECV_VIDEO_CONSUMER, obj],
+    })),
+  removeRecvVideoConsumer: (producerId) =>
+    set((state) => ({
+      RECV_AUDIO_CONSUMER: state.RECV_AUDIO_CONSUMER.filter(
+        (consumer) => consumer.remoteProducerId !== producerId
+      ),
+    })),
 }));
 
 export default MediaStore;

@@ -1,4 +1,5 @@
 import * as MediasoupClient from "mediasoup-client";
+import { useNavigate } from "react-router-dom";
 import MediaStore from "../store/MediaStore";
 import SocketStore from "../store/SocketStore";
 import CurrentStore from "../store/CurrentStore";
@@ -17,8 +18,20 @@ function useMediasoup() {
     setRecvTransport,
     setRecvAudioConsumer,
     setDisplayProducer,
+    setRecvVideoConsumer,
+    removeDisplayProducer,
   } = MediaStore();
-  const { setAudioStream, setVideoStream, videoStream } = useMediaStream();
+  const {
+    setAudioStream,
+    setVideoStream,
+    setPeerVideoStream,
+    videoStream,
+    audioStream,
+  } = useMediaStream();
+
+  const { setCurrentViewChannel } = CurrentStore();
+
+  const navigate = useNavigate();
 
   const getLocalAudioStream = () => {
     navigator.mediaDevices
@@ -145,6 +158,7 @@ function useMediasoup() {
         );
 
         sendTransport.on("produce", async (parameters, callback, errback) => {
+          const { CURRENT_VIEW_CHANNEL_TYPE } = CurrentStore.getState();
           try {
             await VOICE_SOCKET.emit(
               "transport-produce",
@@ -153,14 +167,23 @@ function useMediasoup() {
                 rtpParameters: parameters.rtpParameters,
                 roomId: PARSED_ROOM_URL,
                 consumer: false,
+                mediaTag: parameters.appData.mediaTag,
               },
               ({ producerId, producerExist }) => {
                 callback({ producerId });
 
                 if (parameters.kind === "audio") {
                   if (producerExist) {
-                    console.log(">> producer exist, get Producers");
                     getProducers("audio", producerId);
+                  }
+                  setVideoStream({});
+                  setPeerVideoStream({});
+                  getProducersWithoutProducerId("video");
+                  if (CURRENT_VIEW_CHANNEL_TYPE === "VOICE") {
+                    setCurrentViewChannel(CURRENT_JOIN_CHANNEL);
+                    navigate(
+                      `/channels/${CURRENT_JOIN_GUILD}/${CURRENT_JOIN_CHANNEL}`
+                    );
                   }
                   VOICE_SOCKET.emit("start-voice-call", {
                     guildId: CURRENT_JOIN_GUILD,
@@ -169,9 +192,13 @@ function useMediasoup() {
                   });
                 }
                 if (parameters.kind === "video") {
+                  console.log("실행됨1");
                   if (producerExist) {
-                    console.log(">> producer exist, get Producers");
-                    // getProducers("video", producerId);
+                    console.log("실행됨2");
+                    VOICE_SOCKET.emit("new-video-producer", {
+                      roomId: PARSED_ROOM_URL,
+                      producerId,
+                    });
                   }
                 }
               }
@@ -211,14 +238,12 @@ function useMediasoup() {
                 });
 
                 callback();
-                console.log(">> recvTransport connected");
               } catch (error) {
                 errback(error);
               }
             }
           );
           setRecvTransport(recvTransport);
-          console.log(">> recvTransport 생성", recvTransport);
         }
       );
     } catch (error) {
@@ -230,7 +255,10 @@ function useMediasoup() {
     const { SEND_TRANSPORT, AUDIO_PARAMS, VIDEO_PARAMS } =
       MediaStore.getState();
     if (media === "audio") {
-      const audioProducer = await SEND_TRANSPORT.produce(AUDIO_PARAMS);
+      const audioProducer = await SEND_TRANSPORT.produce({
+        track: AUDIO_PARAMS.track,
+        appData: { mediaTag: "audio" },
+      });
 
       audioProducer.on("trackended", () => {
         console.log("audioProducer track ended");
@@ -243,18 +271,26 @@ function useMediasoup() {
     }
 
     if (media === "video") {
-      const videoProducer = await SEND_TRANSPORT.produce(VIDEO_PARAMS);
-
+      console.log("send producer 시작");
+      const mediaTag = VIDEO_PARAMS.type;
+      const videoProducer = await SEND_TRANSPORT.produce({
+        track: VIDEO_PARAMS.track,
+        appData: { mediaTag },
+      });
+      console.log("send producer 생성 완료");
       videoProducer.on("trackended", () => {
         console.log("videoProducer track ended");
+        const { DISPLAY_PRODUCER } = MediaStore.getState();
+        closeProducer(DISPLAY_PRODUCER);
+        removeDisplayProducer();
+        setVideoStream({ ...videoStream, display: null });
       });
 
       videoProducer.on("transportclose", () => {
         console.log("videoProducer transport ended");
       });
 
-      console.log(">> videoParams", VIDEO_PARAMS.type);
-      VIDEO_PARAMS.type === "camera"
+      mediaTag === "camera"
         ? setVideoProducer(videoProducer)
         : setDisplayProducer(videoProducer);
     }
@@ -272,7 +308,24 @@ function useMediasoup() {
         producerId,
       },
       (producerIds) => {
-        console.log(producerIds);
+        producerIds.forEach((remoteProducerId) => {
+          signalNewConsumerTransport(remoteProducerId);
+        });
+      }
+    );
+  };
+
+  const getProducersWithoutProducerId = async (kind) => {
+    const { VOICE_SOCKET } = SocketStore.getState();
+    const { PARSED_ROOM_URL } = CurrentStore.getState();
+
+    await VOICE_SOCKET.emit(
+      "getProducers",
+      {
+        roomId: PARSED_ROOM_URL,
+        kind,
+      },
+      (producerIds) => {
         producerIds.forEach((remoteProducerId) => {
           signalNewConsumerTransport(remoteProducerId);
         });
@@ -305,7 +358,6 @@ function useMediasoup() {
           console.log(params.error);
           return;
         }
-
         const consumer = await recvTransport.consume({
           id: params.id,
           producerId: params.producerId,
@@ -319,20 +371,17 @@ function useMediasoup() {
           consumer,
         };
 
+        const { track } = consumer;
+        const mediaStream = new MediaStream([track]);
+
         if (params.kind === "audio") {
           setRecvAudioConsumer(newConsumerObj);
-
-          const { track } = consumer;
-          console.log(">> consuming audio");
-
-          // 이부분
-          const audioStream = new MediaStream([track]);
 
           setAudioStream((prevStreams) => ({
             ...prevStreams,
             [remoteProducerId]: {
               kind: params.kind,
-              stream: audioStream,
+              stream: mediaStream,
             },
           }));
           VOICE_SOCKET.emit("consumer-resume", {
@@ -341,11 +390,48 @@ function useMediasoup() {
             serverConsumerId: params.id,
           });
         }
+        if (params.kind === "video") {
+          setRecvVideoConsumer(newConsumerObj);
+          setPeerVideoStream((prevStreams) => ({
+            ...prevStreams,
+            [remoteProducerId]: {
+              kind: params.kind,
+              stream: mediaStream,
+              consumerId: params.id,
+            },
+          }));
+        }
       }
     );
   };
 
+  const toggleVideo = (consumerId) => {
+    const { PARSED_ROOM_URL } = CurrentStore.getState();
+    const { VOICE_SOCKET } = SocketStore.getState();
+    VOICE_SOCKET.emit("consumer-toggle", {
+      roomId: PARSED_ROOM_URL,
+      serverConsumerId: consumerId,
+      kind: "video",
+    });
+  };
+
   const closeProducer = async (producer) => {
+    const { VOICE_SOCKET } = SocketStore.getState();
+    const { PARSED_ROOM_URL } = CurrentStore.getState();
+    if (producer) {
+      VOICE_SOCKET.emit("producer-close", {
+        roomId: PARSED_ROOM_URL,
+        kind: producer.kind,
+        mediaTag: producer.appData.mediaTag,
+      });
+      return new Promise((resolve) => {
+        producer.on("@close", resolve);
+        producer.close();
+      });
+    }
+  };
+
+  const closeMyProducer = async (producer) => {
     if (producer) {
       return new Promise((resolve) => {
         producer.on("@close", resolve);
@@ -374,9 +460,12 @@ function useMediasoup() {
 
   const closeAll = async () => {
     setAudioStream({});
+    setVideoStream({});
+
     const {
       AUDIO_PRODUCER,
       VIDEO_PRODUCER,
+      DISPLAY_PRODUCER,
       RECV_AUDIO_CONSUMER,
       RECV_VIDEO_CONSUMER,
       SEND_TRANSPORT,
@@ -389,8 +478,9 @@ function useMediasoup() {
       await closeConsumer(consumer);
     }
 
-    await closeProducer(AUDIO_PRODUCER);
-    await closeProducer(VIDEO_PRODUCER);
+    await closeMyProducer(AUDIO_PRODUCER);
+    await closeMyProducer(VIDEO_PRODUCER);
+    await closeMyProducer(DISPLAY_PRODUCER);
 
     await closeTransport(SEND_TRANSPORT);
     await closeTransport(RECV_TRANSPORT);
@@ -400,10 +490,14 @@ function useMediasoup() {
 
   return {
     getLocalAudioStream,
-    signalNewConsumerTransport,
-    closeAll,
     getLocalCameraStream,
     getLocalDisplayStream,
+    signalNewConsumerTransport,
+    closeAll,
+    closeProducer,
+    getProducers,
+    getProducersWithoutProducerId,
+    toggleVideo,
   };
 }
 
