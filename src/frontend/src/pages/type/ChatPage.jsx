@@ -4,34 +4,41 @@ import useAuthStore from '../../store/AuthStore'
 import '../../css/ChatPage.css'; 
 import axios from 'axios'; 
 import { useLocation } from 'react-router-dom';
+import ChatStore from '../../store/ChatStore';
+import CurrentStore from "../../store/CurrentStore";
 
 const ChatPage = () => {
   const USER_ID = useAuthStore(state => state.USER_ID);
-  const location = useLocation();
   const [inputMessage, setInputMessage] = useState(''); 
   const [messages, setMessages] = useState([]); // 메시지 목록 상태 관리
   const [editingMessage, setEditingMessage] = useState({ messageId: null, message: '' }); 
   const mainSocket = useSocketStore(state => state.MAIN_SOCKET); 
+
   const socketIdRef = useRef('');
+  const location = useLocation();
+
+  const chatMessage = ChatStore(state => state.MESSAGE);
+  const { CURRENT_VIEW_GUILD, CURRENT_VIEW_CHANNEL} = CurrentStore();
 
   const messageWindowRef = useRef(null); // 메시지 창의 DOM 요소에 접근하기 위한 useRef 훅 사용
-  const [channelId, setChannelId] = useState(1); // 채널 ID 상태
   const [page, setPage] = useState(0); // 페이지 번호 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [hasMoreData, setHasMoreData] = useState(true); // 더 이상 데이터를 가져올 수 있는지 여부 상태
 
   useEffect(() => {
     // 페이지 로딩 시 메시지 불러오기
+    console.log("CURRENT_VIEW_CHANNEL", CURRENT_VIEW_CHANNEL);
     fetchScrollMessages();
-  }, [channelId, page]); 
+  }, [page]); 
 
   // 메시지 불러오기
   const fetchScrollMessages = async () => {
-    if (hasMoreData) {
+    if (hasMoreData && CURRENT_VIEW_CHANNEL) {
       try {
         setLoading(true); 
-        const response = await axios.get(`http://localhost:7000/api/chat-service/community/messages/channel?channelId=${channelId}&page=${page}&size=10`);
+        const response = await axios.get(`http://34.22.109.45:7000/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
         const newMessages = response.data.content.reverse();
+        console.log("메시지 길이", newMessages.length);
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
           setHasMoreData(false);
@@ -58,43 +65,33 @@ const ChatPage = () => {
       messageWindowRef.current.scrollTop = messageWindowRef.current.scrollHeight;
     }
 
+    console.log("메시지 총 길이", messages.length);
     // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
-    const handleReceiveMessage = (data) => {
-      const parsedMessage = JSON.parse(data.body)
-      console.log("서버에서 가져온 데이터", parsedMessage);
-      if (parsedMessage.channelId === 1) {
-        if (parsedMessage.type === "modify") {
+    if (chatMessage) {
+      if (chatMessage.channelId === CURRENT_VIEW_CHANNEL) {
+        if (chatMessage.type === "modify") {
           setMessages(prevMessages => {
             return [...prevMessages].map(prevMessage => {
-              if (prevMessage.messageId === parsedMessage.messageId) {
-                return { ...prevMessage, message: parsedMessage.message };
+              if (prevMessage.messageId === chatMessage.messageId) {
+                return { ...prevMessage, message: chatMessage.message };
               } else {
                 return prevMessage;
               }
             });
           });
-        } else if (parsedMessage.type === "delete") {
+        } else if (chatMessage.type === "delete") {
           setMessages(prevMessages => {
-            return prevMessages.filter(prevMessage => prevMessage.messageId !== parsedMessage.messageId);
+            return prevMessages.filter(prevMessage => prevMessage.messageId !== chatMessage.messageId);
           });
         } else {
           setMessages(prevMessages => {
-            return [...prevMessages, parsedMessage]
+            return [...prevMessages, chatMessage]
           });
         }
       }
-    };
-
-    console.log("일하는 중");
-
-    //처음 구독
-    socketIdRef.current = mainSocket.subscribe('/topic/guild/1', handleReceiveMessage);
-    console.log(socketIdRef.current)
-    return () => {
-      mainSocket.unsubscribe(socketIdRef.current.id);
-      socketIdRef.current = ''
     }
-  }, [location.pathname]); 
+
+  }, [chatMessage]); 
 
   // 메시지 전송
   const sendMessage = () => {
@@ -104,8 +101,8 @@ const ChatPage = () => {
     mainSocket.publish({
       destination: "/api/chat/guild/message",
       body: JSON.stringify({
-        guildId: 1,
-        channelId: 1,
+        guildId: CURRENT_VIEW_GUILD,
+        channelId: CURRENT_VIEW_CHANNEL,
         userId: USER_ID,
         parentId: 0,
         profileImage: "qwedfw",
@@ -159,19 +156,14 @@ const ChatPage = () => {
   };
 
   const formatTime = (timestamp) => {
-    const date = new Date(timestamp); // timestamp를 Date 객체로 변환
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-  
-    // 시간과 분을 두 자리로 포맷팅
-    const formattedHours = String(hours).padStart(2, '0');
-    const formattedMinutes = String(minutes).padStart(2, '0');
-  
-    // 시간을 오전/오후 형식으로 변환
-    const meridiem = hours >= 12 ? '오후' : '오전';
-    const formattedTime = `${meridiem} ${formattedHours}:${formattedMinutes}`;
-  
-    return formattedTime;
+    const date = new Date(timestamp); // 문자열을 Date 객체로 파싱
+
+    // 날짜를 YYYY.MM.DD. 오후 HH:MM 형식으로 포맷팅
+    const formattedDate = `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')}. `;
+    const formattedTime = `${(date.getHours() % 12 || 12)}:${date.getMinutes().toString().padStart(2, '0')}`;
+    const meridiem = date.getHours() >= 12 ? '오후' : '오전';
+    
+    return `${formattedDate}${meridiem} ${formattedTime}`;
   };
 
   return (

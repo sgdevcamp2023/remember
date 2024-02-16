@@ -12,7 +12,7 @@ const RedirectPage = () => {
 
   useEffect(() => {
     if (USER_ID && ACCESS_TOKEN) {
-      const socket = new SockJS("http://localhost:7000/ws-stomp"); // SockJS 사용
+      const socket = new SockJS("http://34.22.109.45:7000/ws-stomp"); // SockJS 사용
       const clientSocket = new StompJs.Client({
         webSocketFactory: () => socket,
         connectHeaders: {
