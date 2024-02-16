@@ -10,6 +10,7 @@ import DmRoomBtn from "./DmRoomBtn";
 import GuildModal from "./GuildModal";
 import GuildSeperator from "./GuildSeperator";
 import ChatStore from "../store/ChatStore";
+import StatusStore from "../store/StatusStore";
 
 const Guild = () => {
   const { USER_ID } = AuthStore();
@@ -19,6 +20,7 @@ const Guild = () => {
   const { setMessage } = ChatStore(); 
   const mainSocket = useSocketStore(state => state.MAIN_SOCKET); 
   const socketIdRef = useRef('');
+  const { setStatus } = StatusStore(); 
 
 
   const appendServer =
@@ -28,20 +30,20 @@ const Guild = () => {
     if (CURRENT_VIEW_GUILD) {
       console.log("현재 보고 있는 길드 id", CURRENT_VIEW_GUILD);
   
-    // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
-    const handleReceiveMessage = (data) => {
-      console.log("handleReceiveMessage");
-    
-      const parsedMessage = JSON.parse(data.body);
-      setMessage(parsedMessage);
-    };
+      // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
+      const handleReceiveMessage = (data) => {    
+        const parsedMessage = JSON.parse(data.body);
+        console.log("서버로부터 받은 데이터", parsedMessage);
+        if (parsedMessage.state === "online" || parsedMessage.state === "offline") {
+          setStatus(parsedMessage);
+        } else if (parsedMessage.type === "send" || parsedMessage.type === "modify" || parsedMessage.type === "delete") {
+          setMessage(parsedMessage);
+        }
+      };
   
-    //처음 구독
-    console.log("처음 구독",CURRENT_VIEW_GUILD);
-  
-    socketIdRef.current = mainSocket.subscribe(`/topic/guild/${CURRENT_VIEW_GUILD}`, handleReceiveMessage);
-    console.log(socketIdRef.current)
-    console.log("구독후");
+      //처음 구독
+      socketIdRef.current = mainSocket.subscribe(`/topic/guild/${CURRENT_VIEW_GUILD}`, handleReceiveMessage);
+      console.log(socketIdRef.current)
     }
 
     return () => {

@@ -36,7 +36,7 @@ const ChatPage = () => {
     if (hasMoreData && CURRENT_VIEW_CHANNEL) {
       try {
         setLoading(true); 
-        const response = await axios.get(`http://localhost:7000/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
+        const response = await axios.get(`http://34.22.109.45:7000/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
         const newMessages = response.data.content.reverse();
         console.log("메시지 길이", newMessages.length);
         // 새로운 데이터가 없을 경우
