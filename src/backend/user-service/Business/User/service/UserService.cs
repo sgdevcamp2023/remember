@@ -6,22 +6,28 @@ using Google.Apis.Auth.OAuth2;
 using Castle.DynamicProxy;
 using user_service.intercepter;
 using user_service.Business.User.dto;
+using user_service.common.dto;
 
 namespace user_service.user.service;
 
 public class UserService : IUserService
 {
     private IUserRepository _userRepository;
+    private ICommunityClient _communityClient;
     private string _bucketName;
     private string _keyPath;
+    private string _defaultImage;
     public UserService(IUserRepository userRepository,
                         IConfiguration config,
+                        ICommunityClient communityClient,
                         LogInterceptor interceptor)
     {
         var generator = new ProxyGenerator();
         _userRepository = generator.CreateInterfaceProxyWithTarget<IUserRepository>(userRepository, interceptor);
+        _communityClient = generator.CreateInterfaceProxyWithTarget<ICommunityClient>(communityClient, interceptor);
         _bucketName = config["GoogleCloud:BucketName"];
         _keyPath = config["GoogleCloud:KeyPath"];
+        _defaultImage = config["DefaultProfileImage"];
     }
 
     public void ChangePassword(PasswordDTO passwords)
@@ -57,26 +63,57 @@ public class UserService : IUserService
         };
     }
 
-    public void ChangeName(NameDTO nameDTO)
+    public async Task ChangeName(NameDTO nameDTO, string traceId, string userId)
     {
-        _userRepository.UpdateName(nameDTO.UserId, nameDTO.NewName);
+        if(userId != nameDTO.UserId.ToString())
+            throw new ServiceException(4031);
+
+        bool isSuccess = await _communityClient.ChangeNameAsync(new CommunityNameDTO()
+        {
+            userId = nameDTO.UserId,
+            nickname = nameDTO.NewName
+        }, traceId, userId);
+
+        if (!isSuccess)
+            throw new ServiceException(4031);
+
+        if(!_userRepository.UpdateName(nameDTO.UserId, nameDTO.NewName))
+            throw new ServiceException(4031);
     }
 
-    public string ChangeProfile(ProfileDTO profileDTO)
+    public async Task<string> ChangeProfile(ProfileDTO profileDTO, string traceId, string userId)
     {
+        if(userId != profileDTO.UserId.ToString())
+            throw new ServiceException(4028);
+
         string ContentType = profileDTO.NewProfile.ContentType;
         if (!ContentType.StartsWith("image/"))
         {
             throw new ServiceException(4024);
         }
 
-        UserModel? user = _userRepository.GetUserById(long.Parse(profileDTO.UserId));
+        UserModel? user = _userRepository.GetUserById(profileDTO.UserId);
         if (user == null)
             throw new ServiceException(4007);
 
         string fileName = $"{user.Id}/profile." + ContentType.Split('/')[1];
-
         string newProfilePath = UploadProfileToGCP(profileDTO.NewProfile, fileName);
+
+        bool isSuccess = await _communityClient.ChangeProfileAsync(new CommunityProfileDTO()
+        {
+            userId = user.Id,
+            profile = newProfilePath
+        }, traceId, userId);
+
+        if (!isSuccess)
+        {
+            DeleteProfileFromGCP(newProfilePath);
+            throw new ServiceException(4024);
+        }
+
+        if(user.Profile != _defaultImage)
+            DeleteProfileFromGCP(user.Profile);
+        
         _userRepository.UpdateProfile(user.Id, newProfilePath);
 
         return newProfilePath;
@@ -117,6 +154,23 @@ public class UserService : IUserService
         {
             throw new ServiceException(4024);
         }
+    }
+
+    private bool DeleteProfileFromGCP(string profileUrl)
+    {
+        try
+        {
+            var credential = GoogleCredential.FromFile(_keyPath);
+            var storage = StorageClient.Create(credential);
+            storage.DeleteObject(_bucketName, profileUrl);
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    
     }
 
     private byte[] MakeProfileToByte(IFormFile file)

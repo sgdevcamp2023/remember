@@ -145,9 +145,24 @@
         "description": "로그아웃에 실패했습니다."
     },
     {
-        "code": 4029,
+        "code": 4029,   
         "message": "SAME_PASSWORD",
         "description": "기존 비밀번호와 새로운 비밀번호가 같습니다."
+    },
+    {
+        "code": 4030,
+        "message": "FAILED_UPDATE_PASSWORD",
+        "description": "비밀번호 변경에 실패했습니다."
+    },
+    {
+        "code": 4031,
+        "message": "FAILED_UPDATE_USERNAME",
+        "description": "이름 변경에 실패했습니다."
+    },
+    {
+        "code": 4032,
+        "message": "FAILED_UPDATE_PROFILE",
+        "description": "프로필 변경에 실패했습니다."
     },
     {
         "code": 4100,

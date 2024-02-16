@@ -1,40 +1,9 @@
-using System.Data;
+namespace user_service.user.dto;
 
-namespace user_service
+public class UserDTO
 {
-    namespace user
-    {
-        namespace dto
-        {
-            public class UserDTO
-            {
-                public long Id { get; set; }
-                public string Email { get; set; } = null!;
-                public string Name { get; set; } = null!;
-                public string ProfileUrl { get; set; } = null!;
-            }
-
-            public class CommunityDTO
-            {
-                public long userId { get; set; }
-                public string email { get; set; } = null!;
-                public string name { get; set; } = null!;
-                public string profile { get; set; } = null!;
-            }
-
-            public class CommunityResponseDTO<T>
-            {
-                public int ResultCode { get; set; }
-                public string ResultMessage { get; set; } = null!;
-                public T? ResultData { get; set; }
-            }
-
-            public class CommunityBaseException
-            {
-                public int Code { get; set; }
-                public string Exception { get; set; } = null!;
-                public string Message { get; set; } = null!;
-            }
-        }
-    }
+    public long Id { get; set; }
+    public string Email { get; set; } = null!;
+    public string Name { get; set; } = null!;
+    public string ProfileUrl { get; set; } = null!;
 }

@@ -1,7 +1,8 @@
 using System.Text;
 using Castle.DynamicProxy;
 using Newtonsoft.Json;
-using user_service.Business.Friend.dto;
+using user_service.common;
+using user_service.common.dto;
 using user_service.common.exception;
 using user_service.Controllers.dto.friend;
 using user_service.friend.repository;
@@ -13,16 +14,16 @@ public class FriendService : IFriendService
 {
     private IConfiguration _config;
     private IFriendRepository _friendRepository;
-    private HttpClient _httpClient;
+    private IStateClient _stateClient;
     public FriendService(IConfiguration config,
                         IFriendRepository friendRepository,
+                        IStateClient stateClient,
                         LogInterceptor interceptor)
     {
         var generator = new ProxyGenerator();
         _friendRepository = generator.CreateInterfaceProxyWithTargetInterface<IFriendRepository>(friendRepository, interceptor);
+        _stateClient = generator.CreateInterfaceProxyWithTargetInterface<IStateClient>(stateClient, interceptor);
         _config = config;
-        _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri("http://10.99.14.176:9090/api/state/direct/user/info");
     }
 
     public async Task<List<FriendInfoDTO>> GetFriendList(long id)
@@ -36,40 +37,16 @@ public class FriendService : IFriendService
         }
 
         // 상태관리 서버에게 전송해야함
-        using StringContent jsonContent = new(
-            JsonConvert.SerializeObject(userIds),
-            Encoding.UTF8,
-            "application/json");
+        var data = await _stateClient.GetFriendOnlineList(userIds, "traceId", "userId");
+        if (data == null)
+            throw new ServiceException(4025);
 
-        CancellationTokenSource cts = new CancellationTokenSource();
-        cts.CancelAfter(100); // Cancel after 1 second
-        CancellationToken cancellationToken = cts.Token;
-        try
+        foreach (FriendInfoDTO friendInfo in friendInfos)
         {
-            var response = await _httpClient.PostAsync("", jsonContent, cancellationToken);
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var result = await response.Content.ReadAsStringAsync();
-                ConnectsStatusDTO? data = JsonConvert.DeserializeObject<ConnectsStatusDTO>(result);
-                if (data == null)
-                    throw new ServiceException(4025);
-
-                foreach (FriendInfoDTO friendInfo in friendInfos)
-                {
-                    if (data.connectionStates[friendInfo.Id.ToString()] == "online")
-                        friendInfo.IsOnline = true;
-                    else
-                        friendInfo.IsOnline = false;
-                }
-            }
+            if (data.connectionStates[friendInfo.Id.ToString()] == "online")
+                friendInfo.IsOnline = true;
             else
-            {
-                throw new ServiceException(4025);
-            }
-        }
-        catch (System.Exception)
-        {
-
+                friendInfo.IsOnline = false;
         }
 
         return friendInfos;
