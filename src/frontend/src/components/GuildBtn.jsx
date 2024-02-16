@@ -3,9 +3,8 @@ import CurrentStore from "../store/CurrentStore";
 
 // 길드 버튼을 클릭하면 현재 해당하는 길드로 zustand값 변경
 const GuildBtn = ({ props }) => {
-  const { CURRENT_VIEW_GUILD, setCurrentViewGuild, setCurrentViewGuildName } =
-    CurrentStore();
-
+  const { CURRENT_VIEW_GUILD, setCurrentViewGuild, setCurrentViewGuildName } = CurrentStore();
+  
   return (
     <div
       onClick={() => {
