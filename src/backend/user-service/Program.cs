@@ -18,7 +18,6 @@ ConfigurationManager configurationBinder = builder.Configuration;
 
 // secretconfig
 builder.Configuration.AddJsonFile("./SecretZuZu/secretconfig.json", optional: true, reloadOnChange: true);
-builder.Configuration.AddJsonFile("./Error/ErrorCode.json", optional: true, reloadOnChange: false);
 
 // 로거 의존성 주입
 builder.Services.AddSingleton<IBaseLogger, FileLogger>();
