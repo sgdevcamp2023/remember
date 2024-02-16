@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
-import "../css/MediaTitle.css";
+import React from "react";
+import "../css/MediaInteract.css";
 import CommunityStore from "../store/CommunityStore";
 import CurrentStore from "../store/CurrentStore";
+import SocketStore from "../store/SocketStore";
 
 const MediaTitle = () => {
   const { CHANNEL_LIST } = CommunityStore();
@@ -14,6 +15,13 @@ const MediaTitle = () => {
           element.channelReadId === CURRENT_JOIN_CHANNEL ? element.name : null
         )}
       </span>
+      {SocketStore.getState().VOICE_SOCKET ? (
+        <button className="media-disconnect">
+          <span>Disconnect</span>
+        </button>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

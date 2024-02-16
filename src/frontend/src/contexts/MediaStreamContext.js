@@ -6,10 +6,18 @@ export const MediaStreamProvider = ({ children }) => {
   const [audioStream, setAudioStream] = useState({});
   // "type" : {track, track....}
   const [videoStream, setVideoStream] = useState({});
+  const [peerVideoStream, setPeerVideoStream] = useState({});
 
   return (
     <MediaStreamContext.Provider
-      value={{ audioStream, setAudioStream, videoStream, setVideoStream }}
+      value={{
+        audioStream,
+        setAudioStream,
+        videoStream,
+        setVideoStream,
+        peerVideoStream,
+        setPeerVideoStream,
+      }}
     >
       {children}
     </MediaStreamContext.Provider>

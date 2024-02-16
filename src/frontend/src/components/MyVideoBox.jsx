@@ -5,7 +5,7 @@ import { useMediaStream } from "../contexts/MediaStreamContext";
 const MyVideoBox = () => {
   const camera = useRef(null);
   const display = useRef(null);
-  const { videoStream } = useMediaStream();
+  const { videoStream, audioStream } = useMediaStream();
 
   useEffect(() => {
     if (videoStream && videoStream.camera) {
@@ -18,6 +18,11 @@ const MyVideoBox = () => {
       display.current.play();
     }
   }, [videoStream]);
+
+  useEffect(() => {
+    console.log("videoStream", videoStream);
+    console.log("audioStream", audioStream);
+  }, [videoStream, audioStream]);
 
   return (
     <div className="my-video-box">

@@ -7,18 +7,24 @@ import MediaStore from "../store/MediaStore";
 
 import useMediasoup from "../hooks/useMediasoup";
 import { useMediaStream } from "../contexts/MediaStreamContext";
+import SocketStore from "../store/SocketStore";
 
 const MediaContainer = () => {
   const navigate = useNavigate();
   const { setCurrentViewChannelType } = CurrentStore();
   const { videoStream, setVideoStream } = useMediaStream();
-  const { getLocalCameraStream, getLocalDisplayStream } = useMediasoup();
-
+  const { getLocalCameraStream, getLocalDisplayStream, closeProducer } =
+    useMediasoup();
+  const { removeVideoProducer, removeDisplayProducer } = MediaStore();
+  const { removeVoiceSocket } = SocketStore();
   const { CURRENT_JOIN_GUILD, CURRENT_JOIN_CHANNEL } = CurrentStore.getState();
 
   const handleCemareStream = () => {
     if (videoStream && videoStream.camera) {
+      const { VIDEO_PRODUCER } = MediaStore.getState();
       videoStream.camera.track.stop();
+      closeProducer(VIDEO_PRODUCER);
+      removeVideoProducer();
       setVideoStream({ ...videoStream, camera: null });
       return;
     }
@@ -29,13 +35,25 @@ const MediaContainer = () => {
 
   const handleDisplayStream = () => {
     if (videoStream && videoStream.display) {
+      const { DISPLAY_PRODUCER } = MediaStore.getState();
       videoStream.display.track.stop();
+      closeProducer(DISPLAY_PRODUCER);
+      removeDisplayProducer();
       setVideoStream({ ...videoStream, display: null });
       return;
     }
     getLocalDisplayStream();
     setCurrentViewChannelType("VOICE");
     navigate(`/channels/${CURRENT_JOIN_GUILD}/${CURRENT_JOIN_CHANNEL}`);
+  };
+
+  const handleDisconnect = () => {
+    const { VOICE_SOCKET } = SocketStore.getState();
+    const { SEND_TRANSPORT, RECV_TRANSPORT } = MediaStore.getState();
+    VOICE_SOCKET.close();
+    removeVoiceSocket();
+    SEND_TRANSPORT.close();
+    RECV_TRANSPORT.close();
   };
 
   return (
@@ -57,7 +75,9 @@ const MediaContainer = () => {
             )}
           </p>
         </div>
-        <button className="disconnect-button">Disconnect</button>
+        <button className="disconnect-button" onClick={handleDisconnect}>
+          Disconnect
+        </button>
       </div>
       <div className="media-tools">
         <button className="media_button camera" onClick={handleCemareStream}>

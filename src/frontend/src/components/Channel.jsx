@@ -17,7 +17,7 @@ import SocketStore from "../store/SocketStore";
 
 const Channel = () => {
   const navigate = useNavigate();
-  const { audioStream } = useMediaStream();
+  const { audioStream, setVideoStream, setPeerVideoStream } = useMediaStream();
 
   const {
     connectSocket,
