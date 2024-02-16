@@ -15,16 +15,18 @@ USER appuser
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG configuration=Release
+ARG path=user-service
+ARG file=user-service.csproj
 WORKDIR /src
-COPY ["user-service.csproj", "./"]
-RUN dotnet restore "user-service.csproj"
+COPY ["user-service/user-service.csproj", "./"]
+RUN dotnet restore $path/$file
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "user-service.csproj" -c $configuration -o /app/build
+RUN dotnet build $path/$file -c $configuration -o /app/build
 
 FROM build AS publish
 ARG configuration=Release
-RUN dotnet publish "user-service.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
+RUN dotnet publish $path/$file -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
