@@ -5,9 +5,9 @@ namespace user_service.user.service;
 
 public interface IUserService
 {
-    void ChangePassword(PasswordDTO passwords);
     UserDTO GetUserInfo(long userId);
-    void ChangeName(NameDTO nameDTO);
-    string ChangeProfile(ProfileDTO profileDTO);
+    Task<string> ChangeProfile(ProfileDTO profileDTO, string traceId, string userId);
+    Task ChangeName(NameDTO nameDTO, string traceId, string userId);
+    void ChangePassword(PasswordDTO passwords);
     void LogOut(long headerUserId, LogoutDTO logoutDTO);
 }

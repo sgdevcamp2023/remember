@@ -39,19 +39,23 @@ namespace user_service
             }
 
             [HttpPatch("change-name")]
-            public IActionResult ChangeName(
+            public async Task<IActionResult> ChangeNameAsync(
+                [FromHeader(Name = "trace-id")] string traceId,
+                [FromHeader(Name = "user-id")] string userId,
                 [FromBody] NameDTO nameDTO)
             {
-                _userService.ChangeName(nameDTO);
+                await _userService.ChangeName(nameDTO, traceId, userId);
 
                 return Ok();
             }
 
             [HttpPatch("change-profile")]
-            public ProfileResponseDTO ChangeProfile(
+            public async Task<ProfileResponseDTO> ChangeProfileAsync(
+                [FromHeader(Name = "trace-id")] string traceId,
+                [FromHeader(Name = "user-id")] string userId,
                 [FromForm] ProfileDTO file)
             {
-                string profileUrl = _userService.ChangeProfile(file);
+                string profileUrl = await _userService.ChangeProfile(file, traceId, userId);
 
                 return new ProfileResponseDTO()
                 {

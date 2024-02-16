@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+
 using System.Data;
 using Microsoft.Data.SqlClient;
 using user_service.logger;

@@ -1,4 +1,5 @@
 
+
 using System.ComponentModel.DataAnnotations;
 
 namespace user_service
@@ -10,7 +11,7 @@ namespace user_service
             public class ProfileDTO
             {
                 [Required(ErrorMessage = "4021")]
-                public string UserId { get; set; } = null!;
+                public long UserId { get; set; }
                 
                 [Required(ErrorMessage = "4023")]
                 public IFormFile NewProfile { get; set; } = null!;

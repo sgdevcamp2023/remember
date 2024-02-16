@@ -2,6 +2,7 @@ using user_service.auth.repository;
 using user_service.auth.service;
 using user_service.Business.Auth.service;
 using user_service.common;
+using user_service.Common;
 using user_service.error;
 using user_service.friend.repository;
 using user_service.friend.service;
@@ -38,6 +39,10 @@ builder.Services.AddScoped<IFriendRepository, FriendRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFriendService, FriendService>();
+
+// OutService 의존성 주입
+builder.Services.AddScoped<ICommunityClient, CommunityClient>();
+builder.Services.AddScoped<IStateClient, StateClient>();
 
 // Controller 소문자로 변경
 builder.Services.AddRouting(options => options.LowercaseUrls = true);

@@ -1,4 +1,4 @@
-namespace user_service.Business.Friend.dto;
+namespace user_service.common.dto;
 
 public class UserIdsDTO
 {

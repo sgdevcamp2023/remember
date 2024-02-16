@@ -6,10 +6,12 @@ namespace user_service
     namespace common
     {
         public class UserRepository : IUserRepository
-        {
+        {   
+            private string _defaultImage;
             private DbConnectionManager _db = null!;
-            public UserRepository(DbConnectionManager dbConnectionManager)
+            public UserRepository(IConfiguration configuration, DbConnectionManager dbConnectionManager)
             {
+                _defaultImage = configuration["DefaultProfileImage"];
                 _db = dbConnectionManager;
             }
             public bool IsEmailExist(string email)
@@ -40,17 +42,13 @@ namespace user_service
                 {
                     user = datas[0];
                 }
-                else
-                {
-                    
-                }
-
+                
                 return user;
             }
 
             public bool InsertUser(RegisterDTO user)
             {
-                string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '{"https://storage.googleapis.com/remember-harmony/d68c3d6c-4683-4ddf-892b-8a73e3678145"}')";
+                string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '{_defaultImage}')";
                 _db.ExecuteNonQuery(query);
 
                 return true;

@@ -9,6 +9,7 @@ namespace user_service
 {
     namespace auth
     {
+        [filter.DefaultHeaderFilter]
         [Route("api/[controller]")]
         [ApiController]
         public class AuthController : ControllerBase
@@ -21,9 +22,11 @@ namespace user_service
             }
 
             [HttpPost("register")]
-            public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO register)
+            public async Task<IActionResult> RegisterAsync(
+                [FromHeader(Name = "trace-id")] string traceId,
+                [FromBody] RegisterDTO register)
             {
-                await _authService.RegisterAsync(register);
+                await _authService.RegisterAsync(register, traceId);
 
                 return Ok();
             }

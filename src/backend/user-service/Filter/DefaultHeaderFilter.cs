@@ -15,7 +15,6 @@ namespace user_service
                 if(context.HttpContext.Request.Headers.ContainsKey("user-id") == false)
                     throw new ServiceException(4101);
             }
-
             public override void OnActionExecuted(ActionExecutedContext context)
             {
                     
