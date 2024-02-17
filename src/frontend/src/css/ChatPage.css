@@ -81,7 +81,7 @@
   }
   
   .input-container input[type="text"]::placeholder {
-    color: #b9bbbe; /* 입력창 플레이스홀더 텍스트 색상 설정 */
+    color: #FFF; /* 입력창 플레이스홀더 텍스트 색상 설정 */
   }
   
   .input-container button {
@@ -139,4 +139,39 @@
   .my-message .message-content {
     background-color: #dbf6c3; /* 자신의 메시지일 때 배경색 변경 */
   }
+  
+
+
+/* 수정 및 삭제 버튼 컨테이너 */
+.edit-buttons {
+  display: flex;
+  gap: 15px; /* 버튼 사이의 간격을 조절합니다. */
+  margin-left: 200px;
+}
+
+/* 수정 및 삭제 버튼 공통 스타일 */
+.edit-buttons button {
+  background-color: #262e4b; /* 디스코드의 파란색과 유사한 색상을 사용합니다. */
+  color: #FFF;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px; /* 버튼 텍스트의 크기를 설정합니다. */
+}
+
+/* 수정 버튼 */
+.edit-buttons button.modify {
+  background-color: #7289DA; /* 디스코드의 파란색과 유사한 색상을 사용합니다. */
+}
+
+/* 삭제 버튼 */
+.edit-buttons button.delete {
+  background-color: #FF0000; /* 디스코드의 빨간색과 유사한 색상을 사용합니다. */
+}
+
+/* 수정 및 삭제 버튼에 호버 효과 추가 */
+.edit-buttons button:hover {
+  filter: brightness(0.9); /* 버튼의 밝기를 줄여 호버 효과를 줍니다. */
+}
   

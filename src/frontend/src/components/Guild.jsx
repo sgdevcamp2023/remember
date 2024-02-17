@@ -34,7 +34,7 @@ const Guild = () => {
       const handleReceiveMessage = (data) => {    
         const parsedMessage = JSON.parse(data.body);
         console.log("서버로부터 받은 데이터", parsedMessage);
-        if (parsedMessage.state === "online" || parsedMessage.state === "offline") {
+        if (parsedMessage.type === "CONNECT" || parsedMessage.type === "DISCONNECT") {
           setStatus(parsedMessage);
         } else if (parsedMessage.type === "send" || parsedMessage.type === "modify" || parsedMessage.type === "delete") {
           setMessage(parsedMessage);
