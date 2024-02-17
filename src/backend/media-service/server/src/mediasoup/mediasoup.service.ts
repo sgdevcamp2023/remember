@@ -52,6 +52,7 @@ export class MediasoupService implements OnModuleInit {
       listenIps: [
         {
           ip: process.env.WEBRTC_LISTEN_IP || '127.0.0.1',
+          // ip: '127.0.0.1',
           announcedIp: process.env.WEBRTC_ANNOUNCED_IP || '127.0.0.1',
         },
       ],

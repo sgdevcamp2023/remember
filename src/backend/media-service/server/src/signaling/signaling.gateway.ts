@@ -12,7 +12,6 @@ import { Server, Socket } from 'socket.io';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { LeaveChannelDto } from './dto/leave-channel.dts';
 import { ChannelGuildEntity } from './entity/channel.guild.entity';
-import { HttpService } from '@nestjs/axios';
 import { MediasoupService } from '../mediasoup/mediasoup.service';
 import * as mediasoup from 'mediasoup';
 import { CreateWebRtcTransportDTO } from './dto/create-webRtcTransport.dto';
@@ -25,7 +24,7 @@ import { KafkaService } from 'src/kafka/kafka.service';
 
 @WebSocketGateway({
   cors: {
-    origin: ['https://localhost:3000', 'https://10.99.4.27:3000'],
+    origin: ['https://localhost:3000', 'https://192.168.0.26:3000'],
     credentials: true,
   },
 })

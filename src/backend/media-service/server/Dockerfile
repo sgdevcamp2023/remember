@@ -16,6 +16,6 @@ COPY . .
 # Nesjs build
 RUN npm run build
 
-EXPOSE 5000
+EXPOSE 6001
 # mediasoup worker가 사용할 RTP 포트 범위를 expose합니다.
-EXPOSE 2000-2020
+EXPOSE 6002-6202
