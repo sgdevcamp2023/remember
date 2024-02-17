@@ -3,7 +3,6 @@ import useSocketStore from '../../store/SocketStore';
 import useAuthStore from '../../store/AuthStore'
 import '../../css/ChatPage.css'; 
 import axios from 'axios'; 
-import { useLocation } from 'react-router-dom';
 import ChatStore from '../../store/ChatStore';
 import CurrentStore from "../../store/CurrentStore";
 
@@ -14,16 +13,17 @@ const ChatPage = () => {
   const [editingMessage, setEditingMessage] = useState({ messageId: null, message: '' }); 
   const mainSocket = useSocketStore(state => state.MAIN_SOCKET); 
 
-  const socketIdRef = useRef('');
-  const location = useLocation();
-
-  const chatMessage = ChatStore(state => state.MESSAGE);
+  let chatMessage = ChatStore(state => state.MESSAGE);
+  const { removeMessage } = ChatStore(); 
   const { CURRENT_VIEW_GUILD, CURRENT_VIEW_CHANNEL} = CurrentStore();
 
   const messageWindowRef = useRef(null); // 메시지 창의 DOM 요소에 접근하기 위한 useRef 훅 사용
   const [page, setPage] = useState(0); // 페이지 번호 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [hasMoreData, setHasMoreData] = useState(true); // 더 이상 데이터를 가져올 수 있는지 여부 상태
+
+  const [hoveredMessageId, setHoveredMessageId] = useState(null);
+
 
   useEffect(() => {
     // 페이지 로딩 시 메시지 불러오기
@@ -38,7 +38,6 @@ const ChatPage = () => {
         setLoading(true); 
         const response = await axios.get(`http://34.22.109.45:7000/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
         const newMessages = response.data.content.reverse();
-        console.log("메시지 길이", newMessages.length);
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
           setHasMoreData(false);
@@ -64,8 +63,9 @@ const ChatPage = () => {
     if (messageWindowRef.current) {
       messageWindowRef.current.scrollTop = messageWindowRef.current.scrollHeight;
     }
+  }, []); 
 
-    console.log("메시지 총 길이", messages.length);
+  useEffect(() => {   
     // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
     if (chatMessage) {
       if (chatMessage.channelId === CURRENT_VIEW_CHANNEL) {
@@ -91,6 +91,7 @@ const ChatPage = () => {
       }
     }
 
+    removeMessage(chatMessage); 
   }, [chatMessage]); 
 
   // 메시지 전송
@@ -155,9 +156,11 @@ const ChatPage = () => {
     }
   };
 
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp); // 문자열을 Date 객체로 파싱
 
+  const formatTime = (timestamp) => {
+    const date = new Date(timestamp); 
+    date.setHours(date.getHours() + 9);
+      
     // 날짜를 YYYY.MM.DD. 오후 HH:MM 형식으로 포맷팅
     const formattedDate = `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')}. `;
     const formattedTime = `${(date.getHours() % 12 || 12)}:${date.getMinutes().toString().padStart(2, '0')}`;
@@ -171,20 +174,12 @@ const ChatPage = () => {
       <div className="scroller-content" ref={messageWindowRef} onScroll={handleScroll}>
         {messages.length === 0 && <div>Loading...</div>}
         {messages.map((msg) => (
-
-/* <div key={msg.messageId} className={msg.senderName === 'me' ? 'my-message' : 'other-message'}>
-<div className="message-info">
-  <img src={msg.profileImage} alt="Profile" className="profile-image" />
-  <div className="user-info">
-    <span className="username">{msg.senderName}</span>
-    <span className="time">{formatTime(msg.createdAt)}</span>
-  </div>
-</div>
-<div className="message-content">
-  <p>{msg.message}</p>
-</div> */
-
-          <div key={msg.messageId} className={`message-container ${msg.senderName === 'me' ? 'my-message' : ''}`}>
+          <div 
+            key={msg.messageId} 
+            className={`message-container ${msg.senderName === 'me' ? 'my-message' : ''}`}
+            onMouseEnter={() => setHoveredMessageId(msg.messageId)}
+            onMouseLeave={() => setHoveredMessageId(null)}
+          >
             <img src={msg.profileImage} alt="Profile" className="profile-image" />
             <div className="message-info">
               <div className="user-info">
@@ -196,8 +191,8 @@ const ChatPage = () => {
               </div>
             </div>
 
-            {USER_ID === msg.userId && (
-              <div>
+            {USER_ID === msg.userId && hoveredMessageId === msg.messageId && (
+              <div className="edit-buttons">
                 {editingMessage.messageId === msg.messageId ? (
                   <div>
                     <input 
