@@ -12,14 +12,12 @@ import harmony.chatservice.exception.ExceptionStatus;
 import harmony.chatservice.repository.DirectMessageRepository;
 import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,8 +89,8 @@ public class DirectMessageService {
         return new DirectMessageDto(messageRepository.save(directMessage));
     }
 
-    public Page<DirectMessageDto> getDirectMessages(Long roomId) {
-        Page<DirectMessageDto> messageDtos = messagesToMessageDtos("message", roomId);
+    public Page<DirectMessageDto> getDirectMessages(Long roomId, int page, int size) {
+        Page<DirectMessageDto> messageDtos = messagesToMessageDtos("message", roomId, page, size);
         for (DirectMessageDto messageDto : messageDtos) {
             List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
             messageDto.setEmojis(emojiDtos);
@@ -102,8 +100,8 @@ public class DirectMessageService {
         return messageDtos;
     }
 
-    public Page<DirectMessageDto> getComments(Long parentId) {
-        Page<DirectMessageDto> messageDtos = messagesToMessageDtos("comment", parentId);
+    public Page<DirectMessageDto> getComments(Long parentId, int page, int size) {
+        Page<DirectMessageDto> messageDtos = messagesToMessageDtos("comment", parentId, page, size);
         for (DirectMessageDto messageDto : messageDtos) {
             List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
             messageDto.setEmojis(emojiDtos);
@@ -112,9 +110,8 @@ public class DirectMessageService {
         return messageDtos;
     }
 
-    public Page<DirectMessageDto> messagesToMessageDtos(String type, Long id) {
-        List<Order> sorts = Collections.singletonList(Sort.Order.desc("createdAt"));
-        Pageable pageable = PageRequest.of(0, 50, Sort.by(sorts));
+    public Page<DirectMessageDto> messagesToMessageDtos(String type, Long id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<DirectMessage> messages = null;
         if (type.equals("message")) {
             messages = messageRepository.findByRoomIdAndDelCheckAndParentId(id, pageable);

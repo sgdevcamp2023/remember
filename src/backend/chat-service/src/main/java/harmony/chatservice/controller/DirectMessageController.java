@@ -15,8 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,16 +57,20 @@ public class DirectMessageController {
         messageProducerService.sendMessageForDirect(messageDto);
     }
 
-    @GetMapping("/api/chat-service/direct/messages/room/{roomId}")
-    public Page<DirectMessageDto> getMessages(@PathVariable("roomId") Long roomId) {
+    @GetMapping("/api/chat-service/direct/messages/room")
+    public Page<DirectMessageDto> getMessages(@RequestParam(value = "roomId") Long roomId,
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "30") int size) {
 
-        return messageService.getDirectMessages(roomId);
+        return messageService.getDirectMessages(roomId, page, size);
     }
 
-    @GetMapping("/api/chat-service/direct/comments/{parentId}")
-    public Page<DirectMessageDto> getComments(@PathVariable("parentId") Long parentId) {
+    @GetMapping("/api/chat-service/direct/comments")
+    public Page<DirectMessageDto> getComments(@RequestParam(value = "parentId") Long parentId,
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "30") int size) {
 
-        return messageService.getComments(parentId);
+        return messageService.getComments(parentId, page, size);
     }
 
     @PostMapping("/api/chat-service/direct/message/file")
