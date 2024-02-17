@@ -49,6 +49,7 @@ public class MessageConsumerService {
         if (connectionEventDto.getType().equals("CONNECT") || connectionEventDto.getType().equals("DISCONNECT")) {
             HashMap<String,String> stateInfo = new HashMap<>();
             stateInfo.put("state", connectionEventDto.getState());
+            stateInfo.put("type", connectionEventDto.getType());
             stateInfo.put("userId", String.valueOf(connectionEventDto.getUserId()));
             String connectionEvent = objectMapper.writeValueAsString(stateInfo);
 
@@ -89,10 +90,6 @@ public class MessageConsumerService {
 
     @KafkaListener(topics = "${spring.kafka.topic.channel-event}", groupId = "${spring.kafka.consumer.group-id.channel-event}", containerFactory = "channelEventListener")
     public void consumeForChannelEvent(ChannelEventDto eventDto) {
-        log.info("시그널링 서버에서 보낸 채널 이벤트 {}", eventDto.getChannelId());
-        log.info("시그널링 서버에서 보낸 채널 이벤트 {}", eventDto.getType());
-        log.info("시그널링 서버에서 보낸 채널 이벤트 {}", eventDto.getGuildId());
-        log.info("시그널링 서버에서 보낸 채널 이벤트 {}", eventDto.getUserId());
         if (eventDto.getType().equals("JOIN") || eventDto.getType().equals("LEAVE")) {
             messagingTemplate.convertAndSend("/topic/guild/" + eventDto.getGuildId(), eventDto);
         }
