@@ -14,4 +14,9 @@ public class GuildReadCommandRepositoryImpl implements GuildReadCommandRepositor
     public void save(GuildRead guildRead) {
         repository.save(guildRead);
     }
+
+    @Override
+    public void delete(long guildId) {
+        repository.deleteGuildReadsByGuildId(guildId);
+    }
 }

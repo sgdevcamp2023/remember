@@ -17,4 +17,9 @@ public class GuildReadCommandServiceImpl implements GuildReadCommandService {
         GuildRead guildRead = ToGuildReadMapper.convert(requestDto);
         repository.save(guildRead);
     }
+
+    @Override
+    public void delete(long guildId) {
+        repository.delete(guildId);
+    }
 }

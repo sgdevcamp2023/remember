@@ -6,4 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface GuildReadCommandService {
     void save(GuildReadRequestDto requestDto);
+
+    void delete(long guildId);
 }

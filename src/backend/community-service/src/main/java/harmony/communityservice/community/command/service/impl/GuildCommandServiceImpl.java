@@ -72,6 +72,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         guildQueryService.existsGuildByGuildIdAndManagerId(guildDeleteRequestDto.getGuildId(),
                 guildDeleteRequestDto.getManagerId());
         guildCommandRepository.delete(guildDeleteRequestDto.getGuildId());
+        guildReadCommandService.delete(guildDeleteRequestDto.getGuildId());
     }
 
     @Override
