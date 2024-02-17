@@ -7,7 +7,8 @@ import org.springframework.data.mongodb.repository.Query;
 
 public interface EmojiRepository extends MongoRepository<Emoji, Long> {
 
-    List<Emoji> findAllByDirectMessageId(Long directMessageId);
+    @Query("{'directMessageId': {$in: ?0}}")
+    List<Emoji> findEmojisByDirectMessageIds(List<Long> messageIds);
 
     @Query("{'communityMessageId': {$in: ?0}}")
     List<Emoji> findEmojisByCommunityMessageIds(List<Long> messageIds);

@@ -12,7 +12,12 @@ import harmony.chatservice.exception.ExceptionStatus;
 import harmony.chatservice.repository.DirectMessageRepository;
 import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -91,10 +96,13 @@ public class DirectMessageService {
 
     public Page<DirectMessageDto> getDirectMessages(Long roomId, int page, int size) {
         Page<DirectMessageDto> messageDtos = messagesToMessageDtos("message", roomId, page, size);
+        List<Long> messageIds = getMessageIds(messageDtos);
+
+        Map<Long, List<EmojiDto>> emojiMap = getEmojisForDirectMessages(messageIds);
+        Map<Long, Long> messageCounts = getMessageCounts(messageIds);
         for (DirectMessageDto messageDto : messageDtos) {
-            List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
-            messageDto.setEmojis(emojiDtos);
-            messageDto.setCount(messageRepository.countByParentId(messageDto.getMessageId()));
+            messageDto.setEmojis(emojiMap.getOrDefault(messageDto.getMessageId(), Collections.emptyList()));
+            messageDto.setCount(messageCounts.getOrDefault(messageDto.getMessageId(), 0L));
         }
 
         return messageDtos;
@@ -102,9 +110,11 @@ public class DirectMessageService {
 
     public Page<DirectMessageDto> getComments(Long parentId, int page, int size) {
         Page<DirectMessageDto> messageDtos = messagesToMessageDtos("comment", parentId, page, size);
+        List<Long> messageIds = getMessageIds(messageDtos);
+
+        Map<Long, List<EmojiDto>> emojiMap = getEmojisForDirectMessages(messageIds);
         for (DirectMessageDto messageDto : messageDtos) {
-            List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
-            messageDto.setEmojis(emojiDtos);
+            messageDto.setEmojis(emojiMap.getOrDefault(messageDto.getMessageId(), Collections.emptyList()));
         }
 
         return messageDtos;
@@ -122,10 +132,43 @@ public class DirectMessageService {
         return (messages != null) ? messages.map(DirectMessageDto::new) : Page.empty(pageable);
     }
 
-    public List<EmojiDto> emojisToEmojiDtos(Long messageId) {
-        List<Emoji> emojis = emojiRepository.findAllByDirectMessageId(messageId);
-        return emojis.stream()
-                .map(EmojiDto::new)
-                .toList();
+    public Map<Long, List<EmojiDto>> getEmojisForDirectMessages(List<Long> messageIds) {
+        List<Emoji> emojis = emojiRepository.findEmojisByDirectMessageIds(messageIds);
+        Map<Long, List<EmojiDto>> emojiMap = new HashMap<>();
+
+        for (Long messageId : messageIds) {
+            List<EmojiDto> emojiDtos = new ArrayList<>();
+            for (Emoji emoji : emojis) {
+                if (messageId.equals(emoji.getDirectMessageId())) {
+                    EmojiDto emojiDto = new EmojiDto(emoji);
+                    emojiDtos.add(emojiDto);
+                }
+            }
+            emojiMap.put(messageId, emojiDtos);
+        }
+        return emojiMap;
+    }
+
+    public Map<Long, Long> getMessageCounts(List<Long> messageIds) {
+        List<DirectMessage> messages = messageRepository.countMessagesByParentIds(messageIds);
+        Map<Long, Long> messageCounts = new HashMap<>();
+
+        for (Long messageId : messageIds) {
+            long count = 0L;
+            for (DirectMessage message : messages) {
+                if (message.getParentId().equals(messageId)) {
+                    count += 1;
+                }
+            }
+            messageCounts.put(messageId, count);
+        }
+
+        return messageCounts;
+    }
+
+    public List<Long> getMessageIds(Page<DirectMessageDto> messageDtos) {
+        return messageDtos.getContent().stream()
+                .map(DirectMessageDto::getMessageId)
+                .collect(Collectors.toList());
     }
 }
