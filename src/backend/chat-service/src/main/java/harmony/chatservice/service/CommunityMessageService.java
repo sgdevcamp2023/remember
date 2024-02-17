@@ -12,7 +12,12 @@ import harmony.chatservice.exception.ExceptionStatus;
 import harmony.chatservice.repository.CommunityMessageRepository;
 import harmony.chatservice.repository.EmojiRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -97,10 +102,13 @@ public class CommunityMessageService {
 
     public Page<CommunityMessageDto> getMessages(Long channelId, int page, int size) {
         Page<CommunityMessageDto> messageDtos = messagesToMessageDtos("message", channelId, page, size);
+        List<Long> messageIds = getMessageIds(messageDtos);
+
+        Map<Long, List<EmojiDto>> emojiMap = getEmojisForMessages(messageIds);
+        Map<Long, Long> messageCounts = getMessageCounts(messageIds);
         for (CommunityMessageDto messageDto : messageDtos) {
-            List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
-            messageDto.setEmojis(emojiDtos);
-            messageDto.setCount(messageRepository.countByParentId(messageDto.getMessageId()));
+            messageDto.setEmojis(emojiMap.getOrDefault(messageDto.getMessageId(), Collections.emptyList()));
+            messageDto.setCount(messageCounts.getOrDefault(messageDto.getMessageId(), 0L));
         }
 
         return messageDtos;
@@ -108,9 +116,11 @@ public class CommunityMessageService {
 
     public Page<CommunityMessageDto> getComments(Long parentId, int page, int size) {
         Page<CommunityMessageDto> messageDtos = messagesToMessageDtos("comment", parentId, page, size);
+        List<Long> messageIds = getMessageIds(messageDtos);
+
+        Map<Long, List<EmojiDto>> emojiMap = getEmojisForMessages(messageIds);
         for (CommunityMessageDto messageDto : messageDtos) {
-            List<EmojiDto> emojiDtos = emojisToEmojiDtos(messageDto.getMessageId());
-            messageDto.setEmojis(emojiDtos);
+            messageDto.setEmojis(emojiMap.getOrDefault(messageDto.getMessageId(), Collections.emptyList()));
         }
 
         return messageDtos;
@@ -128,10 +138,43 @@ public class CommunityMessageService {
         return (messages != null) ? messages.map(CommunityMessageDto::new) : Page.empty(pageable);
     }
 
-    public List<EmojiDto> emojisToEmojiDtos(Long messageId) {
-        List<Emoji> emojis = emojiRepository.findAllByCommunityMessageId(messageId);
-        return emojis.stream()
-                .map(EmojiDto::new)
-                .toList();
+    public Map<Long, List<EmojiDto>> getEmojisForMessages(List<Long> messageIds) {
+        List<Emoji> emojis = emojiRepository.findEmojisByCommunityMessageIds(messageIds);
+        Map<Long, List<EmojiDto>> emojiMap = new HashMap<>();
+
+        for (Long messageId : messageIds) {
+            List<EmojiDto> emojiDtos = new ArrayList<>();
+            for (Emoji emoji : emojis) {
+                if (messageId.equals(emoji.getCommunityMessageId())) {
+                    EmojiDto emojiDto = new EmojiDto(emoji);
+                    emojiDtos.add(emojiDto);
+                }
+            }
+            emojiMap.put(messageId, emojiDtos);
+        }
+        return emojiMap;
+    }
+
+    public Map<Long, Long> getMessageCounts(List<Long> messageIds) {
+        List<CommunityMessage> messages = messageRepository.countMessagesByParentIds(messageIds);
+        Map<Long, Long> messageCounts = new HashMap<>();
+
+        for (Long messageId : messageIds) {
+            long count = 0L;
+            for (CommunityMessage message : messages) {
+                if (message.getParentId().equals(messageId)) {
+                    count += 1;
+                }
+            }
+            messageCounts.put(messageId, count);
+        }
+
+        return messageCounts;
+    }
+
+    public List<Long> getMessageIds(Page<CommunityMessageDto> messageDtos) {
+        return messageDtos.getContent().stream()
+                .map(CommunityMessageDto::getMessageId)
+                .collect(Collectors.toList());
     }
 }
