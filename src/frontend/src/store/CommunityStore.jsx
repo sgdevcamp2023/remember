@@ -7,6 +7,7 @@ const CommunityStore = create((set) => ({
   DM_ROOM_LIST: [],
   USER_STATE_MAP: {},
   VOICE_USER_STATE_MAP: {},
+  CHANNEL_MODAL: false,
 
   setGuildList: (guildList) => set({GUILD_LIST: guildList}),
   removeGuildList: () => set({GUILD_LIST: []}),
@@ -19,7 +20,9 @@ const CommunityStore = create((set) => ({
   setUserStateMap: (userStateMap) => set({USER_STATE_MAP: userStateMap}),
   removeUserStateMap: () => set({USER_STATE_MAP: {}}),
   setVoiceUserStateMap: (voiceUserStateMap) => set({VOICE_USER_STATE_MAP: voiceUserStateMap}),
-  removeVoiceUserStateMap: () => set({VOICE_USER_STATE_MAP: {}})
+  removeVoiceUserStateMap: () => set({VOICE_USER_STATE_MAP: {}}),
+  setChannelModalOpen: (modal) => set({CHANNEL_MODAL: modal}),
+  setChannelModalClose: (modal) => set({CHANNEL_MODAL: modal}),
 }));
 
 export default CommunityStore;

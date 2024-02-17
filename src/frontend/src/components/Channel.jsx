@@ -12,12 +12,13 @@ import AuthStore from "../store/AuthStore";
 import {useMediaStream} from "../contexts/MediaStreamContext";
 import SocketStore from "../store/SocketStore";
 import {getChannelListRequest, getUserStateAndVoice} from "../Request/communityRequest";
+import ChannelModal from "./ChannelModal";
 
 const Channel = () => {
   const navigate = useNavigate();
 
   const {audioStream, setVideoStream, setPeerVideoStream} = useMediaStream();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     connectSocket,
     addEventListeners,
@@ -36,6 +37,8 @@ const Channel = () => {
   const {CURRENT_JOIN_CHANNEL} = CurrentStore.getState();
 
   let accessToken = AuthStore.getState().ACCESS_TOKEN;
+  const appendServer =
+    "https://storage.googleapis.com/remember-harmony/fe2f6651-10c4-444c-a336-3740dd4a5890";
 
   const [members, setMembers] = useState([]);
   const [testId, setTestId] = useState("");
@@ -94,6 +97,14 @@ const Channel = () => {
     validateUserInChannel(guildId, channelId);
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="channel-container">
       <div>
@@ -145,8 +156,12 @@ const Channel = () => {
         ) : (
           <></>
         )}
+        <div onClick={openModal} className="guild-btn">
+          <img alt={"기본 이미지"} className="profile_img" src={appendServer}/>
+        </div>
       </div>
       <div>{VOICE_SOCKET ? <MediaContainer/> : <></>}</div>
+      <ChannelModal isModalOpen={isModalOpen} closeModal={closeModal}/>
     </div>
   );
 };

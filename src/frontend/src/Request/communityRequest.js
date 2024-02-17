@@ -67,3 +67,13 @@ export const getUserStateAndVoice = async (CURRENT_VIEW_GUILD, USER_ID) => {
     },
   })
 };
+
+export const createChannel = async (data) => {
+  return await axios
+    .post(CommunityServerAddr + "api/community/registration/category/channel", data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+
+}
