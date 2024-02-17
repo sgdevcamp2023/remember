@@ -11,6 +11,7 @@ import GuildModal from "./GuildModal";
 import GuildSeperator from "./GuildSeperator";
 import ChatStore from "../store/ChatStore";
 import StatusStore from "../store/StatusStore";
+import {getGuildListRequest} from "../Request/communityRequest";
 
 const Guild = () => {
   const { USER_ID } = AuthStore();
@@ -54,13 +55,13 @@ const Guild = () => {
   
 
   useEffect(() => {
-    // axios를 통한 길드 리스트 요청
-    const response = mock_guild_list.resultData.filter((element) => {
-      return element.userId === USER_ID;
-    });
-    console.log(response);
-    // response를 세팅
-    setGuildList(response);
+
+    const fetchData = async () => {
+      const data = await getGuildListRequest(USER_ID);
+      setGuildList(Object.values(data.data.resultData));
+    }
+
+    fetchData();
     return () => {};
   }, []);
 
