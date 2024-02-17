@@ -24,7 +24,7 @@ import { KafkaService } from 'src/kafka/kafka.service';
 
 @WebSocketGateway({
   cors: {
-    origin: ['https://localhost:3000', 'https://192.168.0.26:3000'],
+    origin: [process.env.CORS_ORIGIN_LIST.split(',')],
     credentials: true,
   },
 })
