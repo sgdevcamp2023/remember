@@ -1,7 +1,6 @@
 import axios from "axios";
-import AuthStore from "../store/AuthStore";
 
-const UserAuthServerAddr = "http://127.0.0.1:4000/api/auth/";
+const UserAuthServerAddr = "http://34.22.109.45:4000/api/auth/";
 
 export const logInRequest = async (email, password) => {
   return await axios
