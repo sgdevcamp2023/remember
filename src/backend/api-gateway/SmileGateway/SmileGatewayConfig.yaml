@@ -10,8 +10,8 @@ listeners:
     clusters:
     - user-service
     - auth-service
-    # - community-service
-    # - chat-service
+    - community-service
+    - chat-service
   custom-filters:
     - name: ListenerTestFilter
       path: /ApiGateway/CustomFilter.cs
