@@ -3,10 +3,21 @@ using SmileGatewayCore.Utils;
 
 namespace SmileGatewayCore.Config;
 
-public static class ErrorResponse
+public class ErrorResponse
 {
-    private static ErrorCodeReader _errorCodeReader = new ErrorCodeReader();
-    public static void MakeBadRequest(HttpResponse response, int errorCode)
+    private static ErrorResponse? _instance;
+    public static ErrorResponse Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = new ErrorResponse();
+            return _instance;
+        }
+    }
+    
+    private ErrorCodeReader _errorCodeReader = new ErrorCodeReader();
+    public void MakeBadRequest(HttpResponse response, int errorCode)
     {
         response.StatusCode = 400;
         response.StatusMessage = "Bad Request";
@@ -21,7 +32,7 @@ public static class ErrorResponse
         response.Body = errorString;
     }
 
-    public static void MakeInternalServerError(HttpResponse response, int errorCode)
+    public void MakeInternalServerError(HttpResponse response, int errorCode)
     {
         response.StatusCode = 500;
         response.StatusMessage = "Internal Server Error";
@@ -34,7 +45,7 @@ public static class ErrorResponse
         response.ContentLength = errorString.Length;
         response.Body = errorString;
     }
-    public static string GetErrorInfo(int errorCode)
+    public string GetErrorInfo(int errorCode)
     {
         if(_errorCodeReader.ErrorCodes.TryGetValue(errorCode, out string? errorInfo))
             return errorInfo;

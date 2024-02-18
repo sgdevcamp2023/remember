@@ -11,6 +11,6 @@ public class AuthException : DefaultException
 
     public override string ToString()
     {
-        return ErrorResponse.GetErrorInfo(ErrorCode);
+        return ErrorResponse.Instance.GetErrorInfo(ErrorCode);
     }
 }

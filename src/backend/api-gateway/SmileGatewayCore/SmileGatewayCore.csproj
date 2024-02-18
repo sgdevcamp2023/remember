@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Content Include="Utils/Error/ErrorCode.json">
+      <Link>ErrorCode.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

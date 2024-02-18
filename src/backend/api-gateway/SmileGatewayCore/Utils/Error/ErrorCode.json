@@ -105,6 +105,11 @@
         "description": "설정 파일을 쓰는데 실패했습니다."
     },
     {
+        "code": 3112,
+        "message": "READ_ERRORCODE_FILED",
+        "description": "에러 코드 파일을 읽는데 실패했습니다."
+    },
+    {
         "code": 3200,
         "message": "DISCONNECT_SOCKET",
         "description": "소켓 연결이 끊겼습니다."

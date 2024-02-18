@@ -180,7 +180,7 @@ internal partial class Listener : NetworkInstance
 
         if (adapter == null)
         {
-            ErrorResponse.MakeBadRequest(_context.Value.Response, 3107);
+            ErrorResponse.Instance.MakeBadRequest(_context.Value.Response, 3107);
             return;
         }
 
