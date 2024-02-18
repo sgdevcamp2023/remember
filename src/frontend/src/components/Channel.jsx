@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import "../css/Channels.css";
-import {channelList as mock_channel_list, memberList as mock_member_list,} from "../config/mock_data";
+import {memberList as mock_member_list,} from "../config/mock_data";
 import MediaContainer from "./MediaContainer";
 import CurrentStore from "../store/CurrentStore";
 import CommunityStore from "../store/CommunityStore";
@@ -11,13 +11,14 @@ import useVoiceSocket from "../hooks/useVoiceSocket";
 import AuthStore from "../store/AuthStore";
 import {useMediaStream} from "../contexts/MediaStreamContext";
 import SocketStore from "../store/SocketStore";
-import {getUserStateAndVoice} from "../Request/communityRequest";
+import {getChannelListRequest, getUserStateAndVoice} from "../Request/communityRequest";
+import ChannelModal from "./ChannelModal";
 
 const Channel = () => {
   const navigate = useNavigate();
 
-  const { audioStream, setVideoStream, setPeerVideoStream } = useMediaStream();
-
+  const {audioStream, setVideoStream, setPeerVideoStream} = useMediaStream();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     connectSocket,
     addEventListeners,
@@ -36,6 +37,8 @@ const Channel = () => {
   const {CURRENT_JOIN_CHANNEL} = CurrentStore.getState();
 
   let accessToken = AuthStore.getState().ACCESS_TOKEN;
+  const appendServer =
+    "https://storage.googleapis.com/remember-harmony/fe2f6651-10c4-444c-a336-3740dd4a5890";
 
   const [members, setMembers] = useState([]);
   const [testId, setTestId] = useState("");
@@ -44,10 +47,21 @@ const Channel = () => {
     // ****************** 길드 채널 최초 접속 시 ******************
     if (CURRENT_VIEW_GUILD) {
       // axios를 통한 채널 리스트, memberList 요청
-      const channelResponse = mock_channel_list.resultData.filter((element) => {
-        return element.guildId === CURRENT_VIEW_GUILD;
-      });
-      //memebers axios
+
+      const fetchChannel = async () => {
+        const data = await getChannelListRequest(CURRENT_VIEW_GUILD, USER_ID);
+        const channels = Object.values(data.data.resultData)
+        setChannelList(channels);
+        const channel = channels?.find(
+          (element) => element.type === "TEXT"
+        );
+        if (channel) {
+          navigate(`/channels/${CURRENT_VIEW_GUILD}/${channel?.channelReadId}`);
+        }
+      }
+
+      fetchChannel();
+
       const memberResponse = mock_member_list.resultData;
 
       const fetchData = async () => {
@@ -59,16 +73,9 @@ const Channel = () => {
       fetchData();
 
       // setUserStateMap(fetchMembers());
-      setChannelList(channelResponse);
-      setMembers(memberResponse);
 
+      setMembers(memberResponse);
       // 첫 번째 채팅 채널로 이동
-      const channel = channelResponse?.find(
-        (element) => element.type === "TEXT"
-      );
-      if (channel) {
-        navigate(`/channels/${CURRENT_VIEW_GUILD}/${channel?.channelReadId}`);
-      }
     }
     return () => {
     };
@@ -88,6 +95,14 @@ const Channel = () => {
       addEventListeners();
     }
     validateUserInChannel(guildId, channelId);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -141,8 +156,12 @@ const Channel = () => {
         ) : (
           <></>
         )}
+        <div onClick={openModal} className="guild-btn">
+          <img alt={"기본 이미지"} className="profile_img" src={appendServer}/>
+        </div>
       </div>
       <div>{VOICE_SOCKET ? <MediaContainer/> : <></>}</div>
+      <ChannelModal isModalOpen={isModalOpen} closeModal={closeModal}/>
     </div>
   );
 };
