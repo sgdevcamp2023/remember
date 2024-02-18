@@ -76,10 +76,10 @@ internal partial class Listener : NetworkInstance
     public async void RegisterAccept()
     {
         // 시작
-        Socket socket = _socketPool.RentSocket();
+        // Socket socket = _socketPool.RentSocket();
         try
         {
-            await _listenerSocket.AcceptAsync(socket);
+            Socket socket = await _listenerSocket.AcceptAsync();
             Start(socket);
         }
         catch (System.Exception e)
@@ -102,7 +102,8 @@ internal partial class Listener : NetworkInstance
             System.Console.WriteLine(e);
         }
 
-        _socketPool.ReturnSocket(socket);
+        socket.Close();
+        // _socketPool.ReturnSocket(socket);
     }
 
     protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
