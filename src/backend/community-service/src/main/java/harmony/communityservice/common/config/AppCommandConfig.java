@@ -174,7 +174,7 @@ public class AppCommandConfig {
     public GuildCommandService guildCommandService() {
         return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userQueryService,
                 guildUserCommandService(), userReadCommandService(), guildQueryService, userReadQueryService,
-                contentService,channelCommandService());
+                contentService, channelCommandService());
     }
 
     @Bean
@@ -288,7 +288,6 @@ public class AppCommandConfig {
 
     @Bean
     public RoomCommandService roomCommandService() {
-        return new RoomCommandServiceImpl(roomCommandRepository(), contentService, userQueryService,
-                roomUserCommandService());
+        return new RoomCommandServiceImpl(roomCommandRepository(), userQueryService, roomUserCommandService());
     }
 }
