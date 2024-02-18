@@ -59,7 +59,7 @@ public class UserService : IUserService
             Id = user.Id,
             Email = user.Email,
             Name = user.Name,
-            ProfileUrl = user.Profile
+            Profile = user.Profile
         };
     }
 
@@ -156,13 +156,13 @@ public class UserService : IUserService
         }
     }
 
-    private bool DeleteProfileFromGCP(string profileUrl)
+    private bool DeleteProfileFromGCP(string profile)
     {
         try
         {
             var credential = GoogleCredential.FromFile(_keyPath);
             var storage = StorageClient.Create(credential);
-            storage.DeleteObject(_bucketName, profileUrl);
+            storage.DeleteObject(_bucketName, profile);
 
             return true;
         }

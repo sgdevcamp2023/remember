@@ -38,4 +38,5 @@ public class CommunityRoomCreateDTO
 {
     public string name { get; set; } = null!;
     public List<long> members { get; set; } = null!;
+    public string profile { get; set; } = null!;
 }

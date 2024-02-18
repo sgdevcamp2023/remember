@@ -1,6 +1,4 @@
-using System.Text;
 using Castle.DynamicProxy;
-using Newtonsoft.Json;
 using user_service.common;
 using user_service.common.dto;
 using user_service.common.exception;
@@ -95,12 +93,12 @@ public class FriendService : IFriendService
     public async Task AcceptFriendAddRequestAsync(FriendDTO friend)
     {
         long id = friend.MyId;
-        long friendId = GetFriendId(friend.FriendEmail);
+        IdAndProfileDTO friendId = GetFriendIdAndProfile(friend.FriendEmail);
 
-        if (id == friendId)
+        if (id == friendId.Id)
             throw new ServiceException(4026);
 
-        if (!_friendRepository.AcceptFriendRequest(id, friendId))
+        if (!_friendRepository.AcceptFriendRequest(id, friendId.Id))
             throw new ServiceException(4018);
 
         string myEmail = GetUserEmail(id);
@@ -108,7 +106,8 @@ public class FriendService : IFriendService
         bool isSuccess = await _communityClient.CreateDMRoomAsync(new CommunityRoomCreateDTO
         {
             name = $"{myEmail},{friend.FriendEmail}",
-            members = new List<long> { id, friendId }
+            members = new List<long> { id, friendId.Id },
+            profile = friendId.Profile
         }, "traceId", id.ToString());
 
         if (!isSuccess)
@@ -145,6 +144,15 @@ public class FriendService : IFriendService
             throw new ServiceException(4007);
 
         return friendId;
+    }
+
+     private IdAndProfileDTO GetFriendIdAndProfile(string email)
+    {
+        IdAndProfileDTO? idAndProfile = _friendRepository.GetIdAndProfile(email);
+        if (idAndProfile == null)
+            throw new ServiceException(4007);
+
+        return idAndProfile;
     }
 
     private string GetUserEmail(long id)

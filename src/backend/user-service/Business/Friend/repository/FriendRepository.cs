@@ -41,6 +41,16 @@ namespace user_service
                     return "";
                 }
 
+                public IdAndProfileDTO? GetIdAndProfile(string email)
+                {
+                    string query = $"SELECT * FROM users WHERE email = '{email}'";
+                    List<IdAndProfileDTO> ids = _db.ExecuteReader<IdAndProfileDTO>(query, MakeIdAndProfile);
+                    if (ids.Count == 1)
+                        return ids[0];
+
+                    return null;
+                }
+
                 public bool CheckAlreadyFriend(long id, long friendId)
                 {
                     string query = $"SELECT * FROM friends WHERE (first_user_id = {id} AND second_user_id = {friendId}) OR (first_user_id = {friendId} AND second_user_id = {id});";
@@ -153,6 +163,15 @@ namespace user_service
                     return reader.GetString(reader.GetOrdinal("email"));
                 }
 
+                private IdAndProfileDTO MakeIdAndProfile(IDataReader reader)
+                {
+                    return new IdAndProfileDTO()
+                    {
+                        Id = reader.GetInt64(reader.GetOrdinal("id")),
+                        Profile = reader.GetString(reader.GetOrdinal("profile"))
+                    };
+                }
+
                 private FriendInfoDTO MakeFriendInfoDTO(IDataReader reader)
                 {
                     return new FriendInfoDTO()
@@ -160,7 +179,7 @@ namespace user_service
                         Id = reader.GetInt64(reader.GetOrdinal("id")),
                         Email = reader.GetString(reader.GetOrdinal("email")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
-                        ProfileUrl = reader.GetString(reader.GetOrdinal("profile")),
+                        Profile = reader.GetString(reader.GetOrdinal("profile")),
                         IsOnline = false
                     };
                 }

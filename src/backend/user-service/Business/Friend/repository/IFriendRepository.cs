@@ -12,6 +12,7 @@ namespace user_service
                 public List<FriendInfoDTO> ShowAllSendRequestList(long id);
                 public List<FriendInfoDTO> ShowAllReceiveRequesttList(long id);
                 public long GetUserIdtoEmail(string email);
+                public IdAndProfileDTO? GetIdAndProfile(string mail);
                 public string GetUserEmailToId(long id);
                 public bool CheckAlreadyFriend(long id, long friendId);
                 public bool SendFriendRequest(long id, long friendId);

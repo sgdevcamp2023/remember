@@ -115,9 +115,9 @@ namespace user_service
                 return true;
             }
 
-            public bool UpdateProfile(long id, string profileUrl)
+            public bool UpdateProfile(long id, string profile)
             {
-                string query = $"UPDATE users SET profile = '{profileUrl}' WHERE id = {id}";
+                string query = $"UPDATE users SET profile = '{profile}' WHERE id = {id}";
                 _db.ExecuteNonQuery(query);
 
                 return true;

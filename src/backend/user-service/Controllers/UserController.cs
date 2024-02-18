@@ -55,11 +55,11 @@ namespace user_service
                 [FromHeader(Name = "user-id")] string userId,
                 [FromForm] ProfileDTO file)
             {
-                string profileUrl = await _userService.ChangeProfile(file, traceId, userId);
+                string profile = await _userService.ChangeProfile(file, traceId, userId);
 
                 return new ProfileResponseDTO()
                 {
-                    ProfileUrl = profileUrl
+                    Profile = profile
                 };
             }
 
