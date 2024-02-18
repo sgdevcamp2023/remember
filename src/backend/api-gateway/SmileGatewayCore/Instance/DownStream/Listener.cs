@@ -58,6 +58,8 @@ internal partial class Listener : NetworkInstance
         }
 
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+        _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveBuffer, Buffers.bufferSize);
 
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Config.Address.Address), Config.Address.Port);
 
@@ -77,6 +79,7 @@ internal partial class Listener : NetworkInstance
     {
         // 시작
         // Socket socket = _socketPool.RentSocket();
+        // await _listenerSocket.AcceptAsync(socket);
         try
         {
             Socket socket = await _listenerSocket.AcceptAsync();
@@ -101,7 +104,6 @@ internal partial class Listener : NetworkInstance
         {
             System.Console.WriteLine(e);
         }
-
         socket.Close();
         // _socketPool.ReturnSocket(socket);
     }

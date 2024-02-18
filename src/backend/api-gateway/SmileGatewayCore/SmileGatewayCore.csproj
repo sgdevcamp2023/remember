@@ -11,7 +11,7 @@
   <ItemGroup>
     <Content Include="Utils/Error/ErrorCode.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <PackageReference Include="YamlDotNet" Version="13.7.1"/>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25"/>
