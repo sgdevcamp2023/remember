@@ -24,7 +24,7 @@ internal class Cluster
 
         foreach (AddressConfig address in config.Address)
         {
-            EndPoint endPoint = new EndPoint(address);
+            EndPoint endPoint = new EndPoint(address, Config.ConnectTimeout, Config.RequestTimeout);
             // EndPointManager.Instance.Add
             endPoints.Add(endPoint);
         }

@@ -7,13 +7,21 @@ namespace SmileGatewayCore.Instance;
 public abstract class NetworkInstance : INetworkInstance
 {
     protected MemoryPool _memory = new MemoryPool();
-    protected TimeSpan _timeout = TimeSpan.FromSeconds(5);
+    protected TimeSpan _requestTimeout;
 
     #region Abstract
     public abstract void Init();
     protected abstract Task OnReceive(Socket socket, ArraySegment<byte> buffer, int size);
     protected abstract Task OnSend(Socket socket, int size);
     #endregion
+
+    public NetworkInstance(int? timeout)
+    {
+        if (timeout != null)
+            _requestTimeout = TimeSpan.FromMilliseconds(timeout.Value);
+        else
+            _requestTimeout = TimeSpan.FromMilliseconds(Utils.Timeout.defaultTimeout);
+    }
 
     public Task Send(Socket socket, byte[] data)
     {
@@ -47,7 +55,7 @@ public abstract class NetworkInstance : INetworkInstance
         try
         {
             var recvTask = socket.ReceiveAsync(buffer, SocketFlags.None);
-            var delayTask = Task.Delay(_timeout);
+            var delayTask = Task.Delay(_requestTimeout);
             var completedTask = await Task.WhenAny(delayTask, recvTask);
 
             if (completedTask == recvTask)
@@ -77,7 +85,7 @@ public abstract class NetworkInstance : INetworkInstance
         try
         {
             var sendTask = socket.SendAsync(data, SocketFlags.None);
-            var delayTask = Task.Delay(_timeout);
+            var delayTask = Task.Delay(_requestTimeout);
             var completedTask = await Task.WhenAny(delayTask, sendTask);
 
             if (completedTask == delayTask)

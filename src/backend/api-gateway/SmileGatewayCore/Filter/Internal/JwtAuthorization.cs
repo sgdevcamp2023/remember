@@ -15,7 +15,7 @@ internal class JwtAuthorization : IJwtAuthorization
     private IRedisRepository _redis;
     public JwtAuthorization()
     {
-        _redis = new RedisRepository("localhost:6379");
+        _redis = new RedisRepository("34.22.109.45:56379");
     }
 
     public JwtResponseModel CreateToken(Adapter adapter, string body)

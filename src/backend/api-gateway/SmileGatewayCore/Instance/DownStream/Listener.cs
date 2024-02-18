@@ -25,6 +25,7 @@ internal partial class Listener : NetworkInstance
     public readonly ListenerConfig Config;
 
     public Listener(ClusterManager clusterManager, ListenerConfig config)
+        : base(config.RequestTimeout)
     {
         _clusterManager = clusterManager;
         Config = config;

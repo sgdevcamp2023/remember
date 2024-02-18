@@ -9,10 +9,13 @@ internal class OriginalFilter : ListenerFilter
     protected override void Working(Adapter adapter, HttpContext context)
     {
         context.Response.Header["Access-Control-Allow-Origin"] = context.Request.Header["Origin"];
-
-        context.Request.Header["Origin"] = $"http://{adapter.Address.Address}:3000";
+        if(context.Request.Header["Access-Control-Allow-Origin"].Contains("localhost"))
+        {
+            context.Response.Header["Access-Control-Allow-Origin"].Replace("localhost", "127.0.0.1");
+        }
+        
         if (context.Request.Header.ContainsKey("Host"))
-            context.Request.Header["Host"] = $"{adapter.Address.Address}:5000";
+            context.Request.Header["Host"] = adapter.ListenerAddress;
     }
 
     protected override void Worked(Adapter adapter, HttpContext context)

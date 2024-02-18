@@ -12,7 +12,6 @@ public partial class EndPoint : NetworkInstance
     public bool IsAlive { get; private set; } = true;
     private async void OnTimerEvent(object? sender, ElapsedEventArgs args)
     {
-        System.Console.WriteLine("Working");
         List<Socket> deadSockets = new List<Socket>();
         // 연결 체크
         while (true)
@@ -25,7 +24,7 @@ public partial class EndPoint : NetworkInstance
             
             try
             {
-                await _connectPool.ConnectAsync(socket, 1000);
+                await _connectPool.ConnectAsync(socket, IpEndPoint, _connectTimeout);
 
                 _connectPool.EnqueueAliveSocket(socket);
                 IsAlive = true;
@@ -55,10 +54,12 @@ public partial class EndPoint : NetworkInstance
             IsHealthCheck = false;
     }
 
-    public override void Init()
+    public override async void Init()
     {
         _timer.Elapsed += OnTimerEvent;
         _timer.Interval = _defaultTime;
         _timer.AutoReset = false;
+
+        await _connectPool.Init(IpEndPoint, _connectTimeout);
     }
 }

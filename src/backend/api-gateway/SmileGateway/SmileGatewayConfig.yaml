@@ -4,7 +4,7 @@ listeners:
 - name: listener1
   protocol: 
   address:
-    address: 127.0.0.1
+    address: 0.0.0.0
     port: 4000
   route-config:
     clusters:
@@ -33,42 +33,42 @@ clusters:
   - name: auth-service
     protocol: http
     address:
-      - address: 127.0.0.1
+      - address: 34.22.109.45
         port: 5000
     prefix: /api/auth
     custom-filters:
       - name: ClusterTestFilter
         path: /ApiGateway/ClusterTestFilter.cs
-    connect-timeout: 5s
     authorization: false
+    connect-timeout: 1000
 
   - name: user-service
     protocol: http
     address:
-      - address: 127.0.0.1
+      - address: 34.22.109.45
         port: 5000
     prefix: /api/user
-    connect-timeout: 5s
     authorization: true
+    connect-timeout: 1000
 
-  # - name: community-service
-  #   protocol: http
-  #   address:
-  #     - address: 10.99.19.2
-  #       port: 8000
-  #   prefix: /api/community
-  #   custom-filters:
-  #     - name: ClusterTestFilter
-  #       path: /ApiGateway/ClusterTestFilter.cs
-  #   connect-timeout: 5s
-  #   authorization: true
+  - name: community-service
+    protocol: http
+    address:
+      - address: 34.22.109.45
+        port: 8000
+    prefix: /api/community
+    custom-filters:
+      - name: ClusterTestFilter
+        path: /ApiGateway/ClusterTestFilter.cs
+    authorization: true
+    connect-timeout: 5000
 
-  # - name: chat-service
-  #   protocol: http
-  #   address:
-  #     - address: 10.99.14.176
-  #       port: 7000
-  #   prefix: /api/chat-service
-  #   custom-filters: 
-  #   connect-timeout: 5s
-  #   authorization: false
+  - name: chat-service
+    protocol: http
+    address:
+      - address: 34.22.109.45
+        port: 7000
+    prefix: /api/chat-service
+    custom-filters: 
+    authorization: false
+    connect-timeout: 5000

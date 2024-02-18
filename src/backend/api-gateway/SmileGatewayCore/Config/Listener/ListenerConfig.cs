@@ -9,4 +9,5 @@ public class ListenerConfig
     public Authorization? Authorization { get; set; }
     public List<string> DisallowHeaders { get; set; } = null!;
     public int ThreadCount { get; set; }
+    public int? RequestTimeout { get; set; }
 }

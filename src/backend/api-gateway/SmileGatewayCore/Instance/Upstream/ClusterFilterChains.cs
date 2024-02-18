@@ -14,7 +14,7 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
     {
         // UseFilter<ClusterExceptionFilter>();
     }
-    
+
 
     public void UseFilter(string filterName)
     {
@@ -64,7 +64,16 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
         {
             ClusterDelegate last = async (context) =>
             {
-                await _endPoint.Value.StartAsync(context);
+                try
+                {
+                    await _endPoint.Value.StartAsync(context);
+                }
+                catch (System.Exception)
+                {
+                    // 혹시나 터지는 경우를 대비하여
+                    _endPoint.Value.DecreaseUsingCount();
+                    throw;
+                }
             };
 
             for (int i = _filters.Count - 1; i >= 0; i--)

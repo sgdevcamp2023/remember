@@ -20,4 +20,7 @@ public class Adapter
         Cluster = cluster;
         UserIP = userIP;
     }
+
+    internal string ListenerAddress {get => Address.Address + ":" + Address.Port;}
+
 }

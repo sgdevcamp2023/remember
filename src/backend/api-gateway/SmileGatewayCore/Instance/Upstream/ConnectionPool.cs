@@ -11,7 +11,6 @@ internal class ConnectionPool
     private ConcurrentQueue<Socket> _aliveSocket = new ConcurrentQueue<Socket>();
     private ConcurrentQueue<Socket> _deadSocket = new ConcurrentQueue<Socket>();
     public int Capacity { get; private set; }
-    private IPEndPoint _endPoint;
     public int DeadCount { get => _deadSocket.Count; }
     public int AliveCount { get => _aliveSocket.Count; }
     public Socket? GetAliveSocket() { return _aliveSocket.TryDequeue(out Socket? socket) ? socket : null; }
@@ -19,16 +18,13 @@ internal class ConnectionPool
     public void EnqueueAliveSocket(Socket socket) { _aliveSocket.Enqueue(socket); }
     public void EnqueueDeadSocket(Socket socket) { _deadSocket.Enqueue(socket); }
 
-    public ConnectionPool(int capacity, IPEndPoint endPoint)
+    public ConnectionPool(int capacity)
     {
         Capacity = capacity;
-        _endPoint = endPoint;
-
-        Init().Wait();
     }
 
 
-    private async Task Init()
+    public async Task Init(IPEndPoint endPoint, TimeSpan timeout)
     {
         for (int i = 0; i < Capacity; i++)
         {
@@ -36,7 +32,7 @@ internal class ConnectionPool
             Socket socket = CreateSocket();
             try
             {
-                await ConnectAsync(socket);
+                await ConnectAsync(socket, endPoint, timeout);
                 EnqueueAliveSocket(socket);
             }
             catch (System.Exception)
@@ -65,15 +61,15 @@ internal class ConnectionPool
         socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, keepAliveRetryCount);
 
         // 딜레이 제거
-        // socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);    
+        socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
 
         return socket;
     }
 
-    public async Task ConnectAsync(Socket socket, int timeOut = 100)
+    public async Task ConnectAsync(Socket socket, IPEndPoint endPoint, TimeSpan timout)
     {
-        var connectTask = socket.ConnectAsync(_endPoint);
-        var timerTask = Task.Delay(timeOut);
+        var connectTask = socket.ConnectAsync(endPoint);
+        var timerTask = Task.Delay(timout);
 
         var completedTask = await Task.WhenAny(timerTask, connectTask);
 
