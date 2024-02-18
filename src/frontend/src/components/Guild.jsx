@@ -49,7 +49,7 @@ const Guild = () => {
 
     return () => {
       mainSocket.unsubscribe(socketIdRef.current.id);
-      socketIdRef.current = ''
+      socketIdRef.current = '';
     }
   }, [CURRENT_VIEW_GUILD]); 
   
