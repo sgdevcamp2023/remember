@@ -1,170 +1,173 @@
 .guild-bar {
-  width: 72px; /* 좌측 사이드바의 너비를 조절할 수 있습니다. */
-  height: 100vh; /* 뷰포트 높이 만큼 사이드바의 높이 설정 */
-  background-color: #1e1f22; /* 배경색 설정 */
-  position: fixed; /* 페이지 스크롤에 따라 고정시킵니다. */
-  top: 0; /* 화면 맨 위에 고정 */
-  left: 0; /* 화면 맨 왼쪽에 고정 */
+    width: 72px; /* 좌측 사이드바의 너비를 조절할 수 있습니다. */
+    height: 100vh; /* 뷰포트 높이 만큼 사이드바의 높이 설정 */
+    background-color: #1e1f22; /* 배경색 설정 */
+    position: fixed; /* 페이지 스크롤에 따라 고정시킵니다. */
+    top: 0; /* 화면 맨 위에 고정 */
+    left: 0; /* 화면 맨 왼쪽에 고정 */
 
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    overflow-y: scroll; /* 세로 스크롤을 추가합니다. */
 }
 
 .guild-seperator {
-  width: 32px;
-  height: 3px; /* 선의 높이 */
-  border-radius: 1px;
-  display: block;
-  background-color: #2f3136;
-  margin: 0 auto 10px; /* 위아래 여백 */
+    width: 32px;
+    height: 3px; /* 선의 높이 */
+    border-radius: 1px;
+    display: block;
+    background-color: #2f3136;
+    margin: 0 auto 10px; /* 위아래 여백 */
 }
 
 .dm-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .dm-room-btn img {
-  border-radius: 50%;
+    border-radius: 50%;
 }
 
 .guild-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .profile_img {
-  width: 100%; /* 가로 전체 크기 */
-  height: 100%; /* 세로 전체 크기 */
+    width: 100%; /* 가로 전체 크기 */
+    height: 100%; /* 세로 전체 크기 */
 }
 
 .guild-btn {
-  width: 48px;
-  height: 48px;
-  background-color: #2f3136;
-  margin: 0 auto 10px;
-  border-radius: 50%;
-  cursor: pointer;
-  overflow: hidden;
-  transition: border-radius 0.3s ease, background-color 0.3s ease; /* 트랜지션 추가 */
+    width: 48px;
+    height: 48px;
+    background-color: #2f3136;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-radius 0.3s ease, background-color 0.3s ease; /* 트랜지션 추가 */
 }
+
 .guild-btn:hover {
-  border-radius: 8px;
-  background-color: #7289da;
+    border-radius: 8px;
+    background-color: #7289da;
 }
+
 .guild-selected {
-  border-radius: 8px;
-  background-color: #7289da;
+    border-radius: 8px;
+    background-color: #7289da;
 }
 
 .dm-room-btn {
-  margin: 15px 0 10px 0;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    margin: 15px 0 10px 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .file_img {
-  width: 4rem; /* w-20 */
-  height: 4rem; /* h-20 */
-  background-color: #36393f; /* bg-white */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto; /* 좌우 중앙 정렬을 위해 추가 */
+    width: 4rem; /* w-20 */
+    height: 4rem; /* h-20 */
+    background-color: #36393f; /* bg-white */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto; /* 좌우 중앙 정렬을 위해 추가 */
 }
 
 .file_img_container {
-  align-items: center;
+    align-items: center;
 }
 
 .server-add-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .server-name-label {
-  color: #a0aec0; /* 조금 더 밝은 회색 글씨 */
-  font-size: 14px; /* 작은 글씨 크기 */
-  margin-bottom: 5px;
+    color: #a0aec0; /* 조금 더 밝은 회색 글씨 */
+    font-size: 14px; /* 작은 글씨 크기 */
+    margin-bottom: 5px;
 }
 
 .server-name-input {
-  width: 100%; /* 가로 전체 크기 */
-  padding: 10px; /* 내부 여백 조정 */
-  border: 1px solid #718096; /* 회색 테두리 */
-  border-radius: 4px; /* 둥근 테두리 */
-  background-color: #2d333b; /* 어두운 배경색 */
-  color: #fff; /* 흰색 글씨 */
-  box-sizing: border-box;
+    width: 100%; /* 가로 전체 크기 */
+    padding: 10px; /* 내부 여백 조정 */
+    border: 1px solid #718096; /* 회색 테두리 */
+    border-radius: 4px; /* 둥근 테두리 */
+    background-color: #2d333b; /* 어두운 배경색 */
+    color: #fff; /* 흰색 글씨 */
+    box-sizing: border-box;
 }
 
 .server-add-modal-content {
-  position: relative;
-  background-color: #36393f;
-  border: 1px solid #202225;
-  border-radius: 8px;
-  max-width: 500px;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-  color: #fff;
+    position: relative;
+    background-color: #36393f;
+    border: 1px solid #202225;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #fff;
 }
 
 .server-add-modal-header {
-  text-align: center;
+    text-align: center;
 }
 
 .server-add-modal-header h2 {
-  margin-bottom: 0.5rem; /* h2 아래 여백 추가 */
+    margin-bottom: 0.5rem; /* h2 아래 여백 추가 */
 }
 
 .server-add-modal-header h4 {
-  color: #718096; /* 회색 글씨 */
-  margin-bottom: 0.2rem; /* h4 아래 여백 추가 */
+    color: #718096; /* 회색 글씨 */
+    margin-bottom: 0.2rem; /* h4 아래 여백 추가 */
 }
 
 .server-add-modal-body {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .server-add-modal-footer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .server-add-modal-footer button {
-  background-color: #7289da;
-  color: #fff;
-  padding: 8px 16px;
-  margin-left: 8px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    background-color: #7289da;
+    color: #fff;
+    padding: 8px 16px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .server-add-modal-footer button:hover {
-  background-color: #677bc4;
+    background-color: #677bc4;
 }
 
 .server-add-modal-header button {
-  background-color: transparent;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  font-size: 20px;
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
 }
 
 .server-add-modal-header button:hover {
-  color: #7289da;
+    color: #7289da;
 }
