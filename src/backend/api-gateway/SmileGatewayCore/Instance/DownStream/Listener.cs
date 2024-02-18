@@ -78,6 +78,7 @@ internal partial class Listener : NetworkInstance
     public async void RegisterAccept()
     {
         // 시작
+        // 리눅스에서는 미 지원
         // Socket socket = _socketPool.RentSocket();
         // await _listenerSocket.AcceptAsync(socket);
         try
@@ -104,6 +105,7 @@ internal partial class Listener : NetworkInstance
         {
             System.Console.WriteLine(e);
         }
+        
         socket.Close();
         // _socketPool.ReturnSocket(socket);
     }

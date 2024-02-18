@@ -55,64 +55,46 @@ public partial class EndPoint : NetworkInstance
 
         // 설정
         _context.Value = context;
-        // Task timeout = Task.Delay(_connectTimeout);
+        Task timeout = Task.Delay(_connectTimeout);
 
-        // // 서버가 죽어있다는 판단을 어떻게 할 것인가?
-        // while (true)
-        // {
-        //     if (timeout.IsCompleted)
-        //         throw new NetworkException(3200);
-
-        //     Socket? socket = _connectPool.GetAliveSocket();
-        //     if (socket == null)
-        //     {
-        //         if (IsHealthCheck == false)
-        //         {
-        //             IsHealthCheck = true;
-        //             _timer.Enabled = true;
-        //         }
-        //         continue;
-        //     }
-
-        //     try
-        //     {
-        //         // 실행
-        //         // 만약 소켓이 종료되어 있을 경우 종료됨.
-        //         // 연결이 끊겨있는 경우라면?
-        //         await Send(socket, context.Request.GetStringToBytes());
-        //         _connectPool.EnqueueAliveSocket(socket);
-
-        //         if (_connectPool.DeadCount > 0)
-        //         {
-        //             _timer.Enabled = true;
-        //         }
-        //     }
-        //     catch (System.Exception)
-        //     {
-        //         System.Console.WriteLine("Dead Socket");
-
-        //         if (socket.Poll(100, SelectMode.SelectRead))
-        //             await _connectPool.ConnectAsync(socket, IpEndPoint, _connectTimeout);
-
-        //         _connectPool.EnqueueDeadSocket(socket);
-        //         continue;
-        //     }
-        //     break;
-        // }
-
-        Socket socket = new Socket(IpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        try
+        // 서버가 죽어있다는 판단을 어떻게 할 것인가?
+        while (true)
         {
-            await _connectPool.ConnectAsync(socket, IpEndPoint, _connectTimeout);
-            await Send(socket, context.Request.GetStringToBytes());
-            socket.Close();
-        }
-        catch (System.Exception)
-        {
-            throw new NetworkException(3200);
+            if (timeout.IsCompleted)
+            {
+                if (_connectPool.AliveCount == 0)
+                {
+                    IsAlive = false;
+                    _timer.Enabled = true;
+                    throw new NetworkException(3200);
+                }
+                else
+                    throw new NetworkException(3201);
+            }
+
+            Socket? socket = await _connectPool.GetSocket(IpEndPoint, _connectTimeout);
+            if (socket == null)
+            {
+                continue;
+            }
+
+            try
+            {
+                // 실행
+                await Send(socket, context.Request.GetStringToBytes());
+                _connectPool.EnqueueSocket(socket);
+            }
+            catch (System.Exception)
+            {
+                System.Console.WriteLine("Dead Socket");
+                _connectPool.MinusAliveCount();
+
+                continue;
+            }
+            break;
         }
 
-        DecreaseUsingCount();   
+        DecreaseUsingCount();
     }
 
     protected override async Task OnSend(Socket socket, int size)

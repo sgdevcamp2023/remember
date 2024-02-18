@@ -108,5 +108,10 @@
         "code": 3200,
         "message": "DISCONNECT_SOCKET",
         "description": "소켓 연결이 끊겼습니다."
+    },
+    {
+        "code": 3201,
+        "message": "BUSY_SERVER",
+        "description": "서버 대기 시간이 초과되었습니다."
     }
 ]

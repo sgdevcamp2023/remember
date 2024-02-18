@@ -8,15 +8,20 @@ namespace SmileGatewayCore.Instance.Upstream;
 internal class ConnectionPool
 {
     // 서버가 죽어있을 때는 어떻게 체크할 것인가?
-    private ConcurrentQueue<Socket> _aliveSocket = new ConcurrentQueue<Socket>();
-    private ConcurrentQueue<Socket> _deadSocket = new ConcurrentQueue<Socket>();
     public int Capacity { get; private set; }
-    public int DeadCount { get => _deadSocket.Count; }
-    public int AliveCount { get => _aliveSocket.Count; }
-    public Socket? GetAliveSocket() { return _aliveSocket.TryDequeue(out Socket? socket) ? socket : null; }
-    public Socket? GetDeadSocket() { return _deadSocket.TryDequeue(out Socket? socket) ? socket : null; }
-    public void EnqueueAliveSocket(Socket socket) { _aliveSocket.Enqueue(socket); }
-    public void EnqueueDeadSocket(Socket socket) { _deadSocket.Enqueue(socket); }
+    private ConcurrentQueue<Socket> _sockets = new ConcurrentQueue<Socket>();
+    private long count = 0;
+    public long AliveCount { get => Interlocked.Read(ref count); }
+    public void EnqueueSocket(Socket socket) { _sockets.Enqueue(socket); }
+
+    // public int DeadCount { get => _deadSocket.Count; }
+    // public int AliveCount { get => _aliveSocket.Count; }
+    // private ConcurrentQueue<Socket> _aliveSocket = new ConcurrentQueue<Socket>();
+    // private ConcurrentQueue<Socket> _deadSocket = new ConcurrentQueue<Socket>();
+    // public Socket? GetAliveSocket() { return _aliveSocket.TryDequeue(out Socket? socket) ? socket : null; }
+    // public Socket? GetDeadSocket() { return _deadSocket.TryDequeue(out Socket? socket) ? socket : null; }
+    // public void EnqueueAliveSocket(Socket socket) { _aliveSocket.Enqueue(socket); }
+    // public void EnqueueDeadSocket(Socket socket) { _deadSocket.Enqueue(socket); }
 
     public ConnectionPool(int capacity)
     {
@@ -33,21 +38,54 @@ internal class ConnectionPool
             try
             {
                 await ConnectAsync(socket, endPoint, timeout);
-                EnqueueAliveSocket(socket);
+                EnqueueSocket(socket);
+                AddAliveCount();
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                EnqueueDeadSocket(socket);
+                System.Console.WriteLine(e.Message);
             }
         }
     }
+
+    public async Task<Socket?> GetSocket(IPEndPoint endPoint, TimeSpan timeout)
+    {
+        if (_sockets.TryDequeue(out Socket? socket))
+        {
+            return socket;
+        }
+        else
+        {
+            if (AliveCount == Capacity)
+                return null;
+
+            Socket newSocket = CreateSocket();
+            try
+            {
+                await ConnectAsync(newSocket, endPoint, timeout);
+                AddAliveCount();
+                return socket;
+            }
+            catch (System.Exception e)
+            {
+                System.Console.WriteLine(e.Message);
+            }
+        }
+        
+        return null;
+    }
+
+    public void AddAliveCount() => Interlocked.Increment(ref count);
+
+    public void MinusAliveCount() => Interlocked.Decrement(ref count);
 
     public Socket CreateSocket()
     {
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-        
+
+        // 리눅스에서는 설정 지원 X        
         // // KeepAlive 시간 설정
         // int keepAliveTime = 60 * 1000; // 60초
         // socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, keepAliveTime);
@@ -75,8 +113,8 @@ internal class ConnectionPool
 
         if (completedTask == timerTask)
             throw new TimeoutException();
-        
-        if(socket.Connected == false)
+
+        if (socket.Connected == false)
             throw new SocketException((int)SocketError.ConnectionRefused);
     }
 }
