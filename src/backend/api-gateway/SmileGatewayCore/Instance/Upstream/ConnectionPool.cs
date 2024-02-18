@@ -48,17 +48,17 @@ internal class ConnectionPool
         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
         
-        // KeepAlive 시간 설정
-        int keepAliveTime = 60 * 1000; // 60초
-        socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, keepAliveTime);
+        // // KeepAlive 시간 설정
+        // int keepAliveTime = 60 * 1000; // 60초
+        // socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, keepAliveTime);
 
-        // KeepAlive 간격 설정
-        int keepAliveInterval = 1000; // 1초
-        socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, keepAliveInterval);
+        // // KeepAlive 간격 설정
+        // int keepAliveInterval = 1000; // 1초
+        // socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, keepAliveInterval);
 
-        // KeepAlive 재시도 횟수 설정
-        int keepAliveRetryCount = 3;
-        socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, keepAliveRetryCount);
+        // // KeepAlive 재시도 횟수 설정
+        // int keepAliveRetryCount = 3;
+        // socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, keepAliveRetryCount);
 
         // 딜레이 제거
         // socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
