@@ -17,7 +17,7 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
         UseFilter<ServiceFilter>();
         UseFilter<TraceFilter>();
         UseFilter<OriginalFilter>();
-        // UseFilter<AuthorizationFilter>();
+        UseFilter<AuthorizationFilter>();
         UseFilter<LogFilter>();
     }
 
