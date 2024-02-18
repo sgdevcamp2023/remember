@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import * as StompJs from "@stomp/stompjs";
-import SockJS from 'sockjs-client'; // SockJS 가져오기
-import SocketStore from '../store/SocketStore'; // websocketStore 가져오기
+import SockJS from "sockjs-client"; // SockJS 가져오기
+import SocketStore from "../store/SocketStore"; // websocketStore 가져오기
 
 const RedirectPage = () => {
   const navigate = useNavigate();
@@ -16,13 +16,13 @@ const RedirectPage = () => {
       const clientSocket = new StompJs.Client({
         webSocketFactory: () => socket,
         connectHeaders: {
-          userId: USER_ID
+          userId: USER_ID,
         },
         reconnectDelay: 5000, // 자동 재 연결
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
       });
-      
+
       clientSocket.activate(); // 클라이언트 활성화
       // 웹소켓 클라이언트를 전역 상태로 설정
       setMainSocket(clientSocket);
@@ -35,7 +35,6 @@ const RedirectPage = () => {
 
     return () => {};
   }, []);
-
 
   return <></>;
 };
