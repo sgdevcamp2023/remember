@@ -53,7 +53,6 @@ function useVoiceSocket(url) {
       });
 
       voice_socket.current.on("producer-closed", ({ kind, producerId }) => {
-        console.log("유저 나감: ", producerId, kind);
         if (kind === "audio") {
           removeRecvAudioConsumer(producerId);
           setAudioStream((prevStreams) => {
@@ -70,8 +69,6 @@ function useVoiceSocket(url) {
             return updatedStreams;
           });
         }
-        const { RECV_TRANSPORT } = MediaStore.getState();
-        console.log("RECV_TRANSPORT", RECV_TRANSPORT);
       });
 
       voice_socket.current.on("message", (msg) => {

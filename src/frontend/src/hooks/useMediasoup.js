@@ -192,9 +192,7 @@ function useMediasoup() {
                   });
                 }
                 if (parameters.kind === "video") {
-                  console.log("실행됨1");
                   if (producerExist) {
-                    console.log("실행됨2");
                     VOICE_SOCKET.emit("new-video-producer", {
                       roomId: PARSED_ROOM_URL,
                       producerId,
@@ -271,13 +269,11 @@ function useMediasoup() {
     }
 
     if (media === "video") {
-      console.log("send producer 시작");
       const mediaTag = VIDEO_PARAMS.type;
       const videoProducer = await SEND_TRANSPORT.produce({
         track: VIDEO_PARAMS.track,
         appData: { mediaTag },
       });
-      console.log("send producer 생성 완료");
       videoProducer.on("trackended", () => {
         console.log("videoProducer track ended");
         const { DISPLAY_PRODUCER } = MediaStore.getState();

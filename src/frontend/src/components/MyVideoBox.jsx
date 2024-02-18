@@ -19,11 +19,6 @@ const MyVideoBox = () => {
     }
   }, [videoStream]);
 
-  useEffect(() => {
-    console.log("videoStream", videoStream);
-    console.log("audioStream", audioStream);
-  }, [videoStream, audioStream]);
-
   return (
     <div className="my-video-box">
       {videoStream.camera ? (

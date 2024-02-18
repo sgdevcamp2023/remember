@@ -1,8 +1,8 @@
 .video {
-  border: 2px solid #ccc;
+  border: 1.5px solid #ffffff;
   border-radius: 10px;
-  width: 500px;
-  height: 300px;
+  width: 400px;
+  height: 250px;
 }
 
 .my-video-box {
@@ -11,9 +11,12 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  border: 2px solid #ccc;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #838383;
 }
 
 .video-container {
-  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
 }

@@ -43,7 +43,9 @@ const PeerVideoContainer = () => {
                 autoPlay
                 className="video"
               />
-              <button onClick={() => handleVideoPause(consumerId)}>aa</button>
+              <button onClick={() => handleVideoPause(consumerId)}>
+                재생/정지
+              </button>
             </div>
           ) : (
             <></>
