@@ -1,0 +1,142 @@
+  .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+      padding: 20px;
+  }
+
+  /* .input-area {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .input-area input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .input-area button {
+    padding: 8px 15px;
+    margin-left: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .input-area button:hover {
+    background-color: #45a049;
+  }
+   */
+  /* 스크롤 */
+  .scroller-content {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #36393f; /* 디스코드의 스크롤 색상과 비슷한 색상으로 설정 */
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .scroller-content::-webkit-scrollbar {
+    width: 8px; /* 스크롤 바 너비 설정 */
+  }
+  
+  .scroller-content::-webkit-scrollbar-thumb {
+    background-color: #0c0c0c; /* 스크롤 바 색상 설정 */
+    border-radius: 4px; /* 스크롤 바 모서리를 둥글게 만듭니다. */
+  }
+  
+  .scroller-content::-webkit-scrollbar-thumb:hover {
+    background-color: #4e5262; /* 마우스 호버 시 스크롤 바 색상 변경 */
+  }
+  
+  .scroller-content::-webkit-scrollbar-track {
+    background-color: #2f3136; /* 스크롤 바 트랙 배경색 설정 */
+    border-radius: 4px; /* 스크롤 바 트랙 모서리를 둥글게 만듭니다. */
+  }
+  
+
+  /* 입력창 */
+  .input-container {
+    display: flex;
+    align-items: center;
+    background-color: #36393f; /* 입력창 배경색 설정 */
+    border-radius: 8px; /* 입력창 테두리를 둥글게 만듭니다. */
+    padding: 8px; /* 입력창 내부 여백 설정 */
+  }
+  
+  .input-container input[type="text"] {
+    flex: 1;
+    background-color: transparent;
+    border: 2px solid #252323; /* 테두리 색상 및 두께 설정 */
+    color: #fff;
+    outline: none;
+    margin-right: 8px;
+    border-radius: 4px; /* 테두리의 둥글기 설정 */
+    padding: 8px;
+  }
+  
+  .input-container input[type="text"]::placeholder {
+    color: #b9bbbe; /* 입력창 플레이스홀더 텍스트 색상 설정 */
+  }
+  
+  .input-container button {
+    background-color: #7289da; /* 버튼 배경색 설정 */
+    color: #fff; /* 버튼 텍스트 색상 설정 */
+    border: none; /* 버튼 테두리 제거 */
+    border-radius: 4px; /* 버튼 테두리를 둥글게 만듭니다. */
+    padding: 8px 16px; /* 버튼 내부 여백 설정 */
+    cursor: pointer; /* 포인터 커서로 변경 */
+    transition: background-color 0.3s ease; /* 배경색 변화에 대한 전환 효과 추가 */
+  }
+  
+  .input-container button:hover {
+    background-color: #677bc4; /* 버튼 호버 시 배경색 변경 */
+  }
+
+
+/**/
+  .message-container {
+    display: flex;
+    align-items: flex-start; /* 세로 정렬 방향을 상단으로 설정 */
+    margin-bottom: 35px;
+  }
+  
+  .profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .message-info {
+    display: flex;
+    flex-direction: column; /* 내부 요소를 세로로 배치 */
+  }
+  
+  .user-info {
+    margin-bottom: 5px; /* 닉네임과 메시지 사이 여백 조정 */
+  }
+  
+  .username {
+    font-weight: bold;
+  }
+  
+  .time {
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: 5px; 
+  }
+  
+  .message-content {
+    border-radius: 10px;
+  }
+  
+  .my-message .message-content {
+    background-color: #dbf6c3; /* 자신의 메시지일 때 배경색 변경 */
+  }
+  

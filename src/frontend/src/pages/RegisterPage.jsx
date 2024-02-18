@@ -40,6 +40,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [checksum, setChecksum] = useState("");
   const [userName, setName] = useState("");
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -59,9 +60,17 @@ export default function RegisterPage() {
   const handleRegister = (e) => {
     e.preventDefault();
     console.log(email, password, userName, checksum);
-    // 여기서 logInRequest 함수를 호출
-    registerRequest(email, password, userName, checksum).then((status) => {
-      if (status === 200) navigate("/login");
+    registerRequest(email, password, userName, checksum).then((response) => {
+      if (response.status === 200) {
+        alert("회원가입이 완료되었습니다.");
+        navigate("/login");
+      }
+      else {
+        const data = response.json();
+        alert(data.description);
+      }
+    }).catch((error) => {
+      console.error("회원가입 실패", error);
     });
   };
 
@@ -72,8 +81,16 @@ export default function RegisterPage() {
       alert("이메일을 입력해주세요.");
       return;
     }
-    // 여기서 logInRequest 함수를 호출
-    checksumRequest(email);
+    checksumRequest(email).then((response) => {
+      if (response.status === 200) {
+        alert("인증번호가 이메일로 전송되었습니다")
+      } else {
+        const data = response.json();
+        alert(data.description);
+      }
+    }).catch((error) => {
+      console.error("이메일 전송 실패", error);
+    });
   };
 
   return (

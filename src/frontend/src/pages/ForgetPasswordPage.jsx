@@ -43,8 +43,14 @@ export default function ForgetPasswordPage() {
     e.preventDefault();
 
     // 여기서 logInRequest 함수를 호출
-    forgetPasswordRequest(email).then((status) => {
-      if (status === 200) navigate("/login");
+    forgetPasswordRequest(email).then((response) => {
+      if (response.status === 200) {
+        alert("초기화된 비밀번호가 이메일로 전송되었습니다.");
+        navigate("/login");
+      } else {
+        const data = response.json();
+        alert(data.description);
+      }
     });
   };
 

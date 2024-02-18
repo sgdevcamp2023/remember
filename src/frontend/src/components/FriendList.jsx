@@ -1,102 +1,133 @@
-import styled from "styled-components";
-import temp from "../img/temp.png";
+import AuthStore from "../store/AuthStore";
+import { CancleAddFriendRequest, DeleteFriendRequest, PostAcceptFriendReqeust, PostAddFriendReqeust, PostRefuseFriendReqeust } from "../Request/friendRequest";
+import { List, ProfileBox, ButtonBox, Button } from '../styled/Main.jsx';
 
-const List = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 70px;
-  color: white;
-`
+const defaultImage = "https://storage.googleapis.com/remember-harmony/d68c3d6c-4683-4ddf-892b-8a73e3678145";
 
-const ProfileBox = styled.div`
-  display: flex;
-  width: 300px;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-`
-
-const ButtonBox = styled.div`
-  display: flex;
-  width: 100px;
-  flex-direction: row;
-  gap: 10px;
-`
-
-const Button = styled.button`
-  width: 50px;
-  height: 30px;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-`
-
+// 친구 목록을 보여주는 컴포넌트
 export const FriendList = ({ friend }) => {
-  const handleChatClick = (friendEmail) => {
-    // 채팅 버튼을 클릭할 때의 동작을 정의합니다. 여기에 채팅을 보내는 로직을 추가하세요.
-    console.log(`Chat with friend ${friendEmail}`);
+  const { USER_ID } = AuthStore();
+
+  const sendChatClick = (e) => {
+    e.preventDefault();
+
+    // TODO
+    console.log(`Send chat with friend ${friend.email}`);
   };
 
-  const handleDeleteFriendClick = (friendEmail) => {
-    console.log(`Delete with friend ${friendEmail}`);
+  const deleteFriendClick = (e) => {
+    e.preventDefault();
+
+    DeleteFriendRequest({ myId: USER_ID, friendEmail: friend.email })
+      .then((response) => {
+        if (response.status === 200)
+          alert("친구 삭제 성공");
+        else
+          alert(response.data.description);
+      })
+      .catch((error) => {
+        console.error("친구 삭제 실패", error);
+      });
+
+    console.log(`Delete with friend ${friend.email}`);
   }
 
   return (
     <List>
       <ProfileBox>
-      <img src={temp} alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
-      <span>{friend.name}</span>
+        <img src={(friend.profileUrl !== "") ? friend.profileUrl : defaultImage}
+          alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+        <span>{friend.name}</span>
       </ProfileBox>
-      
+
       <ButtonBox>
-        <Button onClick={() => handleChatClick(friend.email)}>채팅</Button>
-        <Button onClick={() => handleDeleteFriendClick(friend.email)}>삭제</Button>
+        <Button onClick={sendChatClick}>채팅</Button>
+        <Button onClick={deleteFriendClick}>삭제</Button>
       </ButtonBox>
     </List>
   );
 }
 
+// 친구 추가 요청을 보내거나 받은 목록을 보여주는 컴포넌트
 export const AddReceiveList = ({ friend }) => {
-  const handleAcceptClick = (friendEmail) => {
-    console.log(`Accept with friend ${friendEmail}`);
+  // 친구 추가 허락
+  const { USER_ID } = AuthStore();
+
+  const addAcceptClick = (e) => {
+    e.preventDefault();
+
+    PostAcceptFriendReqeust({ myId: USER_ID, friendEmail: friend.email })
+      .then((response) => {
+        if (response.status === 200)
+          alert("친구 추가 성공");
+        else
+          alert(response.data.description);
+      })
+      .catch((error) => {
+        console.error("친구 추가 실패", error);
+      });
   }
 
-  const handleRefurseClick = (friendEmail) => {
-    // 채팅 버튼을 클릭할 때의 동작을 정의합니다. 여기에 채팅을 보내는 로직을 추가하세요.
-    console.log(`Refuse with friend ${friendEmail}`);
+  // 친구 추가 거부
+  const addRefuseClick = (e) => {
+    e.preventDefault();
+
+    PostRefuseFriendReqeust({ myId: USER_ID, friendEmail: friend.email })
+      .then((response) => {
+        if (response.status === 200)
+          alert("친구 추가 거부 성공");
+        else
+          alert(response.data.description);
+      })
+      .catch((error) => {
+        console.error("친구 추가 거부 실패", error);
+      });
   };
 
   return (
     <List>
       <ProfileBox>
-        <img src={temp} alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+        <img src={(friend.profileUrl === "") ? friend.profileUrl : defaultImage}
+          alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
         <span>{friend.name}</span>
       </ProfileBox>
 
       <ButtonBox>
-        <Button onClick={() => handleAcceptClick(friend.email)}>허락</Button>
-        <Button onClick={() => handleRefurseClick(friend.email)}>거절</Button>
+        <Button onClick={addAcceptClick}>허락</Button>
+        <Button onClick={addRefuseClick}>거절</Button>
       </ButtonBox>
     </List>
   );
 }
 
+// 친구 추가 요청 보내는 컴포넌트
 export const AddSendList = ({ friend }) => {
-  const handleCancleClick = (friendEmail) => {
-    console.log(`Delete with friend ${friendEmail}`);
+  const { USER_ID } = AuthStore();
+  const sendAddCancleClick = (e) => {
+    e.preventDefault();
+
+    CancleAddFriendRequest({ myId: USER_ID, friendEmail: friend.email })
+      .then((response) => {
+        if (response.status === 200)
+          alert("친구 추가 취소 성공");
+        else
+          alert(response.data.description);
+      })
+      .catch((error) => {
+        console.error("친구 추가 취소 실패", error);
+      });
   }
 
   return (
     <List>
       <ProfileBox>
-        <img src={temp} alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+        <img src={(friend.profileUrl === "") ? friend.profileUrl : defaultImage}
+          alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
         <span>{friend.name}</span>
       </ProfileBox>
 
       <ButtonBox>
-        <Button onClick={() => handleCancleClick(friend.email)}>취소</Button>
+        <Button onClick={sendAddCancleClick}>취소</Button>
       </ButtonBox>
     </List>
   );
