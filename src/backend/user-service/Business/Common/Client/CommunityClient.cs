@@ -115,6 +115,39 @@ public class CommunityClient : ICommunityClient
         return true;
     }
 
+    public async Task<bool> CreateDMRoomAsync(CommunityRoomCreateDTO communityDTO, string traceId, string userId)
+    {
+        SetDefaultHeader(traceId, userId);
+
+        StringContent content = new StringContent(
+            JsonConvert.SerializeObject(communityDTO),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        try
+        {
+            HttpResponseMessage response = await _client.PatchAsync("registration/room", content, _cancellationToken);
+            string str = await response.Content.ReadAsStringAsync();
+            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO<CommunityBaseException>>(str);
+
+            if (dto!.ResultCode != 200)
+            {
+                System.Console.WriteLine(dto.ResultData!.Exception);
+
+                throw new ServiceException(4010);
+            }
+        }
+        catch (Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+
+            return false;
+        }
+
+        return true;
+    }
+
     private void SetDefaultHeader(string traceId, string userId)
     {
         _client.DefaultRequestHeaders.Add("trace-id", traceId);

@@ -15,14 +15,17 @@ public class FriendService : IFriendService
     private IConfiguration _config;
     private IFriendRepository _friendRepository;
     private IStateClient _stateClient;
+    private ICommunityClient _communityClient;
     public FriendService(IConfiguration config,
                         IFriendRepository friendRepository,
                         IStateClient stateClient,
+                        ICommunityClient communityClient,
                         LogInterceptor interceptor)
     {
         var generator = new ProxyGenerator();
         _friendRepository = generator.CreateInterfaceProxyWithTargetInterface<IFriendRepository>(friendRepository, interceptor);
         _stateClient = generator.CreateInterfaceProxyWithTargetInterface<IStateClient>(stateClient, interceptor);
+        _communityClient = generator.CreateInterfaceProxyWithTargetInterface<ICommunityClient>(communityClient, interceptor);
         _config = config;
     }
 
@@ -89,7 +92,7 @@ public class FriendService : IFriendService
             throw new ServiceException(4020);
     }
 
-    public void AcceptFriendAddRequest(FriendDTO friend)
+    public async Task AcceptFriendAddRequestAsync(FriendDTO friend)
     {
         long id = friend.MyId;
         long friendId = GetFriendId(friend.FriendEmail);
@@ -99,6 +102,17 @@ public class FriendService : IFriendService
 
         if (!_friendRepository.AcceptFriendRequest(id, friendId))
             throw new ServiceException(4018);
+
+        string myEmail = GetUserEmail(id);
+
+        bool isSuccess = await _communityClient.CreateDMRoomAsync(new CommunityRoomCreateDTO
+        {
+            name = $"{myEmail},{friend.FriendEmail}",
+            members = new List<long> { id, friendId }
+        }, "traceId", id.ToString());
+
+        if (!isSuccess)
+            throw new ServiceException(4021);
     }
 
     public void RefuseFriendAddRequest(FriendDTO friend)
@@ -126,10 +140,19 @@ public class FriendService : IFriendService
 
     private long GetFriendId(string email)
     {
-        long friendId = _friendRepository.GetFriendId(email);
+        long friendId = _friendRepository.GetUserIdtoEmail(email);
         if (friendId == 0)
             throw new ServiceException(4007);
 
         return friendId;
+    }
+
+    private string GetUserEmail(long id)
+    {
+        string email = _friendRepository.GetUserEmailToId(id);
+        if (email == null)
+            throw new ServiceException(4007);
+
+        return email;
     }
 }

@@ -33,3 +33,9 @@ public class CommunityBaseException
     public string Exception { get; set; } = null!;
     public string Message { get; set; } = null!;
 }
+
+public class CommunityRoomCreateDTO
+{
+    public string name { get; set; } = null!;
+    public List<long> members { get; set; } = null!;
+}

@@ -21,7 +21,7 @@ namespace user_service
                     _db = dbConnectionManager;
                 }
 
-                public long GetFriendId(string email)
+                public long GetUserIdtoEmail(string email)
                 {
                     string query = $"SELECT * FROM users WHERE email = '{email}'";
                     List<long> ids = _db.ExecuteReader<long>(query, MakeUserId);
@@ -29,6 +29,16 @@ namespace user_service
                         return ids[0];
 
                     return -1;
+                }
+
+                public string GetUserEmailToId(long id)
+                {
+                    string query = $"SELECT * FROM users WHERE id = '{id}'";
+                    List<string> ids = _db.ExecuteReader<string>(query, MakeEmail);
+                    if (ids.Count == 1)
+                        return ids[0];
+
+                    return "";
                 }
 
                 public bool CheckAlreadyFriend(long id, long friendId)
@@ -136,6 +146,11 @@ namespace user_service
                 private long MakeUserId(IDataReader reader)
                 {
                     return reader.GetInt64(reader.GetOrdinal("id"));
+                }
+
+                private string MakeEmail(IDataReader reader)
+                {
+                    return reader.GetString(reader.GetOrdinal("email"));
                 }
 
                 private FriendInfoDTO MakeFriendInfoDTO(IDataReader reader)
