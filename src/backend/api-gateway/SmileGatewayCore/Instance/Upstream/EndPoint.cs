@@ -24,7 +24,7 @@ public partial class EndPoint : NetworkInstance
         // ConnectionPool이 꽉찼을 때가 문제임.
         // 많은 양의 데이터가 올 때 말하는것.
         IpEndPoint = new IPEndPoint(IPAddress.Parse(addressConfig.Address), addressConfig.Port);
-        _connectPool = new ConnectionPool(50);
+        _connectPool = new ConnectionPool(100);
 
         if (connectTimeout == null)
             _connectTimeout = TimeSpan.FromMilliseconds(Utils.Timeout.defaultTimeout);
@@ -74,24 +74,20 @@ public partial class EndPoint : NetworkInstance
 
             Socket? socket = await _connectPool.GetSocket(IpEndPoint, _connectTimeout);
             if (socket == null)
-            {
                 continue;
-            }
 
             try
             {
                 // 실행
                 await Send(socket, context.Request.GetStringToBytes());
                 _connectPool.EnqueueSocket(socket);
+                break;
             }
             catch (System.Exception)
             {
                 System.Console.WriteLine("Dead Socket");
                 _connectPool.MinusAliveCount();
-
-                continue;
             }
-            break;
         }
 
         DecreaseUsingCount();

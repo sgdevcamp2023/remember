@@ -5,7 +5,7 @@ namespace SmileGatewayCore.Utils;
 public class ErrorCodeReader
 {
     public Dictionary<int, string> ErrorCodes { get; set; } = new Dictionary<int, string>();
-    public string Path { get; } = ".\\SmileGatewayCore\\Utils\\Error\\ErrorCode.json";
+    public string Path { get; } = ".\\Utils\\Error\\ErrorCode.json";
 
     public ErrorCodeReader()
     {

@@ -47,7 +47,7 @@ internal class ConnectionPool
         }
         else
         {
-            if (AliveCount == Capacity)
+            if (AliveCount >= Capacity)
                 return null;
 
             Socket newSocket = CreateSocket();
