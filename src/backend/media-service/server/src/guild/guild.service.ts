@@ -8,7 +8,6 @@ const newMockdata = { ...mockData };
 export class GuildService {
   eventEmitter = new EventEmitter();
   find() {
-    // console.log(JSON.stringify(newMockdata, null, 2));
     return newMockdata;
   }
 
@@ -30,7 +29,6 @@ export class GuildService {
         .find((channel) => channel.id === channelId)
         .members.filter((member) => member !== userId);
     }
-    // console.log(JSON.stringify(newMockdata, null, 2));
     this.eventEmitter.emit('memberUpdate', newMockdata);
     return newMockdata;
   }

@@ -5,16 +5,21 @@ import { CreateWebRtcTransportDTO } from 'src/signaling/dto/create-webRtcTranspo
 
 @Injectable()
 export class MediasoupService implements OnModuleInit {
-  private workers: mediasoup.types.Worker[] = [];
   private nextWorkerIndex = 0;
+  private workers: mediasoup.types.Worker[] = [];
+
   private mediaCodecs: mediasoup.types.RtpCodecCapability[];
+
   private webRtcTransport_options: mediasoup.types.WebRtcTransportOptions;
+
   private routers = new Map<string, mediasoup.types.Router>();
+
   // socketId -> producer transport
   private producerTransports = new Map<
     string,
     mediasoup.types.WebRtcTransport
   >();
+
   // socketId -> consumer transport
   private consumerTransports = new Map<
     string,
@@ -52,7 +57,6 @@ export class MediasoupService implements OnModuleInit {
       listenIps: [
         {
           ip: process.env.WEBRTC_LISTEN_IP || '127.0.0.1',
-          // ip: '127.0.0.1',
           announcedIp: process.env.WEBRTC_ANNOUNCED_IP || '127.0.0.1',
         },
       ],
@@ -82,6 +86,12 @@ export class MediasoupService implements OnModuleInit {
     });
 
     this.workers.push(worker);
+    return worker;
+  }
+
+  getWorker() {
+    const worker = this.workers[this.nextWorkerIndex];
+    this.nextWorkerIndex = (this.nextWorkerIndex + 1) % this.workers.length;
     return worker;
   }
 
@@ -197,7 +207,7 @@ export class MediasoupService implements OnModuleInit {
     if (!this.socketProducerList.has(socketId)) {
       this.socketProducerList.set(socketId, new Map());
     }
-    this.socketProducerList.get(socketId).set(mediaTag, producerId);
+    this.socketProducerList?.get(socketId).set(mediaTag, producerId);
   }
 
   getProducerIdByMediaTag(socketId: string, mediaTag: string) {
@@ -205,7 +215,6 @@ export class MediasoupService implements OnModuleInit {
   }
 
   removeProducerIdByMediaTag(socketId: string, mediaTag: string) {
-    // console.log(this.socketProducerList?.get(socketId).delete(mediaTag));
     this.socketProducerList?.get(socketId).delete(mediaTag);
   }
 
@@ -232,20 +241,19 @@ export class MediasoupService implements OnModuleInit {
       return this.audioConsumers
         .get(roomId)
         .find((consumer) => consumer.id === consumerId);
-    } else {
-      const consumer = this.videoConsumers
-        .get(roomId)
-        .find((consumer) => consumer.id === consumerId);
-      return consumer;
     }
+
+    const consumer = this.videoConsumers
+      .get(roomId)
+      .find((consumer) => consumer.id === consumerId);
+    return consumer;
   }
 
   getConsumers(kind: string, roomId: string) {
     if (kind === 'audio') {
       return this.audioProducers.get(roomId);
-    } else {
-      return this.videoProducers.get(roomId);
     }
+    return this.videoProducers.get(roomId);
   }
 
   removeTransport(socketId: string) {
@@ -269,9 +277,6 @@ export class MediasoupService implements OnModuleInit {
       (producer) => producer.id === producerId,
     );
     producers.splice(index, 1);
-    console.log(
-      `>>> producer removed : ${roomId}, ${this.audioProducers.get(roomId)}`,
-    );
   }
 
   removeConsumer(kind: string, roomId: string, producerId: string) {
@@ -282,12 +287,6 @@ export class MediasoupService implements OnModuleInit {
 
     const index = consumers.findIndex((consumer) => consumer.id === producerId);
     consumers.splice(index, 1);
-  }
-
-  getWorker() {
-    const worker = this.workers[this.nextWorkerIndex];
-    this.nextWorkerIndex = (this.nextWorkerIndex + 1) % this.workers.length;
-    return worker;
   }
 
   getSocketProducerList() {

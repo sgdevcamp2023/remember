@@ -24,7 +24,7 @@ import { KafkaService } from 'src/kafka/kafka.service';
 
 @WebSocketGateway({
   cors: {
-    origin: [process.env.CORS_ORIGIN_LIST.split(',')],
+    origin: ['https://localhost:3000'],
     credentials: true,
   },
 })
@@ -33,7 +33,6 @@ export class SignalingGateway
 {
   private voiceChannelStatusMap: Map<string, Map<string, Map<string, string>>> =
     new Map();
-
   private socketToChannelGuildMap: Map<string, ChannelGuildEntity> = new Map();
 
   @WebSocketServer()
@@ -59,42 +58,29 @@ export class SignalingGateway
     const parsedRoomId = guildId + '-' + channelId;
     this.server.to(parsedRoomId).emit('message', `${userId}님이 퇴장했습니다.`);
 
-    // voiceChannelStatusMap에서 client를 제거한다.
-    const deleteUserInMap = this.voiceChannelStatusMap
-      .get(guildId)
-      ?.get(channelId)
-      ?.delete(userId);
+    this.voiceChannelStatusMap.get(guildId)?.get(channelId)?.delete(userId);
 
-    // when you delete user in map, if channel is empty, delete channel in map
     if (this.voiceChannelStatusMap?.get(guildId)?.get(channelId)?.size === 0) {
       this.voiceChannelStatusMap.get(guildId).delete(channelId);
     }
 
-    // 만약 해당 길드의 음성채널이 비어있다면 제거한다.
     if (this.voiceChannelStatusMap?.get(guildId)?.size === 0) {
       this.voiceChannelStatusMap.delete(guildId);
     }
-
-    // socketToChannelGuildMap에서 제거한다.
     this.socketToChannelGuildMap.delete(client.id);
 
-    ////////////////////////////// mediasoup 관련 작업
+    // about mediasoup
     const myProducer = this.mediasoupService.getSocketProducerList();
     if (myProducer.has(client.id)) {
       myProducer.get(client.id).forEach((producer, mediaTag) => {
-        console.log('disconnect producer', producer, mediaTag);
-
         if (mediaTag === 'audio') {
-          console.log('>> audio producer closed');
           this.mediasoupService.removeProducer('audio', parsedRoomId, producer);
           this.mediasoupService.removeProducerIdByMediaTag(client.id, mediaTag);
         }
         if (mediaTag === 'camera' || mediaTag === 'display') {
-          console.log('>> video producer closed');
           this.mediasoupService.removeProducer('video', parsedRoomId, producer);
           this.mediasoupService.removeProducerIdByMediaTag(client.id, mediaTag);
         }
-        // 해당유저가 나갔음을 알린다.
         client.broadcast.to(parsedRoomId).emit('producer-closed', {
           mediaTag,
           kind: mediaTag === 'audio' ? 'audio' : 'video',
@@ -104,12 +90,8 @@ export class SignalingGateway
     }
     this.mediasoupService.removeTransport(client.id);
 
-    ////////////////////////////// 상태 관리 서버 전달 작업
+    // send to kafka server
     try {
-      // const response = await this.httpService
-      //   .post('http://localhost:6001/guild/delete', data)
-      //   .toPromise();
-
       const kafka_event = {
         guildId: Number(guildId),
         channelId: Number(channelId),
@@ -121,6 +103,8 @@ export class SignalingGateway
     } catch (error) {
       console.error(error);
     }
+
+    console.log(`Client disconnected: ${client.id}`);
   }
 
   @SubscribeMessage('validate-user-in-channel')
@@ -180,11 +164,7 @@ export class SignalingGateway
     client.join(parsedRoomId);
     this.server.to(parsedRoomId).emit('message', `${userId}님이 입장했습니다.`);
 
-    ////////////////////////////////////////// 상태관리 서버 전달 작업
-    // const response = await this.httpService
-    //   .post('http://localhost:6001/guild/update', data)
-    //   .toPromise();
-
+    // send to kafka server
     const kafka_event = {
       guildId: Number(guildId),
       channelId: Number(channelId),
@@ -209,9 +189,10 @@ export class SignalingGateway
       socketToDisconnect.disconnect();
     }
   }
+
   /**
    *##################################################
-   *#########   mediasoup 관련 메소드  ################
+   *#############   Mediasoup socket  ################
    *##################################################
    */
 
@@ -352,7 +333,6 @@ export class SignalingGateway
         this.mediasoupService.setConsumer(consumer.kind, roomId, consumer);
 
         consumer.on('transportclose', () => {
-          console.log('consumer transport close');
           consumer.close();
           this.mediasoupService.removeConsumer(
             consumer.kind,
@@ -362,7 +342,6 @@ export class SignalingGateway
         });
 
         consumer.on('producerclose', () => {
-          console.log('producer close');
           consumer.close();
           this.mediasoupService.removeConsumer(
             consumer.kind,
