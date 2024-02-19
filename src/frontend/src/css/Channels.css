@@ -10,6 +10,10 @@
   overflow-y: scroll;
 }
 
+.channel-container::-webkit-scrollbar {
+  display: none;
+}
+
 .channel-title-container {
   width: 100%;
   height: 50px;

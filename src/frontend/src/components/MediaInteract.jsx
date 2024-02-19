@@ -5,7 +5,7 @@ import CurrentStore from "../store/CurrentStore";
 import SocketStore from "../store/SocketStore";
 import MediaStore from "../store/MediaStore";
 
-const MediaTitle = () => {
+const MediaInteract = () => {
   const { CHANNEL_LIST } = CommunityStore();
   const { CURRENT_JOIN_CHANNEL } = CurrentStore();
   const { removeVoiceSocket } = SocketStore();
@@ -37,4 +37,4 @@ const MediaTitle = () => {
   );
 };
 
-export default MediaTitle;
+export default MediaInteract;
