@@ -68,20 +68,28 @@ public class MessageConsumerService {
 
     @KafkaListener(topics = "${spring.kafka.topic.community-event}", groupId = "${spring.kafka.consumer.group-id.community-event}", containerFactory = "communityEventListener")
     public void consumeForCommunityEvent(CommunityEventDto eventDto) throws JsonProcessingException {
+        log.info("채널 이벤트 체크 로그 {}", eventDto.toString());
         HashMap<String,String> communityEventInfo = new HashMap<>();
-        if (eventDto.getEventType().equals("DELETE-GUILD")) {
+        if (eventDto.getType().equals("CREATE-GUILD")) {
             communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
-            communityEventInfo.put("eventType", "DELETE-GUILD");
-        } else if (eventDto.getEventType().equals("CREATE-CHANNEL")) {
+            communityEventInfo.put("guildReadId", String.valueOf(eventDto.getGuildReadId()));
+            communityEventInfo.put("userId", String.valueOf(eventDto.getUserId()));
+            communityEventInfo.put("name", eventDto.getName());
+            communityEventInfo.put("profile", eventDto.getProfile());
+            communityEventInfo.put("type", "CREATE-GUILD");
+        } else if (eventDto.getType().equals("DELETE-GUILD")) {
             communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
-            communityEventInfo.put("eventType", "CREATE-CHANNEL");
+            communityEventInfo.put("type", "DELETE-GUILD");
+        } else if (eventDto.getType().equals("CREATE-CHANNEL")) {
+            communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
             communityEventInfo.put("channelType", eventDto.getChannelType());
             communityEventInfo.put("channelReadId", String.valueOf(eventDto.getChannelReadId()));
             communityEventInfo.put("categoryId", String.valueOf(eventDto.getCategoryId()));
-        } else if (eventDto.getEventType().equals("DELETE-CHANNEL")) {
+            communityEventInfo.put("type", "CREATE-CHANNEL");
+        } else if (eventDto.getType().equals("DELETE-CHANNEL")) {
             communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
-            communityEventInfo.put("eventType", "DELETE-CHANNEL");
             communityEventInfo.put("channelReadId", String.valueOf(eventDto.getChannelReadId()));
+            communityEventInfo.put("type", "DELETE-CHANNEL");
         }
         String communityEvent = objectMapper.writeValueAsString(communityEventInfo);
 
