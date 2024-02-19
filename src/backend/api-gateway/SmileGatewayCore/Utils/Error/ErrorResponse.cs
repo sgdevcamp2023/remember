@@ -15,7 +15,7 @@ public class ErrorResponse
             return _instance;
         }
     }
-    
+
     private ErrorCodeReader _errorCodeReader = new ErrorCodeReader();
     public void MakeBadRequest(HttpResponse response, int errorCode)
     {
@@ -37,9 +37,9 @@ public class ErrorResponse
         response.StatusCode = 500;
         response.StatusMessage = "Internal Server Error";
         response.Protocol = "HTTP/1.1";
-        response.Header.Add("Content-Type", "applicatoin/json");
-        response.Header.Add("Date", DateTime.Now.ToString("r"));
-        response.Header.Add("Connection", "close");
+        response.Header["Content-Type"] = "applicatoin/json";
+        response.Header["Date"] = DateTime.Now.ToString("r");
+        response.Header["Connection"] = "close";
 
         string errorString = GetErrorInfo(errorCode);
         response.ContentLength = errorString.Length;
@@ -47,7 +47,7 @@ public class ErrorResponse
     }
     public string GetErrorInfo(int errorCode)
     {
-        if(_errorCodeReader.ErrorCodes.TryGetValue(errorCode, out string? errorInfo))
+        if (_errorCodeReader.ErrorCodes.TryGetValue(errorCode, out string? errorInfo))
             return errorInfo;
 
         return "";
