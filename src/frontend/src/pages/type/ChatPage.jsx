@@ -7,6 +7,12 @@ import ChatStore from '../../store/ChatStore';
 import CurrentStore from "../../store/CurrentStore";
 
 const ChatPage = () => {
+  const MAX_MESSAGE_LENGTH = 500; // 최대 메시지 길이
+  const MAX_FILE_COUNT = 5; // 최대 파일 개수 제한
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 최대 파일 크기 제한 (10MB)
+  
+  const [showMessage, setShowMessage] = useState(false); // 메시지 표시 여부 상태
+
   const USER_ID = useAuthStore(state => state.USER_ID);
   const [inputMessage, setInputMessage] = useState(''); 
   const [messages, setMessages] = useState([]); // 메시지 목록 상태 관리
@@ -24,6 +30,8 @@ const ChatPage = () => {
 
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
 
+  const [fileInputVisible, setFileInputVisible] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   useEffect(() => {
     // 페이지 로딩 시 메시지 불러오기
@@ -36,7 +44,7 @@ const ChatPage = () => {
     if (hasMoreData && CURRENT_VIEW_CHANNEL) {
       try {
         setLoading(true); 
-        const response = await axios.get(`http://34.22.109.45:7000/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
+        const response = await axios.get(`http://34.22.109.45:4000/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
         const newMessages = response.data.content.reverse();
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
@@ -67,6 +75,7 @@ const ChatPage = () => {
 
   useEffect(() => {   
     // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
+    console.log("서버로부터 받은 데이터 체크", chatMessage);
     if (chatMessage) {
       if (chatMessage.channelId === CURRENT_VIEW_CHANNEL) {
         if (chatMessage.type === "modify") {
@@ -98,6 +107,13 @@ const ChatPage = () => {
   const sendMessage = () => {
     if (!mainSocket) return;
     if (!inputMessage.trim()) return; 
+
+    if (inputMessage.length > MAX_MESSAGE_LENGTH) {
+      setShowMessage(true); // 메시지 표시
+      return;
+    } else {
+      setShowMessage(false); // 메시지 감춤
+    }
     
     mainSocket.publish({
       destination: "/api/chat/guild/message",
@@ -128,6 +144,13 @@ const ChatPage = () => {
     if (!mainSocket) return; 
     if (!message.trim()) return; 
 
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      setShowMessage(true); // 메시지 표시
+      return;
+    } else {
+      setShowMessage(false); // 메시지 감춤
+    }
+
     const msg = {
       guildId: guildId,
       messageId: messageId,
@@ -141,6 +164,10 @@ const ChatPage = () => {
   // 메시지 삭제
   const deleteMessage = (messageId, guildId) => {
     if (!mainSocket) return; 
+
+    const confirmed = window.confirm("정말로 삭제하시겠습니까?");
+    if (!confirmed) return;
+
     const msg = {
       guildId: guildId,
       messageId: messageId,
@@ -156,6 +183,66 @@ const ChatPage = () => {
     }
   };
 
+  /* 파일 업로드 처리 */
+  const toggleFileInput = () => {
+    setFileInputVisible(!fileInputVisible);
+  };
+
+  const handleFileInputChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + selectedFiles.length > MAX_FILE_COUNT) {
+      alert(`최대 ${MAX_FILE_COUNT}개의 파일까지만 업로드할 수 있습니다.`);
+      return;
+    }
+
+    const totalSize = files.reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > MAX_FILE_SIZE) {
+      alert(`파일 크기는 최대 ${MAX_FILE_SIZE / (1024 * 1024)}MB까지만 가능합니다.`);
+      return;
+    }
+
+    setSelectedFiles([...selectedFiles, ...files]);
+  };
+
+  const handleFileUpload = async () => {
+    const formData = new FormData();
+    const msg = {
+      guildId: CURRENT_VIEW_GUILD,
+      channelId: CURRENT_VIEW_CHANNEL,
+      userId: USER_ID,
+      parentId: 0,
+      profileImage: "qwedfw",
+      type: "send",
+      senderName: "바나나",
+      message: inputMessage
+    };
+
+    const jsonMsg = JSON.stringify(msg);
+    const communityMsg = new Blob([jsonMsg], { type: "application/json" });
+    formData.append("communityMessageRequest", communityMsg);
+
+    // 모든 선택된 파일을 formData에 추가
+    for (let i = 0; i < selectedFiles.length; i++) {
+      formData.append('files', selectedFiles[i]);
+    }
+  
+    try {
+      const response = await axios.post('http://34.22.109.45:4000/api/chat-service/community/message/file', formData, {
+        headers: {
+          'content-type' : 'multipart/form-data',
+        }
+      });
+      console.log('파일 업로드 성공:', response.data);
+    } catch (error) {
+      console.error('파일 업로드 실패:', error);
+    }
+
+    setSelectedFiles([]); // 선택된 파일 초기화
+  };
+
+  const getFileExtension = (filename) => {
+    return filename.split('.').pop().toLowerCase();
+  };
 
   const formatTime = (timestamp) => {
     const date = new Date(timestamp); 
@@ -188,6 +275,15 @@ const ChatPage = () => {
               </div>
               <div className="message-content">
                 {msg.message}
+                {msg.files && msg.files.map((file, index) => (
+                  <div key={index} className="attached-image-container">
+                    {getFileExtension(file) === 'jpg' || getFileExtension(file) === 'jpeg' || getFileExtension(file) === 'png' || getFileExtension(file) === 'gif' ? (
+                      <img src={file} alt="Attached Image" className="attached-image" />
+                    ) : (
+                      <a href={file} download>{file}</a>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -216,13 +312,24 @@ const ChatPage = () => {
         ))}
       </div>
       <div className="input-container">
+        {fileInputVisible && (
+          <div>
+            <input type="file" onChange={handleFileInputChange} multiple />
+            <button onClick={handleFileUpload}>파일 업로드</button>
+          </div>
+        )}
         <input 
           type="text" 
           value={inputMessage} 
           onChange={e => setInputMessage(e.target.value)} 
           onKeyPress={handleKeyPress}
-          placeholder="메시지 입력..." />
+          placeholder="메시지 입력..." 
+        />
+        <button onClick={toggleFileInput}>+</button>
       </div>
+      {showMessage && (
+        <div className="message">500자를 넘을 수 없습니다.</div>
+      )}
     </div>
   );
 };
