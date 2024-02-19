@@ -2,6 +2,7 @@ package harmony.chatservice.dto;
 
 
 import harmony.chatservice.domain.DirectMessage;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class DirectMessageDto {
     private String senderName;
     private String message;
     private boolean delCheck;
+    private LocalDateTime createdAt;
     private List<String> files;
     private List<EmojiDto> emojis;
 
@@ -36,6 +38,7 @@ public class DirectMessageDto {
         this.type = directMessage.getType();
         this.senderName = directMessage.getSenderName();
         this.message = directMessage.getMessage();
+        this.createdAt = directMessage.getCreatedAt();
         this.delCheck = directMessage.isDelCheck();
         this.files = directMessage.getFiles();
     }
