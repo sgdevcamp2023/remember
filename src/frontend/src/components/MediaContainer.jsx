@@ -80,17 +80,22 @@ const MediaContainer = () => {
         </button>
       </div>
       <div className="media-tools">
-        <button className="media_button camera" onClick={handleCemareStream}>
+        <button
+          className={`media_button camera ${
+            videoStream.camera ? "media-selected" : ""
+          }`}
+          onClick={handleCemareStream}
+        >
           Camera
         </button>
         <button
-          className="media_button video_call"
+          className={`media_button video_call ${
+            videoStream.display ? "media-selected" : ""
+          }`}
           onClick={handleDisplayStream}
         >
           Streaming
         </button>
-        <button className="media_button mic">Mic</button>
-        <button className="media_button headset">Headset</button>
       </div>
     </div>
   );

@@ -1,23 +1,27 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "../css/Channels.css";
-import {memberList as mock_member_list,} from "../config/mock_data";
+import { memberList as mock_member_list } from "../config/mock_data";
 import MediaContainer from "./MediaContainer";
 import CurrentStore from "../store/CurrentStore";
 import CommunityStore from "../store/CommunityStore";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ChannelButton from "./ChannelButton";
 import VoiceChannelButton from "./VoiceChannelButton";
 import useVoiceSocket from "../hooks/useVoiceSocket";
 import AuthStore from "../store/AuthStore";
-import {useMediaStream} from "../contexts/MediaStreamContext";
+import { useMediaStream } from "../contexts/MediaStreamContext";
 import SocketStore from "../store/SocketStore";
-import {getChannelListRequest, getUserStateAndVoice} from "../Request/communityRequest";
+import {
+  getChannelListRequest,
+  getUserStateAndVoice,
+} from "../Request/communityRequest";
 import ChannelModal from "./ChannelModal";
+import DmChannelButton from "./DmChannelButton";
 
 const Channel = () => {
   const navigate = useNavigate();
 
-  const {audioStream, setVideoStream, setPeerVideoStream} = useMediaStream();
+  const { audioStream, setVideoStream, setPeerVideoStream } = useMediaStream();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     connectSocket,
@@ -31,10 +35,17 @@ const Channel = () => {
     setCurrentViewChannel,
     setCurrentViewChannelType,
   } = CurrentStore();
-  const {setUserId, USER_ID} = AuthStore();
-  const {CHANNEL_LIST, setChannelList, setUserStateMap, setVoiceUserStateMap} = CommunityStore();
-  const {VOICE_SOCKET} = SocketStore.getState();
-  const {CURRENT_JOIN_CHANNEL} = CurrentStore.getState();
+  const { setUserId, USER_ID } = AuthStore();
+  const {
+    CHANNEL_LIST,
+    DM_ROOM_LIST,
+    setChannelList,
+    setUserStateMap,
+    setVoiceUserStateMap,
+  } = CommunityStore();
+
+  const { VOICE_SOCKET } = SocketStore.getState();
+  const { CURRENT_JOIN_CHANNEL } = CurrentStore.getState();
 
   let accessToken = AuthStore.getState().ACCESS_TOKEN;
   const appendServer =
@@ -50,15 +61,13 @@ const Channel = () => {
 
       const fetchChannel = async () => {
         const data = await getChannelListRequest(CURRENT_VIEW_GUILD, USER_ID);
-        const channels = Object.values(data.data.resultData)
+        const channels = Object.values(data.data.resultData);
         setChannelList(channels);
-        const channel = channels?.find(
-          (element) => element.type === "TEXT"
-        );
+        const channel = channels?.find((element) => element.type === "TEXT");
         if (channel) {
           navigate(`/channels/${CURRENT_VIEW_GUILD}/${channel?.channelReadId}`);
         }
-      }
+      };
 
       fetchChannel();
 
@@ -68,7 +77,7 @@ const Channel = () => {
         const data = await getUserStateAndVoice(CURRENT_VIEW_GUILD, USER_ID);
         setUserStateMap(data.data.resultData.guildStates);
         setVoiceUserStateMap(data.data.resultData.voiceChannelStates);
-      }
+      };
 
       fetchData();
 
@@ -77,10 +86,8 @@ const Channel = () => {
       setMembers(memberResponse);
       // 첫 번째 채팅 채널로 이동
     }
-    return () => {
-    };
+    return () => {};
   }, [CURRENT_VIEW_GUILD]);
-  // console.log(USER_STATE_MAP);
 
   const handleVoiceChannel = (guildId, channelId) => {
     if (channelId === CURRENT_JOIN_CHANNEL) {
@@ -108,21 +115,7 @@ const Channel = () => {
   return (
     <div className="channel-container">
       <div>
-        <input
-          type="text"
-          onChange={(e) => setTestId(e.target.value)}
-          value={testId}
-        />
-        <button
-          onClick={() => {
-            setUserId(testId);
-          }}
-        >
-          로긴
-        </button>
-      </div>
-      <div>
-        {Object.entries(audioStream).map(([id, {kind, stream}]) =>
+        {Object.entries(audioStream).map(([id, { kind, stream }]) =>
           kind === "audio" ? (
             <audio
               key={id}
@@ -134,34 +127,50 @@ const Channel = () => {
           )
         )}
       </div>
-
       <div className="channel-title-container">
         <p className="channel-title">{CURRENT_VIEW_GUILD_NAME}</p>
       </div>
-
-      <div className="channel-list-container">
-        {CHANNEL_LIST ? (
-          CHANNEL_LIST?.map((channel) =>
-            channel.type !== "VOICE" ? (
-              <ChannelButton key={channel.channelReadId} channel={channel}/>
+      {window.location.pathname.includes("@me") ? (
+        DM_ROOM_LIST?.map((room) => (
+          <DmChannelButton key={room.roomId} room={room} />
+        ))
+      ) : (
+        <>
+          <div className="channel-list-container">
+            {CHANNEL_LIST ? (
+              CHANNEL_LIST?.map((channel) =>
+                channel.type !== "VOICE" ? (
+                  <ChannelButton
+                    key={channel.channelReadId}
+                    channel={channel}
+                  />
+                ) : (
+                  <VoiceChannelButton
+                    key={channel.channelReadId}
+                    channel={channel}
+                    members={members}
+                    onClick={handleVoiceChannel}
+                  />
+                )
+              )
             ) : (
-              <VoiceChannelButton
-                key={channel.channelReadId}
-                channel={channel}
-                members={members}
-                onClick={handleVoiceChannel}
+              <></>
+            )}
+            <div onClick={openModal} className="guild-btn">
+              <img
+                alt={"기본 이미지"}
+                className="profile_img"
+                src={appendServer}
               />
-            )
-          )
-        ) : (
-          <></>
-        )}
-        <div onClick={openModal} className="guild-btn">
-          <img alt={"기본 이미지"} className="profile_img" src={appendServer}/>
-        </div>
-      </div>
-      <div>{VOICE_SOCKET ? <MediaContainer/> : <></>}</div>
-      <ChannelModal isModalOpen={isModalOpen} closeModal={closeModal}/>
+            </div>
+          </div>
+          <ChannelModal isModalOpen={isModalOpen} closeModal={closeModal} />
+        </>
+      )}
+      {/*  */}
+
+      {/*  */}
+      <div>{VOICE_SOCKET ? <MediaContainer /> : <></>}</div>
     </div>
   );
 };

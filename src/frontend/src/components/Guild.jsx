@@ -1,65 +1,75 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/Guilds.css";
 import { guildList as mock_guild_list } from "../config/mock_data";
 import AuthStore from "../store/AuthStore";
 import CommunityStore from "../store/CommunityStore";
 import CurrentStore from "../store/CurrentStore";
-import useSocketStore from '../store/SocketStore';
+import useSocketStore from "../store/SocketStore";
 import GuildBtn from "./GuildBtn";
 import DmRoomBtn from "./DmRoomBtn";
 import GuildModal from "./GuildModal";
 import GuildSeperator from "./GuildSeperator";
 import ChatStore from "../store/ChatStore";
 import StatusStore from "../store/StatusStore";
-import {getGuildListRequest} from "../Request/communityRequest";
+import { getGuildListRequest } from "../Request/communityRequest";
 
 const Guild = () => {
   const { USER_ID } = AuthStore();
   const { GUILD_LIST, setGuildList } = CommunityStore();
-  const { CURRENT_VIEW_GUILD} = CurrentStore();
+  const { CURRENT_VIEW_GUILD } = CurrentStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { setMessage } = ChatStore(); 
-  const mainSocket = useSocketStore(state => state.MAIN_SOCKET); 
-  const socketIdRef = useRef('');
-  const { setStatus } = StatusStore(); 
-
+  const { setMessage } = ChatStore();
+  const mainSocket = useSocketStore((state) => state.MAIN_SOCKET);
+  const socketIdRef = useRef("");
+  const { setStatus } = StatusStore();
 
   const appendServer =
     "https://storage.googleapis.com/remember-harmony/fe2f6651-10c4-444c-a336-3740dd4a5890";
 
-  useEffect(() => {   
+  useEffect(() => {
     if (CURRENT_VIEW_GUILD) {
       console.log("현재 보고 있는 길드 id", CURRENT_VIEW_GUILD);
-  
+
       // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
-      const handleReceiveMessage = (data) => {    
+      const handleReceiveMessage = (data) => {
         const parsedMessage = JSON.parse(data.body);
         console.log("서버로부터 받은 데이터", parsedMessage);
-        if (parsedMessage.type === "CONNECT" || parsedMessage.type === "DISCONNECT") {
+        if (
+          parsedMessage.type === "CONNECT" ||
+          parsedMessage.type === "DISCONNECT"
+        ) {
           setStatus(parsedMessage);
-        } else if (parsedMessage.type === "send" || parsedMessage.type === "modify" || parsedMessage.type === "delete") {
+        } else if (
+          parsedMessage.type === "send" ||
+          parsedMessage.type === "modify" ||
+          parsedMessage.type === "delete"
+        ) {
           setMessage(parsedMessage);
         }
       };
   
-      //처음 구독
-      socketIdRef.current = mainSocket.subscribe(`/topic/guild/${CURRENT_VIEW_GUILD}`, handleReceiveMessage);
-      console.log(socketIdRef.current)
+      if (mainSocket !== null) {
+        //처음 구독
+        socketIdRef.current = mainSocket.subscribe(`/topic/guild/${CURRENT_VIEW_GUILD}`, handleReceiveMessage);
+        console.log(socketIdRef.current)
+      }
     }
 
+    
     return () => {
-      mainSocket.unsubscribe(socketIdRef.current.id);
-      socketIdRef.current = ''
+      if (mainSocket !== null) {
+        mainSocket.unsubscribe(socketIdRef.current.id);
+        socketIdRef.current = '';
+      }
     }
   }, [CURRENT_VIEW_GUILD]); 
   
 
   useEffect(() => {
-
     const fetchData = async () => {
       const data = await getGuildListRequest(USER_ID);
       setGuildList(Object.values(data.data.resultData));
-    }
+    };
 
     fetchData();
     return () => {};

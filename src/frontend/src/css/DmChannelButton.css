@@ -1,0 +1,22 @@
+.dm-channel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 1px solid #1e1f22;
+  transition: 0.2s;
+  height: 50px;
+}
+
+.dm-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.dm-roomName {
+  margin-left: 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #fff;
+}

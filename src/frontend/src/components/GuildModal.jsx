@@ -1,19 +1,18 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Modal from "react-modal";
 import upload from "../assets/icons/upload.svg";
 import AuthStore from "../store/AuthStore";
-import { createNewGuild } from "../Request/communityRequest";
+import {createNewGuild} from "../Request/communityRequest";
+import CommunityStore from "../store/CommunityStore";
 
-Modal.setAppElement("#root");
 const GuildModal = (props) => {
   const [ServerImage, setServerImage] = useState(null);
   const [ServerName, setServerName] = useState("");
-
-  const { USER_ID } = AuthStore();
+  const {GUILD_LIST, setGuildList} = CommunityStore();
+  const {USER_ID} = AuthStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    // 파일이 선택되면 상태를 업데이트하여 선택한 파일을 저장
     setServerImage(file);
   };
 
@@ -26,14 +25,21 @@ const GuildModal = (props) => {
     };
     formData.append(
       "requestDto",
-      new Blob([JSON.stringify(data)], { type: "application/json" })
+      new Blob([JSON.stringify(data)], {type: "application/json"})
     );
     formData.append("profile", ServerImage);
-
-    createNewGuild(formData);
-    props.closeModal();
-    window.location.reload();
+    fetchData(formData);
   };
+
+  const fetchData = async (formData) => {
+    const data = await createNewGuild(formData);
+    GUILD_LIST.push(data.data.resultData);
+    setGuildList(GUILD_LIST);
+    setServerImage(null);
+    setServerName("");
+    props.closeModal();
+  };
+
 
   return (
     <Modal
@@ -46,7 +52,7 @@ const GuildModal = (props) => {
       <div className="server-add-modal-header">
         <h2>서버 커스터마이징하기</h2>
         <h4>
-          새로운 서버에 이름과 아이콘을 부여해 개성을 드러내 보세요. 나<br />
+          새로운 서버에 이름과 아이콘을 부여해 개성을 드러내 보세요. 나<br/>
           중에 언제든 바꿀 수 있어요.
         </h4>
       </div>
@@ -64,7 +70,7 @@ const GuildModal = (props) => {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            style={{ display: "none" }}
+            style={{display: "none"}}
           />
         </div>
 
@@ -78,7 +84,7 @@ const GuildModal = (props) => {
           />
         </div>
       </div>
-      <br />
+      <br/>
       <div className="server-add-modal-footer">
         <button onClick={handleServerAdd}>추가</button>
         <button onClick={props.closeModal}>취소</button>

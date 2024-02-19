@@ -146,18 +146,19 @@
 .edit-buttons {
   display: flex;
   gap: 15px; /* 버튼 사이의 간격을 조절합니다. */
-  margin-left: 200px;
+  margin-left: 50px;
 }
 
 /* 수정 및 삭제 버튼 공통 스타일 */
 .edit-buttons button {
-  background-color: #262e4b; /* 디스코드의 파란색과 유사한 색상을 사용합니다. */
-  color: #FFF;
+  background-color: transparent;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  outline: none;
   cursor: pointer;
-  font-size: 14px; /* 버튼 텍스트의 크기를 설정합니다. */
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #7289da; /* 디스코드에서 사용하는 파란색 */
+  transition: color 0.3s ease; /* 호버 효과를 위한 전이 설정 */
 }
 
 /* 수정 버튼 */
@@ -175,3 +176,11 @@
   filter: brightness(0.9); /* 버튼의 밝기를 줄여 호버 효과를 줍니다. */
 }
   
+
+.attached-image-container {
+  max-width: 100%; /* 이미지의 최대 너비를 부모 요소인 .message-content에 맞추기 */
+}
+
+.attached-image {
+  max-width: 100%; /* 이미지의 최대 너비를 부모 요소인 .attached-image-container에 맞추기 */
+}
