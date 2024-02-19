@@ -8,7 +8,7 @@ internal class OriginalFilter : DownStreamFilter
 {
     protected override void Working(Adapter adapter, HttpContext context)
     {
-        context.Response.Header["Access-Control-Allow-Origin"] = context.Request.Header["Origin"];
+        context.Response.Header["Access-Control-Allow-Origin"] = context.Request.Header["Referer"];
         if(context.Request.Header["Access-Control-Allow-Origin"].Contains("localhost"))
         {
             context.Response.Header["Access-Control-Allow-Origin"].Replace("localhost", "127.0.0.1");

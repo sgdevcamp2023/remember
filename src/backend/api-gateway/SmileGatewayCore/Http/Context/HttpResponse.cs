@@ -91,7 +91,7 @@ public partial class HttpResponse
     public byte[] GetStringToBytes()
     {
         string responseString = ToString();
-        System.Console.WriteLine(Body);
+        // System.Console.WriteLine(Body);
         return System.Text.Encoding.UTF8.GetBytes(responseString);
     }
 
