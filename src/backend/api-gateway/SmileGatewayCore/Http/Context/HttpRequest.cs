@@ -114,7 +114,7 @@ public partial class HttpRequest
 
     private string HeaderToString()
     {
-        string requestString = $"{Method} {Path} {Protocol}\r\n";
+        string requestString = $"{Method} {Path}?{QueryString} {Protocol}\r\n";
         requestString += $"trace-id: {TraceId}\r\n";
         requestString += $"user-id: {UserId}\r\n";
 
@@ -138,7 +138,7 @@ public partial class HttpRequest
         else
             buffer = buffer.Concat(Encoding.UTF8.GetBytes(Body!)).ToArray();
 
-        // System.Console.WriteLine(requestString);
+        System.Console.WriteLine(requestString);
         return buffer;
     }
 

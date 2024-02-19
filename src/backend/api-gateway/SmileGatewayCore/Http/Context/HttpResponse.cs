@@ -13,7 +13,7 @@ public partial class HttpResponse
 
     public bool Parse(string responseString)
     {
-        // System.Console.WriteLine(responseString);
+        System.Console.WriteLine(responseString);
         string[] responseLines = responseString.Split("\r\n");
         MakeResponseinfo(responseLines[0].Split(" "));
 
