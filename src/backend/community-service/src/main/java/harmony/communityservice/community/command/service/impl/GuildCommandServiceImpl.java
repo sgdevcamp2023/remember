@@ -14,6 +14,7 @@ import harmony.communityservice.community.command.service.GuildReadCommandServic
 import harmony.communityservice.community.command.service.GuildUserCommandService;
 import harmony.communityservice.community.command.service.UserReadCommandService;
 import harmony.communityservice.community.domain.Guild;
+import harmony.communityservice.community.domain.GuildRead;
 import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.mapper.ToChannelMapper;
@@ -40,12 +41,12 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     private final ContentService contentService;
     private final ChannelCommandService channelCommandService;
     @Override
-    public void save(GuildRegistrationRequestDto requestDto, MultipartFile profile) {
+    public GuildRead save(GuildRegistrationRequestDto requestDto, MultipartFile profile) {
         String imageUrl = contentService.imageConvertUrl(profile);
         Guild guild = ToGuildMapper.convert(requestDto, imageUrl);
         guildCommandRepository.save(guild);
         GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(guild, requestDto.getManagerId());
-        guildReadCommandService.save(guildReadRequestDto);
+        GuildRead guildRead = guildReadCommandService.save(guildReadRequestDto);
         User findUser = userQueryService.findUser(requestDto.getManagerId());
         guildUserCommandService.save(guild, findUser);
         UserReadRequestDto userReadRequestDto = ToUserReadRequestDtoMapper.convert(guild, findUser);
@@ -53,6 +54,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         ChannelRegistrationRequestDto channelRegistrationRequestDto = new ChannelRegistrationRequestDto(
                 guild.getGuildId(), "기본채널", requestDto.getManagerId(), 0L, "TEXT");
         channelCommandService.registration(channelRegistrationRequestDto);
+        return guildRead;
     }
 
     @Override

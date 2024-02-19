@@ -1,6 +1,7 @@
 package harmony.communityservice.common.config;
 
 import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.community.command.repository.BoardCommandRepository;
 import harmony.communityservice.community.command.repository.CategoryCommandRepository;
 import harmony.communityservice.community.command.repository.CategoryReadCommandRepository;
@@ -124,6 +125,7 @@ public class AppCommandConfig {
     private final BoardQueryService boardQueryService;
     private final CommentQueryService commentQueryService;
     private final EmojiQueryService emojiQueryService;
+    private final ProducerService producerService;
 
     @Bean
     public UserCommandRepository userCommandRepository() {
@@ -162,7 +164,7 @@ public class AppCommandConfig {
 
     @Bean
     public GuildReadCommandService guildReadCommandService() {
-        return new GuildReadCommandServiceImpl(guildReadCommandRepository());
+        return new GuildReadCommandServiceImpl(guildReadCommandRepository(), producerService);
     }
 
     @Bean

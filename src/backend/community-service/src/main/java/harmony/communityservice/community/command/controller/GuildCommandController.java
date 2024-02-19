@@ -6,6 +6,7 @@ import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
 import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
 import harmony.communityservice.community.command.dto.GuildUpdateNicknameRequestDto;
 import harmony.communityservice.community.command.service.GuildCommandService;
+import harmony.communityservice.community.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +32,8 @@ public class GuildCommandController {
     public BaseResponse<?> registration(
             @RequestPart(value = "requestDto") @Validated GuildRegistrationRequestDto requestDto,
             @RequestPart(name = "profile", required = false) MultipartFile profile) {
-        guildCommandService.save(requestDto, profile);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK");
+        GuildRead guildRead = guildCommandService.save(requestDto, profile);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", guildRead);
     }
 
 
