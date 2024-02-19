@@ -149,7 +149,7 @@ public partial class HttpRequest
         else
             buffer = buffer.Concat(Encoding.UTF8.GetBytes(Body!)).ToArray();
 
-        System.Console.WriteLine(requestString);
+        // System.Console.WriteLine(requestString);
         return buffer;
     }
 

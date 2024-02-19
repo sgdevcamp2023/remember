@@ -53,6 +53,7 @@ public partial class EndPoint : NetworkInstance
     {
         IncreaseUsingCount();
 
+        System.Console.WriteLine("EndPoint StartAsync");
         // 설정
         _context.Value = context;
         Task timeout = Task.Delay(_connectTimeout + _requestTimeout);
