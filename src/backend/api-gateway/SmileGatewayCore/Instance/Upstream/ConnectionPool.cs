@@ -40,7 +40,7 @@ internal class ConnectionPool
         }
     }
 
-    public Socket? GetSocket(IPEndPoint endPoint, TimeSpan timeout)
+    public async Task<Socket?> GetSocket(IPEndPoint endPoint, TimeSpan timeout)
     {
         if (_sockets.TryDequeue(out Socket? socket))
         {
@@ -48,7 +48,7 @@ internal class ConnectionPool
         }
         else
         {
-            return MakeConnectSocket(endPoint, timeout).Result;
+            return await MakeConnectSocket(endPoint, timeout);
         }
     }
 

@@ -72,7 +72,7 @@ public partial class EndPoint : NetworkInstance
                     throw new NetworkException(3201);
             }
 
-            Socket? socket = _connectPool.GetSocket(IpEndPoint, _connectTimeout);
+            Socket? socket = await _connectPool.GetSocket(IpEndPoint, _connectTimeout);
             if (socket == null)
                 continue;
 
