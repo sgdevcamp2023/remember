@@ -58,36 +58,55 @@ public partial class EndPoint : NetworkInstance
         Task timeout = Task.Delay(_connectTimeout + _requestTimeout);
 
         // 서버가 죽어있다는 판단을 어떻게 할 것인가?
-        while (true)
+        // while (true)
+        // {
+        //     if (timeout.IsCompleted)
+        //     {
+        //         if (_connectPool.AliveCount == 0)
+        //         {
+        //             IsAlive = false;
+        //             _timer.Enabled = true;
+        //             throw new NetworkException(3200);
+        //         }
+        //         else
+        //             throw new NetworkException(3201);
+        //     }
+
+        //     Socket? socket = await _connectPool.GetSocket(IpEndPoint, _connectTimeout);
+        //     if (socket == null)
+        //         continue;
+
+        //     try
+        //     {
+        //         // 실행
+        //         await Send(socket, context.Request.GetStringToBytes());
+        //         _connectPool.EnqueueSocket(socket);
+        //         break;
+        //     }
+        //     catch (System.Exception)
+        //     {
+        //         _connectPool.MinusAliveCount();
+        //         await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
+        //     }
+        //     finally
+        //     {
+        //         DecreaseUsingCount();
+        //     }
+        // }
+
+        Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+
+        try
         {
-            if (timeout.IsCompleted)
-            {
-                if (_connectPool.AliveCount == 0)
-                {
-                    IsAlive = false;
-                    _timer.Enabled = true;
-                    throw new NetworkException(3200);
-                }
-                else
-                    throw new NetworkException(3201);
-            }
-
-            Socket? socket = await _connectPool.GetSocket(IpEndPoint, _connectTimeout);
-            if (socket == null)
-                continue;
-
-            try
-            {
-                // 실행
-                await Send(socket, context.Request.GetStringToBytes());
-                _connectPool.EnqueueSocket(socket);
-                break;
-            }
-            catch (System.Exception)
-            {
-                _connectPool.MinusAliveCount();
-                await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
-            }
+            // 실행
+            await Send(socket, context.Request.GetStringToBytes());
+            // _connectPool.EnqueueSocket(socket);
+        }
+        catch (System.Exception)
+        {
+            // _connectPool.MinusAliveCount();
+            // await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
+            throw new NetworkException(3200);
         }
 
         DecreaseUsingCount();

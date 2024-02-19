@@ -18,7 +18,7 @@ public partial class EndPoint : NetworkInstance
             await _connectPool.ConnectAsync(socket, IpEndPoint, _connectTimeout);
             _connectPool.EnqueueSocket(socket);
             _connectPool.AddAliveCount();
-            
+
             IsAlive = true;
         }
         catch (System.Exception e)
@@ -27,7 +27,7 @@ public partial class EndPoint : NetworkInstance
         }
 
         if(!IsAlive)
-        {
+            {
             if (_timer.Interval > _defaultTime * 60)
                 _timer.Interval = _defaultTime * 60;
             else
