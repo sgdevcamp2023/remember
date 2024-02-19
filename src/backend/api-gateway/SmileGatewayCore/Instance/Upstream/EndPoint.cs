@@ -105,12 +105,9 @@ public partial class EndPoint : NetworkInstance
 
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
-            // _connectPool.EnqueueSocket(socket);
         }
         catch (System.Exception e)
         {
-            // _connectPool.MinusAliveCount();
-            // await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
             System.Console.WriteLine("EndPoint Send Error" + e.Message);
             throw new NetworkException(3200);
         }

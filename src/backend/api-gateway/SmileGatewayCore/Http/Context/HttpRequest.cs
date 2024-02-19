@@ -111,7 +111,7 @@ public partial class HttpRequest
 
         if (temp.Length > 1)
         {
-            QueryString = "?" + temp[1];
+            QueryString = "?" + temp[1] + " ";
         }
         else
         {

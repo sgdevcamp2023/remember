@@ -39,6 +39,8 @@ public partial class HttpResponse
                 continue;
             }
 
+            if (header[0] == "Access-Control-Allow-Origin")
+                continue;
             if (header[0] == "Set-Cookie")
             {
                 if (Cookie == null)
@@ -82,7 +84,7 @@ public partial class HttpResponse
             responseString += $"{Cookie.ToString()}\r\n";
         }
 
-        if(ContentLength != -1)
+        if (ContentLength != -1)
             responseString += $"Content-Length: {ContentLength}\r\n";
         responseString += $"\r\n{Body}";
         return responseString;
