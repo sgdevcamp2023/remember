@@ -57,8 +57,6 @@ public partial class HttpResponse
                 IsChucked = true;
                 continue;
             }
-            if (header[0] == "Access-Control-Allow-Origin")
-                continue;
 
             if (header.Length > 1)
                 Header[header[0]] = header[1];
