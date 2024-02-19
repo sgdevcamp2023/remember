@@ -95,10 +95,9 @@ public partial class EndPoint : NetworkInstance
         //     }
         // }
 
-        Socket? socket = await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
+        Socket socket = _connectPool.CreateSocket();
+        await socket.ConnectAsync(IpEndPoint);
 
-        if(socket == null)
-            throw new NetworkException(3200);
         try
         {
             // 실행
