@@ -58,8 +58,7 @@ builder.Services.AddCors(options =>
                 .WithOrigins("https://127.0.0.1:3000") // 리액트 앱의 주소
                 .WithOrigins("https://localhost:3000")
                 .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
+                .AllowAnyMethod();
     });
 
     options.AddDefaultPolicy(builder =>
