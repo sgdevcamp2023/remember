@@ -111,7 +111,11 @@ public partial class HttpRequest
 
         if (temp.Length > 1)
         {
-            QueryString = temp[1];
+            QueryString = "?" + temp[1];
+        }
+        else
+        {
+            QueryString = " ";
         }
 
         Protocol = requestInfos[2];
@@ -119,7 +123,9 @@ public partial class HttpRequest
 
     private string HeaderToString()
     {
-        string requestString = $"{Method} {Path}?{QueryString} {Protocol}\r\n";
+        string requestString = $"{Method} {Path}{QueryString}{Protocol}\r\n";
+        if(QueryString != String.Empty)
+        
         requestString += $"trace-id: {TraceId}\r\n";
         requestString += $"user-id: {UserId}\r\n";
 

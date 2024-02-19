@@ -14,7 +14,7 @@ namespace SmileGatewayCore.Instance.Upstream;
 /// </summary>
 internal class Cluster
 {
-    private ClusterFilterChains _filterChains = new ClusterFilterChains();
+    private UpStreamFilterChains _filterChains = new UpStreamFilterChains();
     private List<EndPoint> endPoints = new List<EndPoint>();
     public ClusterConfig Config { get; private set; } = null!;
 
@@ -38,12 +38,6 @@ internal class Cluster
         }
 
         _filterChains.Init();
-    }
-
-    public void ChangedCluster(ClusterConfig config)
-    {
-        // 클러스터 동기화
-        
     }
 
     public async Task Run(HttpContext context)
@@ -76,8 +70,14 @@ internal class Cluster
         return endPoint;
     }
 
+    public void ChangedCluster(ClusterConfig config)
+    {
+        // 클러스터 동기화
+        
+    }
+
     public void DeleteCluster()
     {
-        
+        // 클러스터 삭제
     }
 }

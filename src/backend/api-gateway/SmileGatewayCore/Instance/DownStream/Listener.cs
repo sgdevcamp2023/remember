@@ -18,7 +18,7 @@ internal partial class Listener : NetworkInstance
 {
     private Socket _listenerSocket = null!;
     private SocketPool _socketPool = new SocketPool();
-    private ListenerFilterChains _filterChains = new ListenerFilterChains();
+    private DownStreamFilterChains _filterChains = new DownStreamFilterChains();
     private ConcurrentDictionary<string, Cluster> _clusters = new ConcurrentDictionary<string, Cluster>();
     public AsyncLocal<HttpContext?> _context = new AsyncLocal<HttpContext?>() { Value = null };
     public ClusterManager _clusterManager;
@@ -100,13 +100,13 @@ internal partial class Listener : NetworkInstance
         try
         {
             await Receive(socket);
+            socket.Close();
         }
         catch (System.Exception e)
         {
             System.Console.WriteLine(e);
         }
-        
-        socket.Close();
+
         // _socketPool.ReturnSocket(socket);
     }
 

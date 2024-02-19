@@ -5,7 +5,7 @@ using SmileGatewayCore.Utils.Logger;
 namespace SmileGatewayCore.Filter.Listner;
 
 // Request, Response의 로깅을 하는 필터
-internal class LogFilter : ListenerFilter
+internal class LogFilter : DownStreamFilter
 {
     protected override void Working(Adapter adapter, HttpContext context)
     {

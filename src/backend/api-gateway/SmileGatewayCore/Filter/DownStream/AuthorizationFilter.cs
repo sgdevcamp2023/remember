@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-internal class AuthorizationFilter : ListenerFilter
+internal class AuthorizationFilter : DownStreamFilter
 {
     // 생성 관리 벨리데이션 체크깔쥐 다 해주기
     private static JwtAuthorization _jwtAuthorization = new JwtAuthorization();

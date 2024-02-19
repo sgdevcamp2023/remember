@@ -7,9 +7,9 @@ using SmileGatewayCore.Utils.Logger;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-public class ExceptionFilter : IListenerFilterBase
+public class ExceptionFilter : IDownStreamFilterBase
 {
-    public async Task InvokeAsync(Adapter adapter, HttpContext context, ListenerDelegate next)
+    public async Task InvokeAsync(Adapter adapter, HttpContext context, DownStreamDelegate next)
     {
         try
         {

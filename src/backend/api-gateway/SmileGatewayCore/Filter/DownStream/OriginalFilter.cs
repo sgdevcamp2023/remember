@@ -4,7 +4,7 @@ using SmileGatewayCore.Instance;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-internal class OriginalFilter : ListenerFilter
+internal class OriginalFilter : DownStreamFilter
 {
     protected override void Working(Adapter adapter, HttpContext context)
     {
@@ -13,7 +13,7 @@ internal class OriginalFilter : ListenerFilter
         {
             context.Response.Header["Access-Control-Allow-Origin"].Replace("localhost", "127.0.0.1");
         }
-        
+
         if (context.Request.Header.ContainsKey("Host"))
             context.Request.Header["Host"] = adapter.ListenerAddress;
     }

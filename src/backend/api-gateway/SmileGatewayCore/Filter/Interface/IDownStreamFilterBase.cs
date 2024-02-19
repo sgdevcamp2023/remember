@@ -4,7 +4,7 @@ using SmileGatewayCore.Instance.DownStream;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-public interface IListenerFilterBase
+public interface IDownStreamFilterBase
 {
-    public Task InvokeAsync(Adapter adapter, HttpContext context, ListenerDelegate next);
+    public Task InvokeAsync(Adapter adapter, HttpContext context, DownStreamDelegate next);
 }
