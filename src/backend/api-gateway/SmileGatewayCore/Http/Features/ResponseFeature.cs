@@ -15,7 +15,7 @@ public sealed class ResponseFeature : IResponseFeature
         TraceId = string.Empty;
         UserId = string.Empty;
         Header = new HeaderDictionary();
-        ContentLength = 0;
+        ContentLength = -1;
         Body = string.Empty;
     }
 
