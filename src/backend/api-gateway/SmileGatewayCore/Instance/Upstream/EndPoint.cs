@@ -95,8 +95,10 @@ public partial class EndPoint : NetworkInstance
         //     }
         // }
 
-        Socket socket = _connectPool.CreateSocket();
+        Socket? socket = await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
 
+        if(socket == null)
+            throw new NetworkException(3200);
         try
         {
             // 실행
@@ -106,10 +108,11 @@ public partial class EndPoint : NetworkInstance
             socket.Close();
             // _connectPool.EnqueueSocket(socket);
         }
-        catch (System.Exception)
+        catch (System.Exception e)
         {
             // _connectPool.MinusAliveCount();
             // await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
+            System.Console.WriteLine("EndPoint Send Error" + e.Message);
             throw new NetworkException(3200);
         }
 
