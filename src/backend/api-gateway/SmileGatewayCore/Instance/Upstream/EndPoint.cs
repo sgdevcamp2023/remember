@@ -55,7 +55,7 @@ public partial class EndPoint : NetworkInstance
 
         // 설정
         _context.Value = context;
-        Task timeout = Task.Delay(_connectTimeout);
+        Task timeout = Task.Delay(_connectTimeout + _requestTimeout);
 
         // 서버가 죽어있다는 판단을 어떻게 할 것인가?
         while (true)
@@ -72,12 +72,9 @@ public partial class EndPoint : NetworkInstance
                     throw new NetworkException(3201);
             }
 
-            Socket? socket = await _connectPool.GetSocket(IpEndPoint, _connectTimeout);
+            Socket? socket = _connectPool.GetSocket(IpEndPoint, _connectTimeout);
             if (socket == null)
-            {
-                _connectPool.MinusAliveCount();
                 continue;
-            }
 
             try
             {
@@ -89,6 +86,7 @@ public partial class EndPoint : NetworkInstance
             catch (System.Exception)
             {
                 _connectPool.MinusAliveCount();
+                await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
             }
         }
 

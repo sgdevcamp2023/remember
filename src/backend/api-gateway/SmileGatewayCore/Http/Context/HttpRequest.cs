@@ -71,9 +71,14 @@ public partial class HttpRequest
             if (header[0] == "Origin")
             {
                 if (header[1].StartsWith("https"))
-                IsHttps = true;
+                    IsHttps = true;
                 else
                     IsHttps = false;
+            }
+
+            if(header[0] == "Keep-Alive")
+            {
+
             }
 
             if (header.Length > 1)
@@ -145,5 +150,6 @@ public partial class HttpRequest
     private void MakeDeafultHeader()
     {
         Header["Connection"] = "keep-alive";
+        Header["Keep-Alive"] = "timeout=1800";
     }
 }

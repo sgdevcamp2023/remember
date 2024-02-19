@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
+using SmileGatewayCore.Exception;
 
 namespace SmileGatewayCore.Instance.Upstream;
 
@@ -39,7 +40,7 @@ internal class ConnectionPool
         }
     }
 
-    public async Task<Socket?> GetSocket(IPEndPoint endPoint, TimeSpan timeout)
+    public Socket? GetSocket(IPEndPoint endPoint, TimeSpan timeout)
     {
         if (_sockets.TryDequeue(out Socket? socket))
         {
@@ -47,23 +48,8 @@ internal class ConnectionPool
         }
         else
         {
-            if (AliveCount >= Capacity)
-                return null;
-
-            Socket newSocket = CreateSocket();
-            try
-            {
-                await ConnectAsync(newSocket, endPoint, timeout);
-                AddAliveCount();
-                return socket;
-            }
-            catch (System.Exception e)
-            {
-                System.Console.WriteLine(e.Message);
-            }
+            return MakeConnectSocket(endPoint, timeout).Result;
         }
-
-        return null;
     }
 
     public void AddAliveCount()
@@ -74,7 +60,7 @@ internal class ConnectionPool
 
     public void MinusAliveCount()
     {
-        if(Interlocked.CompareExchange(ref count, 0, 0) > 0)
+        if (Interlocked.CompareExchange(ref count, 0, 0) > 0)
             Interlocked.Decrement(ref count);
     }
 
@@ -98,6 +84,28 @@ internal class ConnectionPool
             throw new TimeoutException();
 
         if (socket.Connected == false)
-            throw new SocketException((int)SocketError.ConnectionRefused);
+            throw new NetworkException(3200);
+    }
+
+    public async Task<Socket?> MakeConnectSocket(IPEndPoint endPoint, TimeSpan timeout)
+    {
+
+        Socket socket = CreateSocket();
+        try
+        {
+            if (AliveCount >= Capacity)
+                return null;
+            
+            await ConnectAsync(socket, endPoint, timeout);
+            AddAliveCount();
+
+            return socket;
+        }
+        catch
+        {
+            socket.Dispose();
+        }
+
+        return null;
     }
 }

@@ -62,7 +62,7 @@ public abstract class NetworkInstance : INetworkInstance
             {
                 int recvLen = await recvTask;
                 if (recvLen <= 0)
-                    throw new SocketException((int)SocketError.ConnectionReset);
+                    throw new NetworkException(3200);
 
                 await OnReceive(socket, buffer, recvLen);
             }
@@ -73,7 +73,7 @@ public abstract class NetworkInstance : INetworkInstance
         {
             System.Console.WriteLine(e.Message);
             Disconnect(socket);
-            throw new NetworkException(3200);
+            throw;
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class NetworkInstance : INetworkInstance
 
             int sendLen = await sendTask;
             if (sendLen <= 0)
-                throw new SocketException((int)SocketError.ConnectionReset);
+                throw new NetworkException(3200);
 
             await OnSend(socket, sendLen);
         }
@@ -101,7 +101,7 @@ public abstract class NetworkInstance : INetworkInstance
         {
             System.Console.WriteLine(e.Message);
             Disconnect(socket);
-            throw new NetworkException(3200);
+            throw;
         }
     }
 
@@ -112,7 +112,7 @@ public abstract class NetworkInstance : INetworkInstance
             System.Console.WriteLine("Disconnect");
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
-            
+
             // await socket.DisconnectAsync(reuseSocket: true);
         }
         catch (System.Exception)
