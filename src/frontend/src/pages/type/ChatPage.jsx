@@ -8,6 +8,9 @@ import CurrentStore from "../../store/CurrentStore";
 
 const ChatPage = () => {
   const MAX_MESSAGE_LENGTH = 500; // 최대 메시지 길이
+  const MAX_FILE_COUNT = 5; // 최대 파일 개수 제한
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 최대 파일 크기 제한 (10MB)
+  
   const [showMessage, setShowMessage] = useState(false); // 메시지 표시 여부 상태
 
   const USER_ID = useAuthStore(state => state.USER_ID);
@@ -28,7 +31,7 @@ const ChatPage = () => {
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
 
   const [fileInputVisible, setFileInputVisible] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   useEffect(() => {
     // 페이지 로딩 시 메시지 불러오기
@@ -41,7 +44,7 @@ const ChatPage = () => {
     if (hasMoreData && CURRENT_VIEW_CHANNEL) {
       try {
         setLoading(true); 
-        const response = await axios.get(`http://34.22.109.45:7000/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
+        const response = await axios.get(`http://34.22.109.45:4000/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
         const newMessages = response.data.content.reverse();
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
@@ -180,17 +183,25 @@ const ChatPage = () => {
     }
   };
 
-
-
   /* 파일 업로드 처리 */
-
   const toggleFileInput = () => {
     setFileInputVisible(!fileInputVisible);
   };
 
   const handleFileInputChange = (e) => {
-    console.log("파일 체크", e.target.files[0]);
-    setSelectedFile(e.target.files[0]);
+    const files = Array.from(e.target.files);
+    if (files.length + selectedFiles.length > MAX_FILE_COUNT) {
+      alert(`최대 ${MAX_FILE_COUNT}개의 파일까지만 업로드할 수 있습니다.`);
+      return;
+    }
+
+    const totalSize = files.reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > MAX_FILE_SIZE) {
+      alert(`파일 크기는 최대 ${MAX_FILE_SIZE / (1024 * 1024)}MB까지만 가능합니다.`);
+      return;
+    }
+
+    setSelectedFiles([...selectedFiles, ...files]);
   };
 
   const handleFileUpload = async () => {
@@ -209,10 +220,14 @@ const ChatPage = () => {
     const jsonMsg = JSON.stringify(msg);
     const communityMsg = new Blob([jsonMsg], { type: "application/json" });
     formData.append("communityMessageRequest", communityMsg);
-    formData.append('files', selectedFile);
+
+    // 모든 선택된 파일을 formData에 추가
+    for (let i = 0; i < selectedFiles.length; i++) {
+      formData.append('files', selectedFiles[i]);
+    }
   
     try {
-      const response = await axios.post('http://34.22.109.45:7000/api/chat-service/community/message/file', formData, {
+      const response = await axios.post('http://34.22.109.45:4000/api/chat-service/community/message/file', formData, {
         headers: {
           'content-type' : 'multipart/form-data',
         }
@@ -222,9 +237,12 @@ const ChatPage = () => {
       console.error('파일 업로드 실패:', error);
     }
 
-    setSelectedFile(null);
+    setSelectedFiles([]); // 선택된 파일 초기화
   };
 
+  const getFileExtension = (filename) => {
+    return filename.split('.').pop().toLowerCase();
+  };
 
   const formatTime = (timestamp) => {
     const date = new Date(timestamp); 
@@ -236,10 +254,6 @@ const ChatPage = () => {
     const meridiem = date.getHours() >= 12 ? '오후' : '오전';
     
     return `${formattedDate}${meridiem} ${formattedTime}`;
-  };
-
-  const getFileExtension = (filename) => {
-    return filename.split('.').pop().toLowerCase();
   };
 
   return (
@@ -300,7 +314,7 @@ const ChatPage = () => {
       <div className="input-container">
         {fileInputVisible && (
           <div>
-            <input type="file" onChange={handleFileInputChange} />
+            <input type="file" onChange={handleFileInputChange} multiple />
             <button onClick={handleFileUpload}>파일 업로드</button>
           </div>
         )}
