@@ -12,6 +12,8 @@ const RedirectPage = () => {
 
   useEffect(() => {
     if (USER_ID && ACCESS_TOKEN) {
+      // 서버한테 주소 물어보기 추가해야됨.
+      // "http://34.22.109.45:4000/api/chat/select/chat-server"
       const socket = new SockJS("http://34.22.109.45:7000/ws-stomp"); // SockJS 사용
       const clientSocket = new StompJs.Client({
         webSocketFactory: () => socket,
