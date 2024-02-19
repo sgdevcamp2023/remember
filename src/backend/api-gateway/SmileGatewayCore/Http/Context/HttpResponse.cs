@@ -55,7 +55,6 @@ public partial class HttpResponse
             if (header[0] == "Transfer-Encoding" && header[1] == "chunked")
             {
                 IsChucked = true;
-                continue;
             }
 
             if (header.Length > 1)
