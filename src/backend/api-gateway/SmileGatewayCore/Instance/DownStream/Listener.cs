@@ -114,7 +114,7 @@ internal partial class Listener : NetworkInstance
     {
         if (recvLen == 0)
         {
-            Disconnect(socket);
+            await Disconnect(socket);
             return;
         }
 

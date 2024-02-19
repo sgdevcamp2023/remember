@@ -95,12 +95,15 @@ public partial class EndPoint : NetworkInstance
         //     }
         // }
 
-        Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+        Socket socket = _connectPool.CreateSocket();
 
         try
         {
             // 실행
             await Send(socket, context.Request.GetStringToBytes());
+
+            socket.Shutdown(SocketShutdown.Both);
+            socket.Close();
             // _connectPool.EnqueueSocket(socket);
         }
         catch (System.Exception)
