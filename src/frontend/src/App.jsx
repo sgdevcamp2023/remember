@@ -6,6 +6,7 @@ import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 import RedirectPage from "./pages/RedirectPage";
 import FriendPage from "./pages/dm/FriendPage";
 import LoginPage from "./pages/LoginPage";
+import DmChatPage from "./pages/type/DmChatPage";
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
         {/* Guild and Channel */}
         <Route path="/channels" element={<Layout />}>
           <Route path={`:guildId/:channelId`} element={<MainPage />} />
-          <Route path={`@me`} element={<FriendPage />} />
+          <Route path="@me" element={<FriendPage />} />
+          <Route path="@me/:roomId" element={<DmChatPage />} />
         </Route>
         {/* Catch all - replace with 404 component if you want */}
         {/* <Route path="*" element={<Navigate to="/" replace />} /> */}

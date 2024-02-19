@@ -13,8 +13,8 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
-    "sockjs-client": "^1.6.1",
     "socket.io-client": "^4.7.4",
+    "sockjs-client": "^1.6.1",
     "styled-components": "^6.1.8",
     "web-vitals": "^2.1.4",
     "zustand": "^4.5.0"
