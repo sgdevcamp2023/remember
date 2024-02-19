@@ -81,7 +81,9 @@ public partial class HttpResponse
         {
             responseString += $"{Cookie.ToString()}\r\n";
         }
-        responseString += $"Content-Length: {ContentLength}\r\n";
+
+        if(ContentLength != -1)
+            responseString += $"Content-Length: {ContentLength}\r\n";
         responseString += $"\r\n{Body}";
         return responseString;
     }
