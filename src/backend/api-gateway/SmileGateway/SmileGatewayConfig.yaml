@@ -62,6 +62,7 @@ clusters:
         path: /ApiGateway/ClusterTestFilter.cs
     authorization: true
     connect-timeout: 5000
+    request-timeout: 1000
 
   - name: chat-service
     protocol: http
@@ -72,3 +73,4 @@ clusters:
     custom-filters: 
     authorization: false
     connect-timeout: 5000
+    request-timeout: 1000

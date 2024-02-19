@@ -17,6 +17,8 @@ public partial class EndPoint : NetworkInstance
             Socket socket = _connectPool.CreateSocket();
             await _connectPool.ConnectAsync(socket, IpEndPoint, _connectTimeout);
             _connectPool.EnqueueSocket(socket);
+            _connectPool.AddAliveCount();
+            
             IsAlive = true;
         }
         catch (System.Exception e)

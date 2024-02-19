@@ -11,7 +11,7 @@ public class Adapter
     internal AddressConfig Address { get; set; } = null!;
     internal Cluster Cluster { get; set; } = null!;
     internal string UserIP { get; set; } = null!;
-    internal JwtValidator JwtValidator { get => Authorization!.jwtValidator; }
+    internal JwtValidator JwtValidator { get => Authorization!.JwtValidator; }
     internal Adapter(Authorization? auth, List<string> disallowHeaders, AddressConfig address, Cluster cluster, string userIP)
     {
         Authorization = auth;

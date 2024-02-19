@@ -20,7 +20,7 @@ internal class JwtAuthorization : IJwtAuthorization
 
     public JwtResponseModel CreateToken(Adapter adapter, string body)
     {
-        if (adapter.Authorization!.jwtValidator == null)
+        if (adapter.Authorization!.JwtValidator == null)
             throw new ConfigException(3100);
 
         // Claim 생성
@@ -33,7 +33,7 @@ internal class JwtAuthorization : IJwtAuthorization
         };
 
         // 토큰 생성
-        string accessToken = "Bearer " + CreateAccessToken(adapter.Authorization.jwtValidator, claims);
+        string accessToken = "Bearer " + CreateAccessToken(adapter.Authorization.JwtValidator, claims);
         string refreshToken = CreateRefreshToken();
         
         // 레디스에 토큰 저장

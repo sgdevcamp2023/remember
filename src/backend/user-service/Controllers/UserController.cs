@@ -1,7 +1,6 @@
 using Castle.DynamicProxy;
 using Microsoft.AspNetCore.Mvc;
 using user_service.Business.User.dto;
-using user_service.common.exception;
 using user_service.intercepter;
 using user_service.logger;
 using user_service.user.dto;

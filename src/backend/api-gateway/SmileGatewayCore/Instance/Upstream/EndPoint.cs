@@ -74,7 +74,10 @@ public partial class EndPoint : NetworkInstance
 
             Socket? socket = await _connectPool.GetSocket(IpEndPoint, _connectTimeout);
             if (socket == null)
+            {
+                _connectPool.MinusAliveCount();
                 continue;
+            }
 
             try
             {
@@ -85,7 +88,6 @@ public partial class EndPoint : NetworkInstance
             }
             catch (System.Exception)
             {
-                System.Console.WriteLine("Dead Socket");
                 _connectPool.MinusAliveCount();
             }
         }

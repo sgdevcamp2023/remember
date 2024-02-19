@@ -72,7 +72,7 @@ public abstract class NetworkInstance : INetworkInstance
         catch (System.Exception e)
         {
             System.Console.WriteLine(e.Message);
-            await Disconnect(socket);
+            Disconnect(socket);
             throw new NetworkException(3200);
         }
     }
@@ -100,19 +100,20 @@ public abstract class NetworkInstance : INetworkInstance
         catch (System.Exception e)
         {
             System.Console.WriteLine(e.Message);
-            await Disconnect(socket);
+            Disconnect(socket);
             throw new NetworkException(3200);
         }
     }
 
-    public async Task Disconnect(Socket socket)
+    public void Disconnect(Socket socket)
     {
         try
         {
             System.Console.WriteLine("Disconnect");
             socket.Shutdown(SocketShutdown.Both);
-
-            await socket.DisconnectAsync(reuseSocket: true);
+            socket.Close();
+            
+            // await socket.DisconnectAsync(reuseSocket: true);
         }
         catch (System.Exception)
         {

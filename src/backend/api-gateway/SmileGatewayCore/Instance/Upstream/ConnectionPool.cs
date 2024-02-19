@@ -66,9 +66,17 @@ internal class ConnectionPool
         return null;
     }
 
-    public void AddAliveCount() => Interlocked.Increment(ref count);
+    public void AddAliveCount()
+    {
+        if (Interlocked.CompareExchange(ref count, Capacity, Capacity) <= Capacity)
+            Interlocked.Increment(ref count);
+    }
 
-    public void MinusAliveCount() => Interlocked.Decrement(ref count);
+    public void MinusAliveCount()
+    {
+        if(Interlocked.CompareExchange(ref count, 0, 0) > 0)
+            Interlocked.Decrement(ref count);
+    }
 
     public Socket CreateSocket()
     {
