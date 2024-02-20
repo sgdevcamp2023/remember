@@ -8,7 +8,7 @@ import upload from "../assets/icons/upload.svg";
 import CommunityStore from "../store/CommunityStore";
 
 export default function Guilds() {
-  const apiAddr = "http://localhost:8000";
+  const apiAddr = "https://0chord.store";
   const commonImageUrl =
     "https://storage.googleapis.com/remember-harmony/d68c3d6c-4683-4ddf-892b-8a73e3678145";
   // const userId = localStorage.getItem("user_id");
