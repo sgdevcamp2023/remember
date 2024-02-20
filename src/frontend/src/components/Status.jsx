@@ -39,22 +39,26 @@ const Status = () => {
   );
   return (
     <div className="status">
-      <ul>
-        <p className="status-state">온라인</p>
-        {onlineUsers.map((userState, index) => (
-          <div className="status-container" key={index}>
-            <img className="status-img" src={userState.profile} alt="" />
-            <span className="status-name">{userState.userName}</span>
-          </div>
-        ))}
-        <p className="status-state">오프라인</p>
-        {offlineUsers.map((userState, index) => (
-          <div className="status-container" key={index}>
-            <img className="status-img" src={userState.profile} alt="" />
-            <span className="status-name">{userState.userName}</span>
-          </div>
-        ))}
-      </ul>
+      {window.location.pathname === "/channels/@me" ? (
+        <></>
+      ) : (
+        <ul>
+          <p className="status-state">온라인</p>
+          {onlineUsers.map((userState, index) => (
+            <div className="status-container" key={index}>
+              <img className="status-img" src={userState.profile} alt="" />
+              <span className="status-name">{userState.userName}</span>
+            </div>
+          ))}
+          <p className="status-state">오프라인</p>
+          {offlineUsers.map((userState, index) => (
+            <div className="status-container" key={index}>
+              <img className="status-img" src={userState.profile} alt="" />
+              <span className="status-name">{userState.userName}</span>
+            </div>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

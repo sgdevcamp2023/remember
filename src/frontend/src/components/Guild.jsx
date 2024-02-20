@@ -47,23 +47,24 @@ const Guild = () => {
           setMessage(parsedMessage);
         }
       };
-  
+
       if (mainSocket !== null) {
         //처음 구독
-        socketIdRef.current = mainSocket.subscribe(`/topic/guild/${CURRENT_VIEW_GUILD}`, handleReceiveMessage);
-        console.log(socketIdRef.current)
+        socketIdRef.current = mainSocket.subscribe(
+          `/topic/guild/${CURRENT_VIEW_GUILD}`,
+          handleReceiveMessage
+        );
+        console.log(socketIdRef.current);
       }
     }
 
-    
     return () => {
       if (mainSocket !== null) {
         mainSocket.unsubscribe(socketIdRef.current.id);
-        socketIdRef.current = '';
+        socketIdRef.current = "";
       }
-    }
-  }, [CURRENT_VIEW_GUILD]); 
-  
+    };
+  }, [CURRENT_VIEW_GUILD]);
 
   useEffect(() => {
     const fetchData = async () => {
