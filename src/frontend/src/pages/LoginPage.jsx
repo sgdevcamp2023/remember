@@ -53,6 +53,7 @@ export default function LoginPage() {
 
     // 여기서 logInRequest 함수를 호출
     logInRequest(email, password).then((response) => {
+      console.log(response);
       if (response.status === 200) {
         const { UserId, AccessToken, RefreshToken } = response.data;
         setAccessToken(AccessToken);

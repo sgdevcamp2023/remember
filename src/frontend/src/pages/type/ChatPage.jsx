@@ -61,6 +61,7 @@ const ChatPage = () => {
       try {
         setLoading(true); 
         const response = await axios.get(`https://0chord.store/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
+        console.log("서버로부터 받은 데이터", response.data);
         newMessages = response.data.content.reverse();
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
