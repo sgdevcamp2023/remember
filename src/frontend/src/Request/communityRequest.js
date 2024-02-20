@@ -1,8 +1,8 @@
 import axios from "axios";
 import AuthStore from "../store/AuthStore";
 
-// const CommunityServerAddr = "https://34.22.109.45:8000/";
 const CommunityServerAddr = "https://0chord.store/";
+// const CommunityServerAddr = "http://34.22.109.45:4000/";
 
 let accessToken = AuthStore.getState().ACCESS_TOKEN;
 
@@ -90,6 +90,18 @@ export const getUserStateAndVoice = async (CURRENT_VIEW_GUILD, USER_ID) => {
 export const createChannel = async (data) => {
   return await axios.post(
     CommunityServerAddr + "api/community/registration/category/channel",
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const createInvitationCode = async (data) => {
+  return await axios.post(
+    CommunityServerAddr + "api/community/invitation/guild",
     data,
     {
       headers: {
