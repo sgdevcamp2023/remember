@@ -11,6 +11,7 @@ import GuildModal from "./GuildModal";
 import GuildSeperator from "./GuildSeperator";
 import ChatStore from "../store/ChatStore";
 import StatusStore from "../store/StatusStore";
+import ChannelStore from "../store/ChannelStore";
 import { getGuildListRequest } from "../Request/communityRequest";
 
 const Guild = () => {
@@ -18,10 +19,11 @@ const Guild = () => {
   const { GUILD_LIST, setGuildList } = CommunityStore();
   const { CURRENT_VIEW_GUILD } = CurrentStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { setMessage } = ChatStore();
   const mainSocket = useSocketStore((state) => state.MAIN_SOCKET);
   const socketIdRef = useRef("");
+  const { setMessage } = ChatStore();
   const { setStatus } = StatusStore();
+  const { setChannel } = ChannelStore();
 
   const appendServer =
     "https://storage.googleapis.com/remember-harmony/fe2f6651-10c4-444c-a336-3740dd4a5890";
@@ -45,6 +47,11 @@ const Guild = () => {
           parsedMessage.type === "delete"
         ) {
           setMessage(parsedMessage);
+        } else if (
+          parsedMessage.type === "CREATE-CHANNEL"
+        ) {
+          
+          setChannel(parsedMessage);
         }
       };
 

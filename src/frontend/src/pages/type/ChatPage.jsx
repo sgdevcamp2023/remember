@@ -60,7 +60,7 @@ const ChatPage = () => {
     if (hasMoreData && CURRENT_VIEW_CHANNEL) {
       try {
         setLoading(true); 
-        const response = await axios.get(`https://0chord.store/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
+        const response = await axios.get(`https://0chord.store/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=20`);
         newMessages = response.data.content.reverse();
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {

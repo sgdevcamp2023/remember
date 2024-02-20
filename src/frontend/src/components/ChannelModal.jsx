@@ -1,16 +1,21 @@
 import Modal from "react-modal";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import CurrentStore from "../store/CurrentStore";
 import {createChannel} from "../Request/communityRequest";
+import ChannelStore from "../store/ChannelStore";
+import CommunityStore from "../store/CommunityStore";
+import AuthStore from "../store/AuthStore";
 
 const ChannelModal = (props) => {
 
-  const userId = 1;
   const {
     CURRENT_VIEW_GUILD,
   } = CurrentStore();
+  const {CHANNEL} = ChannelStore();
   const [Channel, setChannel] = useState("");
   const [ChannelType, setChannelType] = useState("");
+  const {CHANNEL_LIST, setChannelList} = CommunityStore();
+  const USER_ID = AuthStore(state => state.USER_ID);
 
   const channelNameHandler = (e) => {
     setChannel(e.currentTarget.value);
@@ -24,7 +29,7 @@ const ChannelModal = (props) => {
     const data = {
       guildId: CURRENT_VIEW_GUILD,
       name: Channel,
-      userId: userId,
+      userId: USER_ID,
       categoryId: 0,
       type: ChannelType,
     };
@@ -37,6 +42,21 @@ const ChannelModal = (props) => {
     makeChannel(data);
     props.closeModal();
   };
+
+  useEffect(() => {
+    if (CHANNEL) {
+      console.log("modal",CHANNEL);
+      let data = {
+        categoryId: CHANNEL.categoryId,
+        name: CHANNEL.channelName,
+        channelReadId: CHANNEL.channelReadId,
+        type : CHANNEL.channelType,
+        guildId: CHANNEL.guildId
+      };
+      CHANNEL_LIST.push(data);
+      setChannelList(CHANNEL_LIST);
+    }
+  }, [CHANNEL]);
 
   return (
     <div>
