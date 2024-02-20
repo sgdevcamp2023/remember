@@ -74,7 +74,7 @@ public class MessageConsumerService {
             communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
             communityEventInfo.put("guildReadId", String.valueOf(eventDto.getGuildReadId()));
             communityEventInfo.put("userId", String.valueOf(eventDto.getUserId()));
-            communityEventInfo.put("name", eventDto.getName());
+            communityEventInfo.put("channelName", eventDto.getChannelName());
             communityEventInfo.put("profile", eventDto.getProfile());
             communityEventInfo.put("type", "CREATE-GUILD");
         } else if (eventDto.getType().equals("DELETE-GUILD")) {
