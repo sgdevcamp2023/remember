@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 const AuthStore = create((set) => ({
-  ACCESS_TOKEN: null,
-  USER_ID: null,
+  ACCESS_TOKEN: "null",
+  USER_ID: 4,
   FRIEND_LIST: [],
   USER_NAME: null,
   USER_PROFILE: null,
@@ -15,9 +15,9 @@ const AuthStore = create((set) => ({
   removeFriendList: () => set({ FRIEND_LIST: [] }),
   deleteFriend: (friendList, friendEmail) => set({ FRIEND_LIST: friendList.filter(friend => friend.email !== friendEmail)}),
   setUserName: (userName) => set({ USER_NAME: userName }),
-  removeUserName: () => set({ USER_NAME: null }),
+  removeUserName: () => set({ USER_NAME: "" }),
   setUserProfile: (userProfile) => set({ USER_PROFILE: userProfile }),
-  removeUserProfile: () => set({ USER_PROFILE: null }),
+  removeUserProfile: () => set({ USER_PROFILE: "" }),
 }));
 
 export default AuthStore;
