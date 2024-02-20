@@ -16,7 +16,9 @@ const DmChatPage = () => {
 
   const [showMessage, setShowMessage] = useState(false); // 메시지 표시 여부 상태
 
-  const USER_ID = useAuthStore(state => state.USER_ID);
+//  const USER_ID = useAuthStore(state => state.USER_ID);
+  const { USER_ID, USER_NAME, USER_PROFILE } = useAuthStore();
+
   const [inputMessage, setInputMessage] = useState(''); 
   const [messages, setMessages] = useState([]); // 메시지 목록 상태 관리
   const [editingMessage, setEditingMessage] = useState({ messageId: null, message: '' }); 
@@ -162,9 +164,9 @@ const DmChatPage = () => {
         roomId: roomId,
         userId: USER_ID,
         parentId: 0,
-        profileImage: "qwedfw",
+        profileImage: USER_PROFILE,
         type: "send",
-        senderName: "메로나",
+        senderName: USER_NAME,
         message: inputMessage
       }),
     });

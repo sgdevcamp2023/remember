@@ -13,7 +13,8 @@ const ChatPage = () => {
   
   const [showMessage, setShowMessage] = useState(false); // 입력 메시지 제한 상태
 
-  const USER_ID = useAuthStore(state => state.USER_ID);
+  const { USER_ID, USER_NAME, USER_PROFILE } = useAuthStore();
+  // useAuthStore(state => state.USER_ID);
   const [inputMessage, setInputMessage] = useState(''); // 입력 메시지 상태
   const [messages, setMessages] = useState([]); // 메시지 목록 상태 관리
   const [editingMessage, setEditingMessage] = useState({ messageId: null, message: '' }); 
@@ -139,9 +140,9 @@ const ChatPage = () => {
         channelId: CURRENT_VIEW_CHANNEL,
         userId: USER_ID,
         parentId: 0,
-        profileImage: "qwedfw",
+        profileImage: USER_PROFILE,
         type: "send",
-        senderName: "바나나",
+        senderName: USER_NAME,
         message: inputMessage
       }),
     });
