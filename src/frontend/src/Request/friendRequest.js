@@ -1,7 +1,7 @@
 import axios from "axios";
 import AuthStore from "../store/AuthStore";
 
-const FriendServerAddr = "http://127.0.0.1:4000/api/user/friend/";
+const FriendServerAddr = "https://0chord.store/api/user/friend/";
 
 export const GetFriendListRequest = async () => {
   return await axios

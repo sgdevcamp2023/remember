@@ -1,7 +1,7 @@
 import axios from "axios";
 import AuthStore from "../store/AuthStore";
 
-const UserServerAddr = "http://127.0.0.1:4000/api/user/";
+const UserServerAddr = "https://0chord.store/api/user/";
 
 export const GetUserInfoRequest = async () => {
     return await axios
