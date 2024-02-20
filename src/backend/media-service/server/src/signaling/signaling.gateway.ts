@@ -24,7 +24,12 @@ import { KafkaService } from 'src/kafka/kafka.service';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: [
+      'https://localhost:3000',
+      'https://10.99.4.27:3000',
+      'http://localhost:3000',
+      'http://10.99.4.27:3000',
+    ],
     credentials: true,
   },
 })
@@ -43,7 +48,9 @@ export class SignalingGateway
     private kafkaService: KafkaService,
   ) {
     setInterval(() => {
-      console.log(this.voiceChannelStatusMap);
+      if (this.voiceChannelStatusMap.size > 0) {
+        console.log(this.voiceChannelStatusMap);
+      }
     }, 10000);
   }
 
