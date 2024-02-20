@@ -11,10 +11,10 @@ const ChatPage = () => {
   const MAX_FILE_COUNT = 5; // 최대 파일 개수 제한
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 최대 파일 크기 제한 (10MB)
   
-  const [showMessage, setShowMessage] = useState(false); // 메시지 표시 여부 상태
+  const [showMessage, setShowMessage] = useState(false); // 입력 메시지 제한 상태
 
   const USER_ID = useAuthStore(state => state.USER_ID);
-  const [inputMessage, setInputMessage] = useState(''); 
+  const [inputMessage, setInputMessage] = useState(''); // 입력 메시지 상태
   const [messages, setMessages] = useState([]); // 메시지 목록 상태 관리
   const [editingMessage, setEditingMessage] = useState({ messageId: null, message: '' }); 
   const mainSocket = useSocketStore(state => state.MAIN_SOCKET); 
@@ -33,10 +33,26 @@ const ChatPage = () => {
   const [fileInputVisible, setFileInputVisible] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
 
+  let [newMessages, setNewMessages] = useState([]);
+                       
+  useEffect(() => {
+    // 채널이 바뀔때 초기화 해주는 작업
+    console.log("CURRENT_VIEW_CHANNEL", CURRENT_VIEW_CHANNEL);
+    setPage(0);
+    setMessages([]);
+    setHasMoreData(true);
+  }, [CURRENT_VIEW_CHANNEL]); 
+
+  useEffect(() => {
+    fetchScrollMessages();
+  }, [CURRENT_VIEW_CHANNEL]);
+
   useEffect(() => {
     // 페이지 로딩 시 메시지 불러오기
     console.log("CURRENT_VIEW_CHANNEL", CURRENT_VIEW_CHANNEL);
-    fetchScrollMessages();
+    if (page > 0) {
+      fetchScrollMessages();
+    }
   }, [page]); 
 
   // 메시지 불러오기
@@ -45,8 +61,8 @@ const ChatPage = () => {
       try {
         setLoading(true); 
         const response = await axios.get(`https://0chord.store/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
-        console.log(response.data.content);
-        const newMessages = response.data.content.reverse();
+        console.log("서버로부터 받은 데이터", response.data);
+        newMessages = response.data.content.reverse();
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
           setHasMoreData(false);
@@ -57,6 +73,7 @@ const ChatPage = () => {
         console.error('Error fetching messages:', error);
       } finally {
         setLoading(false); 
+        setNewMessages([]);
       }
     }
   };
@@ -228,7 +245,7 @@ const ChatPage = () => {
     }
   
     try {
-      const response = await axios.post('http://34.22.109.45:4000/api/chat-service/community/message/file', formData, {
+      const response = await axios.post('https://0chord.store/api/chat-service/community/message/file', formData, {
         headers: {
           'content-type' : 'multipart/form-data',
         }

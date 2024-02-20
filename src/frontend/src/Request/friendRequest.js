@@ -22,11 +22,14 @@ export const GetFriendListRequest = async () => {
 
 export const GetFriendSendListRequest = async () => {
   return await axios
-    .get(FriendServerAddr + `request/send-list/${AuthStore.getState().USER_ID}`, {
-      headers: {
-        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
-      },
-    })
+    .get(
+      FriendServerAddr + `request/send-list/${AuthStore.getState().USER_ID}`,
+      {
+        headers: {
+          Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
+        },
+      }
+    )
     .then((response) => {
       return response;
     })
@@ -38,11 +41,14 @@ export const GetFriendSendListRequest = async () => {
 
 export const GetFriendReceiveListRequest = async () => {
   return await axios
-    .get(FriendServerAddr + `request/receive-list/${AuthStore.getState().USER_ID}`, {
-      headers: {
-        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
-      },
-    })
+    .get(
+      FriendServerAddr + `request/receive-list/${AuthStore.getState().USER_ID}`,
+      {
+        headers: {
+          Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
+        },
+      }
+    )
     .then((response) => {
       return response;
     })
@@ -82,7 +88,7 @@ export const PostAcceptFriendReqeust = async (data) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
       return error.response;
     });
-}
+};
 
 export const PostRefuseFriendReqeust = async (data) => {
   return await axios
@@ -115,7 +121,7 @@ export const CancleAddFriendRequest = async (data) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error.response);
       return error.response;
     });
-}
+};
 
 export const DeleteFriendRequest = async (data) => {
   return await axios
@@ -132,4 +138,4 @@ export const DeleteFriendRequest = async (data) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
       return error.response;
     });
-}
+};

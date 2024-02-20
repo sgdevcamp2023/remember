@@ -35,7 +35,7 @@ export const FriendList = ({ friend }) => {
   return (
     <List>
       <ProfileBox>
-        <img src={(friend.profile !== "") ? friend.profile : defaultImage}
+        <img src={friend.profile}
           alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
         <span>{friend.name}</span>
       </ProfileBox>
@@ -87,7 +87,7 @@ export const AddReceiveList = ({ friend }) => {
   return (
     <List>
       <ProfileBox>
-        <img src={(friend.profile === "") ? friend.profile : defaultImage}
+        <img src={(friend.profileUrl === "") ? friend.profileUrl : defaultImage}
           alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
         <span>{friend.name}</span>
       </ProfileBox>
@@ -121,7 +121,7 @@ export const AddSendList = ({ friend }) => {
   return (
     <List>
       <ProfileBox>
-        <img src={(friend.profile === "") ? friend.profile : defaultImage}
+        <img src={friend.profile}
           alt={friend.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
         <span>{friend.name}</span>
       </ProfileBox>

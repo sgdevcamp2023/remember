@@ -8,13 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import Modal from "react-modal";
 import upload from "../../assets/icons/upload.svg";
 
-const defaultImage = "https://storage.googleapis.com/remember-harmony/d68c3d6c-4683-4ddf-892b-8a73e3678145";
-
 export const MyInfoView = () => {
     const navigate = useNavigate();
     const [newName, setNewName] = useState('');
 
-    const { setAccessToken, setUserId } = AuthStore();
+    const { setAccessToken, setUserId, setUserName, setUserProfile } = AuthStore();
     const [isImageModalOpen, setImageModalOpen] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
 
@@ -151,8 +149,13 @@ export const MyInfoView = () => {
 
     useEffect(() => {
         GetUserInfoRequest().then((response) => {
-            if (response) {
-                setMyInfo(response);
+            if (response.status === 200) {
+                setMyInfo(response.data);
+                setUserName(response.data.name);
+                setUserProfile(response.data.profile);
+            }
+            else {
+                alert(response.data.description);
             }
         }).catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
@@ -163,7 +166,7 @@ export const MyInfoView = () => {
         <div>
             <h1>내 정보</h1>
             <ProfileInfoDiv>
-                <img src={(MyInfo.profile !== "") ? MyInfo.profile : defaultImage} alt="profile" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                <img src={MyInfo.profile} alt="profile" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
                 <ProfileButton onClick={openImageModal}>프로필 변경</ProfileButton>
             </ProfileInfoDiv>
             <Modal
