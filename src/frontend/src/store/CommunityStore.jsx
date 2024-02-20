@@ -8,6 +8,7 @@ const CommunityStore = create((set) => ({
   USER_STATE_MAP: {},
   VOICE_USER_STATE_MAP: {},
   CHANNEL_MODAL: false,
+  INVITATION_CODE: "",
 
   setGuildList: (guildList) => set({GUILD_LIST: guildList}),
   removeGuildList: () => set({GUILD_LIST: []}),
@@ -23,6 +24,7 @@ const CommunityStore = create((set) => ({
   removeVoiceUserStateMap: () => set({VOICE_USER_STATE_MAP: {}}),
   setChannelModalOpen: (modal) => set({CHANNEL_MODAL: modal}),
   setChannelModalClose: (modal) => set({CHANNEL_MODAL: modal}),
+  setInvitationCode: (invitationCode) => set({CHANNEL_MODAL: invitationCode})
 }));
 
 export default CommunityStore;
