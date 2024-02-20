@@ -82,10 +82,11 @@ public class MessageConsumerService {
             communityEventInfo.put("type", "DELETE-GUILD");
         } else if (eventDto.getType().equals("CREATE-CHANNEL")) {
             communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
+            communityEventInfo.put("name", eventDto.getName());
             communityEventInfo.put("channelType", eventDto.getChannelType());
             communityEventInfo.put("channelReadId", String.valueOf(eventDto.getChannelReadId()));
             communityEventInfo.put("categoryId", String.valueOf(eventDto.getCategoryId()));
-            communityEventInfo.put("type", "CREATE-CHANNEL");
+            communityEventInfo.put("type", eventDto.getType());
         } else if (eventDto.getType().equals("DELETE-CHANNEL")) {
             communityEventInfo.put("guildId", String.valueOf(eventDto.getGuildId()));
             communityEventInfo.put("channelReadId", String.valueOf(eventDto.getChannelReadId()));
