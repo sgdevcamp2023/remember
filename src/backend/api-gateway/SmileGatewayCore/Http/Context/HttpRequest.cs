@@ -141,6 +141,7 @@ public partial class HttpRequest
         else
             buffer = buffer.Concat(Encoding.UTF8.GetBytes(Body!)).ToArray();
 
+        buffer = buffer.Concat(Encoding.UTF8.GetBytes("\r\n")).ToArray();
         string temp = Encoding.UTF8.GetString(buffer);
         File.WriteAllText("test.txt", temp);
         // System.Console.WriteLine(requestString);
