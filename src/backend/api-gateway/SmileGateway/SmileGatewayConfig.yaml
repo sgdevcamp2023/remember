@@ -23,8 +23,8 @@ listeners:
       valid-audience: http://127.0.0.1:4000
       valid-issuer: http://127.0.0.1:4000
       secret-key: JWTRefreshTokenHIGHsecuredPasswordVVVp1OH7Xzyr
-      access-token-validity-in-second: 60000
-      refresh-token-validity-in-second: 86400
+      access-token-validity-in-second: 230400 #64 hours
+      refresh-token-validity-in-second: 230400 # 64 hours
   disallow-headers:
     - trace-id
   thread-count: 10

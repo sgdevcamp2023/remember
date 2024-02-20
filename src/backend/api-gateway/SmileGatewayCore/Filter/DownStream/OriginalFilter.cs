@@ -16,6 +16,6 @@ internal class OriginalFilter : DownStreamFilter
     {
         // context.Response.Header["Access-Control-Allow-Origin"] = "*";
         // Origin을 확인해서, https인지 http인지 확인해서 넘겨줘야 할 듯?
-        // context.Response.Header["Access-Control-Allow-Origin"] = $"https://localhost:3000";
+        
     }
 }

@@ -104,6 +104,11 @@ public partial class HttpResponse
         return MakeChuckedBody(str);
     }
 
+    public void MakeAccessControlAllowOrigin()
+    {
+        Header["Access-Control-Allow-Credentials"] = "true";
+    }
+
     private bool MakeChuckedBody(string[] bodys)
     {
         bool isEnd = false;
@@ -113,7 +118,7 @@ public partial class HttpResponse
                 break;
 
             int length = Convert.ToInt32(bodys[i], 16);
-            ContentLength += length;
+            ContentLength += length;    
 
             if (length == 0)
             {

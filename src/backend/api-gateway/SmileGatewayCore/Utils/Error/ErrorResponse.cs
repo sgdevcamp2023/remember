@@ -25,7 +25,7 @@ public class ErrorResponse
         response.Header["Content-Type"] = "applicatoin/json";
         response.Header["Date"] = DateTime.Now.ToString("r");
         response.Header["Connection"] = "close";
-        response.Header["Access-Control-Allow-Credentials"] = "true";
+        response.MakeAccessControlAllowOrigin();
 
         string errorString = GetErrorInfo(errorCode);
         response.ContentLength = errorString.Length;
@@ -40,6 +40,7 @@ public class ErrorResponse
         response.Header["Content-Type"] = "applicatoin/json";
         response.Header["Date"] = DateTime.Now.ToString("r");
         response.Header["Connection"] = "close";
+        response.MakeAccessControlAllowOrigin();
 
         string errorString = GetErrorInfo(errorCode);
         response.ContentLength = errorString.Length;

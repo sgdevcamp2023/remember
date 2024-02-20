@@ -76,11 +76,6 @@ public partial class HttpRequest
                     IsHttps = false;
             }
 
-            if(header[0] == "Keep-Alive")
-            {
-
-            }
-
             if (header.Length > 1)
                 Header[header[0]] = header[1];
         }
@@ -93,7 +88,6 @@ public partial class HttpRequest
         bool contains = false;
         for (int i = 0; i <= bodys.Count - _endBoundary.Length; i++)
         {
-
             if (bodys.Array!.Skip(bodys.Offset + i).Take(_endBoundary.Length).SequenceEqual(_endBoundary))
             {
                 contains = true;
@@ -124,8 +118,6 @@ public partial class HttpRequest
     private string HeaderToString()
     {
         string requestString = $"{Method} {Path}{QueryString}{Protocol}\r\n";
-        if(QueryString != String.Empty)
-        
         requestString += $"trace-id: {TraceId}\r\n";
         requestString += $"user-id: {UserId}\r\n";
 
@@ -149,7 +141,9 @@ public partial class HttpRequest
         else
             buffer = buffer.Concat(Encoding.UTF8.GetBytes(Body!)).ToArray();
 
-        System.Console.WriteLine(requestString);
+        string temp = Encoding.UTF8.GetString(buffer);
+        File.WriteAllText("test.txt", temp);
+        // System.Console.WriteLine(requestString);
         return buffer;
     }
 
