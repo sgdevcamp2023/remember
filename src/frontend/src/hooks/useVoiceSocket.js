@@ -32,8 +32,12 @@ function useVoiceSocket(url) {
   let isUserInChannel = false;
 
   const connectSocket = async () => {
-    voice_socket.current = io(url);
-    setVoiceSocket(voice_socket.current);
+    try {
+      voice_socket.current = io(url);
+      setVoiceSocket(voice_socket.current);
+    } catch (error) {
+      console.error("소켓 연결에 실패했습니다:", error);
+    }
   };
 
   const disconnectSocket = () => {
