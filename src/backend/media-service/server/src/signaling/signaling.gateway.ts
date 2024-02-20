@@ -41,7 +41,11 @@ export class SignalingGateway
   constructor(
     private mediasoupService: MediasoupService,
     private kafkaService: KafkaService,
-  ) {}
+  ) {
+    setInterval(() => {
+      console.log(this.voiceChannelStatusMap);
+    }, 10000);
+  }
 
   afterInit(server: Server) {
     console.log(`Server initialized`);
