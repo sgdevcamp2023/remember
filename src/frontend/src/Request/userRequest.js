@@ -1,7 +1,8 @@
 import axios from "axios";
 import AuthStore from "../store/AuthStore";
 
-const UserServerAddr = "http://34.22.109.45:4000/api/user/";
+const UserServerAddr = "https://0chord.store/api/user/";
+// const UserServerAddr = "http://127.0.0.1:4000/api/user/";
 
 export const GetUserInfoRequest = async () => {
     return await axios
@@ -31,6 +32,7 @@ export const PatchChangeProfileRequest = async (data) => {
         })
         .catch((error) => {
             console.error("데이터를 받아오는 데 실패했습니다:", error);
+            console.log(error);
             return error.response;
         });
 };

@@ -163,7 +163,7 @@ export const MyInfoView = () => {
         <div>
             <h1>내 정보</h1>
             <ProfileInfoDiv>
-                <img src={(MyInfo.profileUrl !== "") ? MyInfo.profileUrl : defaultImage} alt="profile" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                <img src={(MyInfo.profile !== "") ? MyInfo.profile : defaultImage} alt="profile" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
                 <ProfileButton onClick={openImageModal}>프로필 변경</ProfileButton>
             </ProfileInfoDiv>
             <Modal
