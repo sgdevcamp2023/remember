@@ -46,20 +46,14 @@ export class SignalingGateway
   constructor(
     private mediasoupService: MediasoupService,
     private kafkaService: KafkaService,
-  ) {
-    setInterval(() => {
-      if (this.voiceChannelStatusMap.size > 0) {
-        console.log(this.voiceChannelStatusMap);
-      }
-    }, 10000);
-  }
+  ) {}
 
   afterInit(server: Server) {
-    console.log(`Server initialized`);
+    console.log(`>> Server initialized`);
   }
 
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
+    console.log(`>> Client connected: ${client.id}`);
   }
 
   async handleDisconnect(client: Socket) {
@@ -115,7 +109,8 @@ export class SignalingGateway
       console.error(error);
     }
 
-    console.log(`Client disconnected: ${client.id}`);
+    console.log(`>> Client disconnected: ${client.id}`);
+    console.log(this.voiceChannelStatusMap);
   }
 
   @SubscribeMessage('validate-user-in-channel')
@@ -184,6 +179,7 @@ export class SignalingGateway
     };
 
     await this.kafkaService.send(kafka_event);
+    console.log(this.voiceChannelStatusMap);
   }
 
   @SubscribeMessage('leave-channel')
@@ -289,7 +285,7 @@ export class SignalingGateway
     }
 
     producer.on('transportclose', () => {
-      console.log('producer transport close');
+      console.log('>> producer transport close');
       producer.close();
       // this.mediasoupService.removeProducer(kind, roomId, producer.id);
       this.mediasoupService.removeTransport(client.id);
