@@ -1,8 +1,8 @@
 import axios from "axios";
 import AuthStore from "../store/AuthStore";
 
-const CommunityServerAddr = "http://34.22.109.45:8000/";
-// const CommunityServerAddr = "http://34.22.109.45:4000/";
+// const CommunityServerAddr = "https://34.22.109.45:8000/";
+const CommunityServerAddr = "https://0chord.store/";
 
 let accessToken = AuthStore.getState().ACCESS_TOKEN;
 

@@ -7,6 +7,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.2",
+    "http-proxy-middleware": "^2.0.6",
     "mediasoup-client": "^3.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -21,7 +22,7 @@
   },
   "proxy": "http://localhost:8000",
   "scripts": {
-    "start": "set HTTPS=false&&react-scripts start",
+    "start": "set HTTPS=true&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
