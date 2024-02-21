@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import * as StompJs from "@stomp/stompjs";
-import SockJS from "sockjs-client"; // SockJS 가져오기
-import SocketStore from "../store/SocketStore"; // websocketStore 가져오기
+import SockJS from 'sockjs-client'; // SockJS 가져오기
+import SocketStore from '../store/SocketStore'; // websocketStore 가져오기
+import { GetUserInfoRequest } from "../Request/userRequest";
 
 const RedirectPage = () => {
   const navigate = useNavigate();
-  const { USER_ID, ACCESS_TOKEN } = AuthStore();
+  const { USER_ID, ACCESS_TOKEN, setUserName, setUserProfile } = AuthStore();
   const { setMainSocket } = SocketStore(); // websocketStore에서 setWebsocketClient 가져오기
 
   useEffect(() => {
@@ -30,6 +31,15 @@ const RedirectPage = () => {
       // 웹소켓 클라이언트를 전역 상태로 설정
       setMainSocket(clientSocket);
 
+      GetUserInfoRequest().then((response) => {
+        if (response.status === 200) {
+          setUserName(response.data.name);
+          setUserProfile(response.data.profile);
+        }
+      }).catch((error) => {
+        console.error("데이터를 받아오는 데 실패했습니다:", error);
+      });
+
       navigate("/channels/@me");
 
       return;
@@ -37,7 +47,7 @@ const RedirectPage = () => {
 
     navigate("/login");
 
-    return () => {};
+    return () => { };
   }, []);
 
   return <></>;

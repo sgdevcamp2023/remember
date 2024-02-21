@@ -13,7 +13,8 @@ const ChatPage = () => {
   
   const [showMessage, setShowMessage] = useState(false); // 입력 메시지 제한 상태
 
-  const USER_ID = useAuthStore(state => state.USER_ID);
+  const { USER_ID, USER_NAME, USER_PROFILE } = useAuthStore();
+  // useAuthStore(state => state.USER_ID);
   const [inputMessage, setInputMessage] = useState(''); // 입력 메시지 상태
   const [messages, setMessages] = useState([]); // 메시지 목록 상태 관리
   const [editingMessage, setEditingMessage] = useState({ messageId: null, message: '' }); 
@@ -60,7 +61,7 @@ const ChatPage = () => {
     if (hasMoreData && CURRENT_VIEW_CHANNEL) {
       try {
         setLoading(true); 
-        const response = await axios.get(`https://0chord.store/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=10`);
+        const response = await axios.get(`https://0chord.store/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=20`);
         newMessages = response.data.content.reverse();
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
@@ -139,9 +140,9 @@ const ChatPage = () => {
         channelId: CURRENT_VIEW_CHANNEL,
         userId: USER_ID,
         parentId: 0,
-        profileImage: "qwedfw",
+        profileImage: USER_PROFILE,
         type: "send",
-        senderName: "바나나",
+        senderName: USER_NAME,
         message: inputMessage
       }),
     });

@@ -7,6 +7,7 @@ import RedirectPage from "./pages/RedirectPage";
 import FriendPage from "./pages/dm/FriendPage";
 import LoginPage from "./pages/LoginPage";
 import DmChatPage from "./pages/type/DmChatPage";
+import InvitationPage from "./pages/InvitationPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path={"/invitation"} element={<ForgetPasswordPage />} />
         {/* Catch all - replace with 404 component if you want */}
         {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+        <Route path={`/invitation/:invitationCode`} element={<InvitationPage/>}/>
       </Route>
     </Routes>
     // </AppElement>

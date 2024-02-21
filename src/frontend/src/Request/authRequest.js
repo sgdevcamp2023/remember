@@ -1,5 +1,4 @@
 import axios from "axios";
-import AuthStore from "../store/AuthStore";
 
 const UserAuthServerAddr = "https://0chord.store/api/auth/";
 
@@ -11,13 +10,7 @@ export const logInRequest = async (email, password) => {
     })
     .then((response) => {
       // Body에 accessToken, refreshToken이 담김
-      if (response.status !== 200) {
-        alert(response.description);
-      } else {
-        // TODO
-        return response;
-      }
-      return response.status;
+      return response;
     })
     .catch((error) => {
       console.error("데이터를 받아오는 데 실패했습니다:", error);
