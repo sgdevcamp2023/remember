@@ -13,7 +13,7 @@ public partial class HttpResponse
 
     public bool Parse(string responseString)
     {
-        System.Console.WriteLine(responseString);
+        // System.Console.WriteLine(responseString);
         string[] responseLines = responseString.Split("\r\n");
         MakeResponseinfo(responseLines[0].Split(" "));
 
@@ -93,7 +93,7 @@ public partial class HttpResponse
     public byte[] GetStringToBytes()
     {
         string responseString = ToString();
-        // System.Console.WriteLine(Body);
+        System.Console.WriteLine(responseString);
         return System.Text.Encoding.UTF8.GetBytes(responseString);
     }
 

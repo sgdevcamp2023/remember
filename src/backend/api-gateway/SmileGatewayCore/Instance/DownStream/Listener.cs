@@ -61,7 +61,6 @@ internal partial class Listener : NetworkInstance
         _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveBuffer, Buffers.bufferSize);
 
-        System.Console.WriteLine("Listener Init : " + Config.Address.Port);
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Config.Address.Address), Config.Address.Port);
 
         _listenerSocket.Bind(endPoint);
@@ -84,7 +83,6 @@ internal partial class Listener : NetworkInstance
         // await _listenerSocket.AcceptAsync(socket);
         try
         {
-            System.Console.WriteLine("Accept Async : " + Config.Address.Port);
             Socket socket = await _listenerSocket.AcceptAsync();
             Start(socket);
         }
@@ -157,7 +155,7 @@ internal partial class Listener : NetworkInstance
 
     protected override Task OnSend(Socket socket, int size)
     {
-        System.Console.WriteLine($"Listener Send {size} bytes");
+        System.Console.WriteLine($"{Config.Address.Address}:{Config.Address.Port} Listener Send {size} bytes");
 
         
         return Task.CompletedTask;
