@@ -87,7 +87,7 @@ public class UserService : IUserService
             throw new ServiceException(4032);
 
         Console.WriteLine(profileDTO.NewProfile.ContentType);
-        
+
         string ContentType = profileDTO.NewProfile.ContentType;
         if (!ContentType.StartsWith("image/"))
         {
@@ -154,6 +154,7 @@ public class UserService : IUserService
         }
         catch (Exception)
         {
+            System.Console.WriteLine("UploadProfileToGCP Error");
             throw new ServiceException(4024);
         }
     }
