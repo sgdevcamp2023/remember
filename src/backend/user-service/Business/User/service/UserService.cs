@@ -86,6 +86,8 @@ public class UserService : IUserService
         if(userId != profileDTO.UserId.ToString())
             throw new ServiceException(4032);
 
+        Console.WriteLine(profileDTO.NewProfile.ContentType);
+        
         string ContentType = profileDTO.NewProfile.ContentType;
         if (!ContentType.StartsWith("image/"))
         {
