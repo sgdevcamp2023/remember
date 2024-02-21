@@ -41,6 +41,7 @@ const RedirectPage = () => {
       });
 
       navigate("/channels/@me");
+
       return;
     }
 
