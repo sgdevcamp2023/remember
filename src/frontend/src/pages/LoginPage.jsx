@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import "../css/auth.css";
 import backImg from "../img/backImg.webp";
-import { logInRequest } from "../Request/authRequest";
+import {logInRequest} from "../Request/authRequest";
 import AuthStore from "../store/AuthStore";
-import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   display: flex;
@@ -38,7 +37,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setAccessToken, setUserId } = AuthStore();
+  const {setAccessToken, setUserId, REDIRECT_URL, setRedirectUrl} = AuthStore();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -55,13 +54,17 @@ export default function LoginPage() {
     logInRequest(email, password).then((response) => {
       console.log(response);
       if (response.status === 200) {
-        const { UserId, AccessToken, RefreshToken } = response.data;
+        const {UserId, AccessToken, RefreshToken} = response.data;
         setAccessToken(AccessToken);
         setUserId(UserId);
         localStorage.setItem("RefreshToken", RefreshToken);
-        navigate("/");
-      }else
-      {
+        if (REDIRECT_URL !== null) {
+          setRedirectUrl(null);
+          navigate(REDIRECT_URL);
+        }
+        else
+          navigate("/");
+      } else {
         alert("로그인 실패");
       }
     }).catch((error) => {
@@ -72,7 +75,7 @@ export default function LoginPage() {
   return (
     <Wrapper>
       <FormContainer>
-        <h1 style={{ margin: "0px" }}>돌아오신 것을 환영해요!</h1>
+        <h1 style={{margin: "0px"}}>돌아오신 것을 환영해요!</h1>
         <span>다시 만나니까 너무 반가워요!</span>
 
         <Content onSubmit={handleSubmit}>
@@ -97,11 +100,11 @@ export default function LoginPage() {
             ></input>
           </label>
 
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Link to="/register" style={{ color: "white" }}>
+          <div style={{display: "flex", justifyContent: "space-between"}}>
+            <Link to="/register" style={{color: "white"}}>
               회원가입이 필요하신가요?
             </Link>
-            <Link to="/forget-Password" style={{ color: "white" }}>
+            <Link to="/forget-Password" style={{color: "white"}}>
               비밀번호를 잊으셨나요?
             </Link>
           </div>

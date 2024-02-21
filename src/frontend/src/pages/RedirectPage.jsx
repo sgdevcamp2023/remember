@@ -31,16 +31,17 @@ const RedirectPage = () => {
       // 웹소켓 클라이언트를 전역 상태로 설정
       setMainSocket(clientSocket);
 
-      // GetUserInfoRequest().then((response) => {
-      //   if (response.status === 200) {
-      //     setUserName(response.data.name);
-      //     setUserProfile(response.data.profile);
-      //   }
-      // }).catch((error) => {
-      //   console.error("데이터를 받아오는 데 실패했습니다:", error);
-      // });
+      GetUserInfoRequest().then((response) => {
+        if (response.status === 200) {
+          setUserName(response.data.name);
+          setUserProfile(response.data.profile);
+        }
+      }).catch((error) => {
+        console.error("데이터를 받아오는 데 실패했습니다:", error);
+      });
 
       navigate("/channels/@me");
+
       return;
     }
 

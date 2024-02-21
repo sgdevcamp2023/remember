@@ -4,21 +4,12 @@ import AuthStore from "../store/AuthStore";
 const CommunityServerAddr = "https://0chord.store/";
 // const CommunityServerAddr = "http://34.22.109.45:4000/";
 
-let accessToken = AuthStore.getState().ACCESS_TOKEN;
-
-AuthStore.subscribe(
-  (newAccessToken) => {
-    accessToken = newAccessToken;
-  },
-  (state) => state.accessToken
-);
-
 export const getGuildListRequest = async (userId) => {
   return await axios.get(
     CommunityServerAddr + `api/community/check/guild/${userId}`,
     {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     }
   );
@@ -29,7 +20,9 @@ export const getCategoryListRequest = async (guildId, userId) => {
     .get(
       CommunityServerAddr + `api/community/check/category/${guildId}/${userId}`,
       {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {
+          Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
+        },
       }
     )
     .then((response) => {
@@ -44,9 +37,11 @@ export const getCategoryListRequest = async (guildId, userId) => {
 export const getChannelListRequest = async (guildId, userId) => {
   return await axios.get(
     CommunityServerAddr +
-      `api/community/check/guild/channel/${guildId}/${userId}`,
+    `api/community/check/guild/channel/${guildId}/${userId}`,
     {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: {
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
+      },
     }
   );
 };
@@ -56,7 +51,7 @@ export const getUserDmRoom = async (userId) => {
     CommunityServerAddr + `api/community/check/room/${userId}`,
     {
       headers: {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     }
   );
@@ -68,7 +63,7 @@ export const createNewGuild = async (formData) => {
     formData,
     {
       headers: {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     }
   );
@@ -78,10 +73,10 @@ export const createNewGuild = async (formData) => {
 export const getUserStateAndVoice = async (CURRENT_VIEW_GUILD, USER_ID) => {
   return await axios.get(
     CommunityServerAddr +
-      `api/community/guild/${CURRENT_VIEW_GUILD}/${USER_ID}`,
+    `api/community/guild/${CURRENT_VIEW_GUILD}/${USER_ID}`,
     {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     }
   );
@@ -93,7 +88,7 @@ export const createChannel = async (data) => {
     data,
     {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     }
   );
@@ -105,7 +100,18 @@ export const createInvitationCode = async (data) => {
     data,
     {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
+      },
+    }
+  );
+};
+
+export const joinInvitation = async (code, userId) => {
+  return await axios.get(
+    CommunityServerAddr + `api/community/join/guild/${code}/${userId}`,
+    {
+      headers: {
+        Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
     }
   );

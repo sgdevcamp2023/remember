@@ -16,7 +16,9 @@ const DmChatPage = () => {
 
   const [showMessage, setShowMessage] = useState(false); // 메시지 표시 여부 상태
 
-  const USER_ID = useAuthStore(state => state.USER_ID);
+//  const USER_ID = useAuthStore(state => state.USER_ID);
+  const { USER_ID, USER_NAME, USER_PROFILE } = useAuthStore();
+
   const [inputMessage, setInputMessage] = useState(''); 
   const [messages, setMessages] = useState([]); // 메시지 목록 상태 관리
   const [editingMessage, setEditingMessage] = useState({ messageId: null, message: '' }); 
@@ -64,7 +66,7 @@ const DmChatPage = () => {
     if (hasMoreData && roomId) {
       try {
         setLoading(true); 
-        const response = await axios.get(`https://0chord.store/api/chat-service/direct/messages/room?roomId=${roomId}&page=${page}&size=10`);
+        const response = await axios.get(`https://0chord.store/api/chat-service/direct/messages/room?roomId=${roomId}&page=${page}&size=20`);
         newMessages = response.data.content.reverse();
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
@@ -162,9 +164,9 @@ const DmChatPage = () => {
         roomId: roomId,
         userId: USER_ID,
         parentId: 0,
-        profileImage: "qwedfw",
+        profileImage: USER_PROFILE,
         type: "send",
-        senderName: "메로나",
+        senderName: USER_NAME,
         message: inputMessage
       }),
     });
