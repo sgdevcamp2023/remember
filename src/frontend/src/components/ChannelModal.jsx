@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import {useState, useEffect} from "react";
+import {useEffect, useState} from "react";
 import CurrentStore from "../store/CurrentStore";
 import {createChannel} from "../Request/communityRequest";
 import ChannelStore from "../store/ChannelStore";
@@ -45,18 +45,19 @@ const ChannelModal = (props) => {
 
   useEffect(() => {
     if (CHANNEL) {
-      console.log("modal",CHANNEL);
+      console.log("modal", CHANNEL);
       let data = {
         categoryId: CHANNEL.categoryId,
         name: CHANNEL.channelName,
         channelReadId: CHANNEL.channelReadId,
-        type : CHANNEL.channelType,
+        type: CHANNEL.channelType,
         guildId: CHANNEL.guildId
       };
       CHANNEL_LIST.push(data);
       setChannelList(CHANNEL_LIST);
     }
   }, [CHANNEL]);
+
 
   return (
     <div>
@@ -80,17 +81,6 @@ const ChannelModal = (props) => {
                 onChange={handleChannelTypeChange}
               />
               <label>VOICE</label>
-            </div>
-          </div>
-          <div className="radio-option">
-            <div className="radio-box">
-              <input
-                type="radio"
-                name="channelType"
-                value="FORUM"
-                onChange={handleChannelTypeChange}
-              />
-              <label>FORUM</label>
             </div>
           </div>
           <div className="radio-option">

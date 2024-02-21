@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 
 export default function GuildInvitationModal(props) {
 
-  const reactAddr = "http://localhost:3000/invitation/";
+  const reactAddr = "https://localhost:3000/invitation/";
   const inputRef = useRef(null);
 
   const handleCopyClick = () => {

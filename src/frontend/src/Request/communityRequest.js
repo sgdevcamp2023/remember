@@ -29,7 +29,7 @@ export const getCategoryListRequest = async (guildId, userId) => {
     .get(
       CommunityServerAddr + `api/community/check/category/${guildId}/${userId}`,
       {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {Authorization: `Bearer ${accessToken}`},
       }
     )
     .then((response) => {
@@ -44,9 +44,9 @@ export const getCategoryListRequest = async (guildId, userId) => {
 export const getChannelListRequest = async (guildId, userId) => {
   return await axios.get(
     CommunityServerAddr +
-      `api/community/check/guild/channel/${guildId}/${userId}`,
+    `api/community/check/guild/channel/${guildId}/${userId}`,
     {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: {Authorization: `Bearer ${accessToken}`},
     }
   );
 };
@@ -56,7 +56,7 @@ export const getUserDmRoom = async (userId) => {
     CommunityServerAddr + `api/community/check/room/${userId}`,
     {
       headers: {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {Authorization: `Bearer ${accessToken}`},
       },
     }
   );
@@ -68,7 +68,7 @@ export const createNewGuild = async (formData) => {
     formData,
     {
       headers: {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {Authorization: `Bearer ${accessToken}`},
       },
     }
   );
@@ -78,7 +78,7 @@ export const createNewGuild = async (formData) => {
 export const getUserStateAndVoice = async (CURRENT_VIEW_GUILD, USER_ID) => {
   return await axios.get(
     CommunityServerAddr +
-      `api/community/guild/${CURRENT_VIEW_GUILD}/${USER_ID}`,
+    `api/community/guild/${CURRENT_VIEW_GUILD}/${USER_ID}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -103,6 +103,17 @@ export const createInvitationCode = async (data) => {
   return await axios.post(
     CommunityServerAddr + "api/community/invitation/guild",
     data,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const joinInvitation = async (code, userId) => {
+  return await axios.get(
+    CommunityServerAddr + `api/community/join/guild/${code}/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
