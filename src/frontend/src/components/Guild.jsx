@@ -16,7 +16,7 @@ import { getGuildListRequest } from "../Request/communityRequest";
 
 const Guild = () => {
   const { USER_ID } = AuthStore();
-  const { GUILD_LIST, setGuildList } = CommunityStore();
+  const { GUILD_LIST, setGuildList, VOICE_USER_STATE_MAP } = CommunityStore();
   const { CURRENT_VIEW_GUILD } = CurrentStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const mainSocket = useSocketStore((state) => state.MAIN_SOCKET);
