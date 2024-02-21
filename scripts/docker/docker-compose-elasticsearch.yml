@@ -1,0 +1,22 @@
+version: '3.4'
+services:
+  elasticsearch:
+    container_name: elasticsearch
+    build:
+      context: ./elasticsearch/
+      dockerfile: Dockerfile
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - "ELASTIC_PASSWORD=1q2w3e4r!"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elasticsearch/backup:/usr/share/elasticsearch/backup
+    networks:
+      - community-network
+
+networks:
+  community-network:

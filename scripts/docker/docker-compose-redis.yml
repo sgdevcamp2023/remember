@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    ports:
+      - "56379:6379"
+    container_name: redis
+    volumes:
+      - ./redis/redis.conf:/etc/redis/redis.conf
+    networks:
+      - community-network
+
+networks:
+  community-network:

@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  mssql:
+    image: mssql
+    build:
+      context: .
+      dockerfile: Dockerfile-mssql
+    container_name: mssql
+    user: root
+    hostname: mssql-docker
+    ports:
+      - 11433:1433
+    networks:
+      - community-network
+volumes:
+  mssql:
+
+networks:
+  community-network:

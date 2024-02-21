@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  community-service:
+    build:
+      context: .
+      dockerfile: Dockerfile-community
+    container_name: community-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - logs:/log/info
+    networks:
+      - community-network
+    environment:
+      - SPRING_DATASOURCE_SOURCE_HIKARI_JDBC_URL=jdbc:mysql://10.178.0.3:3307/harmony?useSSL=false&characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
+      - SPRING_DATASOURCE_REPLICA_HIKARI_JDBC_URL=jdbc:mysql://10.178.0.3:3308/harmony?useSSL=false&characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
+networks:
+  community-network:
+
+volumes:
+  logs:

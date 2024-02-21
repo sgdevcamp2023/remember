@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    tools {
+        gradle 'gradle'
+    }
+    stages {
+        stage('Github') {
+            steps {
+                checkout scmGit(
+                    branches: [[name: 'BE/jj']],
+                    extensions: [submodule(parentCredentials: true, trackingSubmodules: true)],
+                    userRemoteConfigs: [[credentialsId: 'jjtoken', url: 'https://github.com/sgdevcamp2023/remember']]
+                    )
+            }
+        }
+        stage('Build') {
+            steps {
+                dir('src/backend/chat-service') {
+                    sh "gradle clean build"
+                }
+                
+            }
+        }
+        stage('Deploy') {
+                        steps {        
+                sshagent (credentials: ['harmony-ssh']) {
+                sh """
+                    scp /var/jenkins_home/workspace/chat-service/src/backend/chat-service/build/libs/chat-service-0.0.1-SNAPSHOT.jar harmony@10.178.0.3:/home/harmony/
+                """
+                sh """
+                    ssh -o StrictHostKeyChecking=no ${TARGET_HOST} '
+                    make down-chat
+                    make up-chat
+                    '
+                """
+                }
+            }
+        }
+    }
+    environment {
+        TARGET_HOST = "harmony@10.178.0.3"
+    }
+}
+

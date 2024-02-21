@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+EXPOSE 4000
+
+ENV ASPNETCORE_URLS=http://*:4000
+
+RUN apt-get update
+RUN apt-get install -y vim
+
+RUN chmod 777 /var/log
+RUN chmod 777 /var
+
+COPY gateway .
+ENTRYPOINT ["dotnet", "SmileGateway.dll"]

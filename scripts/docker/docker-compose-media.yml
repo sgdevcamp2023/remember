@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  media-service:
+    build:
+      context: .
+      dockerfile: Dockerfile-media
+    env_file:
+      - ./.env
+    ports:
+      - '6001:6001'
+      - '6002-6202:6002-6202'
+    container_name: media-service
+    volumes:
+      - ./server:/app
+    networks:
+      - community-network
+
+networks:
+  community-network:

@@ -1,0 +1,17 @@
+# Use the official image as a parent image.
+FROM mcr.microsoft.com/mssql/server:2019-latest
+
+# Set the working directory.
+WORKDIR /usr/src/app
+
+# Copy the sql script into the container
+COPY ./DefaultSchema.sql .
+
+# Set environment variables.
+ENV SA_PASSWORD=test1234!
+ENV ACCEPT_EULA=Y
+
+# Run Microsoft SQl Server and initialization script (at the same time)
+RUN (/opt/mssql/bin/sqlservr --accept-eula & ) | grep -q "Service Broker manager has started" && \
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $SA_PASSWORD -Q "CREATE DATABASE UserDB;" && \
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $SA_PASSWORD -d UserDB -i DefaultSchema.sql

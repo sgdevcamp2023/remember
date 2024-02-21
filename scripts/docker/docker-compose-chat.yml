@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  chat-service:
+    build:
+      context: .
+      dockerfile: Dockerfile-chat
+    container_name: chat-service
+    ports:
+      - "7000:7000"
+    volumes:
+      - logs:/log/info
+    networks:
+      - community-network
+    environment:
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=10.178.0.3:9092
+      - SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS=10.178.0.3:9092
+      - SPRING_DATA_MONGODB_URI=mongodb://10.178.0.3:36912/chat
+networks:
+  community-network:
+
+volumes:
+  logs:
