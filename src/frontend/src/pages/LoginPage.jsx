@@ -59,8 +59,6 @@ export default function LoginPage() {
         setUserId(UserId);
         localStorage.setItem("RefreshToken", RefreshToken);
         if (REDIRECT_URL !== null) {
-          setAccessToken("123");
-          setUserId(6);
           setRedirectUrl(null);
           navigate(REDIRECT_URL);
         }
