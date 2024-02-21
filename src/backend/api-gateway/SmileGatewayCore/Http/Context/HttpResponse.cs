@@ -51,6 +51,7 @@ public partial class HttpResponse
             }
             if (header[0] == "Content-Length")
             {
+                System.Console.WriteLine(header[1]);
                 _responseFeatrue.ContentLength = int.Parse(header[1]);
                 continue;
             }
@@ -129,7 +130,8 @@ public partial class HttpResponse
             else
                 Body += bodys[i + 1];
         }
-
+        
+        ContentLength = Body!.Length;
         return isEnd;
     }
 
