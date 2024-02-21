@@ -7,6 +7,7 @@ using Castle.DynamicProxy;
 using user_service.intercepter;
 using user_service.Business.User.dto;
 using user_service.common.dto;
+using System.Xml;
 
 namespace user_service.user.service;
 
@@ -143,7 +144,9 @@ public class UserService : IUserService
         try
         {
             byte[] profileBytes = MakeProfileToByte(profile);
-
+            System.Console.WriteLine(profileBytes.Length);
+            System.Console.WriteLine(_keyPath);
+            System.Console.WriteLine(_bucketName);
             var credential = GoogleCredential.FromFile(_keyPath);
             var storage = StorageClient.Create(credential);
             using (var stream = new MemoryStream(profileBytes))
