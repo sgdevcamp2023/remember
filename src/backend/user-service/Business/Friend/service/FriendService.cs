@@ -37,19 +37,21 @@ public class FriendService : IFriendService
             userIds.userIds.Add(friendInfo.Id);
         }
 
-        // 상태관리 서버에게 전송해야함
-        var data = await _stateClient.GetFriendOnlineList(userIds, "traceId", "userId");
-        if (data == null)
-            throw new ServiceException(4025);
-
-        foreach (FriendInfoDTO friendInfo in friendInfos)
+        if (userIds.userIds.Count != 0)
         {
-            if (data.connectionStates[friendInfo.Id.ToString()] == "online")
-                friendInfo.IsOnline = true;
-            else
-                friendInfo.IsOnline = false;
-        }
+            // 상태관리 서버에게 전송해야함
+            var data = await _stateClient.GetFriendOnlineList(userIds, "traceId", "userId");
+            if (data == null)
+                throw new ServiceException(4025);
 
+            foreach (FriendInfoDTO friendInfo in friendInfos)
+            {
+                if (data.connectionStates[friendInfo.Id.ToString()] == "online")
+                    friendInfo.IsOnline = true;
+                else
+                    friendInfo.IsOnline = false;
+            }
+        }
         return friendInfos;
     }
 
@@ -146,7 +148,7 @@ public class FriendService : IFriendService
         return friendId;
     }
 
-     private IdAndProfileDTO GetFriendIdAndProfile(string email)
+    private IdAndProfileDTO GetFriendIdAndProfile(string email)
     {
         IdAndProfileDTO? idAndProfile = _friendRepository.GetIdAndProfile(email);
         if (idAndProfile == null)
