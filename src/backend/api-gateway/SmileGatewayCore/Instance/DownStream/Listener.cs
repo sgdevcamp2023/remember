@@ -61,6 +61,7 @@ internal partial class Listener : NetworkInstance
         _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveBuffer, Buffers.bufferSize);
 
+        System.Console.WriteLine("Listener Init : " + Config.Address.Port);
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Config.Address.Address), Config.Address.Port);
 
         _listenerSocket.Bind(endPoint);
