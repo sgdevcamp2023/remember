@@ -1,14 +1,44 @@
 # remember
-
-스마일게이트 개발 캠프 2023 - Remember
-
+- 스마일게이트 개발 캠프 2023 - Remember
+- 개발 기간 : 2023.12 ~ 2024.02
+## 로고
 ![image](./resources/harmony.png)
 
 ## 팀 소개
 - 저희 팀은 총 백엔드 4명으로 이루어진 팀입니다. 
 - 각각 Spring 개발자 2명, Node.js 개발자 1명, ASP.NET Core 개발자 1명으로 이루어져 있습니다.
 
-![image](./resources/팀원소개.jpg)
+<table align="center">
+    <tr align="center">
+        <td><B>김영현(Spring)<B></td>
+        <td><B>홍지현(ASP.NET)<B></td>
+        <td><B>안재진(Spring)<B></td>
+        <td><B>최성민(Node.js)<B></td>
+    </tr>
+    <tr align="center">
+        <td>
+            <img src="https://github.com/0chord.png" style="max-width: 100px">
+            <br>
+            <a href="https://github.com/0chord"><I>0chord</I></a>
+        </td>
+        <td>
+          <img src="https://github.com/Hong-Study.png" style="max-width: 100px">
+            <br>
+            <a href="https://github.com/Hong-Study"><I>Hong-Study</I></a>
+        </td>
+        <td>
+            <img src="https://github.com/acs0209.png" style="max-width: 100px">
+            <br>
+            <a href="https://github.com/acs0209"><I>acs0209</I></a>
+        </td>
+        <td>
+            <img src="https://github.com/smaivnn.png" style="max-width: 100px">
+            <br>
+            <a href="https://github.com/smaivnn"><I>smaivnn</I></a>
+        </td>
+        </td>
+    </tr>
+</table>
 
 ## 기술 스택
 ### Frontend
