@@ -86,7 +86,7 @@ public partial class HttpResponse
 
         if (ContentLength != -1)
             responseString += $"Content-Length: {ContentLength}\r\n";
-        responseString += $"\r\n{Body}";
+        responseString += $"\r\n{Body}\r\n";
         return responseString;
     }
 
