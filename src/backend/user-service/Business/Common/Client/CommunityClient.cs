@@ -94,6 +94,7 @@ public class CommunityClient : ICommunityClient
 
         try
         {
+            System.Console.WriteLine(communityDTO.userId + " " + communityDTO.profile);
             HttpResponseMessage response = await _client.PatchAsync("change/user", content, _cancellationToken);
             string str = await response.Content.ReadAsStringAsync();
             var dto = JsonConvert.DeserializeObject<CommunityResponseDTO<CommunityBaseException>>(str);
