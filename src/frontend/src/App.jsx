@@ -24,6 +24,8 @@ function App() {
           <Route path="@me" element={<FriendPage />} />
           <Route path="@me/:roomId" element={<DmChatPage />} />
         </Route>
+        {/* invitation */}
+        <Route path={"/invitation"} element={<ForgetPasswordPage />} />
         {/* Catch all - replace with 404 component if you want */}
         {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Route>

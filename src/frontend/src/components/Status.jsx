@@ -10,7 +10,6 @@ const Status = () => {
   const status = StatusStore((state) => state.STATUS);
 
   useEffect(() => {
-    console.log("status에서 찍은 데이터", status);
     if (status) {
       const findUser = USER_STATE_MAP[status.userId];
       if (status.state === "online") {
@@ -27,7 +26,6 @@ const Status = () => {
 
   useEffect(() => {
     if (USER_STATE_MAP !== undefined) {
-      console.log(USER_STATE_MAP);
       setUserStates(Object.values(USER_STATE_MAP));
     }
   }, [USER_STATE_MAP]);

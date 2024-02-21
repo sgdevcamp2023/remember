@@ -11,7 +11,10 @@ const AuthStore = create((set) => ({
   removeUserId: () => set({ USER_ID: null }),
   setFriendList: (friendList) => set({ FRIEND_LIST: friendList }),
   removeFriendList: () => set({ FRIEND_LIST: [] }),
-  deleteFriend: (friendList, friendEmail) => set({ FRIEND_LIST: friendList.filter(friend => friend.email !== friendEmail)}),
+  deleteFriend: (friendList, friendEmail) =>
+    set({
+      FRIEND_LIST: friendList.filter((friend) => friend.email !== friendEmail),
+    }),
 }));
 
 export default AuthStore;

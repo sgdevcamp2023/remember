@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import VoiceChatUser from "./VoiceChatUser";
 import CurrentStore from "../store/CurrentStore";
+import CommunityStore from "../store/CommunityStore";
 
-const VoiceChannelButton = ({ channel, members, onClick }) => {
+const VoiceChannelButton = ({ channel, onClick }) => {
   const { CURRENT_VIEW_GUILD, CURRENT_VIEW_CHANNEL } = CurrentStore();
+  const { VOICE_USER_STATE_MAP } = CommunityStore();
 
   const handleVoiceChannel = (guildId, channelId) => {
     onClick(guildId, channelId);
   };
-  
 
   return (
     <div>
@@ -25,11 +26,7 @@ const VoiceChannelButton = ({ channel, members, onClick }) => {
         <p>{channel.name}</p>
       </div>
       <div>
-        {members[channel.channelReadId]?.map((member, index) => (
-          <div>
-            <VoiceChatUser key={index} props={member} />
-          </div>
-        ))}
+        <VoiceChatUser />
       </div>
     </div>
   );

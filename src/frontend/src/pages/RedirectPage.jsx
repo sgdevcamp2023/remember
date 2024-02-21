@@ -31,6 +31,7 @@ const RedirectPage = () => {
       setMainSocket(clientSocket);
 
       navigate("/channels/@me");
+
       return;
     }
 
