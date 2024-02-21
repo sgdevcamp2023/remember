@@ -61,43 +61,48 @@
   border-radius: 4px; /* 스크롤 바 트랙 모서리를 둥글게 만듭니다. */
 }
 
-/* 입력창 */
-.input-container {
-  display: flex;
-  align-items: center;
-  background-color: #36393f; /* 입력창 배경색 설정 */
-  border-radius: 8px; /* 입력창 테두리를 둥글게 만듭니다. */
-  padding: 8px; /* 입력창 내부 여백 설정 */
-}
+  /* 입력창 */
+  .input-container {
+    display: flex;
+    align-items: center;
+    background-color: #36393f; /* 입력창 배경색 설정 */
+    border-radius: 8px; /* 입력창 테두리를 둥글게 만듭니다. */
+    padding: 8px; /* 입력창 내부 여백 설정 */
+  }
+  
+  .input-container input[type="text"] {
+    flex: 1;
+    background-color: transparent;
+    border: 2px solid #252323; /* 테두리 색상 및 두께 설정 */
+    color: #fff;
+    outline: none;
+    margin-right: 8px;
+    border-radius: 4px; /* 테두리의 둥글기 설정 */
+    padding: 8px;
+  }
+  
+  .input-container input[type="text"]::placeholder {
+    color: #FFF; /* 입력창 플레이스홀더 텍스트 색상 설정 */
+  }
+  
+  .input-container button {
+    background-color: #7289da; /* 버튼 배경색 설정 */
+    color: #fff; /* 버튼 텍스트 색상 설정 */
+    border: none; /* 버튼 테두리 제거 */
+    border-radius: 4px; /* 버튼 테두리를 둥글게 만듭니다. */
+    padding: 8px 16px; /* 버튼 내부 여백 설정 */
+    cursor: pointer; /* 포인터 커서로 변경 */
+    transition: background-color 0.3s ease; /* 배경색 변화에 대한 전환 효과 추가 */
+    margin-bottom: 20px;
+  }
+  
+  .input-container button:hover {
+    background-color: #677bc4; /* 버튼 호버 시 배경색 변경 */
+  }
 
-.input-container input[type="text"] {
-  flex: 1;
-  background-color: transparent;
-  border: 2px solid #252323; /* 테두리 색상 및 두께 설정 */
-  color: #fff;
-  outline: none;
-  margin-right: 8px;
-  border-radius: 4px; /* 테두리의 둥글기 설정 */
-  padding: 8px;
-}
-
-.input-container input[type="text"]::placeholder {
-  color: #fff; /* 입력창 플레이스홀더 텍스트 색상 설정 */
-}
-
-.input-container button {
-  background-color: #7289da; /* 버튼 배경색 설정 */
-  color: #fff; /* 버튼 텍스트 색상 설정 */
-  border: none; /* 버튼 테두리 제거 */
-  border-radius: 4px; /* 버튼 테두리를 둥글게 만듭니다. */
-  padding: 8px 16px; /* 버튼 내부 여백 설정 */
-  cursor: pointer; /* 포인터 커서로 변경 */
-  transition: background-color 0.3s ease; /* 배경색 변화에 대한 전환 효과 추가 */
-}
-
-.input-container button:hover {
-  background-color: #677bc4; /* 버튼 호버 시 배경색 변경 */
-}
+  .plus-button {
+    padding-top: 10px;
+  }
 
 /**/
 .message-container {
@@ -134,6 +139,7 @@
 
 .message-content {
   border-radius: 10px;
+  color: rgb(226, 223, 223);
 }
 
 .my-message .message-content {
