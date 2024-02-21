@@ -2,17 +2,16 @@
 
 스마일게이트 개발 캠프 2023 - Remember
 
-## 서비스 소개
-1. [팀 소개](#팀-소개)
-2. [프로젝트 개요]
+![image](./resources/harmony.png)
 
 ## 팀 소개
+- 저희 팀은 총 백엔드 4명으로 이루어진 팀입니다. 
+- 각각 Spring 개발자 2명, Node.js 개발자 1명, ASP.NET Core 개발자 1명으로 이루어져 있습니다.
 
-
+![image](./resources/팀원소개.jpg)
 
 ## 기술 스택
 ### Frontend
-#### Web
 - react
 - zustand
 
