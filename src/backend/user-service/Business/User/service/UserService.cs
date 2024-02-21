@@ -144,9 +144,6 @@ public class UserService : IUserService
         try
         {
             byte[] profileBytes = MakeProfileToByte(profile);
-            System.Console.WriteLine(profileBytes.Length);
-            System.Console.WriteLine(_keyPath);
-            System.Console.WriteLine(_bucketName);
             var credential = GoogleCredential.FromFile(_keyPath);
             var storage = StorageClient.Create(credential);
             using (var stream = new MemoryStream(profileBytes))
@@ -155,9 +152,9 @@ public class UserService : IUserService
             }
             return storage.GetObject(_bucketName, fileName).MediaLink;
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            System.Console.WriteLine("UploadProfileToGCP Error");
+            System.Console.WriteLine(e.Message);
             throw new ServiceException(4024);
         }
     }
