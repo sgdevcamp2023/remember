@@ -71,7 +71,7 @@
     - kafka
 
 ## 전체 아키텍처
-![image](./resources/전체%20아키텍처-back.drawio.png)
+![image](./resources/전체%20아키텍처.png)
 
 ## 역활 분담
 
