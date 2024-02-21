@@ -21,6 +21,4 @@ public class Adapter
         Cluster = cluster;
         UserIP = userIP;
     }
-
-
 }

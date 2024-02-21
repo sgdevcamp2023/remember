@@ -11,6 +11,7 @@ internal class OriginalFilter : DownStreamFilter
             context.Response.Header["Access-Control-Allow-Origin"] = context.Request.Header["Origin"];
         else
             context.Response.Header["Access-Control-Allow-Origin"] = "https://localhost:3000";
+        
         if (context.Request.Header.ContainsKey("Host"))
             context.Request.Header["Host"] = adapter.ListenerAddress;
     }

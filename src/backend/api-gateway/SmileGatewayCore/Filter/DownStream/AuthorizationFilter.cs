@@ -32,8 +32,8 @@ internal class AuthorizationFilter : DownStreamFilter
 
         if (tokens[0] != "Bearer")
             throw new AuthException(3003);
-        
-        if(adapter.JwtValidator == null)
+
+        if (adapter.JwtValidator == null)
             throw new ConfigException(3102);
 
         if (!_jwtAuthorization.ValidationToken(adapter.JwtValidator, accessToken))
@@ -66,6 +66,9 @@ internal class AuthorizationFilter : DownStreamFilter
     }
     protected override void Worked(Adapter adapter, HttpContext context)
     {
+        if (adapter.Authorization == null)
+            return;
+
         if (context.Response.StatusCode == 200)
         {
             if (adapter.Authorization!.LoginPath == context.Request.Path)
@@ -83,6 +86,9 @@ internal class AuthorizationFilter : DownStreamFilter
             }
             else if (adapter.Authorization.LogoutPath == context.Request.Path)
             {
+                if (adapter.JwtValidator == null)
+                    throw new ConfigException(3102);
+
                 switch (adapter.Authorization.Type)
                 {
                     case "JWT":
