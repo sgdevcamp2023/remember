@@ -10,7 +10,7 @@ public class DownStreamFilterChains : IFilterChain<DownStreamDelegate, Adapter>
 {
     protected List<Func<DownStreamDelegate, DownStreamDelegate>> _filters = new List<Func<DownStreamDelegate, DownStreamDelegate>>();
     private DownStreamDelegate? _start = null;
-    public void Init(bool isInside = false)
+    public void Init(bool isInside)
     {
         // 인증 필터
         UseFilter<ExceptionFilter>();

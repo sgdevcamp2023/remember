@@ -83,6 +83,7 @@ internal partial class Listener : NetworkInstance
         // await _listenerSocket.AcceptAsync(socket);
         try
         {
+            System.Console.WriteLine("Accept Async : " + Config.Address.Port);
             Socket socket = await _listenerSocket.AcceptAsync();
             Start(socket);
         }
