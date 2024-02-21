@@ -92,12 +92,16 @@
     padding: 8px 16px; /* 버튼 내부 여백 설정 */
     cursor: pointer; /* 포인터 커서로 변경 */
     transition: background-color 0.3s ease; /* 배경색 변화에 대한 전환 효과 추가 */
+    margin-bottom: 20px;
   }
   
   .input-container button:hover {
     background-color: #677bc4; /* 버튼 호버 시 배경색 변경 */
   }
 
+  .plus-button {
+    padding-top: 10px;
+  }
 
 /**/
   .message-container {

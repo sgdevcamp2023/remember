@@ -343,7 +343,9 @@ const ChatPage = () => {
           onKeyPress={handleKeyPress}
           placeholder="메시지 입력..." 
         />
-        <button onClick={toggleFileInput}>+</button>
+        <div className="plus-button">
+          <button onClick={toggleFileInput}>+</button>
+        </div>
       </div>
       {showMessage && (
         <div className="message">500자를 넘을 수 없습니다.</div>
