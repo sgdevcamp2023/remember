@@ -106,6 +106,7 @@ public partial class HttpResponse
 
     public void MakeAccessControlAllowOrigin()
     {
+        Header["Access-Control-Allow-Origin"] = "https://localhost:3000";
         Header["Access-Control-Allow-Credentials"] = "true";
     }
 

@@ -38,7 +38,7 @@ public partial class HttpRequest
 
     private void ParseHeader(string requestString)
     {
-        System.Console.WriteLine("\n" + requestString + "\n");
+        // System.Console.WriteLine("\n" + requestString + "\n");
         string[] requestLines = requestString.Split("\r\n");
         MakeRequestInfo(requestLines[0].Split(" "));
 

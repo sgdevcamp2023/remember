@@ -33,6 +33,9 @@ internal class AuthorizationFilter : DownStreamFilter
         if (tokens[0] != "Bearer")
             throw new AuthException(3003);
         
+        if(adapter.JwtValidator == null)
+            throw new ConfigException(3102);
+
         if (!_jwtAuthorization.ValidationToken(adapter.JwtValidator, accessToken))
         {
             System.Console.WriteLine("Authorization Filter : Token Validation Failed");

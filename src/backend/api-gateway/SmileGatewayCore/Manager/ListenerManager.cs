@@ -13,6 +13,7 @@ internal class ListenerManager
     {
         foreach (var config in configs)
         {
+            System.Console.WriteLine(config.Name + config.IsInside);
             Listeners.TryAdd(config.Name, CreateListener(config));
         }
     }

@@ -41,6 +41,7 @@ listeners:
     - auth-service
     - community-service
     - chat-service
+    - state-service
   is-inside: true
   disallow-headers:
   thread-count: 10
@@ -86,6 +87,17 @@ clusters:
       - address: 34.22.109.45
         port: 7000
     prefix: /api/chat-service
+    custom-filters: 
+    authorization: false
+    connect-timeout: 5000
+    request-timeout: 20000
+
+  - name: state-service
+    protocol: http
+    address:
+      - address: 34.22.109.45
+        port: 9000
+    prefix: /api/state
     custom-filters: 
     authorization: false
     connect-timeout: 5000
