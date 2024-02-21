@@ -10,14 +10,19 @@ public class DownStreamFilterChains : IFilterChain<DownStreamDelegate, Adapter>
 {
     protected List<Func<DownStreamDelegate, DownStreamDelegate>> _filters = new List<Func<DownStreamDelegate, DownStreamDelegate>>();
     private DownStreamDelegate? _start = null;
-    public void Init()
+    public void Init(bool isInside = false)
     {
         // 인증 필터
         UseFilter<ExceptionFilter>();
-        UseFilter<ServiceFilter>();
-        UseFilter<TraceFilter>();
+
+        if (!isInside)
+        {
+            UseFilter<ServiceFilter>();
+            UseFilter<TraceFilter>();
+            UseFilter<AuthorizationFilter>();
+        }
+
         UseFilter<OriginalFilter>();
-        // UseFilter<AuthorizationFilter>();
         UseFilter<LogFilter>();
     }
 

@@ -19,6 +19,6 @@ internal class TraceFilter : DownStreamFilter
     
     protected override void Worked(Adapter adapter, HttpContext context)
     {
-        
+           
     }
 }

@@ -65,8 +65,8 @@ public class UserService : IUserService
 
     public async Task ChangeName(NameDTO nameDTO, string traceId, string userId)
     {
-        // if(userId != nameDTO.UserId.ToString())
-        //     throw new ServiceException(4031);
+        if(userId != nameDTO.UserId.ToString())
+            throw new ServiceException(4031);
 
         bool isSuccess = await _communityClient.ChangeNameAsync(new CommunityNameDTO()
         {
@@ -83,8 +83,8 @@ public class UserService : IUserService
 
     public async Task<string> ChangeProfile(ProfileDTO profileDTO, string traceId, string userId)
     {
-        // if(userId != profileDTO.UserId.ToString())
-        //     throw new ServiceException(4032);
+        if(userId != profileDTO.UserId.ToString())
+            throw new ServiceException(4032);
 
         string ContentType = profileDTO.NewProfile.ContentType;
         if (!ContentType.StartsWith("image/"))

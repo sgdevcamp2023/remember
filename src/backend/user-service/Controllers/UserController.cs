@@ -10,7 +10,7 @@ namespace user_service
 {
     namespace user
     {
-        [filter.DefaultHeaderFilter]
+        // [filter.DefaultHeaderFilter]
         [Route("api/[controller]")]
         [ApiController]
         public class UserController : ControllerBase
@@ -55,7 +55,8 @@ namespace user_service
                 [FromForm] ProfileDTO file)
             {
                 string profile = await _userService.ChangeProfile(file, traceId, userId);
-
+                // string profile = await _userService.ChangeProfile(file, "1", "1");
+                
                 return new ProfileResponseDTO()
                 {
                     Profile = profile

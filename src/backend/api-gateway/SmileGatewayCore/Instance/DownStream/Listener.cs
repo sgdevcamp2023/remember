@@ -46,7 +46,7 @@ internal partial class Listener : NetworkInstance
             }
         }
 
-        _filterChains.Init();
+        _filterChains.Init(Config.IsInside);
 
         // Listener Cumtom Filter 설정
         if (Config.CustomFilters != null)
@@ -157,6 +157,7 @@ internal partial class Listener : NetworkInstance
     {
         System.Console.WriteLine($"Listener Send {size} bytes");
 
+        
         return Task.CompletedTask;
     }
 
