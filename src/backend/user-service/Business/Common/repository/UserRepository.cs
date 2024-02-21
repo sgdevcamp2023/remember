@@ -1,4 +1,5 @@
 using System.Data;
+using System.Text.RegularExpressions;
 using user_service.auth.dto;
 
 namespace user_service
@@ -6,7 +7,7 @@ namespace user_service
     namespace common
     {
         public class UserRepository : IUserRepository
-        {   
+        {
             private string _defaultImage;
             private DbConnectionManager _db = null!;
             public UserRepository(IConfiguration configuration, DbConnectionManager dbConnectionManager)
@@ -14,11 +15,12 @@ namespace user_service
                 _defaultImage = configuration["DefaultProfileImage"];
                 _db = dbConnectionManager;
             }
+
             public bool IsEmailExist(string email)
             {
                 string query = $"SELECT * FROM users WHERE email = '{email}'";
                 var readers = _db.ExecuteReader<UserModel>(query, GetUserModel);
-                
+
                 return readers.Count > 0;
             }
 
@@ -42,22 +44,20 @@ namespace user_service
                 {
                     user = datas[0];
                 }
-                
+
                 return user;
             }
 
             public bool InsertUser(RegisterDTO user)
             {
-                string query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', '{user.Username}', '{_defaultImage}')";
+                string query = query = $"INSERT INTO users (email, password, name, profile) VALUES ('{user.Email}', '{user.Password}', N'{user.Username}', '{_defaultImage}')";
                 _db.ExecuteNonQuery(query);
-
                 return true;
             }
             public bool UpdateUser(UserModel user)
             {
-                string query = $"UPDATE users SET email = '{user.Email}', password = '{user.Password}', name = '{user.Name}', updated_at = '{user.UpdatedAt}' WHERE id = {user.Id}";
+                string query = query = $"UPDATE users SET email = '{user.Email}', password = '{user.Password}', name = N'{user.Name}', updated_at = '{user.UpdatedAt}' WHERE id = {user.Id}";
                 _db.ExecuteNonQuery(query);
-
                 return true;
             }
 
@@ -101,7 +101,7 @@ namespace user_service
 
             public bool UpdateName(long id, string name)
             {
-                string query = $"UPDATE users SET name = '{name}' WHERE id = {id}";
+                string query = $"UPDATE users SET name = N'{name}' WHERE id = {id}";
                 _db.ExecuteNonQuery(query);
 
                 return true;

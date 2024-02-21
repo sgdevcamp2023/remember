@@ -8,6 +8,7 @@ using user_service.intercepter;
 using user_service.Business.User.dto;
 using user_service.common.dto;
 using System.Xml;
+using System.Text;
 
 namespace user_service.user.service;
 
@@ -80,6 +81,9 @@ public class UserService : IUserService
 
         if(!_userRepository.UpdateName(nameDTO.UserId, nameDTO.NewName))
             throw new ServiceException(4031);
+
+        var data = _userRepository.GetUserById(nameDTO.UserId);
+        System.Console.WriteLine(data!.Name);
     }
 
     public async Task<string> ChangeProfile(ProfileDTO profileDTO, string traceId, string userId)
