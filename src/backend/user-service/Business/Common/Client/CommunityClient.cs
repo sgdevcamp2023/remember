@@ -17,7 +17,7 @@ public class CommunityClient : ICommunityClient
         _client.BaseAddress = new Uri(_configuration["OutService:Community"]);
 
         CancellationTokenSource cts = new CancellationTokenSource();
-        cts.CancelAfter(5000); // Cancel after 1 second
+        cts.CancelAfter(10000); // Cancel after 1 second
         _cancellationToken = cts.Token;
     }
 
@@ -29,12 +29,13 @@ public class CommunityClient : ICommunityClient
         {
             HttpResponseMessage response = await _client.PostAsync("registration/user", CreateJsonContent(communityDTO), _cancellationToken);
             string str = await response.Content.ReadAsStringAsync();
-            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO<CommunityBaseException>>(str);
-
+            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO>(str);
+            if (dto == null)
+                System.Console.WriteLine("Response is null");
             if (dto!.ResultCode != 200)
             {
-                System.Console.WriteLine(dto.ResultData!.Exception);
-
+                var exception = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
+                System.Console.WriteLine(exception!.Message);
                 throw new ServiceException(4010);
             }
         }
@@ -63,13 +64,13 @@ public class CommunityClient : ICommunityClient
         {
             HttpResponseMessage response = await _client.PatchAsync("change/user/nickname", content, _cancellationToken);
             string str = await response.Content.ReadAsStringAsync();
-            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO<CommunityBaseException>>(str);
-            if(dto == null)
-                throw new Exception("Response is null");
-            
-            if (dto.ResultCode != 200)
+            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO>(str);
+            if (dto == null)
+                System.Console.WriteLine("Response is null");
+            if (dto!.ResultCode != 200)
             {
-                System.Console.WriteLine(dto.ResultData!.Exception);
+                var exception = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
+                System.Console.WriteLine(exception!.Message);
                 throw new ServiceException(4010);
             }
         }
@@ -94,15 +95,23 @@ public class CommunityClient : ICommunityClient
 
         try
         {
-            System.Console.WriteLine(communityDTO.userId + " " + communityDTO.profile);
             HttpResponseMessage response = await _client.PatchAsync("change/user", content, _cancellationToken);
-            string str = await response.Content.ReadAsStringAsync();
-            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO<CommunityBaseException>>(str);
+            Task<string> readTask = response.Content.ReadAsStringAsync();
+            while(!readTask.IsCompleted)
+            {
+                System.Console.WriteLine("Waiting for response");
+            }
+            string str = readTask.Result;
+             str += "}";
 
+            System.Console.WriteLine(str);
+            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO>(str);
+            if (dto == null)
+                System.Console.WriteLine("Response is null");
             if (dto!.ResultCode != 200)
             {
-                System.Console.WriteLine(dto.ResultData!.Exception);
-
+                var exception = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
+                System.Console.WriteLine(exception!.Message);
                 throw new ServiceException(4010);
             }
         }
@@ -130,12 +139,13 @@ public class CommunityClient : ICommunityClient
         {
             HttpResponseMessage response = await _client.PatchAsync("registration/room", content, _cancellationToken);
             string str = await response.Content.ReadAsStringAsync();
-            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO<CommunityBaseException>>(str);
-
+            var dto = JsonConvert.DeserializeObject<CommunityResponseDTO>(str);
+            if (dto == null)
+                System.Console.WriteLine("Response is null");
             if (dto!.ResultCode != 200)
             {
-                System.Console.WriteLine(dto.ResultData!.Exception);
-
+                var exception = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
+                System.Console.WriteLine(exception!.Message);
                 throw new ServiceException(4010);
             }
         }
