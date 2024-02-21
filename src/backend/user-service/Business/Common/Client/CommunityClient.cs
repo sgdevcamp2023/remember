@@ -63,6 +63,7 @@ public class CommunityClient : ICommunityClient
         try
         {
             HttpResponseMessage response = await _client.PatchAsync("change/user/nickname", content, _cancellationToken);
+            // response.Content.
             string str = await response.Content.ReadAsStringAsync();
             var dto = JsonConvert.DeserializeObject<CommunityResponseDTO>(str);
             if (dto == null)
@@ -96,15 +97,7 @@ public class CommunityClient : ICommunityClient
         try
         {
             HttpResponseMessage response = await _client.PatchAsync("change/user", content, _cancellationToken);
-            Task<string> readTask = response.Content.ReadAsStringAsync();
-            while(!readTask.IsCompleted)
-            {
-                System.Console.WriteLine("Waiting for response");
-            }
-            string str = readTask.Result;
-             str += "}";
-
-            System.Console.WriteLine(str);
+            string str = await response.Content.ReadAsStringAsync();
             var dto = JsonConvert.DeserializeObject<CommunityResponseDTO>(str);
             if (dto == null)
                 System.Console.WriteLine("Response is null");
