@@ -1,16 +1,20 @@
 # 유저 서버
-1. [서버 아키텍처](#서버-아키텍처)
-2. [동작 방식](#동작-방식)
-3. [구현 기능 목록](#구현-기능-목록)
-4. [트러블 슈팅](#트러블-슈팅)
+### 1. [서버 아키텍처](#서버-아키텍처)
+### 2. [동작 방식](#동작-방식)
+### 3. [구현 기능 목록](#구현-기능-목록)
+### 4. [트러블 슈팅](#트러블-슈팅)
 
 ## 서버 아키텍처
-| 종류     | 기술                                                              |
-| -------- | ----------------------------------------------------------------- |
-| Language | `ASP.NET Core 6`                                                  |
-| Database | `MSSQL`, `Redis`                                                  |
-| Token    | `JWT`                                                             |
-| Database | `Castle.Core`, `MailKit`, `SmtpServer`, `Google.Cloud.Storage.V1` |
+| 종류         | 기술                                                              |
+| ------------ | ----------------------------------------------------------------- |
+| **Language** | `ASP.NET Core 6`, `C#`                                            |
+| **Database** | `MSSQL`, `Redis`                                                  |
+| **Token**    | `JWT`                                                             |
+| **Library**  | `Castle.Core`, `MailKit`, `SmtpServer`, `Google.Cloud.Storage.V1` |
+
+### 폴더 구조
+![image](../../../resources//user-service/user-service-폴더구조.png)
+
 
 ## 동작 방식
 ### Auth
@@ -138,6 +142,7 @@ public async Task<bool> RegisterUserAsync(CommunityUserDTO communityDTO, string 
 - `EntityFrameWork`를 사용하지 않고, SQL 구문으로 Database에 접근함.
 - Redis 또한 로우하게 접근함.
 
+![image](../../../resources/user-service/유저%20서버.png)
 ## 구현 기능 목록
 ### Auth
 - 로그인

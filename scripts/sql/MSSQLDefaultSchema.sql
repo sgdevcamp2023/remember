@@ -4,7 +4,7 @@ CREATE TABLE users (
     id          BIGINT IDENTITY(1, 1) NOT NULL,
     email       VARCHAR(50)         NOT NULL,
     password    VARCHAR(64)         NOT NULL,
-    name        VARCHAR(20)         NOT NULL,
+    name        NVARCHAR(100)         NOT NULL,
     profile     VARCHAR(255)        NULL,
     created_at  DATETIME            NOT NULL DEFAULT GETDATE(),
     updated_at  DATETIME            NOT NULL DEFAULT GETDATE(),
