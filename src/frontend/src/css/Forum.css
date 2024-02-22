@@ -1,0 +1,10 @@
+.forum {
+    width: 850px;
+    height: 100vh;
+    background-color: #34363a;
+    position: fixed;
+    top: 0;
+    left: 320px; /* 첫 번째 사이드바의 너비에 맞춰 설정 */
+    padding: 8px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}

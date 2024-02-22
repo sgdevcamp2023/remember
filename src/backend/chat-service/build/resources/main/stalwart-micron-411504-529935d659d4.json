@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "stalwart-micron-411504",
+  "private_key_id": "529935d659d4ce393852e0776a808f932dd6ca87",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCnKN80U5EvUAop\ndf+jgyFGZW+GMC5s3EoHHUYmgO2CVtDSMkh3hSIuTIoM3tED3IBChn0TSYnTmMSk\nT/xEo+AGdE8mSFMm0Z1SJJQRrO83S6XzGEzxxeHvRnIIFsKTha7+/13XGheRr6Ay\n5hYJSbB0ejaFKNIzy3/ywHl3zB6i9/hY7r5RjlQjFvgyenyzngPDxTKkMJNlFUnk\n8uCuBXwc9odSCJxztp1IERoOR+jAY2lmw2W/62Xkbox/PlkL1tkokD2V1sRbe1Eg\n4MV+xtyGAeoAuKeDzZhc0XeDxM/wQS+34+FQaifkL4wm2SfRhh91GqVOjils0FJK\nLWw3JWlXAgMBAAECggEAQLOSSbe675xEgq3YyFqeS5hBpagKoDpYMQ7Es2yeAiBG\nbcXmxNR0WYVovfiU4LC9uIJD8W46efucyZjoJU1lDjqA1GmUPedOxJfB9GGCql2O\nm1yhk8erXyleRAFDSUSqaqs/kF3aF5rqICltCCVMtpkDd2FIk6HGIZkcqyEIDr3a\nWrCGXskel0cQErF2/+G0UERFMFHJygzLhTnfxF8vjJ/XGj/m1ounCeXUL9YMuxDW\nvxjer3POV6nRXeoPE5ATXjlOtRswCOA0AqBJOpdbUa8/MHvitDPNtNF4UgFfiPj3\nIkJsxwZ3bCAwhOyrBN809xM8Bn2HoUKcIjUvim96SQKBgQDVkSEB4y4/fHIQG10j\n3hln9gINeZEH1NLqDu0rkO/hpFN6SbzmASuwILcgUuhqrUycTwsHPc1zgR8ykWhV\nnMDa2Xl6ql/yquCJx9/7A2EPnKY5XyJ9a0S5EfAI5+EDlVgv5U3EAqYYDv8AfnH1\nbl7NXjvqbwSNGAljqltaZibUowKBgQDIX0iX+eulrUxWQ/etXrg/JALuYckXnBnp\nDgIGJhENgpqOa0v5ZGtSqX9Qg+AjPyoebGzLIjq17tkvfEShWuP9LPYnw3N1BAgT\nGUzijWVGzO8NbbGKrx7B4OoUUoucNqe5YRPjiybyh7fpP54WRBauS7V+YBT6WVYP\nlgxnLVWvvQKBgAEVzLIiwmBmNHoqeW2uOjjSAi6pWHhOt4ei7ceT4/QkjpwHdeNB\nTESH1gZfBXlNSh9dM3Qk9z9H/62VGY+dzUkPY9Ogu/4SqjNpBZVT7hFTPXD7L8St\nX9sE4VBaRUVsY9dSdfOyA8AJi3goLFIP7oFiojFNwRsqbRnJis9Jx5a7AoGAeVBv\nREx1Zu7gnA40o8wIY3orKCceOGQzr83iXdSoWHStnPLLoegxrm+e/KGLj+uLVbYx\nvF8yCrrc1go4BzVfegbB1ltYyQ0y0lVsHnKbUd18ErZKWvwh9CJ3tuwvSNoyfGOR\nRiAW6ZpQODFjRnnc/ZQrA6Oqr9Rs7azcP4/MJEUCgYAgM2DIgKlzeaNs/HuC+LEM\nMG73qJC66SOMI4nWWTK2odMLiCWaA1EoMiHEBmc7XVy0AqGzge3V7rAQk500OZWH\nHHgtYxG0r5Bc4V5o4jI3pc8LhaHX/GvtVLug5wkb8D177EFs/oo4oUET5m+F9DK+\njpTib2oC3K6WfchBKMzhsw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "smile-bucket-service@stalwart-micron-411504.iam.gserviceaccount.com",
+  "client_id": "108434375820849027512",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/smile-bucket-service%40stalwart-micron-411504.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

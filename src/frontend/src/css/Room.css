@@ -1,0 +1,22 @@
+.profile_img {
+    width: 3.5rem; /* w-20 */
+    height: 3.5rem; /* h-20 */
+    background-color: #fff; /* bg-white */
+    border-radius: 9999px; /* rounded-full */
+    margin-right: 10px;
+}
+
+.room-item {
+    display: flex; /* Flexbox를 사용하여 요소들을 나란히 배치합니다 */
+    align-items: center; /* 세로 가운데 정렬 */
+}
+
+.room-name {
+    margin: 0;
+    text-decoration: none; /* 하이퍼링크 스타일 제거 */
+    color: white;
+}
+
+.room-name:hover {
+    text-decoration: none;
+}

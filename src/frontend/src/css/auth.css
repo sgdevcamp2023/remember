@@ -1,0 +1,24 @@
+label {
+    height: 60%;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+
+    & > input {
+        height: 50%;
+        border: none;
+        border-radius: 2px;
+        outline: none;
+        margin-top: 5px;
+        background-color: black;
+        color: white;
+    }
+}
+button {
+    height: 30%;
+    border: none;
+    border-radius: 2px;
+    margin-top: 10px;
+    background-color: #5a64ea;
+    color: white;
+}
