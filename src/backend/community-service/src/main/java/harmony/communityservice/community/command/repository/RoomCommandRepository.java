@@ -5,4 +5,6 @@ import harmony.communityservice.community.domain.Room;
 public interface RoomCommandRepository {
 
     void save(Room room);
+
+    void deleteByRoomId(long roomId);
 }

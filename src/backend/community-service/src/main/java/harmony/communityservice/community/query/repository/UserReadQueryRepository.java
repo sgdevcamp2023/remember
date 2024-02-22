@@ -10,4 +10,6 @@ public interface UserReadQueryRepository {
     Optional<UserRead> findByUserIdAndGuildId(Long userId, Long guildId);
 
     List<UserRead> findUserReadsByUserId(Long userId);
+
+    List<UserRead> findUserReadsByGuildId(Long guildId);
 }

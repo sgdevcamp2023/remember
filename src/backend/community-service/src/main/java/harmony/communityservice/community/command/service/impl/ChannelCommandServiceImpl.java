@@ -21,12 +21,13 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
     private final ChannelReadCommandService channelReadCommandService;
 
     @Override
-    public void registration(ChannelRegistrationRequestDto requestDto) {
+    public Long registration(ChannelRegistrationRequestDto requestDto) {
         userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
         Guild guild = guildQueryService.findByGuildId(requestDto.getGuildId());
         Channel channel = ToChannelMapper.convert(requestDto, guild);
         channelCommandRepository.save(channel);
         channelReadCommandService.registration(requestDto.getGuildId(), channel);
+        return channel.getChannelId();
     }
 
     @Override

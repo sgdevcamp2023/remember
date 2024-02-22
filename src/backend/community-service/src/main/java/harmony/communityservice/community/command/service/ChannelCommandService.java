@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface ChannelCommandService {
 
-    void registration(ChannelRegistrationRequestDto requestDto);
+    Long registration(ChannelRegistrationRequestDto requestDto);
 
     void remove(ChannelDeleteRequestDto requestDto);
 }

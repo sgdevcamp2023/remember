@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaGuildReadCommandRepository extends JpaRepository<GuildRead, Long> {
 
+    void deleteGuildReadsByGuildId(long guildId);
 
 }

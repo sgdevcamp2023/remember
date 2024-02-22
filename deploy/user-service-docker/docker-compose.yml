@@ -1,0 +1,49 @@
+# Please refer DefaultScema.sql://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  userservice:
+    image: userservice
+    build:
+      context: .
+      dockerfile: ./Dockerfile.userservice
+    volumes:
+      - logs:/var/log
+    container_name: user-service
+    ports:
+      - 5000:5000
+  
+  mssql:
+    image: mssql
+    build:
+      context: .
+      dockerfile: ./Dockerfile.mssql
+    container_name: mssql
+    user: root
+    hostname: mssql-docker
+    ports:
+      - 1433:1433
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    
+  fluentd:
+    image: fluentd
+    container_name: fluentd
+    build:
+      context: .
+      dockerfile: ./Dockerfile.fluentd
+    environment:
+      - FLUENTD_CONF=fluentd.conf
+    volumes:
+      - C:\github\remember\src\backend\user-service\fluentd\buffer:/var/buffer
+      - C:\github\remember\src\backend\user-service\fluentd\pos:/var/pos
+      - logs:/var/log
+    restart: unless-stopped
+
+volumes:
+  logs:
