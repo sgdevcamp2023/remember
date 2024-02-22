@@ -10,7 +10,6 @@ const InvitationPage = () => {
 
   useEffect(() => {
     if (USER_ID && ACCESS_TOKEN) {
-      console.log(params.invitationCode);
       const fetchData = async (code, userId) => {
         const wait = await joinInvitation(code, userId);
       }

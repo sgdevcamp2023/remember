@@ -77,7 +77,6 @@ const Channel = () => {
         const data = await getUserStateAndVoice(CURRENT_VIEW_GUILD, USER_ID);
         setUserStateMap(data.data.resultData.guildStates);
         setVoiceUserStateMap(data.data.resultData.voiceChannelStates);
-        console.log("voiceUser", data.data.resultData.voiceChannelStates);
       };
 
       fetchData();

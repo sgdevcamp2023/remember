@@ -82,7 +82,6 @@ export default function Guilds() {
             })
             .then((response) => {
               removeRooms();
-              console.log(response.data.resultData.roomResponseDtos);
               registerRooms(response.data.resultData.roomResponseDtos);
             })
             .catch((e) => {

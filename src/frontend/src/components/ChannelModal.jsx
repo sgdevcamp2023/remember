@@ -35,7 +35,6 @@ const ChannelModal = (props) => {
     };
 
     const makeChannel = async (data) => {
-      console.log(data);
       const wait = await createChannel(data);
     }
 
@@ -45,7 +44,6 @@ const ChannelModal = (props) => {
 
   useEffect(() => {
     if (CHANNEL) {
-      console.log("modal", CHANNEL);
       let data = {
         categoryId: CHANNEL.categoryId,
         name: CHANNEL.channelName,

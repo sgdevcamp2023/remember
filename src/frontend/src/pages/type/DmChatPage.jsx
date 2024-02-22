@@ -43,7 +43,6 @@ const DmChatPage = () => {
 
   useEffect(() => {
     // roomId가 바뀔때 초기화 해주는 작업
-    console.log("roomId", roomId);
     setPage(0);
     setMessages([]);
     setHasMoreData(true);
@@ -102,9 +101,6 @@ const DmChatPage = () => {
       // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
       const handleReceiveMessage = (data) => {
         const parsedMessage = JSON.parse(data.body);
-        console.log("서버로부터 받은 데이터", parsedMessage);
-        console.log(typeof parsedMessage.roomId); // NUMBER 타입
-        console.log(typeof roomId); // STRING 타입
         if (parsedMessage.roomId === parseInt(roomId)) {
           if (parsedMessage.type === "modify") {
             setMessages(prevMessages => {
@@ -133,7 +129,6 @@ const DmChatPage = () => {
       if (mainSocket !== null) {
         //처음 구독
         socketIdRef.current = mainSocket.subscribe(`/topic/direct/${roomId}`, handleReceiveMessage);
-        console.log(socketIdRef.current)
       }
     }
 
@@ -273,7 +268,6 @@ const DmChatPage = () => {
           'content-type' : 'multipart/form-data',
         }
       });
-      console.log('파일 업로드 성공:', response.data);
     } catch (error) {
       console.error('파일 업로드 실패:', error);
     }
