@@ -1,0 +1,10 @@
+.main-section {
+  width: calc(100% - 312px - 300px); /* 좌측 너비만큼 + 상태 만큼 뺀다. */
+  height: 100vh;
+  background-color: #36393e;
+  position: fixed;
+  top: 0;
+  left: 312px; /* 첫 번째 사이드바의 너비에 맞춰 설정 */
+  /* padding: 8px; */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
