@@ -1,7 +1,7 @@
 using SmileGatewayCore.Filter.Cluster;
 using SmileGatewayCore.Http.Context;
 
-public class ClusterTestFilter : ClusterFilter
+public class ClusterTestFilter : UpStreamFilter
 {
     public override void Worked(HttpContext context)
     {

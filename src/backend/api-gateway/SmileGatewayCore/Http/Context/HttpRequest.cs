@@ -88,7 +88,6 @@ public partial class HttpRequest
         bool contains = false;
         for (int i = 0; i <= bodys.Count - _endBoundary.Length; i++)
         {
-
             if (bodys.Array!.Skip(bodys.Offset + i).Take(_endBoundary.Length).SequenceEqual(_endBoundary))
             {
                 contains = true;
@@ -106,7 +105,11 @@ public partial class HttpRequest
 
         if (temp.Length > 1)
         {
-            QueryString = temp[1];
+            QueryString = "?" + temp[1] + " ";
+        }
+        else
+        {
+            QueryString = " ";
         }
 
         Protocol = requestInfos[2];
@@ -114,7 +117,7 @@ public partial class HttpRequest
 
     private string HeaderToString()
     {
-        string requestString = $"{Method} {Path} {Protocol}\r\n";
+        string requestString = $"{Method} {Path}{QueryString}{Protocol}\r\n";
         requestString += $"trace-id: {TraceId}\r\n";
         requestString += $"user-id: {UserId}\r\n";
 
@@ -145,5 +148,6 @@ public partial class HttpRequest
     private void MakeDeafultHeader()
     {
         Header["Connection"] = "keep-alive";
+        Header["Keep-Alive"] = "timeout=1800";
     }
 }

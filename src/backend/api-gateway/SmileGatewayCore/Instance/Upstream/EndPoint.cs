@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Microsoft.AspNetCore.HttpOverrides;
 using SmileGatewayCore.Config;
 using SmileGatewayCore.Exception;
 using SmileGatewayCore.Http.Context;
@@ -11,26 +12,34 @@ namespace SmileGatewayCore.Instance.Upstream;
 
 public partial class EndPoint : NetworkInstance
 {
+    public IPEndPoint IpEndPoint { get; private set; } = null!;
     private ConnectionPool _connectPool;
     private AsyncLocal<HttpContext> _context = new AsyncLocal<HttpContext>();
     private long _usingCount = 0;
-    public IPEndPoint IpEndPoint { get; private set; } = null!;
-    public EndPoint(AddressConfig config)
+    private TimeSpan _connectTimeout;
+
+    public EndPoint(AddressConfig addressConfig, int? connectTimeout, int? requestTimeout)
+        : base(requestTimeout)
     {
         // ConnectionPool이 꽉찼을 때가 문제임.
         // 많은 양의 데이터가 올 때 말하는것.
-        IpEndPoint = new IPEndPoint(IPAddress.Parse(config.Address), config.Port);
-        _connectPool = new ConnectionPool(100, IpEndPoint);
+        IpEndPoint = new IPEndPoint(IPAddress.Parse(addressConfig.Address), addressConfig.Port);
+        _connectPool = new ConnectionPool(100);
+
+        if (connectTimeout == null)
+            _connectTimeout = TimeSpan.FromMilliseconds(Utils.Timeout.defaultTimeout);
+        else
+            _connectTimeout = TimeSpan.FromMilliseconds(connectTimeout.Value);
 
         Init();
     }
 
-    private void IncreaseUsingCount()
+    public void IncreaseUsingCount()
     {
         Interlocked.Increment(ref _usingCount);
     }
 
-    private void DecreaseUsingCount()
+    public void DecreaseUsingCount()
     {
         Interlocked.Decrement(ref _usingCount);
     }
@@ -43,60 +52,63 @@ public partial class EndPoint : NetworkInstance
     public async Task StartAsync(HttpContext context)
     {
         IncreaseUsingCount();
+
+        System.Console.WriteLine("EndPoint StartAsync");
+        // 설정
         _context.Value = context;
+        Task timeout = Task.Delay(_connectTimeout + _requestTimeout);
 
-        // Socket? socket = _connectPool.GetAliveSocket();
-        // if(socket == null)
-        //     return;
-
-        // await Send(socket, context.Request.GetStringToBytes());
-        // _connectPool.EnqueueAliveSocket(socket);
-
+        // 서버가 죽어있다는 판단을 어떻게 할 것인가?
         // while (true)
         // {
-        //     Socket? socket = _connectPool.GetAliveSocket();
-        //     if (socket == null)
+        //     if (timeout.IsCompleted)
         //     {
-        //         if(IsHealthCheck == false)
+        //         if (_connectPool.AliveCount == 0)
         //         {
-        //             IsHealthCheck = true;
+        //             IsAlive = false;
         //             _timer.Enabled = true;
+        //             throw new NetworkException(3200);
         //         }
-
-        //         IsAlive = false;
-        //         throw new NetworkException(3200);
+        //         else
+        //             throw new NetworkException(3201);
         //     }
+
+        //     Socket? socket = await _connectPool.GetSocket(IpEndPoint, _connectTimeout);
+        //     if (socket == null)
+        //         continue;
 
         //     try
         //     {
         //         // 실행
-        //         // 만약 소켓이 종료되어 있을 경우 종료됨.
-        //         // 연결이 끊겨있는 경우라면?
         //         await Send(socket, context.Request.GetStringToBytes());
-        //         _connectPool.EnqueueAliveSocket(socket);
+        //         _connectPool.EnqueueSocket(socket);
+        //         break;
         //     }
         //     catch (System.Exception)
         //     {
-        //         System.Console.WriteLine("Dead Socket");
-
-        //         if(socket.Poll(100, SelectMode.SelectRead))
-        //             await _connectPool.ConnectAsync(socket, 1000);  
-
-        //         _connectPool.EnqueueDeadSocket(socket);
-        //         continue;
+        //         _connectPool.MinusAliveCount();
+        //         await _connectPool.MakeConnectSocket(IpEndPoint, _connectTimeout);
         //     }
-
-        //     break;
+        //     finally
+        //     {
+        //         DecreaseUsingCount();
+        //     }
         // }
-        Socket socket = new Socket(IpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+        Socket socket = _connectPool.CreateSocket();
+        await socket.ConnectAsync(IpEndPoint);
+
         try
         {
-            await _connectPool.ConnectAsync(socket, 1000);
+            // 실행
             await Send(socket, context.Request.GetStringToBytes());
+
+            socket.Shutdown(SocketShutdown.Both);
             socket.Close();
         }
-        catch (System.Exception)
+        catch (System.Exception e)
         {
+            System.Console.WriteLine("EndPoint Send Error" + e.Message);
             throw new NetworkException(3200);
         }
 

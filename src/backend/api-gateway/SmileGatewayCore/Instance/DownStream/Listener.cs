@@ -18,13 +18,14 @@ internal partial class Listener : NetworkInstance
 {
     private Socket _listenerSocket = null!;
     private SocketPool _socketPool = new SocketPool();
-    private ListenerFilterChains _filterChains = new ListenerFilterChains();
+    private DownStreamFilterChains _filterChains = new DownStreamFilterChains();
     private ConcurrentDictionary<string, Cluster> _clusters = new ConcurrentDictionary<string, Cluster>();
     public AsyncLocal<HttpContext?> _context = new AsyncLocal<HttpContext?>() { Value = null };
     public ClusterManager _clusterManager;
     public readonly ListenerConfig Config;
 
     public Listener(ClusterManager clusterManager, ListenerConfig config)
+        : base(config.RequestTimeout)
     {
         _clusterManager = clusterManager;
         Config = config;
@@ -45,7 +46,7 @@ internal partial class Listener : NetworkInstance
             }
         }
 
-        _filterChains.Init();
+        _filterChains.Init(Config.IsInside);
 
         // Listener Cumtom Filter 설정
         if (Config.CustomFilters != null)
@@ -57,6 +58,8 @@ internal partial class Listener : NetworkInstance
         }
 
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+        _listenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveBuffer, Buffers.bufferSize);
 
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Config.Address.Address), Config.Address.Port);
 
@@ -75,10 +78,12 @@ internal partial class Listener : NetworkInstance
     public async void RegisterAccept()
     {
         // 시작
-        Socket socket = _socketPool.RentSocket();
+        // 리눅스에서는 미 지원
+        // Socket socket = _socketPool.RentSocket();
+        // await _listenerSocket.AcceptAsync(socket);
         try
         {
-            await _listenerSocket.AcceptAsync(socket);
+            Socket socket = await _listenerSocket.AcceptAsync();
             Start(socket);
         }
         catch (System.Exception e)
@@ -95,13 +100,14 @@ internal partial class Listener : NetworkInstance
         try
         {
             await Receive(socket);
+            socket.Close();
         }
         catch (System.Exception e)
         {
             System.Console.WriteLine(e);
         }
 
-        _socketPool.ReturnSocket(socket);
+        // _socketPool.ReturnSocket(socket);
     }
 
     protected override async Task OnReceive(Socket socket, ArraySegment<byte> buffer, int recvLen)
@@ -149,8 +155,9 @@ internal partial class Listener : NetworkInstance
 
     protected override Task OnSend(Socket socket, int size)
     {
-        System.Console.WriteLine($"Listener Send {size} bytes");
+        System.Console.WriteLine($"{Config.Address.Address}:{Config.Address.Port} Listener Send {size} bytes");
 
+        
         return Task.CompletedTask;
     }
 
@@ -174,7 +181,7 @@ internal partial class Listener : NetworkInstance
 
         if (adapter == null)
         {
-            ErrorResponse.MakeBadRequest(_context.Value.Response, 3107);
+            ErrorResponse.Instance.MakeBadRequest(_context.Value.Response, 3107);
             return;
         }
 

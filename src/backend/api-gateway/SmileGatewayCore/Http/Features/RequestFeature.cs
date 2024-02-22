@@ -13,7 +13,7 @@ public sealed class RequestFeature : IRequestFeature
 
         
         TraceId = string.Empty;
-        UserId = string.Empty;
+        UserId = "0";
         IsHttps = false;
         Header = new HeaderDictionary();
         ContentLength = -1;

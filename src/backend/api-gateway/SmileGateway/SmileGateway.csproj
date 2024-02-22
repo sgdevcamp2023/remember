@@ -13,6 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="SmileGatewayConfig.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <ProjectReference Include="..\SmileGatewayCore\SmileGatewayCore.csproj" />
   </ItemGroup>
 

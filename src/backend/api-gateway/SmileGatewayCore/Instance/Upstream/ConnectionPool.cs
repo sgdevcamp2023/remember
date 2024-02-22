@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
+using SmileGatewayCore.Exception;
 
 namespace SmileGatewayCore.Instance.Upstream;
 
@@ -8,27 +9,19 @@ namespace SmileGatewayCore.Instance.Upstream;
 internal class ConnectionPool
 {
     // 서버가 죽어있을 때는 어떻게 체크할 것인가?
-    private ConcurrentQueue<Socket> _aliveSocket = new ConcurrentQueue<Socket>();
-    private ConcurrentQueue<Socket> _deadSocket = new ConcurrentQueue<Socket>();
     public int Capacity { get; private set; }
-    private IPEndPoint _endPoint;
-    public int DeadCount { get => _deadSocket.Count; }
-    public int AliveCount { get => _aliveSocket.Count; }
-    public Socket? GetAliveSocket() { return _aliveSocket.TryDequeue(out Socket? socket) ? socket : null; }
-    public Socket? GetDeadSocket() { return _deadSocket.TryDequeue(out Socket? socket) ? socket : null; }
-    public void EnqueueAliveSocket(Socket socket) { _aliveSocket.Enqueue(socket); }
-    public void EnqueueDeadSocket(Socket socket) { _deadSocket.Enqueue(socket); }
+    private ConcurrentQueue<Socket> _sockets = new ConcurrentQueue<Socket>();
+    private long count = 0;
+    public long AliveCount { get => Interlocked.Read(ref count); }
+    public void EnqueueSocket(Socket socket) { _sockets.Enqueue(socket); }
 
-    public ConnectionPool(int capacity, IPEndPoint endPoint)
+    public ConnectionPool(int capacity)
     {
         Capacity = capacity;
-        _endPoint = endPoint;
-
-        Init().Wait();
     }
 
 
-    private async Task Init()
+    public async Task Init(IPEndPoint endPoint, TimeSpan timeout)
     {
         for (int i = 0; i < Capacity; i++)
         {
@@ -36,14 +29,39 @@ internal class ConnectionPool
             Socket socket = CreateSocket();
             try
             {
-                await ConnectAsync(socket);
-                EnqueueAliveSocket(socket);
+                await ConnectAsync(socket, endPoint, timeout);
+                EnqueueSocket(socket);
+                AddAliveCount();
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                EnqueueDeadSocket(socket);
+                System.Console.WriteLine(e.Message);
             }
         }
+    }
+
+    public async Task<Socket?> GetSocket(IPEndPoint endPoint, TimeSpan timeout)
+    {
+        if (_sockets.TryDequeue(out Socket? socket))
+        {
+            return socket;
+        }
+        else
+        {
+            return await MakeConnectSocket(endPoint, timeout);
+        }
+    }
+
+    public void AddAliveCount()
+    {
+        if (Interlocked.CompareExchange(ref count, Capacity, Capacity) <= Capacity)
+            Interlocked.Increment(ref count);
+    }
+
+    public void MinusAliveCount()
+    {
+        if (Interlocked.CompareExchange(ref count, 0, 0) > 0)
+            Interlocked.Decrement(ref count);
     }
 
     public Socket CreateSocket()
@@ -51,36 +69,43 @@ internal class ConnectionPool
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-        
-        // KeepAlive 시간 설정
-        int keepAliveTime = 60 * 1000; // 60초
-        socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, keepAliveTime);
-
-        // KeepAlive 간격 설정
-        int keepAliveInterval = 1000; // 1초
-        socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, keepAliveInterval);
-
-        // KeepAlive 재시도 횟수 설정
-        int keepAliveRetryCount = 3;
-        socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, keepAliveRetryCount);
-
-        // 딜레이 제거
-        // socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);    
 
         return socket;
     }
 
-    public async Task ConnectAsync(Socket socket, int timeOut = 100)
+    public async Task ConnectAsync(Socket socket, IPEndPoint endPoint, TimeSpan timout)
     {
-        var connectTask = socket.ConnectAsync(_endPoint);
-        var timerTask = Task.Delay(timeOut);
+        var connectTask = socket.ConnectAsync(endPoint);
+        var timerTask = Task.Delay(timout);
 
         var completedTask = await Task.WhenAny(timerTask, connectTask);
 
         if (completedTask == timerTask)
             throw new TimeoutException();
-        
-        if(socket.Connected == false)
-            throw new SocketException((int)SocketError.ConnectionRefused);
+
+        if (socket.Connected == false)
+            throw new NetworkException(3200);
+    }
+
+    public async Task<Socket?> MakeConnectSocket(IPEndPoint endPoint, TimeSpan timeout)
+    {
+
+        Socket socket = CreateSocket();
+        try
+        {
+            if (AliveCount >= Capacity)
+                return null;
+            
+            await ConnectAsync(socket, endPoint, timeout);
+            AddAliveCount();
+
+            return socket;
+        }
+        catch
+        {
+            socket.Dispose();
+        }
+
+        return null;
     }
 }

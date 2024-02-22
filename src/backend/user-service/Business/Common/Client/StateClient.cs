@@ -15,7 +15,7 @@ public class StateClient : IStateClient
         _client.BaseAddress = new Uri(_configuration["OutService:State"]);
 
         CancellationTokenSource cts = new CancellationTokenSource();
-        cts.CancelAfter(1000); // Cancel after 1 second
+        cts.CancelAfter(5000); // Cancel after 1 second
         _cancellationToken = cts.Token;
     }
 

@@ -15,8 +15,7 @@ internal class ConfigReader
                                                 .Build();
     public ConfigReader(string path)
     {
-        // _path = ".\\SmileGateway\\" + path;
-        _path = "C:\\github\\remember\\src\\backend\\api-gateway\\" + path;
+        _path = path;
     }
 
     public T Load<T>()
@@ -31,8 +30,9 @@ internal class ConfigReader
                 }
             }
         }
-        catch (System.Exception)
+        catch (System.Exception e)
         {
+            System.Console.WriteLine(e.Message);
             throw new ConfigException(3110);
         }
     }

@@ -52,10 +52,10 @@ namespace user_service
             }
 
             [HttpPost("request/accept")]
-            public IActionResult AcceptFriendRequest(
+            public async Task<IActionResult> AcceptFriendRequest(
                 [FromBody] FriendDTO friendDTO)
             {
-                _friendService.AcceptFriendAddRequest(friendDTO);
+                await _friendService.AcceptFriendAddRequestAsync(friendDTO);
 
                 return Ok();
             }

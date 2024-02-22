@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Utils/Error/ErrorCode.json">
+      <Link>ErrorCode.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <PackageReference Include="YamlDotNet" Version="13.7.1"/>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25"/>
     <PackageReference Include="StackExchange.Redis" Version="2.7.17"/>

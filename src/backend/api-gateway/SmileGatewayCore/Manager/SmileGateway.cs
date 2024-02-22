@@ -13,13 +13,7 @@ public class SmileGateway
     private Root _root = null!;
     public SmileGateway(string configPath)
     {
-#if DEBUG
-        _configPath = System.Reflection.Assembly.GetEntryAssembly()!.GetName().Name + "\\" + configPath;
-        // _configPath = System.Environment.CurrentDirectory + "\\" + configPath;
-#elif RELEASE
         _configPath = configPath;
-#endif
-
         _configReader = new ConfigReader(_configPath);
     }
 

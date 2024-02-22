@@ -7,6 +7,8 @@ using Castle.DynamicProxy;
 using user_service.intercepter;
 using user_service.Business.User.dto;
 using user_service.common.dto;
+using System.Xml;
+using System.Text;
 
 namespace user_service.user.service;
 
@@ -59,7 +61,7 @@ public class UserService : IUserService
             Id = user.Id,
             Email = user.Email,
             Name = user.Name,
-            ProfileUrl = user.Profile
+            Profile = user.Profile
         };
     }
 
@@ -79,12 +81,17 @@ public class UserService : IUserService
 
         if(!_userRepository.UpdateName(nameDTO.UserId, nameDTO.NewName))
             throw new ServiceException(4031);
+
+        var data = _userRepository.GetUserById(nameDTO.UserId);
+        System.Console.WriteLine(data!.Name);
     }
 
     public async Task<string> ChangeProfile(ProfileDTO profileDTO, string traceId, string userId)
     {
         if(userId != profileDTO.UserId.ToString())
-            throw new ServiceException(4028);
+            throw new ServiceException(4032);
+
+        Console.WriteLine(profileDTO.NewProfile.ContentType);
 
         string ContentType = profileDTO.NewProfile.ContentType;
         if (!ContentType.StartsWith("image/"))
@@ -141,7 +148,6 @@ public class UserService : IUserService
         try
         {
             byte[] profileBytes = MakeProfileToByte(profile);
-
             var credential = GoogleCredential.FromFile(_keyPath);
             var storage = StorageClient.Create(credential);
             using (var stream = new MemoryStream(profileBytes))
@@ -150,19 +156,20 @@ public class UserService : IUserService
             }
             return storage.GetObject(_bucketName, fileName).MediaLink;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            System.Console.WriteLine(e.Message);
             throw new ServiceException(4024);
         }
     }
 
-    private bool DeleteProfileFromGCP(string profileUrl)
+    private bool DeleteProfileFromGCP(string profile)
     {
         try
         {
             var credential = GoogleCredential.FromFile(_keyPath);
             var storage = StorageClient.Create(credential);
-            storage.DeleteObject(_bucketName, profileUrl);
+            storage.DeleteObject(_bucketName, profile);
 
             return true;
         }

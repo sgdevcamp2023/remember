@@ -4,20 +4,25 @@ using SmileGatewayCore.Http.Context;
 
 namespace SmileGatewayCore.Instance.DownStream;
 
-public delegate Task ListenerDelegate(Adapter adapter, HttpContext context);
+public delegate Task DownStreamDelegate(Adapter adapter, HttpContext context);
 
-public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
+public class DownStreamFilterChains : IFilterChain<DownStreamDelegate, Adapter>
 {
-    protected List<Func<ListenerDelegate, ListenerDelegate>> _filters = new List<Func<ListenerDelegate, ListenerDelegate>>();
-    private ListenerDelegate? _start = null;
-    public void Init()
+    protected List<Func<DownStreamDelegate, DownStreamDelegate>> _filters = new List<Func<DownStreamDelegate, DownStreamDelegate>>();
+    private DownStreamDelegate? _start = null;
+    public void Init(bool isInside)
     {
         // 인증 필터
         UseFilter<ExceptionFilter>();
-        UseFilter<ServiceFilter>();
-        UseFilter<TraceFilter>();
+
+        if (!isInside)
+        {
+            UseFilter<ServiceFilter>();
+            UseFilter<TraceFilter>();
+            UseFilter<AuthorizationFilter>();
+        }
+
         UseFilter<OriginalFilter>();
-        UseFilter<AuthorizationFilter>();
         UseFilter<LogFilter>();
     }
 
@@ -27,7 +32,7 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
         if (type == null)
             throw new System.Exception();
 
-        if (typeof(IListenerFilterBase).IsAssignableFrom(type) == false)
+        if (typeof(IDownStreamFilterBase).IsAssignableFrom(type) == false)
             throw new System.Exception();
 
         UseFilter(type);
@@ -44,7 +49,7 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
         {
             return async (instance, context) =>
              {
-                 var filter = Activator.CreateInstance(type) as IListenerFilterBase;
+                 var filter = Activator.CreateInstance(type) as IDownStreamFilterBase;
 
                  if (filter == null)
                  {
@@ -55,7 +60,7 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
              };
         });
     }
-    public void Use(Func<ListenerDelegate, ListenerDelegate> filter)
+    public void Use(Func<DownStreamDelegate, DownStreamDelegate> filter)
     {
         _filters.Add(filter);
     }
@@ -65,7 +70,7 @@ public class ListenerFilterChains : IFilterChain<ListenerDelegate, Adapter>
     {
         if (_start == null)
         {
-            ListenerDelegate last = async (adapter, context) =>
+            DownStreamDelegate last = async (adapter, context) =>
             {
                 RouteFilter filter = new RouteFilter();
                 await filter.InvokeAsync(adapter, context);

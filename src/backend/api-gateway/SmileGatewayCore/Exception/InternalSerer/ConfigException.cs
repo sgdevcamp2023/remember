@@ -13,7 +13,7 @@ public class ConfigException : InternalException
 
     public override string ToString()
     {
-        string info = ErrorResponse.GetErrorInfo(ErrorCode);
+        string info = ErrorResponse.Instance.GetErrorInfo(ErrorCode);
         ErrorCodeModel? errorCode = JsonConvert.DeserializeObject<ErrorCodeModel>(info);
         if(errorCode != null)
         {

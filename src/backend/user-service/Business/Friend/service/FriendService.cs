@@ -1,6 +1,4 @@
-using System.Text;
 using Castle.DynamicProxy;
-using Newtonsoft.Json;
 using user_service.common;
 using user_service.common.dto;
 using user_service.common.exception;
@@ -15,14 +13,17 @@ public class FriendService : IFriendService
     private IConfiguration _config;
     private IFriendRepository _friendRepository;
     private IStateClient _stateClient;
+    private ICommunityClient _communityClient;
     public FriendService(IConfiguration config,
                         IFriendRepository friendRepository,
                         IStateClient stateClient,
+                        ICommunityClient communityClient,
                         LogInterceptor interceptor)
     {
         var generator = new ProxyGenerator();
         _friendRepository = generator.CreateInterfaceProxyWithTargetInterface<IFriendRepository>(friendRepository, interceptor);
         _stateClient = generator.CreateInterfaceProxyWithTargetInterface<IStateClient>(stateClient, interceptor);
+        _communityClient = generator.CreateInterfaceProxyWithTargetInterface<ICommunityClient>(communityClient, interceptor);
         _config = config;
     }
 
@@ -36,19 +37,21 @@ public class FriendService : IFriendService
             userIds.userIds.Add(friendInfo.Id);
         }
 
-        // 상태관리 서버에게 전송해야함
-        var data = await _stateClient.GetFriendOnlineList(userIds, "traceId", "userId");
-        if (data == null)
-            throw new ServiceException(4025);
-
-        foreach (FriendInfoDTO friendInfo in friendInfos)
+        if (userIds.userIds.Count != 0)
         {
-            if (data.connectionStates[friendInfo.Id.ToString()] == "online")
-                friendInfo.IsOnline = true;
-            else
-                friendInfo.IsOnline = false;
-        }
+            // 상태관리 서버에게 전송해야함
+            var data = await _stateClient.GetFriendOnlineList(userIds, "traceId", "userId");
+            if (data == null)
+                throw new ServiceException(4025);
 
+            foreach (FriendInfoDTO friendInfo in friendInfos)
+            {
+                if (data.connectionStates[friendInfo.Id.ToString()] == "online")
+                    friendInfo.IsOnline = true;
+                else
+                    friendInfo.IsOnline = false;
+            }
+        }
         return friendInfos;
     }
 
@@ -89,16 +92,28 @@ public class FriendService : IFriendService
             throw new ServiceException(4020);
     }
 
-    public void AcceptFriendAddRequest(FriendDTO friend)
+    public async Task AcceptFriendAddRequestAsync(FriendDTO friend)
     {
         long id = friend.MyId;
-        long friendId = GetFriendId(friend.FriendEmail);
+        IdAndProfileDTO friendId = GetFriendIdAndProfile(friend.FriendEmail);
 
-        if (id == friendId)
+        if (id == friendId.Id)
             throw new ServiceException(4026);
 
-        if (!_friendRepository.AcceptFriendRequest(id, friendId))
+        if (!_friendRepository.AcceptFriendRequest(id, friendId.Id))
             throw new ServiceException(4018);
+
+        string myEmail = GetUserEmail(id);
+
+        bool isSuccess = await _communityClient.CreateDMRoomAsync(new CommunityRoomCreateDTO
+        {
+            name = $"{myEmail},{friend.FriendEmail}",
+            members = new List<long> { id, friendId.Id },
+            profile = friendId.Profile
+        }, "traceId", id.ToString());
+
+        if (!isSuccess)
+            throw new ServiceException(4021);
     }
 
     public void RefuseFriendAddRequest(FriendDTO friend)
@@ -126,10 +141,28 @@ public class FriendService : IFriendService
 
     private long GetFriendId(string email)
     {
-        long friendId = _friendRepository.GetFriendId(email);
+        long friendId = _friendRepository.GetUserIdtoEmail(email);
         if (friendId == 0)
             throw new ServiceException(4007);
 
         return friendId;
+    }
+
+    private IdAndProfileDTO GetFriendIdAndProfile(string email)
+    {
+        IdAndProfileDTO? idAndProfile = _friendRepository.GetIdAndProfile(email);
+        if (idAndProfile == null)
+            throw new ServiceException(4007);
+
+        return idAndProfile;
+    }
+
+    private string GetUserEmail(long id)
+    {
+        string email = _friendRepository.GetUserEmailToId(id);
+        if (email == null)
+            throw new ServiceException(4007);
+
+        return email;
     }
 }

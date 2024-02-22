@@ -14,7 +14,6 @@ namespace user_service
                 public string Email { get; set; } = null!;
 
                 [Required(ErrorMessage = "4005")]
-                [RegularExpression(@"^[a-zA-Z_-]+$", ErrorMessage = "4006")]
                 public string Username { get; set; } = null!;
 
                 [Required(ErrorMessage = "4002")]

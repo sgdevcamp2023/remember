@@ -1,7 +1,6 @@
 using Castle.DynamicProxy;
 using Microsoft.AspNetCore.Mvc;
 using user_service.Business.User.dto;
-using user_service.common.exception;
 using user_service.intercepter;
 using user_service.logger;
 using user_service.user.dto;
@@ -11,7 +10,7 @@ namespace user_service
 {
     namespace user
     {
-        [filter.DefaultHeaderFilter]
+        // [filter.DefaultHeaderFilter]
         [Route("api/[controller]")]
         [ApiController]
         public class UserController : ControllerBase
@@ -55,11 +54,12 @@ namespace user_service
                 [FromHeader(Name = "user-id")] string userId,
                 [FromForm] ProfileDTO file)
             {
-                string profileUrl = await _userService.ChangeProfile(file, traceId, userId);
-
+                string profile = await _userService.ChangeProfile(file, traceId, userId);
+                // string profile = await _userService.ChangeProfile(file, "1", "1");
+                
                 return new ProfileResponseDTO()
                 {
-                    ProfileUrl = profileUrl
+                    Profile = profile
                 };
             }
 

@@ -10,7 +10,7 @@ public interface IFriendService
     List<FriendInfoDTO> GetReceiveRequestList(long id);
     void SendFriendAddRequest(FriendDTO friend);
     void CancleFriendAddRequest(FriendDTO friend);
-    void AcceptFriendAddRequest(FriendDTO friend);
+    Task AcceptFriendAddRequestAsync(FriendDTO friend);
     void RefuseFriendAddRequest(FriendDTO friend);
     bool DeleteFriend(FriendDTO friend);
 }

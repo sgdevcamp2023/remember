@@ -39,6 +39,8 @@ public partial class HttpResponse
                 continue;
             }
 
+            if (header[0] == "Access-Control-Allow-Origin")
+                continue;
             if (header[0] == "Set-Cookie")
             {
                 if (Cookie == null)
@@ -49,6 +51,7 @@ public partial class HttpResponse
             }
             if (header[0] == "Content-Length")
             {
+                System.Console.WriteLine(header[1]);
                 _responseFeatrue.ContentLength = int.Parse(header[1]);
                 continue;
             }
@@ -57,8 +60,6 @@ public partial class HttpResponse
                 IsChucked = true;
                 continue;
             }
-            if (header[0] == "Access-Control-Allow-Origin")
-                continue;
 
             if (header.Length > 1)
                 Header[header[0]] = header[1];
@@ -83,15 +84,17 @@ public partial class HttpResponse
         {
             responseString += $"{Cookie.ToString()}\r\n";
         }
-        responseString += $"Content-Length: {ContentLength}\r\n";
-        responseString += $"\r\n{Body}";
+
+        if (ContentLength != -1)
+            responseString += $"Content-Length: {ContentLength}\r\n";
+        responseString += $"\r\n{Body}\r\n";
         return responseString;
     }
 
     public byte[] GetStringToBytes()
     {
         string responseString = ToString();
-        System.Console.WriteLine(Body);
+        System.Console.WriteLine(responseString);
         return System.Text.Encoding.UTF8.GetBytes(responseString);
     }
 
@@ -100,6 +103,12 @@ public partial class HttpResponse
         string[] str = body.Split("\r\n");
 
         return MakeChuckedBody(str);
+    }
+
+    public void MakeAccessControlAllowOrigin()
+    {
+        Header["Access-Control-Allow-Origin"] = "https://localhost:3000";
+        Header["Access-Control-Allow-Credentials"] = "true";
     }
 
     private bool MakeChuckedBody(string[] bodys)
@@ -111,7 +120,7 @@ public partial class HttpResponse
                 break;
 
             int length = Convert.ToInt32(bodys[i], 16);
-            ContentLength += length;
+            ContentLength += length;    
 
             if (length == 0)
             {
@@ -121,7 +130,8 @@ public partial class HttpResponse
             else
                 Body += bodys[i + 1];
         }
-
+        
+        ContentLength = Body!.Length;
         return isEnd;
     }
 

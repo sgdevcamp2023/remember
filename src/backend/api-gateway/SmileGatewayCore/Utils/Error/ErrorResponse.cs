@@ -3,10 +3,21 @@ using SmileGatewayCore.Utils;
 
 namespace SmileGatewayCore.Config;
 
-public static class ErrorResponse
+public class ErrorResponse
 {
-    private static ErrorCodeReader _errorCodeReader = new ErrorCodeReader();
-    public static void MakeBadRequest(HttpResponse response, int errorCode)
+    private static ErrorResponse? _instance;
+    public static ErrorResponse Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = new ErrorResponse();
+            return _instance;
+        }
+    }
+
+    private ErrorCodeReader _errorCodeReader = new ErrorCodeReader();
+    public void MakeBadRequest(HttpResponse response, int errorCode)
     {
         response.StatusCode = 400;
         response.StatusMessage = "Bad Request";
@@ -14,31 +25,32 @@ public static class ErrorResponse
         response.Header["Content-Type"] = "applicatoin/json";
         response.Header["Date"] = DateTime.Now.ToString("r");
         response.Header["Connection"] = "close";
-        response.Header["Access-Control-Allow-Credentials"] = "true";
+        response.MakeAccessControlAllowOrigin();
 
         string errorString = GetErrorInfo(errorCode);
         response.ContentLength = errorString.Length;
         response.Body = errorString;
     }
 
-    public static void MakeInternalServerError(HttpResponse response, int errorCode)
+    public void MakeInternalServerError(HttpResponse response, int errorCode)
     {
         response.StatusCode = 500;
         response.StatusMessage = "Internal Server Error";
         response.Protocol = "HTTP/1.1";
-        response.Header.Add("Content-Type", "applicatoin/json");
-        response.Header.Add("Date", DateTime.Now.ToString("r"));
-        response.Header.Add("Connection", "close");
+        response.Header["Content-Type"] = "applicatoin/json";
+        response.Header["Date"] = DateTime.Now.ToString("r");
+        response.Header["Connection"] = "close";
+        response.MakeAccessControlAllowOrigin();
 
         string errorString = GetErrorInfo(errorCode);
         response.ContentLength = errorString.Length;
         response.Body = errorString;
     }
-    public static string GetErrorInfo(int errorCode)
+    public string GetErrorInfo(int errorCode)
     {
-        if(_errorCodeReader.ErrorCodes.TryGetValue(errorCode, out string? errorInfo))
+        if (_errorCodeReader.ErrorCodes.TryGetValue(errorCode, out string? errorInfo))
             return errorInfo;
 
-        throw new System.Exception();
+        return "";
     }
 }

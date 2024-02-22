@@ -8,5 +8,7 @@ public class ListenerConfig
     public List<CustomFilterConfig>? CustomFilters { get; set; }
     public Authorization? Authorization { get; set; }
     public List<string> DisallowHeaders { get; set; } = null!;
+    public bool IsInside { get; set; }
     public int ThreadCount { get; set; }
+    public int? RequestTimeout { get; set; }
 }

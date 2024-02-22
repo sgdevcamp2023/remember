@@ -3,18 +3,18 @@ using SmileGatewayCore.Http.Context;
 
 namespace SmileGatewayCore.Instance.Upstream;
 
-public delegate Task ClusterDelegate(HttpContext context);
+public delegate Task UpStreamDelegate(HttpContext context);
 
-public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
+public class UpStreamFilterChains : IFilterChain<UpStreamDelegate, EndPoint>
 {
-    private List<Func<ClusterDelegate, ClusterDelegate>> _filters = new List<Func<ClusterDelegate, ClusterDelegate>>();
-    private ClusterDelegate? _start = null;
+    private List<Func<UpStreamDelegate, UpStreamDelegate>> _filters = new List<Func<UpStreamDelegate, UpStreamDelegate>>();
+    private UpStreamDelegate? _start = null;
     private AsyncLocal<EndPoint> _endPoint = new AsyncLocal<EndPoint>();
     public void Init()
     {
         // UseFilter<ClusterExceptionFilter>();
     }
-    
+
 
     public void UseFilter(string filterName)
     {
@@ -22,7 +22,7 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
         if (type == null)
             throw new System.Exception();
 
-        if (typeof(IClusterFilterBase).IsAssignableFrom(type) == false)
+        if (typeof(IUpStreamFilterBase).IsAssignableFrom(type) == false)
             throw new System.Exception();
 
         UseFilter(type);
@@ -39,7 +39,7 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
         {
             return async (context) =>
              {
-                 var filter = Activator.CreateInstance(type) as IClusterFilterBase;
+                 var filter = Activator.CreateInstance(type) as IUpStreamFilterBase;
 
                  if (filter == null)
                  {
@@ -50,7 +50,7 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
              };
         });
     }
-    public void Use(Func<ClusterDelegate, ClusterDelegate> filter)
+    public void Use(Func<UpStreamDelegate, UpStreamDelegate> filter)
     {
         _filters.Add(filter);
     }
@@ -62,9 +62,18 @@ public class ClusterFilterChains : IFilterChain<ClusterDelegate, EndPoint>
 
         if (_start == null)
         {
-            ClusterDelegate last = async (context) =>
+            UpStreamDelegate last = async (context) =>
             {
-                await _endPoint.Value.StartAsync(context);
+                try
+                {
+                    await _endPoint.Value.StartAsync(context);
+                }
+                catch (System.Exception)
+                {
+                    // 혹시나 터지는 경우를 대비하여
+                    _endPoint.Value.DecreaseUsingCount();
+                    throw;
+                }
             };
 
             for (int i = _filters.Count - 1; i >= 0; i--)

@@ -8,57 +8,40 @@ public partial class EndPoint : NetworkInstance
 {
     private Timer _timer = new Timer();
     private int _defaultTime = 1000;
-    private bool IsHealthCheck { get; set; } = false;
     public bool IsAlive { get; private set; } = true;
     private async void OnTimerEvent(object? sender, ElapsedEventArgs args)
     {
-        System.Console.WriteLine("Working");
-        List<Socket> deadSockets = new List<Socket>();
         // 연결 체크
-        while (true)
+        try
         {
-            Socket? socket = _connectPool.GetDeadSocket();
-            if (socket == null)
-                break;
+            Socket socket = _connectPool.CreateSocket();
+            await _connectPool.ConnectAsync(socket, IpEndPoint, _connectTimeout);
+            _connectPool.EnqueueSocket(socket);
+            _connectPool.AddAliveCount();
 
-            socket = _connectPool.CreateSocket();
-            
-            try
-            {
-                await _connectPool.ConnectAsync(socket, 1000);
-
-                _connectPool.EnqueueAliveSocket(socket);
-                IsAlive = true;
-            }
-            catch (System.Exception e)
-            {
-                System.Console.WriteLine(e.Message);
-                deadSockets.Add(socket);
-            }
+            IsAlive = true;
+        }
+        catch (System.Exception e)
+        {
+            System.Console.WriteLine(e.Message);
         }
 
-        foreach(var socket in deadSockets)
-        {
-            _connectPool.EnqueueDeadSocket(socket);
-        }
-
-        System.Console.WriteLine("Dead Count : " + _connectPool.DeadCount);
-        if (_connectPool.DeadCount != 0)
-        {
+        if(!IsAlive)
+            {
             if (_timer.Interval > _defaultTime * 60)
-                    _timer.Interval = _defaultTime * 60;
-                else
-                    _timer.Interval = _timer.Interval * 2;
+                _timer.Interval = _defaultTime * 60;
+            else
+                _timer.Interval = _timer.Interval * 2;
             _timer.Enabled = true;
         }
-        else
-            IsHealthCheck = false;
     }
 
-    public override void Init()
+    public override async void Init()
     {
         _timer.Elapsed += OnTimerEvent;
         _timer.Interval = _defaultTime;
         _timer.AutoReset = false;
+
+        await _connectPool.Init(IpEndPoint, _connectTimeout);
     }
 }

@@ -7,9 +7,9 @@ using SmileGatewayCore.Utils.Logger;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-public class ExceptionFilter : IListenerFilterBase
+public class ExceptionFilter : IDownStreamFilterBase
 {
-    public async Task InvokeAsync(Adapter adapter, HttpContext context, ListenerDelegate next)
+    public async Task InvokeAsync(Adapter adapter, HttpContext context, DownStreamDelegate next)
     {
         try
         {
@@ -21,18 +21,18 @@ public class ExceptionFilter : IListenerFilterBase
             {
                 System.Console.WriteLine($"ExceptionFilter: {d.Message} {d.ErrorCode}");
 
-                ErrorResponse.MakeBadRequest(context.Response, d.ErrorCode);
+                ErrorResponse.Instance.MakeBadRequest(context.Response, d.ErrorCode);
             }
             else if (e is InternalException i)
             {
                 System.Console.WriteLine($"ExceptionFilter: {i.Message} {i.ErrorCode}");
 
-                ErrorResponse.MakeInternalServerError(context.Response, i.ErrorCode);
+                ErrorResponse.Instance.MakeInternalServerError(context.Response, i.ErrorCode);
             }
             else
             {
                 System.Console.WriteLine($"ExceptionFilter: {e.Message}");
-                ErrorResponse.MakeBadRequest(context.Response, 3000);
+                ErrorResponse.Instance.MakeBadRequest(context.Response, 3000);
             }
 
             FileLogger.Instance.LogError(

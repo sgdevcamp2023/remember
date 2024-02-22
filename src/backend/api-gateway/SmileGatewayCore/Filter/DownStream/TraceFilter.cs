@@ -4,7 +4,7 @@ using SmileGatewayCore.Instance;
 namespace SmileGatewayCore.Filter.Listner;
 
 // Request 요청에 TraceID를 부여하는 필터
-internal class TraceFilter : ListenerFilter
+internal class TraceFilter : DownStreamFilter
 {
     static long TraceId = 1;
     protected override void Working(Adapter adapter, HttpContext context)
@@ -19,6 +19,6 @@ internal class TraceFilter : ListenerFilter
     
     protected override void Worked(Adapter adapter, HttpContext context)
     {
-        
+           
     }
 }

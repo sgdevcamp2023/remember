@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace SmileGatewayCore.Filter.Listner;
 
-internal class AuthorizationFilter : ListenerFilter
+internal class AuthorizationFilter : DownStreamFilter
 {
     // 생성 관리 벨리데이션 체크깔쥐 다 해주기
     private static JwtAuthorization _jwtAuthorization = new JwtAuthorization();
@@ -32,7 +32,10 @@ internal class AuthorizationFilter : ListenerFilter
 
         if (tokens[0] != "Bearer")
             throw new AuthException(3003);
-        
+
+        if (adapter.JwtValidator == null)
+            throw new ConfigException(3102);
+
         if (!_jwtAuthorization.ValidationToken(adapter.JwtValidator, accessToken))
         {
             System.Console.WriteLine("Authorization Filter : Token Validation Failed");
@@ -63,6 +66,9 @@ internal class AuthorizationFilter : ListenerFilter
     }
     protected override void Worked(Adapter adapter, HttpContext context)
     {
+        if (adapter.Authorization == null)
+            return;
+
         if (context.Response.StatusCode == 200)
         {
             if (adapter.Authorization!.LoginPath == context.Request.Path)
@@ -80,6 +86,9 @@ internal class AuthorizationFilter : ListenerFilter
             }
             else if (adapter.Authorization.LogoutPath == context.Request.Path)
             {
+                if (adapter.JwtValidator == null)
+                    throw new ConfigException(3102);
+
                 switch (adapter.Authorization.Type)
                 {
                     case "JWT":

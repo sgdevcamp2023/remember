@@ -20,11 +20,11 @@ public class CommunityProfileDTO
     public string profile { get; set; } = null!;
 }
 
-public class CommunityResponseDTO<T>
+public class CommunityResponseDTO
 {
     public int ResultCode { get; set; }
-    public string ResultMessage { get; set; } = null!;
-    public T? ResultData { get; set; }
+    public string resultMessage { get; set; } = null!;
+    public string ResultData { get; set; } = null!;
 }
 
 public class CommunityBaseException
@@ -32,4 +32,11 @@ public class CommunityBaseException
     public int Code { get; set; }
     public string Exception { get; set; } = null!;
     public string Message { get; set; } = null!;
+}
+
+public class CommunityRoomCreateDTO
+{
+    public string name { get; set; } = null!;
+    public List<long> members { get; set; } = null!;
+    public string profile { get; set; } = null!;
 }

@@ -19,7 +19,7 @@ namespace user_service
 
             public class ProfileResponseDTO
             {
-                public string ProfileUrl { get; set; } = null!;
+                public string Profile { get; set; } = null!;
             }
         }
     }
