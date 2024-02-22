@@ -22,8 +22,7 @@ public class DownStreamFilterChains : IFilterChain<DownStreamDelegate, Adapter>
             UseFilter<AuthorizationFilter>();
         }
 
-        UseFilter<OriginalFilter>();
-        UseFilter<LogFilter>();
+        UseFilter<OriginalFilter>();        
     }
 
     public void UseFilter(string filterName)
@@ -70,6 +69,8 @@ public class DownStreamFilterChains : IFilterChain<DownStreamDelegate, Adapter>
     {
         if (_start == null)
         {
+            UseFilter<LogFilter>();
+
             DownStreamDelegate last = async (adapter, context) =>
             {
                 RouteFilter filter = new RouteFilter();
@@ -85,6 +86,4 @@ public class DownStreamFilterChains : IFilterChain<DownStreamDelegate, Adapter>
 
         await _start(adapter, context);
     }
-    // 처리해야될게, HttpContext를 Filter로 만들어서 넘길 것인가?
-    // 아니면 Listener에서 처리해서 넘길 것인가?
 }
