@@ -1,3 +1,6 @@
+[submodule "src/backend/user-service/SecretZuZu"]
+	path = src/backend/user-service/SecretZuZu
+	url = https://github.com/Hong-Study/SecretZuZu.git
 [submodule "src/backend/community-service/remember-community-private-env"]
 	path = src/backend/community-service/remember-community-private-env
 	url = https://github.com/0Chord/remember-community-private-env.git
