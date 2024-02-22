@@ -1,0 +1,20 @@
+{"@timestamp":"2024-02-22T20:35:36.303+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator",
+                "message":"HHH000339: Could not obtain connection metadata: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server."}
+{"@timestamp":"2024-02-22T20:35:36.345+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-02-22T20:36:39.060+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.engine.jdbc.spi.SqlExceptionHelper",
+                "message":"SQL Error: 0, SQLState: 08S01"}
+{"@timestamp":"2024-02-22T20:36:39.082+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext",
+                "message":"Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [harmony/communityservice/common/config/JpaConfig.class]: [PersistenceUnit: entityManager] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to check JDBC Connection auto-commit in preparation for DDL execution [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]"}
