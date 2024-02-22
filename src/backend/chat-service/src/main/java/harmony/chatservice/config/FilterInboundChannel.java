@@ -27,16 +27,16 @@ public class FilterInboundChannel implements ChannelInterceptor {
     private final MessageProducerService messageService;
     private static final String AUTH_PREFIX = "Authorization";
 
-    @Override
-    public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-        if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
-            if (!jwtTokenHandler.verifyToken(Objects.requireNonNull(headerAccessor.getFirstNativeHeader(AUTH_PREFIX)))) {
-                throw new RuntimeException("예외 발생");
-            }
-        }
-        return message;
-    }
+//    @Override
+//    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+//        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
+//        if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
+//            if (!jwtTokenHandler.verifyToken(Objects.requireNonNull(headerAccessor.getFirstNativeHeader(AUTH_PREFIX)))) {
+//                throw new RuntimeException("예외 발생");
+//            }
+//        }
+//        return message;
+//    }
 
     @Override
     public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
