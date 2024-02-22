@@ -116,7 +116,7 @@ export const MyInfoView = () => {
         e.preventDefault();
 
         if (newName === '') return;
-
+        
         PatchUserNameRequest({ userId: AuthStore.getState().USER_ID, newName: newName })
             .then((response) => {
                 if (response.status === 200)
@@ -148,10 +148,12 @@ export const MyInfoView = () => {
 
 
     useEffect(() => {
+
         GetUserInfoRequest().then((response) => {
             if (response.status === 200) {
                 setMyInfo(response.data);
                 setUserName(response.data.name);
+                console.log(response.data.name);
                 setUserProfile(response.data.profile);
             }
             else {

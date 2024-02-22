@@ -252,9 +252,9 @@ const DmChatPage = () => {
       roomId: roomId,
       userId: USER_ID,
       parentId: 0,
-      profileImage: "qwedfw",
+      profileImage: USER_PROFILE,
       type: "send",
-      senderName: "바나나",
+      senderName: USER_NAME,
       message: inputMessage
     };
 
