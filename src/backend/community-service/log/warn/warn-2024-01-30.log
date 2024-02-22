@@ -1,0 +1,108 @@
+{"@timestamp":"2024-01-30T13:24:51.445+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator",
+                "message":"HHH000339: Could not obtain connection metadata: java.sql.SQLSyntaxErrorException: Unknown database '10.99.19.2:3307/harmony'"}
+{"@timestamp":"2024-01-30T13:24:51.475+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-01-30T13:24:54.042+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration",
+                "message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2024-01-30T13:25:58.586+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.dialect.Dialect",
+                "message":"HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions."}
+{"@timestamp":"2024-01-30T13:25:58.588+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-01-30T13:26:00.976+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration",
+                "message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2024-01-30T13:40:09.270+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.dialect.Dialect",
+                "message":"HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions."}
+{"@timestamp":"2024-01-30T13:40:09.273+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-01-30T13:40:11.241+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration",
+                "message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2024-01-30T14:21:39.011+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"Test worker", "logger":"org.hibernate.dialect.Dialect",
+                "message":"HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions."}
+{"@timestamp":"2024-01-30T14:21:39.014+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"Test worker", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-01-30T14:21:41.719+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"Test worker", "logger":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration",
+                "message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2024-01-30T15:30:20.121+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.dialect.Dialect",
+                "message":"HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions."}
+{"@timestamp":"2024-01-30T15:30:20.123+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-01-30T15:30:22.685+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration",
+                "message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2024-01-30T15:30:23.287+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext",
+                "message":"Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'"}
+{"@timestamp":"2024-01-30T15:31:28.062+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator",
+                "message":"HHH000339: Could not obtain connection metadata: java.sql.SQLException: Access denied for user 'root'@'172.21.0.1' (using password: YES)"}
+{"@timestamp":"2024-01-30T15:31:28.074+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-01-30T15:31:30.029+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration",
+                "message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2024-01-30T15:31:30.375+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext",
+                "message":"Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'"}
+{"@timestamp":"2024-01-30T15:34:42.680+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.dialect.Dialect",
+                "message":"HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions."}
+{"@timestamp":"2024-01-30T15:34:42.683+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-01-30T15:34:44.703+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration",
+                "message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2024-01-30T15:34:45.088+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext",
+                "message":"Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'"}
+{"@timestamp":"2024-01-30T16:31:05.400+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.dialect.Dialect",
+                "message":"HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions."}
+{"@timestamp":"2024-01-30T16:31:05.403+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.hibernate.orm.deprecation",
+                "message":"HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)"}
+{"@timestamp":"2024-01-30T16:31:07.530+0900", "level":"WARN",
+                "service":"community-service", "trace": "", "apiAddr": "",
+                "httpMethod":"","userId":"", "thread":"main", "logger":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration",
+                "message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}

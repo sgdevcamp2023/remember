@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  zipkin:
+    image: openzipkin/zipkin-slim:2.23.2
+    container_name: zipkin
+    ports:
+      - 9411:9411
+    environment:
+      - STORAGE_TYPE=elasticsearch
+      - ES_HOSTS=http://10.99.19.2:9200
