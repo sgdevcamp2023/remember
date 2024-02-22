@@ -33,10 +33,10 @@ public class AuthService : IAuthService
     public async Task RegisterAsync(RegisterDTO register, string traceId)
     {
         // 체크
-        // SameEmailCheck(register.Email);
-        // CheckEmailChecksum(register.Email, register.EmailChecksum);
+        SameEmailCheck(register.Email);
+        CheckEmailChecksum(register.Email, register.EmailChecksum);
 
-        // _redis.DeleteChecksum(register.Email);
+        _redis.DeleteChecksum(register.Email);
 
         // 비밀번호 암호화
         register.Password = Utils.SHA256Hash(register.Password);
