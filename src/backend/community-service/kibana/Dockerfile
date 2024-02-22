@@ -1,0 +1,2 @@
+FROM docker.elastic.co/kibana/kibana:7.10.2
+RUN kibana-plugin install https://github.com/opendistro-for-elasticsearch/alerting-kibana-plugin/releases/download/v1.13.0.0/opendistroAlertingKibana-1.13.0.0.zip

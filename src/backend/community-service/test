@@ -1,0 +1,75 @@
+server:
+  port: 7000
+
+spring:
+  kafka:
+    topic:
+      community-chat: "communityChat"
+      direct-chat: "directChat"
+      emoji-chat: "emojiChat"
+      connection-event: "connectionEvent"
+      session-event: "sessionEvent"
+      community-event: "communityEvent"
+      channel-event: "channelEvent"
+
+    producer:
+      bootstrap-servers: 10.99.14.176:9092
+
+    consumer:
+      bootstrap-servers: 10.99.14.176:9092
+      group-id:
+        community: "communityChatGroup"
+        direct: "directChatGroup"
+        emoji: "emojiGroup"
+        connection-event: "connectionEventGroup"
+        community-event: "communityEventGroup"
+        channel-event: "channelEventGroupChat"
+
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: classpath:stalwart-micron-411504-529935d659d4.json
+        project-id: stalwart-micron-411504
+        bucket: smile-bucket-test
+
+  data:
+    mongodb:
+      #      host: localhost
+      #      port: 27017
+      #      authentication-database: admin
+      #      database: chat
+      #      username: dkswowls
+      #      password: dkswowls
+      #            auto-index-creation: true
+      uri: mongodb://10.99.14.176:27017/chat
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  freemarker:
+    cache: false
+    suffix: .ftl
+
+  # file upload max size (파일 업로드 크기 설정)
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+
+jwt:
+  secret-key: test
+
+file:
+  dir: https://storage.googleapis.com/
