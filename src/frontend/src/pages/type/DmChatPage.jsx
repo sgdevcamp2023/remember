@@ -323,7 +323,7 @@ const DmChatPage = () => {
                 </div>
               </div>
 
-              {USER_ID === msg.userId && hoveredMessageId === msg.messageId && (
+              {parseInt(USER_ID) === msg.userId && hoveredMessageId === msg.messageId && (
                 <div className="dm-edit-buttons">
                   {editingMessage.messageId === msg.messageId ? (
                     <div>
