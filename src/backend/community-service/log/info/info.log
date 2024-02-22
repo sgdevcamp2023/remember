@@ -2541,3 +2541,20 @@ Caused by: java.net.ConnectException: Connection refused
 	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
 	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63)
 	... 61 common frames omitted
+{"@timestamp":"2024-02-22T20:34:32.319+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"HV000001: Hibernate Validator 8.0.1.Final"}
+{"@timestamp":"2024-02-22T20:34:32.354+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Starting CommunityServiceApplication using Java 17.0.9 with PID 30587 (/Users/0chord/Desktop/recamp/remember/src/backend/community-service/build/classes/java/main started by 0chord in /Users/0chord/Desktop/recamp/remember/src/backend/community-service)"}
+{"@timestamp":"2024-02-22T20:34:32.355+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"The following 1 profile is active: "prod""}
+{"@timestamp":"2024-02-22T20:34:32.822+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode."}
+{"@timestamp":"2024-02-22T20:34:33.074+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Finished Spring Data repository scanning in 232 ms. Found 28 JPA repository interfaces."}
+{"@timestamp":"2024-02-22T20:34:33.336+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"BeanFactory id=870e9f60-20bf-3dac-9ad3-d73e425a78a3"}
+{"@timestamp":"2024-02-22T20:34:33.762+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Tomcat initialized with port 8000 (http)"}
+{"@timestamp":"2024-02-22T20:34:33.768+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Initializing ProtocolHandler ["http-nio-8000"]"}
+{"@timestamp":"2024-02-22T20:34:33.769+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Starting service [Tomcat]"}
+{"@timestamp":"2024-02-22T20:34:33.769+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Starting Servlet engine: [Apache Tomcat/10.1.17]"}
+{"@timestamp":"2024-02-22T20:34:33.809+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Initializing Spring embedded WebApplicationContext"}
+{"@timestamp":"2024-02-22T20:34:33.809+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"Root WebApplicationContext: initialization completed in 1420 ms"}
+{"@timestamp":"2024-02-22T20:34:33.909+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"HHH000204: Processing PersistenceUnitInfo [name: entityManager]"}
+{"@timestamp":"2024-02-22T20:34:33.940+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"HHH000412: Hibernate ORM core version 6.4.1.Final"}
+{"@timestamp":"2024-02-22T20:34:33.957+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"HHH000026: Second-level cache disabled"}
+{"@timestamp":"2024-02-22T20:34:34.133+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"No LoadTimeWeaver setup: ignoring JPA class transformer"}
+{"@timestamp":"2024-02-22T20:34:34.148+0900","level":"INFO","service":"community-service","trace":"","apiAddr":"","httpMethod":"","userId":"","message":"HikariPool-1 - Starting..."}
