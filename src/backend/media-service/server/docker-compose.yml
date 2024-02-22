@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  node-app:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - '6001:6001'
+      - '6002-6202:6002-6202'
+      
+
+    command: npm run start:dev
