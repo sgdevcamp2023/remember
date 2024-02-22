@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "36912:27017"
+    volumes:
+      - mongo:/data/db
+    container_name: mongodb
+    networks:
+      - community-network
+
+volumes:
+  mongo:
+networks:
+  community-network:

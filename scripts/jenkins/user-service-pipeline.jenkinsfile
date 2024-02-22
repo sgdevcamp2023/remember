@@ -1,0 +1,65 @@
+
+pipeline {
+    agent any
+    tools {
+        gradle 'gradle'
+    }
+    stages {
+        stage('Github') {
+            steps {
+                checkout scmGit(
+                    branches: [[name: 'BE/hjh']],
+                    extensions: [submodule(parentCredentials: true, trackingSubmodules: true)],
+                    userRemoteConfigs: [[credentialsId: 'moon-token', url: 'https://github.com/sgdevcamp2023/remember']]
+                    )
+            }
+        }
+    
+        
+        stage('Restore') {
+            steps {
+                dir('src/backend/user-service') {
+                    // NuGet 패키지 복원
+                    sh 'dotnet restore'
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                dir('src/backend/user-service') {
+                    // 프로젝트 빌드
+                    sh 'dotnet build -c Release'
+                }
+            }
+        }
+        
+        stage('Publish') {
+            steps {
+                dir('src/backend/user-service') {
+                    // 프로젝트 publish
+                    sh 'dotnet publish -c Release -o ./publish'
+                }
+            }
+        }
+
+        stage('Deploy') {
+                        steps {        
+                sshagent (credentials: ['harmony-ssh']) {
+                sh """
+                    scp -r /var/jenkins_home/workspace/user-service/src/backend/user-service/publish harmony@10.178.0.3:/home/harmony/
+                """
+                sh """
+                    ssh -o StrictHostKeyChecking=no ${TARGET_HOST} '
+                    make down-user
+                    make up-user
+                    '
+                """
+                }
+            }
+        }
+    }
+    environment {
+        TARGET_HOST = "harmony@10.178.0.3"
+    }
+}

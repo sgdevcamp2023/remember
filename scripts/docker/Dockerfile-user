@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+EXPOSE 5000
+
+ENV ASPNETCORE_URLS=http://*:5000
+
+RUN chmod 777 /var/log
+RUN chmod 777 /var
+
+COPY publish .
+ENTRYPOINT ["dotnet", "user-service.dll"]

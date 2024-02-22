@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  state-service:
+    build:
+      context: .
+      dockerfile: Dockerfile-state
+    container_name: state-service
+    ports:
+      - "9000:9000"
+    volumes:
+      - logs:/log/info
+    networks:
+      - community-network
+    environment:
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=10.178.0.3:9092
+      - SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS=10.178.0.3:9092
+      - SPRING_DATA_REDIS_HOST=10.178.0.3
+      - SPRING_DATA_REDIS_PORT=56379
+networks:
+  community-network:
+
+volumes:
+  logs:

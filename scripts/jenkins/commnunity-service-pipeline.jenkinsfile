@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    tools {
+        gradle 'gradle'
+    }
+    stages {
+        stage('Github') {
+            steps {
+                checkout scmGit(
+                    branches: [[name: 'BE/yh']],
+                    extensions: [submodule(parentCredentials: true, trackingSubmodules: true)],
+                    userRemoteConfigs: [[credentialsId: '0chord-signin', url: 'https://github.com/sgdevcamp2023/remember']]
+                    )
+            }
+        }
+        stage('Build') {
+            steps {
+                dir('src/backend/community-service') {
+                    sh "gradle clean build"
+                }
+                
+            }
+        }
+        stage('Deploy') {
+                        steps {        
+                sshagent (credentials: ['harmony-ssh']) {
+                sh """
+                    scp /var/jenkins_home/workspace/community-service/src/backend/community-service/build/libs/community-service-0.0.1-SNAPSHOT.jar harmony@10.178.0.3:/home/harmony/
+                """
+                sh """
+                    ssh -o StrictHostKeyChecking=no ${TARGET_HOST} '
+                    make down-community
+                    make up-community
+                    '
+                """
+                }
+            }
+        }
+    }
+    environment {
+        TARGET_HOST = "harmony@10.178.0.3"
+    }
+}
+

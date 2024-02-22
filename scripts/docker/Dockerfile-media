@@ -1,0 +1,21 @@
+# prod stage
+FROM node:18
+WORKDIR /usr/src/app
+COPY ./server/dist ./dist
+COPY ./server/package*.json ./
+EXPOSE 6001
+RUN npm install
+WORKDIR /usr/src/app/dist
+#RUN cat main.js
+#RUN npm install @nestjs/core
+#RUN npm install @nestjs/axios
+#RUN npm install @nestjs/config
+#RUN npm install @nestjs/websockets
+#RUN npm install socket.io
+#RUN npm install class-validator
+#RUN npm install mediasoup
+#RUN npm install @nestjs/microservices
+#RUN npm install kafkajs
+#RUN npm install winston
+RUN pwd
+ENTRYPOINT ["node", "main.js"]

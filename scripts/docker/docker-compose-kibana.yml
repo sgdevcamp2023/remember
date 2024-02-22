@@ -1,0 +1,17 @@
+version: '3.4'
+services:
+  kibana:
+    build:
+      context: ./kibana/
+      dockerfile: Dockerfile
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - TZ=Asia/Seoul
+    ports:
+      - 5601:5601
+    networks:
+      - community-network
+
+networks:
+  community-network:

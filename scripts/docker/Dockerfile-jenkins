@@ -1,0 +1,24 @@
+FROM jenkins/jenkins
+
+USER root
+
+# Install dependencies
+RUN apt-get update
+RUN apt-get install wget
+RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN rm packages-microsoft-prod.deb
+
+# Install .NET SDK 6.0
+RUN apt-get update;
+RUN apt-get install -y apt-transport-https
+RUN apt-get update
+RUN apt-get install -y dotnet-sdk-6.0
+RUN dotnet --version
+
+# Install Node.js
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install -y nodejs
+RUN node --version
+RUN npm --version
+USER jenkins

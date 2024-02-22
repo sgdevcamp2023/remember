@@ -1,0 +1,4 @@
+FROM openjdk:17-ea-17-jdk
+VOLUME /tmp
+COPY ./chat-service-0.0.1-SNAPSHOT.jar ChatService.jar
+ENTRYPOINT ["java","-jar","-Djava.net.preferIPv4Stack=true","ChatService.jar"]

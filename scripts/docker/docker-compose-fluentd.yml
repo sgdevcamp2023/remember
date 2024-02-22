@@ -1,0 +1,23 @@
+version: '3'
+services:
+  fluentd:
+    build:
+      context: ./fluentd/
+      dockerfile: Dockerfile 
+    container_name: fluentd
+    ports:
+      - 24224:24224
+    environment:
+      - FLUENTD_CONF=fluentd.conf
+    volumes:
+      - ./fluentd/buffer:/var/buffer
+      - ./fluentd/pos:/var/pos
+      - logs:/var/log
+    networks:
+      - community-network
+
+networks:
+  community-network:
+
+volumes:
+  logs:

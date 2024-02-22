@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  user-service:
+    image: user-service
+    build:
+      context: .
+      dockerfile: Dockerfile-user
+    networks:
+      - community-network
+    volumes:
+      - logs:/var/log/info
+    container_name: user-service
+    ports:
+      - 5000:5000
+
+volumes:
+  logs:
+
+networks:
+  community-network:
