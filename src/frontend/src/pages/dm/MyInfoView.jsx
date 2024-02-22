@@ -67,8 +67,8 @@ export const MyInfoView = () => {
         e.preventDefault();
 
         let formData = new FormData();
-        formData.append("UserId", AuthStore.getState().USER_ID);
-        formData.append("NewProfile", profileImage);
+        formData.append("userId", AuthStore.getState().USER_ID);
+        formData.append("newProfile", profileImage);
 
         PatchChangeProfileRequest(formData)
             .then((response) => {
