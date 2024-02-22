@@ -1,0 +1,10 @@
+cluster.name: "elasticsearch"
+network.host: 0.0.0.0
+path.repo: [ "/usr/share/elasticsearch/backup" ]
+
+xpack.license.self_generated.type: trial
+xpack.security.enabled: false
+xpack.monitoring.collection.enabled: true
+
+discovery.type: single-node
+
