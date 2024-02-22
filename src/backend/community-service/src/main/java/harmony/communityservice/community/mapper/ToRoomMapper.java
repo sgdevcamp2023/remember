@@ -5,10 +5,10 @@ import harmony.communityservice.community.domain.Room;
 
 public class ToRoomMapper {
 
-    public static Room convert(RoomRegistrationRequestDto requestDto, String profileUrl) {
+    public static Room convert(RoomRegistrationRequestDto requestDto) {
         return Room.builder()
                 .name(requestDto.getName())
-                .profile(profileUrl)
+                .profile(requestDto.getProfile())
                 .build();
     }
 }

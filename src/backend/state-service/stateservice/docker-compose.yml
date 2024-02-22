@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  chat-service:
+    container_name: state-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+    volumes:
+      - logs:/log/info
+
+volumes:
+  logs:

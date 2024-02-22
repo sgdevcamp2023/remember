@@ -14,4 +14,9 @@ public class RoomCommandRepositoryImpl implements RoomCommandRepository {
     public void save(Room room) {
         jpaRoomCommandRepository.save(room);
     }
+
+    @Override
+    public void deleteByRoomId(long roomId) {
+        jpaRoomCommandRepository.deleteRoomByRoomId(roomId);
+    }
 }

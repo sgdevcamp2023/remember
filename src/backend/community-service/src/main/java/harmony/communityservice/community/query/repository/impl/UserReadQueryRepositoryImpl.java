@@ -26,4 +26,9 @@ public class UserReadQueryRepositoryImpl implements UserReadQueryRepository {
     public List<UserRead> findUserReadsByUserId(Long userId) {
         return jpaUserReadQueryRepository.findUserReadByUserId(userId);
     }
+
+    @Override
+    public List<UserRead> findUserReadsByGuildId(Long guildId) {
+        return jpaUserReadQueryRepository.findUserReadsByGuildId(guildId);
+    }
 }
