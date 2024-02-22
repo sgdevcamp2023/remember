@@ -30,12 +30,10 @@ const Guild = () => {
 
   useEffect(() => {
     if (CURRENT_VIEW_GUILD) {
-      console.log("현재 보고 있는 길드 id", CURRENT_VIEW_GUILD);
 
       // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
       const handleReceiveMessage = (data) => {
         const parsedMessage = JSON.parse(data.body);
-        console.log("서버로부터 받은 데이터", parsedMessage);
         if (
           parsedMessage.type === "CONNECT" ||
           parsedMessage.type === "DISCONNECT"
@@ -61,7 +59,6 @@ const Guild = () => {
           `/topic/guild/${CURRENT_VIEW_GUILD}`,
           handleReceiveMessage
         );
-        console.log(socketIdRef.current);
       }
     }
 

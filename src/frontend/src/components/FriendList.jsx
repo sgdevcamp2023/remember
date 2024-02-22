@@ -12,7 +12,6 @@ export const FriendList = ({ friend }) => {
     e.preventDefault();
 
     // TODO
-    console.log(`Send chat with friend ${friend.email}`);
   };
 
   const deleteFriendClick = (e) => {
@@ -29,7 +28,6 @@ export const FriendList = ({ friend }) => {
         console.error("친구 삭제 실패", error);
       });
 
-    console.log(`Delete with friend ${friend.email}`);
   }
 
   return (

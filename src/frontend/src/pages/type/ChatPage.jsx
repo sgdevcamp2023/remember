@@ -37,8 +37,6 @@ const ChatPage = () => {
   let [newMessages, setNewMessages] = useState([]);
                        
   useEffect(() => {
-    // 채널이 바뀔때 초기화 해주는 작업
-    console.log("CURRENT_VIEW_CHANNEL", CURRENT_VIEW_CHANNEL);
     setPage(0);
     setMessages([]);
     setHasMoreData(true);
@@ -49,8 +47,6 @@ const ChatPage = () => {
   }, [CURRENT_VIEW_CHANNEL]);
 
   useEffect(() => {
-    // 페이지 로딩 시 메시지 불러오기
-    console.log("CURRENT_VIEW_CHANNEL", CURRENT_VIEW_CHANNEL);
     if (page > 0) {
       fetchScrollMessages();
     }
@@ -93,7 +89,6 @@ const ChatPage = () => {
 
   useEffect(() => {   
     // 웹 소켓으로부터 메시지를 받았을 때 처리하는 함수
-    console.log("서버로부터 받은 데이터 체크", chatMessage);
     if (chatMessage) {
       if (chatMessage.channelId === CURRENT_VIEW_CHANNEL) {
         if (chatMessage.type === "modify") {
@@ -250,7 +245,6 @@ const ChatPage = () => {
           'content-type' : 'multipart/form-data',
         }
       });
-      console.log('파일 업로드 성공:', response.data);
     } catch (error) {
       console.error('파일 업로드 실패:', error);
     }

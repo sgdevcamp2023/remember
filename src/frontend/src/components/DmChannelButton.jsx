@@ -5,12 +5,6 @@ import { useNavigate } from "react-router-dom";
 const DmChannelButton = ({ room }) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(room);
-
-    return () => {};
-  }, []);
-
   const handleDmChannelClick = () => {
     navigate(`/channels/@me/${room.roomId}`);
   };
