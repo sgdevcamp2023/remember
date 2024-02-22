@@ -92,8 +92,8 @@
 - kafka
 
 ### 홍지현
-- Smile Gateway
-- 유저 서버
+- [Smile Gateway](./src/backend/api-gateway/)
+- [유저 서버](./src/backend/user-service/)
 - NGINX
 
 ### 프론트

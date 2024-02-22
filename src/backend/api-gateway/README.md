@@ -10,7 +10,7 @@
 ## 로고
 <div style="position: relative; text-align: center;">
   <p align="left">
-  <img src="../../../resources/Smilegateway.png" alt="Image" style="width: 30%;">
+  <img src="https://github.com/sgdevcamp2023/remember/tree/docs/resources/Smilegateway.png" alt="Image" style="width: 30%;">
   </p>
   <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 21px;">
     Smilegate 로고</br> + </br>게이트웨이</br> = 수제작
