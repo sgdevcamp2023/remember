@@ -1,19 +1,23 @@
 package harmony.communityservice.community.command.service.impl;
 
 import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.community.command.dto.ChannelRegistrationRequestDto;
 import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
 import harmony.communityservice.community.command.dto.GuildReadRequestDto;
 import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
 import harmony.communityservice.community.command.dto.GuildUpdateNicknameRequestDto;
 import harmony.communityservice.community.command.dto.UserReadRequestDto;
 import harmony.communityservice.community.command.repository.GuildCommandRepository;
+import harmony.communityservice.community.command.service.ChannelCommandService;
 import harmony.communityservice.community.command.service.GuildCommandService;
 import harmony.communityservice.community.command.service.GuildReadCommandService;
 import harmony.communityservice.community.command.service.GuildUserCommandService;
 import harmony.communityservice.community.command.service.UserReadCommandService;
 import harmony.communityservice.community.domain.Guild;
+import harmony.communityservice.community.domain.GuildRead;
 import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.domain.UserRead;
+import harmony.communityservice.community.mapper.ToChannelMapper;
 import harmony.communityservice.community.mapper.ToGuildMapper;
 import harmony.communityservice.community.mapper.ToGuildReadRequestDtoMapper;
 import harmony.communityservice.community.mapper.ToUserReadRequestDtoMapper;
@@ -35,17 +39,22 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
+    private final ChannelCommandService channelCommandService;
     @Override
-    public void save(GuildRegistrationRequestDto requestDto, MultipartFile profile) {
+    public GuildRead save(GuildRegistrationRequestDto requestDto, MultipartFile profile) {
         String imageUrl = contentService.imageConvertUrl(profile);
         Guild guild = ToGuildMapper.convert(requestDto, imageUrl);
         guildCommandRepository.save(guild);
         GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(guild, requestDto.getManagerId());
-        guildReadCommandService.save(guildReadRequestDto);
+        GuildRead guildRead = guildReadCommandService.save(guildReadRequestDto);
         User findUser = userQueryService.findUser(requestDto.getManagerId());
         guildUserCommandService.save(guild, findUser);
         UserReadRequestDto userReadRequestDto = ToUserReadRequestDtoMapper.convert(guild, findUser);
         userReadCommandService.save(userReadRequestDto);
+        ChannelRegistrationRequestDto channelRegistrationRequestDto = new ChannelRegistrationRequestDto(
+                guild.getGuildId(), "기본채널", requestDto.getManagerId(), 0L, "TEXT");
+        channelCommandService.registration(channelRegistrationRequestDto);
+        return guildRead;
     }
 
     @Override
@@ -65,6 +74,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         guildQueryService.existsGuildByGuildIdAndManagerId(guildDeleteRequestDto.getGuildId(),
                 guildDeleteRequestDto.getManagerId());
         guildCommandRepository.delete(guildDeleteRequestDto.getGuildId());
+        guildReadCommandService.delete(guildDeleteRequestDto.getGuildId());
     }
 
     @Override

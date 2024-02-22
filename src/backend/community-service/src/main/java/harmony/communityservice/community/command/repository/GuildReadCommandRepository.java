@@ -5,4 +5,6 @@ import harmony.communityservice.community.domain.GuildRead;
 public interface GuildReadCommandRepository {
 
     void save(GuildRead guildRead);
+
+    void delete(long guildId);
 }

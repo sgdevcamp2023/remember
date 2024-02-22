@@ -1,0 +1,19 @@
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: 10.99.14.176:9092
+      session-event-topic: "sessionEvent"
+      channel-event-topic: "channelEvent"
+    consumer:
+      bootstrap-servers: 10.99.14.176:9092
+      group-id:
+        session: "sessionEventGroup"
+        channel: "channelEventGroupState"
+
+  data:
+    redis:
+      host: 10.99.14.176
+      port: 6378
+
+server:
+  port: 9090

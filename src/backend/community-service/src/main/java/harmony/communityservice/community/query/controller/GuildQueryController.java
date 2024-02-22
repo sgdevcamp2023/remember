@@ -6,6 +6,7 @@ import harmony.communityservice.community.domain.GuildRead;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.GuildReadQueryService;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +33,7 @@ public class GuildQueryController {
 
     @GetMapping("/check/guild/{userId}")
     public BaseResponse<?> checkGuild(@PathVariable Long userId) {
-        List<GuildRead> findGuildReads = guildReadQueryService.findGuildReadsByUserId(userId);
+        Map<Long, GuildRead> findGuildReads = guildReadQueryService.findGuildReadsByUserId(userId);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", findGuildReads);
     }
 }

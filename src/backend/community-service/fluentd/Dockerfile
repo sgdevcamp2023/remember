@@ -1,0 +1,8 @@
+FROM fluent/fluentd:edge-debian
+ADD ./conf/fluentd.conf /fluentd/etc/fluentd.conf
+USER root
+RUN ["gem", "install", "elasticsearch", "--no-document", "--version", "7.17.10"]
+RUN ["gem", "install", "fluent-plugin-elasticsearch","--no-document","--version","5.2.3"]
+RUN ["gem", "uninstall", "--ignore-dependencies","faraday"]
+RUN ["gem", "install", "faraday","--no-document","--version","1.10.0"]
+USER fluent

@@ -14,4 +14,9 @@ public class RoomUserCommandRepositoryImpl implements RoomUserCommandRepository 
     public void save(RoomUser roomUser) {
         jpaRoomUserCommandRepository.save(roomUser);
     }
+
+    @Override
+    public void deleteByRoomUser(RoomUser roomUser) {
+        jpaRoomUserCommandRepository.delete(roomUser);
+    }
 }
