@@ -76,7 +76,7 @@ export const PostAddFriendReqeust = async (data) => {
 
 export const PostAcceptFriendReqeust = async (data) => {
   return await axios
-    .post(FriendServerAddr + "request/Accept", data, {
+    .post(FriendServerAddr + "request/accept", data, {
       headers: {
         Authorization: `${AuthStore.getState().ACCESS_TOKEN}`,
       },
