@@ -25,7 +25,7 @@ public class FilterInboundChannel implements ChannelInterceptor {
     private final StateClient stateClient;
     private final CommunityClient communityClient;
     private final MessageProducerService messageService;
-    private static final String AUTH_PREFIX = "Bearer ";
+    private static final String AUTH_PREFIX = "Authorization";
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {

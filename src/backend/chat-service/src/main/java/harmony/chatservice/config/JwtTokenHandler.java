@@ -15,8 +15,9 @@ public class JwtTokenHandler {
         String subject = null;
 
         try {
+            String token = parseBearerToken(jwtToken);
             subject = Jwts.parser().setSigningKey(secretKey)
-                    .parseClaimsJws(jwtToken).getBody()
+                    .parseClaimsJws(token).getBody()
                     .getSubject();
         } catch (Exception e) {
             isTokenValid = false;
@@ -27,5 +28,12 @@ public class JwtTokenHandler {
         }
 
         return isTokenValid;
+    }
+
+    public String parseBearerToken(String jwtToken) {
+        if (jwtToken.startsWith("Bearer ")) {
+            return jwtToken.substring(7);
+        }
+        return jwtToken;
     }
 }
