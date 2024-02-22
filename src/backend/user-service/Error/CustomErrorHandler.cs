@@ -2,7 +2,6 @@
 using System.Data.Common;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using user_service.auth.exception;
 using user_service.common.exception;
 using user_service.logger;
 
@@ -20,16 +19,8 @@ namespace user_service
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                 if (exceptionHandlerPathFeature != null)
                 {
-
                     var exception = exceptionHandlerPathFeature.Error;
-                    if (exception is TokenException tokenException)
-                    {
-                        if (context.Response.Headers.TryGetValue("Authorization", out var value))
-                            context.Response.Headers.Remove("Authorization");
-                        context.Response.Headers.Add("Authorization", $"Bearer {tokenException.tokenDTO.AccessToken}");
-                        HttpBadRequest(context, tokenException.ErrorCode);
-                    }
-                    else if (exception is ServiceException serviceException)
+                    if (exception is ServiceException serviceException)
                     {
                         HttpBadRequest(context, serviceException.ErrorCode);
                     }

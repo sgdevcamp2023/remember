@@ -36,7 +36,7 @@ public class CommunityClient : ICommunityClient
             {
                 var exception = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
                 System.Console.WriteLine(exception!.Message);
-                throw new ServiceException(4010);
+                throw new ClientException(4010);
             }
         }
         catch (Exception e)
@@ -72,7 +72,7 @@ public class CommunityClient : ICommunityClient
             {
                 var exception = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
                 System.Console.WriteLine(exception!.Message);
-                throw new ServiceException(4010);
+                throw new ClientException(4010);
             }
         }
         catch (Exception e)
@@ -105,7 +105,7 @@ public class CommunityClient : ICommunityClient
             {
                 var exception = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
                 System.Console.WriteLine(exception!.Message);
-                throw new ServiceException(4010);
+                throw new ClientException(4010);
             }
         }
         catch (Exception e)
@@ -130,7 +130,7 @@ public class CommunityClient : ICommunityClient
 
         try
         {
-            HttpResponseMessage response = await _client.PatchAsync("registration/room", content, _cancellationToken);
+            HttpResponseMessage response = await _client.PostAsync("registration/room", content, _cancellationToken);
             string str = await response.Content.ReadAsStringAsync();
             var dto = JsonConvert.DeserializeObject<CommunityResponseDTO>(str);
             if (dto == null)
@@ -139,7 +139,7 @@ public class CommunityClient : ICommunityClient
             {
                 var exception = JsonConvert.DeserializeObject<CommunityBaseException>(dto.ResultData);
                 System.Console.WriteLine(exception!.Message);
-                throw new ServiceException(4010);
+                throw new ClientException(4010);
             }
         }
         catch (Exception e)
