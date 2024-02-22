@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="harmony.chatservice.ChatServiceApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-02-13T05:24:22" hostname="DESKTOP-F2JKAL3" time="5.847">
+  <properties/>
+  <testcase name="contextLoads()" classname="harmony.chatservice.ChatServiceApplicationTests" time="5.847"/>
+  <system-out><![CDATA[14:23:45.130 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [harmony.chatservice.ChatServiceApplicationTests]: ChatServiceApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:23:45.810 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration harmony.chatservice.ChatServiceApplication for test class harmony.chatservice.ChatServiceApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.1)
+
+2024-02-13T14:23:50.638+09:00  INFO 57244 --- [    Test worker] h.c.ChatServiceApplicationTests          : Starting ChatServiceApplicationTests using Java 17.0.7 with PID 57244 (started by 82109 in C:\develop\smilegate\severDev5th\chat\remember\src\backend\chat-service)
+2024-02-13T14:23:50.644+09:00  INFO 57244 --- [    Test worker] h.c.ChatServiceApplicationTests          : No active profile set, falling back to 1 default profile: "default"
+2024-02-13T14:23:55.600+09:00  INFO 57244 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2024-02-13T14:23:56.287+09:00  INFO 57244 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 626 ms. Found 3 MongoDB repository interfaces.
+2024-02-13T14:23:58.060+09:00  INFO 57244 --- [    Test worker] o.s.cloud.context.scope.GenericScope     : BeanFactory id=97770401-4c05-3709-b269-a2b72e079efc
+2024-02-13T14:24:02.835+09:00  INFO 57244 --- [    Test worker] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "4.11.1"}, "os": {"type": "Windows", "name": "Windows 10", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Oracle Corporation/17.0.7+8-LTS-224"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=null, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@4efb13f1, com.mongodb.Jep395RecordCodecProvider@7bb4ed71, com.mongodb.KotlinCodecProvider@5112b7]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[10.99.14.176:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
+2024-02-13T14:24:02.922+09:00  INFO 57244 --- [99.14.176:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=10.99.14.176:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=21, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=193770400}
+2024-02-13T14:24:20.715+09:00  INFO 57244 --- [    Test worker] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = latest
+	bootstrap.servers = [10.99.14.176:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-channelEventGroupChat-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = channelEventGroupChat
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.springframework.kafka.support.serializer.JsonDeserializer
+
+2024-02-13T14:24:22.002+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.6.1
+2024-02-13T14:24:22.012+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 5e3c2b738d253ff5
+2024-02-13T14:24:22.012+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1707801861984
+2024-02-13T14:24:22.027+09:00  INFO 57244 --- [    Test worker] fkaConsumerFactory$ExtendedKafkaConsumer : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Subscribed to topic(s): channelEvent
+2024-02-13T14:24:22.057+09:00  INFO 57244 --- [    Test worker] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = latest
+	bootstrap.servers = [10.99.14.176:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-communityEventGroup-2
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = communityEventGroup
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.springframework.kafka.support.serializer.JsonDeserializer
+
+2024-02-13T14:24:22.095+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.6.1
+2024-02-13T14:24:22.096+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 5e3c2b738d253ff5
+2024-02-13T14:24:22.097+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1707801862095
+2024-02-13T14:24:22.098+09:00  INFO 57244 --- [    Test worker] fkaConsumerFactory$ExtendedKafkaConsumer : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Subscribed to topic(s): communityEvent
+2024-02-13T14:24:22.146+09:00  INFO 57244 --- [    Test worker] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = latest
+	bootstrap.servers = [10.99.14.176:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-emojiGroup-3
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = emojiGroup
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.springframework.kafka.support.serializer.JsonDeserializer
+
+2024-02-13T14:24:22.177+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.6.1
+2024-02-13T14:24:22.179+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 5e3c2b738d253ff5
+2024-02-13T14:24:22.180+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1707801862177
+2024-02-13T14:24:22.181+09:00  INFO 57244 --- [    Test worker] fkaConsumerFactory$ExtendedKafkaConsumer : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Subscribed to topic(s): emojiChat
+2024-02-13T14:24:22.264+09:00  INFO 57244 --- [    Test worker] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = latest
+	bootstrap.servers = [10.99.14.176:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-directChatGroup-4
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = directChatGroup
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.springframework.kafka.support.serializer.JsonDeserializer
+
+2024-02-13T14:24:22.333+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.6.1
+2024-02-13T14:24:22.333+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 5e3c2b738d253ff5
+2024-02-13T14:24:22.334+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1707801862333
+2024-02-13T14:24:22.335+09:00  INFO 57244 --- [    Test worker] fkaConsumerFactory$ExtendedKafkaConsumer : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Subscribed to topic(s): directChat
+2024-02-13T14:24:22.369+09:00  INFO 57244 --- [    Test worker] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = latest
+	bootstrap.servers = [10.99.14.176:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-connectionEventGroup-5
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = connectionEventGroup
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.springframework.kafka.support.serializer.JsonDeserializer
+
+2024-02-13T14:24:22.432+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.6.1
+2024-02-13T14:24:22.432+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 5e3c2b738d253ff5
+2024-02-13T14:24:22.432+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1707801862432
+2024-02-13T14:24:22.433+09:00  INFO 57244 --- [    Test worker] fkaConsumerFactory$ExtendedKafkaConsumer : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Subscribed to topic(s): connectionEvent
+2024-02-13T14:24:22.438+09:00  INFO 57244 --- [    Test worker] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = latest
+	bootstrap.servers = [10.99.14.176:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-communityChatGroup-6
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = communityChatGroup
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.springframework.kafka.support.serializer.JsonDeserializer
+
+2024-02-13T14:24:22.464+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.6.1
+2024-02-13T14:24:22.465+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 5e3c2b738d253ff5
+2024-02-13T14:24:22.466+09:00  INFO 57244 --- [    Test worker] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1707801862464
+2024-02-13T14:24:22.470+09:00  INFO 57244 --- [    Test worker] fkaConsumerFactory$ExtendedKafkaConsumer : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Subscribed to topic(s): communityChat
+2024-02-13T14:24:22.507+09:00  INFO 57244 --- [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2024-02-13T14:24:22.516+09:00  INFO 57244 --- [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4a0c04ab]]
+2024-02-13T14:24:22.517+09:00  INFO 57244 --- [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2024-02-13T14:24:22.603+09:00  INFO 57244 --- [    Test worker] h.c.ChatServiceApplicationTests          : Started ChatServiceApplicationTests in 35.691 seconds (process running for 42.333)
+2024-02-13T14:24:24.830+09:00  INFO 57244 --- [ntainer#1-0-C-1] org.apache.kafka.clients.Metadata        : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Cluster ID: tTuzViQKRqKdIr45uGOm_w
+2024-02-13T14:24:24.830+09:00  INFO 57244 --- [ntainer#4-0-C-1] org.apache.kafka.clients.Metadata        : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Cluster ID: tTuzViQKRqKdIr45uGOm_w
+2024-02-13T14:24:24.830+09:00  INFO 57244 --- [ntainer#2-0-C-1] org.apache.kafka.clients.Metadata        : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Cluster ID: tTuzViQKRqKdIr45uGOm_w
+2024-02-13T14:24:24.830+09:00  INFO 57244 --- [ntainer#5-0-C-1] org.apache.kafka.clients.Metadata        : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Cluster ID: tTuzViQKRqKdIr45uGOm_w
+2024-02-13T14:24:24.830+09:00  INFO 57244 --- [ntainer#0-0-C-1] org.apache.kafka.clients.Metadata        : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Cluster ID: tTuzViQKRqKdIr45uGOm_w
+2024-02-13T14:24:24.830+09:00  INFO 57244 --- [ntainer#3-0-C-1] org.apache.kafka.clients.Metadata        : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Cluster ID: tTuzViQKRqKdIr45uGOm_w
+2024-02-13T14:24:24.834+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Discovered group coordinator 10.99.14.176:9092 (id: 2147482646 rack: null)
+2024-02-13T14:24:24.834+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Discovered group coordinator 10.99.14.176:9092 (id: 2147482646 rack: null)
+2024-02-13T14:24:24.834+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Discovered group coordinator 10.99.14.176:9092 (id: 2147482646 rack: null)
+2024-02-13T14:24:24.834+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Discovered group coordinator 10.99.14.176:9092 (id: 2147482646 rack: null)
+2024-02-13T14:24:24.834+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Discovered group coordinator 10.99.14.176:9092 (id: 2147482646 rack: null)
+2024-02-13T14:24:24.834+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Discovered group coordinator 10.99.14.176:9092 (id: 2147482646 rack: null)
+2024-02-13T14:24:24.844+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] (Re-)joining group
+2024-02-13T14:24:24.844+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] (Re-)joining group
+2024-02-13T14:24:24.844+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] (Re-)joining group
+2024-02-13T14:24:24.845+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] (Re-)joining group
+2024-02-13T14:24:24.845+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] (Re-)joining group
+2024-02-13T14:24:24.846+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] (Re-)joining group
+2024-02-13T14:24:24.977+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Request joining group due to: need to re-join with the given member-id: consumer-connectionEventGroup-5-64d73a1a-349b-4eea-8171-05eea329d37c
+2024-02-13T14:24:24.977+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Request joining group due to: need to re-join with the given member-id: consumer-communityEventGroup-2-3878e10b-97f1-4dcc-badf-d5ce1d145519
+2024-02-13T14:24:24.978+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+2024-02-13T14:24:24.978+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+2024-02-13T14:24:24.979+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] (Re-)joining group
+2024-02-13T14:24:24.979+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] (Re-)joining group
+2024-02-13T14:24:24.981+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Request joining group due to: need to re-join with the given member-id: consumer-emojiGroup-3-c13edc97-ced5-4ce5-b8b6-d28d75b48290
+2024-02-13T14:24:24.981+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Request joining group due to: need to re-join with the given member-id: consumer-directChatGroup-4-fae8c9af-3e28-4f5d-9334-b52cc3ca9e3e
+2024-02-13T14:24:24.982+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+2024-02-13T14:24:24.983+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+2024-02-13T14:24:24.983+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] (Re-)joining group
+2024-02-13T14:24:24.984+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Request joining group due to: need to re-join with the given member-id: consumer-channelEventGroupChat-1-f4e24fa1-9fbc-467e-93a0-51949d1e6e9c
+2024-02-13T14:24:24.984+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] (Re-)joining group
+2024-02-13T14:24:24.984+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+2024-02-13T14:24:24.984+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] (Re-)joining group
+2024-02-13T14:24:24.988+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Request joining group due to: need to re-join with the given member-id: consumer-communityChatGroup-6-b033e637-4db6-4804-bd95-55f58bf9423a
+2024-02-13T14:24:24.989+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+2024-02-13T14:24:24.990+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] (Re-)joining group
+2024-02-13T14:24:26.410+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Successfully joined group with generation Generation{generationId=119, memberId='consumer-connectionEventGroup-5-64d73a1a-349b-4eea-8171-05eea329d37c', protocol='range'}
+2024-02-13T14:24:26.479+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Successfully synced group in generation Generation{generationId=119, memberId='consumer-connectionEventGroup-5-64d73a1a-349b-4eea-8171-05eea329d37c', protocol='range'}
+2024-02-13T14:24:26.490+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Notifying assignor about the new Assignment(partitions=[])
+2024-02-13T14:24:26.492+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-connectionEventGroup-5, groupId=connectionEventGroup] Adding newly assigned partitions: 
+2024-02-13T14:24:26.495+09:00  INFO 57244 --- [ntainer#0-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : connectionEventGroup: partitions assigned: []
+2024-02-13T14:24:26.570+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Successfully joined group with generation Generation{generationId=118, memberId='consumer-communityEventGroup-2-3878e10b-97f1-4dcc-badf-d5ce1d145519', protocol='range'}
+2024-02-13T14:24:26.590+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Successfully synced group in generation Generation{generationId=118, memberId='consumer-communityEventGroup-2-3878e10b-97f1-4dcc-badf-d5ce1d145519', protocol='range'}
+2024-02-13T14:24:26.592+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Notifying assignor about the new Assignment(partitions=[communityEvent-0])
+2024-02-13T14:24:26.611+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Adding newly assigned partitions: communityEvent-0
+2024-02-13T14:24:26.643+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityEventGroup-2, groupId=communityEventGroup] Setting offset for partition communityEvent-0 to the committed offset FetchPosition{offset=8, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.99.14.176:9092 (id: 1001 rack: null)], epoch=0}}
+2024-02-13T14:24:26.647+09:00  INFO 57244 --- [ntainer#3-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : communityEventGroup: partitions assigned: [communityEvent-0]
+2024-02-13T14:24:26.943+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Successfully joined group with generation Generation{generationId=119, memberId='consumer-communityChatGroup-6-b033e637-4db6-4804-bd95-55f58bf9423a', protocol='range'}
+2024-02-13T14:24:26.961+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Successfully synced group in generation Generation{generationId=119, memberId='consumer-communityChatGroup-6-b033e637-4db6-4804-bd95-55f58bf9423a', protocol='range'}
+2024-02-13T14:24:26.964+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Notifying assignor about the new Assignment(partitions=[])
+2024-02-13T14:24:26.965+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-communityChatGroup-6, groupId=communityChatGroup] Adding newly assigned partitions: 
+2024-02-13T14:24:26.965+09:00  INFO 57244 --- [ntainer#1-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : communityChatGroup: partitions assigned: []
+2024-02-13T14:24:27.131+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Successfully joined group with generation Generation{generationId=112, memberId='consumer-channelEventGroupChat-1-f4e24fa1-9fbc-467e-93a0-51949d1e6e9c', protocol='range'}
+2024-02-13T14:24:27.159+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Successfully joined group with generation Generation{generationId=119, memberId='consumer-emojiGroup-3-c13edc97-ced5-4ce5-b8b6-d28d75b48290', protocol='range'}
+2024-02-13T14:24:27.185+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Successfully synced group in generation Generation{generationId=112, memberId='consumer-channelEventGroupChat-1-f4e24fa1-9fbc-467e-93a0-51949d1e6e9c', protocol='range'}
+2024-02-13T14:24:27.187+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Notifying assignor about the new Assignment(partitions=[channelEvent-0])
+2024-02-13T14:24:27.188+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Adding newly assigned partitions: channelEvent-0
+2024-02-13T14:24:27.205+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-channelEventGroupChat-1, groupId=channelEventGroupChat] Setting offset for partition channelEvent-0 to the committed offset FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.99.14.176:9092 (id: 1001 rack: null)], epoch=0}}
+2024-02-13T14:24:27.206+09:00  INFO 57244 --- [ntainer#2-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : channelEventGroupChat: partitions assigned: [channelEvent-0]
+2024-02-13T14:24:27.261+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Successfully synced group in generation Generation{generationId=119, memberId='consumer-emojiGroup-3-c13edc97-ced5-4ce5-b8b6-d28d75b48290', protocol='range'}
+2024-02-13T14:24:27.262+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Notifying assignor about the new Assignment(partitions=[])
+2024-02-13T14:24:27.262+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-emojiGroup-3, groupId=emojiGroup] Adding newly assigned partitions: 
+2024-02-13T14:24:27.262+09:00  INFO 57244 --- [ntainer#4-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : emojiGroup: partitions assigned: []
+2024-02-13T14:24:27.875+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Successfully joined group with generation Generation{generationId=119, memberId='consumer-directChatGroup-4-fae8c9af-3e28-4f5d-9334-b52cc3ca9e3e', protocol='range'}
+2024-02-13T14:24:27.890+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Successfully synced group in generation Generation{generationId=119, memberId='consumer-directChatGroup-4-fae8c9af-3e28-4f5d-9334-b52cc3ca9e3e', protocol='range'}
+2024-02-13T14:24:27.890+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Notifying assignor about the new Assignment(partitions=[directChat-0])
+2024-02-13T14:24:27.890+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Adding newly assigned partitions: directChat-0
+2024-02-13T14:24:27.900+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.a.k.c.c.internals.ConsumerCoordinator  : [Consumer clientId=consumer-directChatGroup-4, groupId=directChatGroup] Setting offset for partition directChat-0 to the committed offset FetchPosition{offset=13, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.99.14.176:9092 (id: 1001 rack: null)], epoch=0}}
+2024-02-13T14:24:27.900+09:00  INFO 57244 --- [ntainer#5-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : directChatGroup: partitions assigned: [directChat-0]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

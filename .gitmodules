@@ -1,0 +1,12 @@
+[submodule "src/backend/state-service/stateservice/harmony-private-state-server"]
+	path = src/backend/state-service/stateservice/harmony-private-state-server
+	url = https://github.com/acs0209/harmony-private-state-server.git
+[submodule "src/backend/chat-service/harmony-private-env"]
+	path = src/backend/chat-service/harmony-private-env
+	url = https://github.com/acs0209/harmony-private-env.git
+[submodule "src/backend/user-service/SecretZuZu"]
+	path = src/backend/user-service/SecretZuZu
+	url = https://github.com/Hong-Study/SecretZuZu.git
+[submodule "src/backend/community-service/remember-community-private-env"]
+	path = src/backend/community-service/remember-community-private-env
+	url = https://github.com/0Chord/remember-community-private-env.git
