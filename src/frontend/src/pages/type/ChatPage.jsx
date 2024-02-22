@@ -58,6 +58,7 @@ const ChatPage = () => {
       try {
         setLoading(true); 
         const response = await axios.get(`https://0chord.store/api/chat-service/community/messages/channel?channelId=${CURRENT_VIEW_CHANNEL}&page=${page}&size=20`);
+        console.log("response", response);
         newMessages = response.data.content.reverse();
         // 새로운 데이터가 없을 경우
         if (newMessages.length === 0) {
@@ -298,8 +299,8 @@ const ChatPage = () => {
                 ))}
               </div>
             </div>
-
-            {USER_ID === msg.userId && hoveredMessageId === msg.messageId && (
+            
+            {parseInt(USER_ID) === msg.userId && hoveredMessageId === msg.messageId && (
               <div className="edit-buttons">
                 {editingMessage.messageId === msg.messageId ? (
                   <div>
