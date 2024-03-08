@@ -27,7 +27,7 @@
 
 
 ## 동작 방식
-- 기본적으로 **SmileGatewayConfig.json**을 파싱하여 작동합니다. **SmileGatewayCore**는 Smile Gateway가 작동하는 기본 토대 코드가 들어가 있습니다.
+- 기본적으로 **SmileGatewayConfig.yaml**을 파싱하여 작동합니다. **SmileGatewayCore**는 Smile Gateway가 작동하는 기본 토대 코드가 들어가 있습니다.
 
 ## Config
 ### 기본 골자
