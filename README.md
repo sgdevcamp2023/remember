@@ -42,8 +42,10 @@
 
 ## 기술 스택
 ### Frontend
-- react
-- zustand
+- React, Javascript
+- Zustand
+- styled-components
+- Stomp.js
 
 ### Backend
 - Language
@@ -87,9 +89,9 @@
 - Media 서버
 
 ### 안재진
-- 채팅 서버
-- 상태 관리 서버
-- kafka
+- [채팅 서버](./src/backend/chat-service)
+- [상태 관리 서버](./src/backend/state-service)
+- [kafka](./docs/서버-소개/카프카)
 
 ### 홍지현
 - [Smile Gateway](./src/backend/api-gateway/)
