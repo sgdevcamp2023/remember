@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "room_user")
+@Table(name = "room_user", indexes = @Index(name = "idx__roomId__userId", columnList = "room_id, user_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomUser {
 

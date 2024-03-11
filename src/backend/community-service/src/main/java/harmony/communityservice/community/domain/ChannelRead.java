@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "channel_read")
+@Table(name = "channel_read", indexes = @Index(name = "idx__categoryId__guildId",columnList = "category_id, guild_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChannelRead {
 

@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "channel")
+@Table(name = "channel",indexes = @Index(name = "idx__categoryId__guildId",columnList = "category_id, guild_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel {
 
