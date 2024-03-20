@@ -14,11 +14,11 @@ public class CommentResponseDto {
     private Long userId;
     private boolean modified;
     private String writerProfile;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @Builder
     public CommentResponseDto(Long commentId, Long boardId, String writerName, String comment, Long userId,
-                              boolean modified, String writerProfile, LocalDateTime createdAt) {
+                              boolean modified, String writerProfile, String createdAt) {
         this.commentId = commentId;
         this.boardId = boardId;
         this.writerName = writerName;

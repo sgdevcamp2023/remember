@@ -16,13 +16,13 @@ public class BoardsResponseDto {
     private String writer;
     private Long userId;
     private boolean modified;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private List<EmojiResponseDto> emojiResponseDtos = new ArrayList<>();
     private int CommentCount;
 
     @Builder
     public BoardsResponseDto(Long boardId, Long channelId, String title, String content, String writer, Long userId,
-                             boolean modified, LocalDateTime createdAt, List<EmojiResponseDto> emojiResponseDtos,
+                             boolean modified, String createdAt, List<EmojiResponseDto> emojiResponseDtos,
                              int commentCount) {
         this.boardId = boardId;
         this.channelId = channelId;

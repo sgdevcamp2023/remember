@@ -12,7 +12,7 @@ public class BoardResponseDto {
     private String writerName;
     private Long userId;
     private boolean modified;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private CommentsResponseDto commentsResponseDto;
     private ImagesResponseDto imagesResponseDto;
     private EmojisResponseDto emojisResponseDto;
@@ -20,7 +20,7 @@ public class BoardResponseDto {
     @Builder
     public BoardResponseDto(Long boardId, String title, String content, String writerName, Long userId,
                             boolean modified,
-                            LocalDateTime createdAt, CommentsResponseDto commentsResponseDto,
+                            String createdAt, CommentsResponseDto commentsResponseDto,
                             ImagesResponseDto imagesResponseDto, EmojisResponseDto emojisResponseDto) {
         this.boardId = boardId;
         this.title = title;

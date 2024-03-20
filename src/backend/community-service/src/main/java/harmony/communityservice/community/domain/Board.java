@@ -1,8 +1,10 @@
 package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,6 +15,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -32,7 +35,7 @@ public class Board {
     private Long boardId;
 
     @ManyToOne
-    @JoinColumn(name = "channel_id")
+    @JoinColumn(name = "channel_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Channel channel;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
@@ -69,10 +72,10 @@ public class Board {
     private boolean modified;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @Column(name = "modified_at")
-    private LocalDateTime modifiedAt;
+    private String modifiedAt;
 
     @Builder
     public Board(Channel channel, List<Image> images,
@@ -84,8 +87,10 @@ public class Board {
         this.writerName = writerName;
         this.userId = userId;
         this.modified = false;
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.modifiedAt = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.writerProfile = writerProfile;
     }
 
@@ -103,6 +108,7 @@ public class Board {
         this.title = title;
         this.content = content;
         this.modified = true;
-        this.modifiedAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }

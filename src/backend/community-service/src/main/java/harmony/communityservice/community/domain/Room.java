@@ -10,6 +10,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -36,7 +38,7 @@ public class Room {
     private String profile;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<RoomUser> roomUsers = new ArrayList<>();
@@ -45,7 +47,8 @@ public class Room {
     public Room(String name, String profile) {
         this.name = name;
         this.profile = profile;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
 }
