@@ -1,9 +1,15 @@
 # Media server
 
+0. [링크](#링크)
 1. [기술 스택](#기술-스택)
 2. [서버 아키텍처](#서버-아키텍처)
 3. [구현 기능](#주요-구현-기능)
 4. [중점 코드](#중점-코드)
+
+## 링크
+
+mediasoup 정리 : https://smaivnn.tistory.com/28  
+데이터 구조 리팩토링 : https://github.com/smaivnn/mediasoup-tutorial-react-nestjs
 
 ## 기술 스택
 
@@ -29,7 +35,7 @@
 - Router : "방"의 개념으로 미디어 스트림의 경로를 제어하는 역할.
 - Transport : 클라이언트를 router와 연결해서 producer, consumer간 미디어 전송을 가능하게 한다. (RTP)
 
-> final  
+> 채택  
 > client Transport : 2 (send, recv)  
 > Server Transport : 2 x peer
 
