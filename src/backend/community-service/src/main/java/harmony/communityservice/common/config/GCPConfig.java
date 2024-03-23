@@ -16,9 +16,9 @@ public class GCPConfig {
     @Bean
     public Storage gcpStorage() {
         try {
-            ClassPathResource resource = new ClassPathResource("smilegate-recamp-project-8342d152b109.json");
+            ClassPathResource resource = new ClassPathResource("level-totality-416411-c2358eaf982c.json");
             GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
-            String projectId = "smilegate-recamp-project";
+            String projectId = "level-totality-416411";
             return StorageOptions.newBuilder()
                     .setProjectId(projectId)
                     .setCredentials(credentials)

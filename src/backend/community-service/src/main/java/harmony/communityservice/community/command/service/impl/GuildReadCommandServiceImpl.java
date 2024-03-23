@@ -18,7 +18,7 @@ public class GuildReadCommandServiceImpl implements GuildReadCommandService {
     public GuildRead save(GuildReadRequestDto requestDto) {
         GuildRead guildRead = ToGuildReadMapper.convert(requestDto);
         repository.save(guildRead);
-        producerService.sendCreateGuild(guildRead);
+//        producerService.sendCreateGuild(guildRead);
         return guildRead;
     }
 

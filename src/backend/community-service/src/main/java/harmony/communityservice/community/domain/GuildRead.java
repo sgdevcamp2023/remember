@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "guild_read")
+@Table(name = "guild_read", indexes = @Index(name = "idx__userId",columnList = "user_id"))
 public class GuildRead {
 
     @Id

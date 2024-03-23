@@ -5,6 +5,7 @@ import harmony.communityservice.community.query.repository.GuildQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaGuildQueryRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 
 @RequiredArgsConstructor
 public class GuildQueryRepositoryImpl implements GuildQueryRepository {
@@ -12,6 +13,7 @@ public class GuildQueryRepositoryImpl implements GuildQueryRepository {
     private final JpaGuildQueryRepository jpaGuildQueryRepository;
 
     @Override
+    @Cacheable(value = "guild", key = "#guildId")
     public Optional<Guild> findById(Long guildId) {
         return jpaGuildQueryRepository.findById(guildId);
     }

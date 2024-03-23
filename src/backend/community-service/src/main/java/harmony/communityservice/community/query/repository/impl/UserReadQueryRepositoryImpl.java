@@ -6,6 +6,7 @@ import harmony.communityservice.community.query.repository.jpa.JpaUserReadQueryR
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 
 @RequiredArgsConstructor
 public class UserReadQueryRepositoryImpl implements UserReadQueryRepository {
