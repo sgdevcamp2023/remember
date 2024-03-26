@@ -1,74 +1,132 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Media server
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+0. [링크](#링크)
+1. [기술 스택](#기술-스택)
+2. [서버 아키텍처](#서버-아키텍처)
+3. [구현 기능](#주요-구현-기능)
+4. [중점 코드](#중점-코드)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 링크
 
-## Description
-Nest.js 서버 프로젝트 시작용 보일러 코드입니다.
-<br/>
-현재까지 적용 : 
-기능|상태
-|---|:---:|
-|auth|✅|
-|OAuth||
-|RBAC|✅|
-|MongoDB|✅|
-|logger|✅|
-|typeORM||
+mediasoup 정리 : https://smaivnn.tistory.com/28  
+데이터 구조 리팩토링 : https://github.com/smaivnn/mediasoup-tutorial-react-nestjs
 
+## 기술 스택
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-<br/>
-The implemented functions are shown in the table above
-## Installation
+| 종류        | 기술                            |
+| ----------- | ------------------------------- |
+| Language    | `node.js` `Nest.js`             |
+| open source | `mediasoup` `socket.io` `kafka` |
 
-```bash
-$ npm clone [repository address]
+## 서버 아키텍처
+
+### 서버 기본 흐름
+
+![서버흐름](../../../../docs/서버-소개/미디어-서버/서버흐름.png)
+
+- SDP와 ICE과정 mediasoup 통합.
+- Signaling과 Media 서버의 통합.
+
+### mediasoup 아키텍처 ( N : M )
+
+![mediasoup](../../../../docs/서버-소개/미디어-서버/mediasoup아키텍처.png)
+
+- Worker : 실시간 미디어 처리 작업을 수행하며 CPU 코어 하나에 할당된다.
+- Router : "방"의 개념으로 미디어 스트림의 경로를 제어하는 역할.
+- Transport : 클라이언트를 router와 연결해서 producer, consumer간 미디어 전송을 가능하게 한다. (RTP)
+
+> 채택  
+> client Transport : 2 (send, recv)  
+> Server Transport : 2 x peer
+
+## 주요 구현 기능
+
+### worker 부하 분산
+
+![worker](../../../../docs/서버-소개/미디어-서버/worker부하분산.png)
+![transport](../../../../docs/서버-소개/미디어-서버/transport설정.png)
+
+## 중점 코드
+
+### worker 부하 분산
+
+```javascript
+  private nextWorkerIndex = 0;
+  private workers: mediasoup.types.Worker[] = [];
+
+  // 서버 시작 시
+  async onModuleInit() {
+    const numWorkers = os.cpus().length;
+
+    for (let i = 0; i < numWorkers; ++i) {
+      await this.createWorker();
+    }
+  }
+
+  // worker 생성
+  async createWorker() {
+    const worker = await mediasoup.createWorker({
+      // ...code
+    });
+
+    worker.on('died', () => {
+      // ...code
+    });
+
+    this.workers.push(worker);
+    return worker;
+  }
+
+  // worker 가져오기 (Round Robin)
+  getWorker() {
+    const worker = this.workers[this.nextWorkerIndex];
+    this.nextWorkerIndex = (this.nextWorkerIndex + 1) % this.workers.length;
+    return worker;
+  }
+
 ```
 
-## Running the app
+### Client Transport
 
-```bash
-# development
-$ npm run start
+- FE/dev > hooks > useMediasoup.js >  
+  createSendTransport / createRecvTransport
 
-# watch mode
-$ npm run start:dev
+### Server Transport
 
-# production mode
-$ npm run start:prod
-```
+```javascript
+async createWebRtcTransport(
+    data: CreateWebRtcTransportDTO,
+  ): Promise<mediasoup.types.WebRtcTransport> {
+    const { roomId } = data;
 
-## Test
+    try {
+      const router = await this.getRouter(roomId);
+      const transport = await router.createWebRtcTransport(
+        this.webRtcTransport_options,
+      );
 
-```bash
-# unit tests
-$ npm run test
+      this.setTransport(data.consumer, data.socketId, transport);
 
-# e2e tests
-$ npm run test:e2e
+      transport.on('dtlsstatechange', (dtlsState) => {
+        switch (dtlsState) {
+          case 'connected':
+            console.log('>> dtlsstatechange connected');
+            break;
+          case 'failed':
+            console.log('>> dtlsstatechange failed');
+            break;
+          case 'closed':
+            console.log('>> dtlsstatechange closed');
+            transport.close();
+            break;
+        }
+      });
 
-# test coverage
-$ npm run test:cov
+      return transport;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 ```
 
 ## License
