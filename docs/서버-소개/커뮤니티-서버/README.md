@@ -1,10 +1,12 @@
 # 커뮤니티 서버
 
-1. [서버 아키텍처](#서버-아키텍처)
-2. [폴더 구조](#폴더-구조)
-3. [ERD](#erd)
-4. [동작 방식](#동작-방식)
-5. [구현 기능 목록](#구현-기능-목록)
+1. [서버 코드](../../../src/backend/community-service)
+2. [서버 아키텍처](#서버-아키텍처)
+3. [폴더 구조](#폴더-구조)
+4. [ERD](#erd)
+5. [동작 방식](#동작-방식)
+6. [구현 기능 목록](#구현-기능-목록)
+7. [리펙토링 일지](https://meteor-mallet-36a.notion.site/6ae93cdc1d024c639191ae3d3d43d396)
 
 ## 서버 아키텍처
 
@@ -28,9 +30,11 @@
 
 - MySQL RDBMS를 Source, Replica로 이중화를 실행하였으며 Source DB는 쓰기 전용 DB, Replica DB는 읽기 전용 DB로 분리하였습니다.
 - 읽기 전용 테이블을 만들어 JOIN 연산을 최소화하여 빠른 조회를 할 수 있게 만들었습니다.
-- Source와 Replica의 DB 동기화는 Binary file을 비동기식으로 Source에서 Replica로 전달하여 데이터 동기화를 실시하고 있습니다.
+- Source와 Replica의 DB 동기화는 MySQL CDC를 통하여 Binary Log를 비동기식으로 Source에서 Replica로 전달하여 데이터 동기화를 실시하고 있습니다.
 - 스프링 서버에서 Transactional Annotation(readOnly = true)일 때는 Replica DB, Transactional Annotaion(readOnly = false)일 때는 Source DB를 사용합니다.
-
+- MySQL CDC를 활용한 데이터 동기화 시 1000만건 연속 Insert 기준 약 80만건(8%)의 딜레이가 발생 -> 대규모 서비스에서 치명적 결함
+    - Kafka Connect 기반 Debezium 오픈소스로 Migration 실행
+#### CQRS에 관한 자세한 내용은 [CQRS에 대한 생각](https://velog.io/@0chord/series/CQRS) 시리즈를 참고
 ```Java
 public class RoutingDataSource extends AbstractRoutingDataSource {
     @Override
