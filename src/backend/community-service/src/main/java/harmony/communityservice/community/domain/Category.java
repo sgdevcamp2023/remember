@@ -52,7 +52,7 @@ public class Category {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public void updateName(String name) {
+    public void modifyName(String name) {
         this.name = name;
         this.modifiedAt = LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

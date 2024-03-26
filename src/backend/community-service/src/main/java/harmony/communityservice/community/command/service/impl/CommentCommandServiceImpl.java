@@ -1,8 +1,8 @@
 package harmony.communityservice.community.command.service.impl;
 
-import harmony.communityservice.community.command.dto.CommentDeleteRequestDto;
-import harmony.communityservice.community.command.dto.CommentRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.CommentUpdateRequestDto;
+import harmony.communityservice.community.command.dto.DeleteCommentRequest;
+import harmony.communityservice.community.command.dto.RegisterCommentRequest;
+import harmony.communityservice.community.command.dto.ModifyCommentRequest;
 import harmony.communityservice.community.command.repository.CommentCommandRepository;
 import harmony.communityservice.community.command.service.CommentCommandService;
 import harmony.communityservice.community.domain.Board;
@@ -20,24 +20,24 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     private final CommentQueryService commentQueryService;
 
     @Override
-    public void save(CommentRegistrationRequestDto requestDto) {
+    public void register(RegisterCommentRequest registerCommentRequest) {
 
-        Board findBoard = boardQueryService.findBoardByBoardId(requestDto.getBoardId());
-        Comment comment = ToCommentMapper.convert(requestDto, findBoard);
+        Board findBoard = boardQueryService.searchByBoardId(registerCommentRequest.getBoardId());
+        Comment comment = ToCommentMapper.convert(registerCommentRequest, findBoard);
         commentCommandRepository.save(comment);
     }
 
     @Override
-    public void updateComment(CommentUpdateRequestDto requestDto) {
-        Comment findComment = commentQueryService.findById(requestDto.getCommentId());
-        findComment.checkWriter(requestDto.getUserId());
-        findComment.updateComment(requestDto.getComment());
+    public void modify(ModifyCommentRequest modifyCommentRequest) {
+        Comment findComment = commentQueryService.searchById(modifyCommentRequest.getCommentId());
+        findComment.verifyWriter(modifyCommentRequest.getUserId());
+        findComment.modify(modifyCommentRequest.getComment());
     }
 
     @Override
-    public void delete(CommentDeleteRequestDto requestDto) {
-        Comment findComment = commentQueryService.findById(requestDto.getCommentId());
-        findComment.checkWriter(requestDto.getUserId());
+    public void delete(DeleteCommentRequest deleteCommentRequest) {
+        Comment findComment = commentQueryService.searchById(deleteCommentRequest.getCommentId());
+        findComment.verifyWriter(deleteCommentRequest.getUserId());
         commentCommandRepository.delete(findComment);
     }
 }

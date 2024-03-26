@@ -1,7 +1,7 @@
 package harmony.communityservice.community.command.service.impl;
 
-import harmony.communityservice.community.command.dto.RoomDeleteRequestDto;
-import harmony.communityservice.community.command.dto.RoomRegistrationRequestDto;
+import harmony.communityservice.community.command.dto.DeleteRoomRequest;
+import harmony.communityservice.community.command.dto.RegisterRoomRequest;
 import harmony.communityservice.community.command.repository.RoomCommandRepository;
 import harmony.communityservice.community.command.service.RoomCommandService;
 import harmony.communityservice.community.command.service.RoomUserCommandService;
@@ -22,18 +22,18 @@ public class RoomCommandServiceImpl implements RoomCommandService {
     private final RoomUserCommandService roomUserCommandService;
 
     @Override
-    public void save(RoomRegistrationRequestDto roomRegistrationRequestDto) {
-        Room room = ToRoomMapper.convert(roomRegistrationRequestDto);
+    public void register(RegisterRoomRequest registerRoomRequest) {
+        Room room = ToRoomMapper.convert(registerRoomRequest);
         roomCommandRepository.save(room);
-        roomRegistrationRequestDto.getMembers().stream()
-                .map(userQueryService::findUser)
-                .forEach(user -> roomUserCommandService.save(room, user));
+        registerRoomRequest.getMembers().stream()
+                .map(userQueryService::searchByUserId)
+                .forEach(user -> roomUserCommandService.register(room, user));
     }
 
     @Override
-    public void delete(RoomDeleteRequestDto roomDeleteRequestDto) {
-        User firstUser = userQueryService.findUser(roomDeleteRequestDto.getFirstUser());
-        User secondUser = userQueryService.findUser(roomDeleteRequestDto.getSecondUser());
+    public void delete(DeleteRoomRequest deleteRoomRequest) {
+        User firstUser = userQueryService.searchByUserId(deleteRoomRequest.getFirstUser());
+        User secondUser = userQueryService.searchByUserId(deleteRoomRequest.getSecondUser());
         List<RoomUser> firstRooms = firstUser.getRoomUsers();
         List<RoomUser> secondRooms = secondUser.getRoomUsers();
         Optional<RoomUser> firstRoomUser = firstRooms.stream()
@@ -44,11 +44,11 @@ public class RoomCommandServiceImpl implements RoomCommandService {
         firstRoomUser.ifPresent(roomUser -> {
             long roomId = roomUser.getRoom().getRoomId();
             roomCommandRepository.deleteByRoomId(roomId);
-            roomUserCommandService.deleteByRoomUser(roomUser);
+            roomUserCommandService.delete(roomUser);
             secondRooms.stream()
                     .filter(secondRoomUser -> secondRoomUser.getRoom().getRoomId() == roomId)
                     .findFirst()
-                    .ifPresent(roomUserCommandService::deleteByRoomUser);
+                    .ifPresent(roomUserCommandService::delete);
         });
     }
 }

@@ -6,5 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface CommentQueryService {
 
-    Comment findById(Long commentId);
+
+    Comment searchById(Long commentId);
 }

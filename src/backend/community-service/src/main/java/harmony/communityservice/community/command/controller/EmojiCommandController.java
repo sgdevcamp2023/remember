@@ -1,8 +1,8 @@
 package harmony.communityservice.community.command.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.command.dto.EmojiDeleteRequestDto;
-import harmony.communityservice.community.command.dto.EmojiRegistrationRequestDto;
+import harmony.communityservice.community.command.dto.DeleteEmojiRequest;
+import harmony.communityservice.community.command.dto.RegisterEmojiRequest;
 import harmony.communityservice.community.command.service.EmojiCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,14 +20,14 @@ public class EmojiCommandController {
 
     private final EmojiCommandService emojiCommandService;
 
-    @PostMapping("/registration/board/emoji")
-    public BaseResponse<?> registration(@RequestBody @Validated EmojiRegistrationRequestDto requestDto) {
-        emojiCommandService.save(requestDto);
+    @PostMapping("/register/board/emoji")
+    public BaseResponse<?> register(@RequestBody @Validated RegisterEmojiRequest requestDto) {
+        emojiCommandService.register(requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/emoji")
-    public BaseResponse<?> remove(@RequestBody @Validated EmojiDeleteRequestDto requestDto) {
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteEmojiRequest requestDto) {
         emojiCommandService.delete(requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }

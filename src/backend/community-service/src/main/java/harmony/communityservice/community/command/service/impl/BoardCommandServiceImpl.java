@@ -1,9 +1,9 @@
 package harmony.communityservice.community.command.service.impl;
 
 import harmony.communityservice.common.service.ContentService;
-import harmony.communityservice.community.command.dto.BoardDeleteRequestDto;
-import harmony.communityservice.community.command.dto.BoardRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.BoardUpdateRequestDto;
+import harmony.communityservice.community.command.dto.DeleteBoardRequest;
+import harmony.communityservice.community.command.dto.RegisterBoardRequest;
+import harmony.communityservice.community.command.dto.ModifyBoardRequest;
 import harmony.communityservice.community.command.repository.BoardCommandRepository;
 import harmony.communityservice.community.command.service.BoardCommandService;
 import harmony.communityservice.community.command.service.ImageCommandService;
@@ -29,29 +29,29 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     private final BoardQueryService boardQueryService;
 
     @Override
-    public void save(BoardRegistrationRequestDto requestDto, List<MultipartFile> images) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
+    public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images) {
+        userReadQueryService.existsByUserIdAndGuildId(registerBoardRequest.getUserId(), registerBoardRequest.getGuildId());
         List<String> imageUrls = images.stream()
-                .map(contentService::imageConvertUrl).toList();
-        UserRead findUserRead = userReadQueryService.findUserReadIdAndGuildId(requestDto.getUserId(),
-                requestDto.getGuildId());
-        Channel findChannel = channelQueryService.findChannelByChannelId(requestDto.getChannelId());
-        Board board = ToBoardMapper.convert(requestDto, findUserRead, findChannel);
+                .map(contentService::convertFileToUrl).toList();
+        UserRead findUserRead = userReadQueryService.searchByUserIdAndGuildId(registerBoardRequest.getUserId(),
+                registerBoardRequest.getGuildId());
+        Channel findChannel = channelQueryService.searchByChannelId(registerBoardRequest.getChannelId());
+        Board board = ToBoardMapper.convert(registerBoardRequest, findUserRead, findChannel);
         boardCommandRepository.save(board);
-        imageCommandService.saveImages(imageUrls, board);
+        imageCommandService.registerImagesInBoard(imageUrls, board);
     }
 
     @Override
-    public void update(BoardUpdateRequestDto boardUpdateRequestDto) {
-        Board findBoard = boardQueryService.findBoardByBoardId(boardUpdateRequestDto.getBoardId());
-        findBoard.checkWriter(boardUpdateRequestDto.getUserId());
-        findBoard.updateBoard(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
+    public void modify(ModifyBoardRequest modifyBoardRequest) {
+        Board findBoard = boardQueryService.searchByBoardId(modifyBoardRequest.getBoardId());
+        findBoard.verifyWriter(modifyBoardRequest.getUserId());
+        findBoard.modifyTitleAndContent(modifyBoardRequest.getTitle(), modifyBoardRequest.getContent());
     }
 
     @Override
-    public void delete(BoardDeleteRequestDto requestDto) {
-        Board findBoard = boardQueryService.findBoardByBoardId(requestDto.getBoardId());
-        findBoard.checkWriter(requestDto.getUserId());
+    public void delete(DeleteBoardRequest deleteBoardRequest) {
+        Board findBoard = boardQueryService.searchByBoardId(deleteBoardRequest.getBoardId());
+        findBoard.verifyWriter(deleteBoardRequest.getUserId());
         boardCommandRepository.delete(findBoard);
     }
 }

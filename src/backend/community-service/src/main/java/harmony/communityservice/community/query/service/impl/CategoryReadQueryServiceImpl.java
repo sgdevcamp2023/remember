@@ -14,13 +14,13 @@ public class CategoryReadQueryServiceImpl implements CategoryReadQueryService {
     private final CategoryReadQueryRepository categoryReadQueryRepository;
 
     @Override
-    public List<CategoryRead> findCategoryReadsByGuildId(long guildId, long userId) {
-        userReadQueryService.existsUserIdAndGuildId(userId, guildId);
+    public List<CategoryRead> searchListByGuildId(long guildId, long userId) {
+        userReadQueryService.existsByUserIdAndGuildId(userId, guildId);
         return categoryReadQueryRepository.findAllByGuildId(guildId);
     }
 
     @Override
-    public CategoryRead findByCategoryId(long categoryId) {
+    public CategoryRead searchByCategoryId(long categoryId) {
         return categoryReadQueryRepository.findCategoryReadById(categoryId).orElseThrow(NotFoundDataException::new);
     }
 

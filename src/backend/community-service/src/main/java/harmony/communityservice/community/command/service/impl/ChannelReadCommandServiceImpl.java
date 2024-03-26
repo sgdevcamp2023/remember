@@ -13,14 +13,14 @@ public class ChannelReadCommandServiceImpl implements ChannelReadCommandService 
     private final ChannelReadCommandRepository channelReadCommandRepository;
 
     @Override
-    public void registration(long guildId, Channel channel) {
+    public void register(long guildId, Channel channel) {
 
         ChannelRead channelRead = ToChannelReadMapper.convert(channel, guildId);
         channelReadCommandRepository.save(channelRead);
     }
 
     @Override
-    public void remove(long channelId) {
+    public void delete(long channelId) {
         channelReadCommandRepository.deleteByChannelId(channelId);
     }
 }

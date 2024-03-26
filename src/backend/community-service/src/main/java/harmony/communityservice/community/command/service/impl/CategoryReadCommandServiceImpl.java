@@ -13,13 +13,13 @@ public class CategoryReadCommandServiceImpl implements CategoryReadCommandServic
     private final CategoryReadCommandRepository categoryReadCommandRepository;
 
     @Override
-    public void save(Category category, Long guildId) {
+    public void register(Category category, Long guildId) {
         CategoryRead categoryRead = ToCategoryReadMapper.convert(category, guildId);
         categoryReadCommandRepository.save(categoryRead);
     }
 
     @Override
     public void delete(Long categoryId) {
-        categoryReadCommandRepository.delete(categoryId);
+        categoryReadCommandRepository.deleteByCategoryReadId(categoryId);
     }
 }

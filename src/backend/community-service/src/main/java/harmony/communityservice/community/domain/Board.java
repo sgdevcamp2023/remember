@@ -94,17 +94,17 @@ public class Board {
         this.writerProfile = writerProfile;
     }
 
-    public int commentCount() {
+    public int countComments() {
         return comments.size();
     }
 
-    public void checkWriter(Long userId) {
+    public void verifyWriter(Long userId) {
         if (!this.userId.equals(userId)) {
             throw new IllegalStateException();
         }
     }
 
-    public void updateBoard(String title, String content) {
+    public void modifyTitleAndContent(String title, String content) {
         this.title = title;
         this.content = content;
         this.modified = true;

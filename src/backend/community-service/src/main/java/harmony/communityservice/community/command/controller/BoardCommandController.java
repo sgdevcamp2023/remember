@@ -1,16 +1,15 @@
 package harmony.communityservice.community.command.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.command.dto.BoardDeleteRequestDto;
-import harmony.communityservice.community.command.dto.BoardRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.BoardUpdateRequestDto;
+import harmony.communityservice.community.command.dto.DeleteBoardRequest;
+import harmony.communityservice.community.command.dto.RegisterBoardRequest;
+import harmony.communityservice.community.command.dto.ModifyBoardRequest;
 import harmony.communityservice.community.command.service.BoardCommandService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,23 +25,23 @@ public class BoardCommandController {
 
     private final BoardCommandService boardCommandService;
 
-    @PostMapping("/registration/board")
-    public BaseResponse<?> registration(
-            @RequestPart(value = "requestDto") BoardRegistrationRequestDto boardRegistrationDto,
+    @PostMapping("/register/board")
+    public BaseResponse<?> register(
+            @RequestPart(value = "requestDto") RegisterBoardRequest boardRegistrationDto,
             @RequestPart(name = "images", required = false) List<MultipartFile> images) {
 
-        boardCommandService.save(boardRegistrationDto, images);
+        boardCommandService.register(boardRegistrationDto, images);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
-    @PatchMapping("/change/board")
-    public BaseResponse<?> change(@RequestBody @Validated BoardUpdateRequestDto boardUpdateRequestDto) {
-        boardCommandService.update(boardUpdateRequestDto);
+    @PatchMapping("/update/board")
+    public BaseResponse<?> modify(@RequestBody @Validated ModifyBoardRequest boardUpdateRequestDto) {
+        boardCommandService.modify(boardUpdateRequestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/board")
-    public BaseResponse<?> delete(@RequestBody @Validated BoardDeleteRequestDto requestDto) {
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteBoardRequest requestDto) {
         boardCommandService.delete(requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }

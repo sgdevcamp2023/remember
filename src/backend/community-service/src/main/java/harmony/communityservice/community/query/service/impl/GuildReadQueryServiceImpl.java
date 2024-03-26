@@ -13,7 +13,7 @@ public class GuildReadQueryServiceImpl implements GuildReadQueryService {
     private final GuildReadQueryRepository guildReadQueryRepository;
 
     @Override
-    public Map<Long, GuildRead> findGuildReadsByUserId(long userId) {
+    public Map<Long, GuildRead> searchMapByUserId(long userId) {
         Map<Long, GuildRead> guildReads = new HashMap<>();
         for (GuildRead guildRead : guildReadQueryRepository.findGuildsByUserId(userId)) {
             guildReads.put(guildRead.getGuildId(), guildRead);

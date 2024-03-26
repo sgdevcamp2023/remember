@@ -1,7 +1,7 @@
 package harmony.communityservice.community.query.service.impl;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.community.query.dto.InvitationRequestDto;
+import harmony.communityservice.community.query.dto.SearchGuildInvitationCodeRequest;
 import harmony.communityservice.community.domain.Guild;
 import harmony.communityservice.community.mapper.ToInviteCodeMapper;
 import harmony.communityservice.community.query.repository.GuildQueryRepository;
@@ -16,25 +16,26 @@ public class GuildQueryServiceImpl implements GuildQueryService {
     private final UserReadQueryService userReadQueryService;
 
     @Override
-    public String findInviteCode(InvitationRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        Guild guild = guildQueryRepository.findById(requestDto.getGuildId()).orElseThrow(NotFoundDataException::new);
+    public String searchInvitationCode(SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(searchGuildInvitationCodeRequest.getUserId(), searchGuildInvitationCodeRequest.getGuildId());
+        Guild guild = guildQueryRepository.findById(searchGuildInvitationCodeRequest.getGuildId()).orElseThrow(NotFoundDataException::new);
 
-        return ToInviteCodeMapper.convert(guild.getInviteCode(), requestDto.getUserId(),requestDto.getGuildId());
+        return ToInviteCodeMapper.convert(guild.getInviteCode(), searchGuildInvitationCodeRequest.getUserId(),
+                searchGuildInvitationCodeRequest.getGuildId());
     }
 
     @Override
-    public Guild findGuildByInviteCode(String code) {
+    public Guild searchByInvitationCode(String code) {
         return guildQueryRepository.findByInvitationCode(code).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
-    public Guild findByGuildId(Long guildId) {
+    public Guild searchByGuildId(Long guildId) {
         return guildQueryRepository.findById(guildId).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
-    public boolean existsGuildByGuildIdAndManagerId(Long guildId, Long managerId) {
+    public boolean existsByGuildIdAndManagerId(Long guildId, Long managerId) {
         return guildQueryRepository.existsByGuildIdAndManagerId(guildId, managerId);
     }
 }

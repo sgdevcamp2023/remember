@@ -47,12 +47,11 @@ public class User {
         this.profile = profile;
     }
 
-    public void updateProfile(String profile) {
+    public void modifyProfile(String profile) {
         this.profile = profile;
     }
 
-    public void updateNickname(String nickname) {
+    public void modifyNickname(String nickname) {
         this.nickname = nickname;
     }
-
 }

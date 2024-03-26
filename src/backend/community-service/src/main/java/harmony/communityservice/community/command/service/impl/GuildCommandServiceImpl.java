@@ -1,12 +1,12 @@
 package harmony.communityservice.community.command.service.impl;
 
 import harmony.communityservice.common.service.ContentService;
-import harmony.communityservice.community.command.dto.ChannelRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
-import harmony.communityservice.community.command.dto.GuildReadRequestDto;
-import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.GuildUpdateNicknameRequestDto;
-import harmony.communityservice.community.command.dto.UserReadRequestDto;
+import harmony.communityservice.community.command.dto.DeleteGuildRequest;
+import harmony.communityservice.community.command.dto.ModifyUserNicknameInGuildRequest;
+import harmony.communityservice.community.command.dto.RegisterChannelRequest;
+import harmony.communityservice.community.command.dto.RegisterGuildReadRequest;
+import harmony.communityservice.community.command.dto.RegisterGuildRequest;
+import harmony.communityservice.community.command.dto.RegisterUserReadRequest;
 import harmony.communityservice.community.command.repository.GuildCommandRepository;
 import harmony.communityservice.community.command.service.ChannelCommandService;
 import harmony.communityservice.community.command.service.GuildCommandService;
@@ -17,10 +17,9 @@ import harmony.communityservice.community.domain.Guild;
 import harmony.communityservice.community.domain.GuildRead;
 import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.domain.UserRead;
-import harmony.communityservice.community.mapper.ToChannelMapper;
 import harmony.communityservice.community.mapper.ToGuildMapper;
-import harmony.communityservice.community.mapper.ToGuildReadRequestDtoMapper;
-import harmony.communityservice.community.mapper.ToUserReadRequestDtoMapper;
+import harmony.communityservice.community.mapper.ToSearchGuildReadRequestMapper;
+import harmony.communityservice.community.mapper.ToRegisterUserReadRequestMapper;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
@@ -40,47 +39,50 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
     private final ChannelCommandService channelCommandService;
+
     @Override
-    public GuildRead save(GuildRegistrationRequestDto requestDto, MultipartFile profile) {
-        String imageUrl = contentService.imageConvertUrl(profile);
-        Guild guild = ToGuildMapper.convert(requestDto, imageUrl);
+    public GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
+        String imageUrl = contentService.convertFileToUrl(profile);
+        Guild guild = ToGuildMapper.convert(registerGuildRequest, imageUrl);
         guildCommandRepository.save(guild);
-        GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(guild, requestDto.getManagerId());
-        GuildRead guildRead = guildReadCommandService.save(guildReadRequestDto);
-        User findUser = userQueryService.findUser(requestDto.getManagerId());
-        guildUserCommandService.save(guild, findUser);
-        UserReadRequestDto userReadRequestDto = ToUserReadRequestDtoMapper.convert(guild, findUser);
-        userReadCommandService.save(userReadRequestDto);
-        ChannelRegistrationRequestDto channelRegistrationRequestDto = new ChannelRegistrationRequestDto(
-                guild.getGuildId(), "기본채널", requestDto.getManagerId(), 0L, "TEXT");
-        channelCommandService.registration(channelRegistrationRequestDto);
+        RegisterGuildReadRequest guildReadRequestDto = ToSearchGuildReadRequestMapper.convert(guild,
+                registerGuildRequest.getManagerId());
+        GuildRead guildRead = guildReadCommandService.register(guildReadRequestDto);
+        User findUser = userQueryService.searchByUserId(registerGuildRequest.getManagerId());
+        guildUserCommandService.register(guild, findUser);
+        RegisterUserReadRequest userReadRequestDto = ToRegisterUserReadRequestMapper.convert(guild, findUser);
+        userReadCommandService.register(userReadRequestDto);
+        RegisterChannelRequest channelRegistrationRequestDto = new RegisterChannelRequest(
+                guild.getGuildId(), "기본채널", registerGuildRequest.getManagerId(), 0L, "TEXT");
+        channelCommandService.register(channelRegistrationRequestDto);
         return guildRead;
     }
 
     @Override
-    public void join(String invitationCode, Long userId) {
+    public void joinByInvitationCode(String invitationCode, Long userId) {
         List<String> splitCodes = List.of(invitationCode.split("\\."));
-        Guild findGuild = guildQueryService.findGuildByInviteCode(splitCodes.get(0));
-        GuildReadRequestDto guildReadRequestDto = ToGuildReadRequestDtoMapper.convert(findGuild, userId);
-        guildReadCommandService.save(guildReadRequestDto);
-        User findUser = userQueryService.findUser(userId);
-        guildUserCommandService.save(findGuild, findUser);
-        UserReadRequestDto userReadRequestDto = ToUserReadRequestDtoMapper.convert(findGuild, findUser);
-        userReadCommandService.save(userReadRequestDto);
+        Guild findGuild = guildQueryService.searchByInvitationCode(splitCodes.get(0));
+        RegisterGuildReadRequest guildReadRequestDto = ToSearchGuildReadRequestMapper.convert(findGuild, userId);
+        guildReadCommandService.register(guildReadRequestDto);
+        User findUser = userQueryService.searchByUserId(userId);
+        guildUserCommandService.register(findGuild, findUser);
+        RegisterUserReadRequest userReadRequestDto = ToRegisterUserReadRequestMapper.convert(findGuild, findUser);
+        userReadCommandService.register(userReadRequestDto);
     }
 
     @Override
-    public void remove(GuildDeleteRequestDto guildDeleteRequestDto) {
-        guildQueryService.existsGuildByGuildIdAndManagerId(guildDeleteRequestDto.getGuildId(),
-                guildDeleteRequestDto.getManagerId());
-        guildCommandRepository.delete(guildDeleteRequestDto.getGuildId());
-        guildReadCommandService.delete(guildDeleteRequestDto.getGuildId());
+    public void delete(DeleteGuildRequest deleteGuildRequest) {
+        guildQueryService.existsByGuildIdAndManagerId(deleteGuildRequest.getGuildId(),
+                deleteGuildRequest.getManagerId());
+        guildCommandRepository.delete(deleteGuildRequest.getGuildId());
+        guildReadCommandService.delete(deleteGuildRequest.getGuildId());
     }
 
     @Override
-    public void updateGuildNickname(GuildUpdateNicknameRequestDto requestDto) {
-        UserRead findUserRead = userReadQueryService.findUserReadIdAndGuildId(requestDto.getUserId(),
-                requestDto.getGuildId());
-        findUserRead.updateNickname(requestDto.getNickname());
+    public void modifyUserNicknameInGuild(ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest) {
+        UserRead findUserRead = userReadQueryService.searchByUserIdAndGuildId(
+                modifyUserNicknameInGuildRequest.getUserId(),
+                modifyUserNicknameInGuildRequest.getGuildId());
+        findUserRead.modifyNickname(modifyUserNicknameInGuildRequest.getNickname());
     }
 }

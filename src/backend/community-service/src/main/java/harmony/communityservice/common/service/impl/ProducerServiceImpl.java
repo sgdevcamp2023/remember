@@ -1,6 +1,6 @@
 package harmony.communityservice.common.service.impl;
 
-import harmony.communityservice.common.dto.CommunityEventDto;
+import harmony.communityservice.common.dto.CommunityEvent;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.community.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
@@ -10,13 +10,13 @@ import org.springframework.kafka.core.KafkaTemplate;
 @RequiredArgsConstructor
 public class ProducerServiceImpl implements ProducerService {
 
-    private final KafkaTemplate<String, CommunityEventDto> kafkaTemplateForCommunity;
+    private final KafkaTemplate<String, CommunityEvent> kafkaTemplateForCommunity;
     @Value("${spring.kafka.producer.community-event-topic}")
     private String communityEvent;
 
     @Override
-    public void sendDeleteGuild(Long guildId) {
-        CommunityEventDto kafkaEventDto = CommunityEventDto.builder()
+    public void publishGuildDeletionEvent(Long guildId) {
+        CommunityEvent kafkaEventDto = CommunityEvent.builder()
                 .type("DELETE-GUILD")
                 .guildId(guildId)
                 .build();
@@ -24,9 +24,9 @@ public class ProducerServiceImpl implements ProducerService {
     }
 
     @Override
-    public void sendCreateChannel(Long guildId, Long categoryId, Long channelId, String channelName,
+    public void publishChannelCreationEvent(Long guildId, Long categoryId, Long channelId, String channelName,
                                   String channelType) {
-        CommunityEventDto kafkaEventDto = CommunityEventDto.builder()
+        CommunityEvent kafkaEventDto = CommunityEvent.builder()
                 .type("CREATE-CHANNEL")
                 .guildId(guildId)
                 .channelType(channelType)
@@ -38,8 +38,8 @@ public class ProducerServiceImpl implements ProducerService {
     }
 
     @Override
-    public void sendDeleteChannel(Long channelId) {
-        CommunityEventDto kafkaEventDto = CommunityEventDto.builder()
+    public void publishChannelDeletionEvent(Long channelId) {
+        CommunityEvent kafkaEventDto = CommunityEvent.builder()
                 .type("DELETE-CHANNEL")
                 .channelReadId(channelId)
                 .build();
@@ -47,8 +47,8 @@ public class ProducerServiceImpl implements ProducerService {
     }
 
     @Override
-    public void sendCreateGuild(GuildRead guildRead) {
-        CommunityEventDto kafkaEventDto = CommunityEventDto.builder()
+    public void publishGuildCreationEvent(GuildRead guildRead) {
+        CommunityEvent kafkaEventDto = CommunityEvent.builder()
                 .type("CREATE-GUILD")
                 .guildId(guildRead.getGuildId())
                 .guildReadId(guildRead.getGuildReadId())

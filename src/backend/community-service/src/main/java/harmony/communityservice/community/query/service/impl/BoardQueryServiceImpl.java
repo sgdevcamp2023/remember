@@ -3,18 +3,18 @@ package harmony.communityservice.community.query.service.impl;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.domain.Emoji;
-import harmony.communityservice.community.mapper.ToBoardResponseDtoMapper;
-import harmony.communityservice.community.mapper.ToBoardsResponseDtoMapper;
-import harmony.communityservice.community.mapper.ToCommentResponseDtoMapper;
-import harmony.communityservice.community.mapper.ToEmojiResponseDtoMapper;
-import harmony.communityservice.community.query.dto.BoardResponseDto;
-import harmony.communityservice.community.query.dto.BoardsResponseDto;
-import harmony.communityservice.community.query.dto.CommentResponseDto;
-import harmony.communityservice.community.query.dto.CommentsResponseDto;
-import harmony.communityservice.community.query.dto.EmojiResponseDto;
-import harmony.communityservice.community.query.dto.EmojisResponseDto;
-import harmony.communityservice.community.query.dto.ImageResponseDto;
-import harmony.communityservice.community.query.dto.ImagesResponseDto;
+import harmony.communityservice.community.mapper.ToSearchBoardResponseMapper;
+import harmony.communityservice.community.mapper.ToSearchBoardsResponseMapper;
+import harmony.communityservice.community.mapper.ToSearchCommentResponseMapper;
+import harmony.communityservice.community.mapper.ToSearchEmojiResponseMapper;
+import harmony.communityservice.community.query.dto.SearchBoardDetailResponse;
+import harmony.communityservice.community.query.dto.SearchBoardResponse;
+import harmony.communityservice.community.query.dto.SearchCommentResponse;
+import harmony.communityservice.community.query.dto.SearchCommentsResponse;
+import harmony.communityservice.community.query.dto.SearchEmojiResponse;
+import harmony.communityservice.community.query.dto.SearchEmojisResponse;
+import harmony.communityservice.community.query.dto.SearchImageResponse;
+import harmony.communityservice.community.query.dto.SearchImagesResponse;
 import harmony.communityservice.community.query.repository.BoardQueryRepository;
 import harmony.communityservice.community.query.service.BoardQueryService;
 import java.util.List;
@@ -28,57 +28,57 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     private final BoardQueryRepository boardQueryRepository;
 
     @Override
-    public List<BoardsResponseDto> findBoards(long channelId, long lastBoardId) {
+    public List<SearchBoardResponse> searchList(long channelId, long lastBoardId) {
         PageRequest pageRequest = PageRequest.of(0, MAX_PAGE_COUNT);
 
         return boardQueryRepository.findByChannelOrderByBoardId(channelId, lastBoardId, pageRequest)
                 .stream()
                 .map(findBoard -> {
-                    List<EmojiResponseDto> emojiResponseDtos = findBoard.getEmojis().stream()
-                            .map(ToEmojiResponseDtoMapper::convert)
+                    List<SearchEmojiResponse> emojiResponseDtos = findBoard.getEmojis().stream()
+                            .map(ToSearchEmojiResponseMapper::convert)
                             .collect(Collectors.toList());
-                    return ToBoardsResponseDtoMapper.convert(findBoard, emojiResponseDtos);
+                    return ToSearchBoardsResponseMapper.convert(findBoard, emojiResponseDtos);
                 })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Board findBoardByBoardId(Long boardId) {
+    public Board searchByBoardId(Long boardId) {
         return boardQueryRepository.findByBoardId(boardId).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
-    public BoardResponseDto make(long boardId) {
-        Board findBoard = findBoardByBoardId(boardId);
-        CommentsResponseDto commentsResponseDto = makeCommentsResponseDto(boardId,
+    public SearchBoardDetailResponse searchBoardDetail(long boardId) {
+        Board findBoard = searchByBoardId(boardId);
+        SearchCommentsResponse commentsResponseDto = makeSearchCommentsResponse(boardId,
                 findBoard);
-        EmojisResponseDto emojisResponseDto = makeEmojiResponseDto(findBoard);
-        ImagesResponseDto imagesResponseDto = makeImagesResponseDto(findBoard);
-        return ToBoardResponseDtoMapper.convert(findBoard, commentsResponseDto, emojisResponseDto, imagesResponseDto,
+        SearchEmojisResponse emojisResponseDto = makeSearchEmojisResponse(findBoard);
+        SearchImagesResponse imagesResponseDto = makeSearchImagesResponse(findBoard);
+        return ToSearchBoardResponseMapper.convert(findBoard, commentsResponseDto, emojisResponseDto, imagesResponseDto,
                 boardId);
     }
 
-    private static ImagesResponseDto makeImagesResponseDto(Board findBoard) {
-        return new ImagesResponseDto(
+    private static SearchImagesResponse makeSearchImagesResponse(Board findBoard) {
+        return new SearchImagesResponse(
                 findBoard.getImages().stream()
-                        .map(image -> new ImageResponseDto(image.getImageAddr()))
+                        .map(image -> new SearchImageResponse(image.getImageAddr()))
                         .collect(Collectors.toList())
         );
     }
 
-    private static EmojisResponseDto makeEmojiResponseDto(Board findBoard) {
+    private static SearchEmojisResponse makeSearchEmojisResponse(Board findBoard) {
         List<Emoji> emojis = findBoard.getEmojis();
-        return new EmojisResponseDto(
+        return new SearchEmojisResponse(
                 emojis.stream()
-                        .map(ToEmojiResponseDtoMapper::convert)
+                        .map(ToSearchEmojiResponseMapper::convert)
                         .collect(Collectors.toList())
         );
     }
 
-    private static CommentsResponseDto makeCommentsResponseDto(long boardId, Board findBoard) {
-        List<CommentResponseDto> commentResponseDtos = findBoard.getComments().stream()
-                .map(comment -> ToCommentResponseDtoMapper.convert(comment, boardId))
+    private static SearchCommentsResponse makeSearchCommentsResponse(long boardId, Board findBoard) {
+        List<SearchCommentResponse> searchCommentResponses = findBoard.getComments().stream()
+                .map(comment -> ToSearchCommentResponseMapper.convert(comment, boardId))
                 .collect(Collectors.toList());
-        return new CommentsResponseDto(commentResponseDtos);
+        return new SearchCommentsResponse(searchCommentResponses);
     }
 }

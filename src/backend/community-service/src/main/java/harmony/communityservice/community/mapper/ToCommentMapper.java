@@ -1,12 +1,12 @@
 package harmony.communityservice.community.mapper;
 
-import harmony.communityservice.community.command.dto.CommentRegistrationRequestDto;
+import harmony.communityservice.community.command.dto.RegisterCommentRequest;
 import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.domain.Comment;
 
 public class ToCommentMapper {
 
-    public static Comment convert(CommentRegistrationRequestDto requestDto, Board findBoard) {
+    public static Comment convert(RegisterCommentRequest requestDto, Board findBoard) {
         return Comment.builder()
                 .comment(requestDto.getComment())
                 .board(findBoard)

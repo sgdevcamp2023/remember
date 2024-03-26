@@ -1,8 +1,8 @@
 package harmony.communityservice.community.command.service.impl;
 
-import harmony.communityservice.community.command.dto.CategoryDeleteRequestDto;
-import harmony.communityservice.community.command.dto.CategoryRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.CategoryUpdateRequestDto;
+import harmony.communityservice.community.command.dto.DeleteCategoryRequest;
+import harmony.communityservice.community.command.dto.RegisterCategoryRequest;
+import harmony.communityservice.community.command.dto.ModifyCategoryRequest;
 import harmony.communityservice.community.command.repository.CategoryCommandRepository;
 import harmony.communityservice.community.command.service.CategoryCommandService;
 import harmony.communityservice.community.command.service.CategoryReadCommandService;
@@ -26,28 +26,28 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     private final CategoryReadQueryService categoryReadQueryService;
     private final CategoryQueryService categoryQueryService;
     @Override
-    public void save(CategoryRegistrationRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        Guild findGuild = guildQueryService.findByGuildId(requestDto.getGuildId());
-        Category category = ToCategoryMapper.convert(findGuild, requestDto);
+    public void register(RegisterCategoryRequest registerCategoryRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(registerCategoryRequest.getUserId(), registerCategoryRequest.getGuildId());
+        Guild findGuild = guildQueryService.searchByGuildId(registerCategoryRequest.getGuildId());
+        Category category = ToCategoryMapper.convert(findGuild, registerCategoryRequest);
         categoryCommandRepository.save(category);
-        categoryReadCommandService.save(category, requestDto.getGuildId());
+        categoryReadCommandService.register(category, registerCategoryRequest.getGuildId());
     }
 
     @Override
-    public void delete(CategoryDeleteRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        categoryCommandRepository.deleteByCategoryId(requestDto.getCategoryId());
-        categoryReadCommandService.delete(requestDto.getCategoryId());
+    public void delete(DeleteCategoryRequest deleteCategoryRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(deleteCategoryRequest.getUserId(), deleteCategoryRequest.getGuildId());
+        categoryCommandRepository.deleteByCategoryId(deleteCategoryRequest.getCategoryId());
+        categoryReadCommandService.delete(deleteCategoryRequest.getCategoryId());
     }
 
     @Override
-    public void update(CategoryUpdateRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        categoryReadQueryService.existsByCategoryIdAndGuildId(requestDto.getCategoryId(), requestDto.getGuildId());
-        Category findCategory = categoryQueryService.findByCategoryId(requestDto.getCategoryId());
-        CategoryRead findCategoryRead = categoryReadQueryService.findByCategoryId(requestDto.getCategoryId());
-        findCategory.updateName(requestDto.getName());
-        findCategoryRead.updateName(requestDto.getName());
+    public void modify(ModifyCategoryRequest modifyCategoryRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(modifyCategoryRequest.getUserId(), modifyCategoryRequest.getGuildId());
+        categoryReadQueryService.existsByCategoryIdAndGuildId(modifyCategoryRequest.getCategoryId(), modifyCategoryRequest.getGuildId());
+        Category findCategory = categoryQueryService.searchByCategoryId(modifyCategoryRequest.getCategoryId());
+        CategoryRead findCategoryRead = categoryReadQueryService.searchByCategoryId(modifyCategoryRequest.getCategoryId());
+        findCategory.modifyName(modifyCategoryRequest.getName());
+        findCategoryRead.modifyName(modifyCategoryRequest.getName());
     }
 }

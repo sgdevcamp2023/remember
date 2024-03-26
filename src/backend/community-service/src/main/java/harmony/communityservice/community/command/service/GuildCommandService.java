@@ -1,8 +1,8 @@
 package harmony.communityservice.community.command.service;
 
-import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
-import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.GuildUpdateNicknameRequestDto;
+import harmony.communityservice.community.command.dto.DeleteGuildRequest;
+import harmony.communityservice.community.command.dto.RegisterGuildRequest;
+import harmony.communityservice.community.command.dto.ModifyUserNicknameInGuildRequest;
 import harmony.communityservice.community.domain.GuildRead;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,11 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 public interface GuildCommandService {
 
-    GuildRead save(GuildRegistrationRequestDto requestDto, MultipartFile profile);
+    GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile);
 
-    void join(String invitationCode, Long userId);
+    void joinByInvitationCode(String invitationCode, Long userId);
 
-    void remove(GuildDeleteRequestDto guildDeleteRequestDto);
+    void delete(DeleteGuildRequest deleteGuildRequest);
 
-    void updateGuildNickname(GuildUpdateNicknameRequestDto requestDto);
+    void modifyUserNicknameInGuild(ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest);
 }

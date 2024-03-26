@@ -6,7 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface EmojiUserCommandService {
-    void save(Emoji emoji, Long userId);
+
+    void register(Emoji emoji, Long userId);
 
     void delete(EmojiUser emojiUser);
 }

@@ -1,7 +1,7 @@
 package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.query.dto.RoomsResponseDto;
+import harmony.communityservice.community.query.dto.SearchRoomsResponse;
 import harmony.communityservice.community.query.service.RoomQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,9 @@ public class RoomQueryController {
 
     private final RoomQueryService roomQueryService;
 
-    @GetMapping("/check/room/{userId}")
+    @GetMapping("/search/rooms/{userId}")
     public BaseResponse<?> search(@PathVariable Long userId) {
-        RoomsResponseDto roomsResponseDto = roomQueryService.searchRoom(userId);
+        SearchRoomsResponse roomsResponseDto = roomQueryService.searchList(userId);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", roomsResponseDto);
     }
 }
