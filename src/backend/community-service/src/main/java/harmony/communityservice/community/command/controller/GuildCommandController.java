@@ -45,7 +45,7 @@ public class GuildCommandController {
     @DeleteMapping("/delete/guild")
     public BaseResponse<?> delete(@RequestBody @Validated DeleteGuildRequest deleteGuildRequest) {
         guildCommandService.delete(deleteGuildRequest);
-        producerService.publishGuildDeletionEvent(deleteGuildRequest.getGuildId());
+        producerService.publishGuildDeletionEvent(deleteGuildRequest.guildId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 

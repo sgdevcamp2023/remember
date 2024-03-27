@@ -30,12 +30,12 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     @Override
     public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images) {
-        userReadQueryService.existsByUserIdAndGuildId(registerBoardRequest.getUserId(), registerBoardRequest.getGuildId());
+        userReadQueryService.existsByUserIdAndGuildId(registerBoardRequest.userId(), registerBoardRequest.guildId());
         List<String> uploadedImageUrls = images.stream()
                 .map(contentService::convertFileToUrl).toList();
-        UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(registerBoardRequest.getUserId(),
-                registerBoardRequest.getGuildId());
-        Channel targetChannel = channelQueryService.searchByChannelId(registerBoardRequest.getChannelId());
+        UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(registerBoardRequest.userId(),
+                registerBoardRequest.guildId());
+        Channel targetChannel = channelQueryService.searchByChannelId(registerBoardRequest.channelId());
         Board board = ToBoardMapper.convert(registerBoardRequest, boardWriter, targetChannel);
         boardCommandRepository.save(board);
         imageCommandService.registerImagesInBoard(uploadedImageUrls, board);
@@ -43,15 +43,15 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     @Override
     public void modify(ModifyBoardRequest modifyBoardRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(modifyBoardRequest.getBoardId());
-        targetBoard.verifyWriter(modifyBoardRequest.getUserId());
-        targetBoard.modifyTitleAndContent(modifyBoardRequest.getTitle(), modifyBoardRequest.getContent());
+        Board targetBoard = boardQueryService.searchByBoardId(modifyBoardRequest.boardId());
+        targetBoard.verifyWriter(modifyBoardRequest.userId());
+        targetBoard.modifyTitleAndContent(modifyBoardRequest.title(), modifyBoardRequest.content());
     }
 
     @Override
     public void delete(DeleteBoardRequest deleteBoardRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(deleteBoardRequest.getBoardId());
-        targetBoard.verifyWriter(deleteBoardRequest.getUserId());
+        Board targetBoard = boardQueryService.searchByBoardId(deleteBoardRequest.boardId());
+        targetBoard.verifyWriter(deleteBoardRequest.userId());
         boardCommandRepository.delete(targetBoard);
     }
 }

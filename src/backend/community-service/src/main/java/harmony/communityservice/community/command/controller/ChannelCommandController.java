@@ -25,8 +25,8 @@ public class ChannelCommandController {
     @PostMapping("/register/category/channel")
     public BaseResponse<?> registerChannelInCategory(@RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
         Long channelId = channelCommandService.register(registerChannelRequest);
-        producerService.publishChannelCreationEvent(registerChannelRequest.getGuildId(), registerChannelRequest.getCategoryId(), channelId,
-                registerChannelRequest.getName(), registerChannelRequest.getType());
+        producerService.publishChannelCreationEvent(registerChannelRequest.guildId(), registerChannelRequest.categoryId(), channelId,
+                registerChannelRequest.name(), registerChannelRequest.type());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
@@ -39,7 +39,7 @@ public class ChannelCommandController {
     @DeleteMapping("/delete/channel")
     public BaseResponse<?> delete(@RequestBody @Validated DeleteChannelRequest deleteChannelRequest) {
         channelCommandService.delete(deleteChannelRequest);
-        producerService.publishChannelDeletionEvent(deleteChannelRequest.getChannelId());
+        producerService.publishChannelDeletionEvent(deleteChannelRequest.channelId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

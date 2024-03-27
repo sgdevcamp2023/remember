@@ -1,11 +1,7 @@
 package harmony.communityservice.community.command.dto;
 
-import lombok.Getter;
+public record RegisterEmojiRequest(Long boardId,
+                                   Long emojiType,
+                                   Long userId) {
 
-@Getter
-public class RegisterEmojiRequest {
-
-    private Long boardId;
-    private Long emojiType;
-    private Long userId;
 }

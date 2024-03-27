@@ -2,23 +2,17 @@ package harmony.communityservice.community.command.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class RegisterChannelRequest {
+public record RegisterChannelRequest(
+        @NotNull Long guildId,
+        @NotBlank String name,
+        @NotNull Long userId,
+        @NotNull Long categoryId,
+        @NotBlank String type) {
 
-    @NotNull
-    private Long guildId;
-    @NotBlank
-    private String name;
-    @NotNull
-    private Long userId;
-    @NotNull
-    private long categoryId = 0L;
-    @NotBlank
-    private String type;
+    public RegisterChannelRequest {
+        if (categoryId == null) {
+            categoryId = 0L;
+        }
+    }
 }

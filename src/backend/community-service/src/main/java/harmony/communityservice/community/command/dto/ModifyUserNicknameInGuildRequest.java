@@ -4,13 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-@Getter
-public class ModifyUserNicknameInGuildRequest {
+public record ModifyUserNicknameInGuildRequest(@NotNull Long userId,
+                                               @NotNull Long guildId,
+                                               @NotBlank String nickname) {
 
-    @NotNull
-    private Long userId;
-    @NotNull
-    private Long guildId;
-    @NotBlank
-    private String nickname;
 }

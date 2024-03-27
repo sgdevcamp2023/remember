@@ -7,18 +7,18 @@ import java.util.List;
 
 public class ToSearchBoardsResponseMapper {
 
-    public static SearchBoardResponse convert(Board findBoard, List<SearchEmojiResponse> emojiResponseDtos) {
+    public static SearchBoardResponse convert(Board targetBoard, List<SearchEmojiResponse> searchEmojiResponses) {
         return SearchBoardResponse.builder()
-                .boardId(findBoard.getBoardId())
-                .commentCount(findBoard.countComments())
-                .title(findBoard.getTitle())
-                .content(findBoard.getContent())
-                .userId(findBoard.getUserId())
-                .writer(findBoard.getWriterName())
-                .createdAt(findBoard.getCreatedAt())
-                .channelId(findBoard.getChannel().getChannelId())
-                .modified(findBoard.isModified())
-                .emojiResponseDtos(emojiResponseDtos)
+                .boardId(targetBoard.getBoardId())
+                .commentCount(targetBoard.countComments())
+                .title(targetBoard.getTitle())
+                .content(targetBoard.getContent())
+                .userId(targetBoard.getUserId())
+                .writer(targetBoard.getWriterName())
+                .createdAt(targetBoard.getCreatedAt())
+                .channelId(targetBoard.getChannel().getChannelId())
+                .modified(targetBoard.isModified())
+                .emojiResponseDtos(searchEmojiResponses)
                 .build();
     }
 }

@@ -2,14 +2,9 @@ package harmony.communityservice.community.command.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 
-@Getter
-public class RegisterCategoryRequest {
-    @NotBlank
-    private String name;
-    @NotNull
-    private Long userId;
-    @NotNull
-    private Long guildId;
+public record RegisterCategoryRequest(@NotBlank String name,
+                                      @NotNull Long userId,
+                                      @NotNull Long guildId) {
+
 }

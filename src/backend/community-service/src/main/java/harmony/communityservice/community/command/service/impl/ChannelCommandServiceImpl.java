@@ -22,18 +22,18 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
 
     @Override
     public Long register(RegisterChannelRequest registerChannelRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(registerChannelRequest.getUserId(), registerChannelRequest.getGuildId());
-        Guild guild = guildQueryService.searchByGuildId(registerChannelRequest.getGuildId());
+        userReadQueryService.existsByUserIdAndGuildId(registerChannelRequest.userId(), registerChannelRequest.guildId());
+        Guild guild = guildQueryService.searchByGuildId(registerChannelRequest.guildId());
         Channel channel = ToChannelMapper.convert(registerChannelRequest, guild);
         channelCommandRepository.save(channel);
-        channelReadCommandService.register(registerChannelRequest.getGuildId(), channel);
+        channelReadCommandService.register(registerChannelRequest.guildId(), channel);
         return channel.getChannelId();
     }
 
     @Override
     public void delete(DeleteChannelRequest deleteChannelRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(deleteChannelRequest.getUserId(), deleteChannelRequest.getGuildId());
-        channelReadCommandService.delete(deleteChannelRequest.getChannelId());
-        channelCommandRepository.deleteByChannelId(deleteChannelRequest.getChannelId());
+        userReadQueryService.existsByUserIdAndGuildId(deleteChannelRequest.userId(), deleteChannelRequest.guildId());
+        channelReadCommandService.delete(deleteChannelRequest.channelId());
+        channelCommandRepository.deleteByChannelId(deleteChannelRequest.channelId());
     }
 }

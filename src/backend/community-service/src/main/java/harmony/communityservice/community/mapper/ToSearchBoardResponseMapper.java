@@ -8,15 +8,15 @@ import harmony.communityservice.community.query.dto.SearchImagesResponse;
 
 public class ToSearchBoardResponseMapper {
 
-    public static SearchBoardDetailResponse convert(Board board, SearchCommentsResponse commentsResponseDto,
-                                                    SearchEmojisResponse emojisResponseDto, SearchImagesResponse imagesResponseDto, long boardId) {
+    public static SearchBoardDetailResponse convert(Board board, SearchCommentsResponse searchCommentsResponse,
+                                                    SearchEmojisResponse searchEmojisResponse, SearchImagesResponse searchImagesResponse, long boardId) {
         return SearchBoardDetailResponse.builder()
                 .title(board.getTitle())
                 .content(board.getContent())
-                .commentsResponseDto(commentsResponseDto)
-                .emojisResponseDto(emojisResponseDto)
+                .commentsResponseDto(searchCommentsResponse)
+                .emojisResponseDto(searchEmojisResponse)
                 .boardId(boardId)
-                .imagesResponseDto(imagesResponseDto)
+                .imagesResponseDto(searchImagesResponse)
                 .modified(board.isModified())
                 .createdAt(board.getCreatedAt())
                 .userId(board.getUserId())

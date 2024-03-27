@@ -6,11 +6,11 @@ import harmony.communityservice.community.domain.Guild;
 
 public class ToChannelMapper {
 
-    public static Channel convert(RegisterChannelRequest requestDto, Guild guild) {
+    public static Channel convert(RegisterChannelRequest registerChannelRequest, Guild guild) {
         return Channel.builder()
-                .name(requestDto.getName())
-                .type(requestDto.getType())
-                .categoryId(requestDto.getCategoryId())
+                .name(registerChannelRequest.name())
+                .type(registerChannelRequest.type())
+                .categoryId(registerChannelRequest.categoryId())
                 .guild(guild)
                 .build();
     }

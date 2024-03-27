@@ -5,12 +5,12 @@ import harmony.communityservice.community.domain.UserRead;
 
 public class ToUserReadMapper {
 
-    public static UserRead convert(RegisterUserReadRequest requestDto) {
+    public static UserRead convert(RegisterUserReadRequest registerUserReadRequest) {
         return UserRead.builder()
-                .userId(requestDto.getUserId())
-                .guildId(requestDto.getGuildId())
-                .profile(requestDto.getProfile())
-                .nickname(requestDto.getNickname())
+                .userId(registerUserReadRequest.userId())
+                .guildId(registerUserReadRequest.guildId())
+                .profile(registerUserReadRequest.profile())
+                .nickname(registerUserReadRequest.nickname())
                 .build();
     }
 }

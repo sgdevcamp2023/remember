@@ -17,13 +17,13 @@ public class GuildQueryServiceImpl implements GuildQueryService {
 
     @Override
     public String searchInvitationCode(SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(searchGuildInvitationCodeRequest.getUserId(),
-                searchGuildInvitationCodeRequest.getGuildId());
-        Guild guild = guildQueryRepository.findById(searchGuildInvitationCodeRequest.getGuildId())
+        userReadQueryService.existsByUserIdAndGuildId(searchGuildInvitationCodeRequest.userId(),
+                searchGuildInvitationCodeRequest.guildId());
+        Guild guild = guildQueryRepository.findById(searchGuildInvitationCodeRequest.guildId())
                 .orElseThrow(NotFoundDataException::new);
 
-        return ToInvitationCodeMapper.convert(guild.getInviteCode(), searchGuildInvitationCodeRequest.getUserId(),
-                searchGuildInvitationCodeRequest.getGuildId());
+        return ToInvitationCodeMapper.convert(guild.getInviteCode(), searchGuildInvitationCodeRequest.userId(),
+                searchGuildInvitationCodeRequest.guildId());
     }
 
     @Override

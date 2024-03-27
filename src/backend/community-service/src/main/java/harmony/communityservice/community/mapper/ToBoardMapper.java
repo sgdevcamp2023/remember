@@ -7,10 +7,10 @@ import harmony.communityservice.community.domain.UserRead;
 
 public class ToBoardMapper {
 
-    public static Board convert(RegisterBoardRequest requestDto, UserRead userRead, Channel channel) {
+    public static Board convert(RegisterBoardRequest registerBoardRequest, UserRead userRead, Channel channel) {
         return Board.builder()
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
+                .title(registerBoardRequest.title())
+                .content(registerBoardRequest.content())
                 .channel(channel)
                 .userId(userRead.getUserId())
                 .writerName(userRead.getNickname())

@@ -25,15 +25,15 @@ public class RoomCommandServiceImpl implements RoomCommandService {
     public void register(RegisterRoomRequest registerRoomRequest) {
         Room room = ToRoomMapper.convert(registerRoomRequest);
         roomCommandRepository.save(room);
-        registerRoomRequest.getMembers().stream()
+        registerRoomRequest.members().stream()
                 .map(userQueryService::searchByUserId)
                 .forEach(user -> roomUserCommandService.register(room, user));
     }
 
     @Override
     public void delete(DeleteRoomRequest deleteRoomRequest) {
-        User firstUser = userQueryService.searchByUserId(deleteRoomRequest.getFirstUser());
-        User secondUser = userQueryService.searchByUserId(deleteRoomRequest.getSecondUser());
+        User firstUser = userQueryService.searchByUserId(deleteRoomRequest.firstUser());
+        User secondUser = userQueryService.searchByUserId(deleteRoomRequest.secondUser());
         List<RoomUser> firstRooms = firstUser.getRoomUsers();
         List<RoomUser> secondRooms = secondUser.getRoomUsers();
         Optional<RoomUser> firstRoomUser = firstRooms.stream()

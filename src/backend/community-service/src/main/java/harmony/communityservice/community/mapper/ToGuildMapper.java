@@ -6,11 +6,11 @@ import java.util.UUID;
 
 public class ToGuildMapper {
 
-    public static Guild convert(RegisterGuildRequest requestDto, String profile) {
+    public static Guild convert(RegisterGuildRequest registerGuildRequest, String profile) {
         return Guild.builder()
-                .name(requestDto.getName())
+                .name(registerGuildRequest.name())
                 .profile(profile)
-                .managerId(requestDto.getManagerId())
+                .managerId(registerGuildRequest.managerId())
                 .inviteCode(UUID.randomUUID().toString().replace("-", ""))
                 .build();
     }

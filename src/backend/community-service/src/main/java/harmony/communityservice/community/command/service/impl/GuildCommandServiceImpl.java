@@ -46,14 +46,14 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         Guild guild = ToGuildMapper.convert(registerGuildRequest, uploadedImageUrl);
         guildCommandRepository.save(guild);
         RegisterGuildReadRequest registerGuildReadRequest = ToSearchGuildReadRequestMapper.convert(guild,
-                registerGuildRequest.getManagerId());
+                registerGuildRequest.managerId());
         GuildRead guildRead = guildReadCommandService.register(registerGuildReadRequest);
-        User targetUser = userQueryService.searchByUserId(registerGuildRequest.getManagerId());
+        User targetUser = userQueryService.searchByUserId(registerGuildRequest.managerId());
         guildUserCommandService.register(guild, targetUser);
         RegisterUserReadRequest registerUserReadRequest = ToRegisterUserReadRequestMapper.convert(guild, targetUser);
         userReadCommandService.register(registerUserReadRequest);
         RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
-                guild.getGuildId(), "기본채널", registerGuildRequest.getManagerId(), 0L, "TEXT");
+                guild.getGuildId(), "기본채널", registerGuildRequest.managerId(), 0L, "TEXT");
         channelCommandService.register(registerChannelRequest);
         return guildRead;
     }
@@ -73,17 +73,17 @@ public class GuildCommandServiceImpl implements GuildCommandService {
 
     @Override
     public void delete(DeleteGuildRequest deleteGuildRequest) {
-        guildQueryService.existsByGuildIdAndManagerId(deleteGuildRequest.getGuildId(),
-                deleteGuildRequest.getManagerId());
-        guildCommandRepository.delete(deleteGuildRequest.getGuildId());
-        guildReadCommandService.delete(deleteGuildRequest.getGuildId());
+        guildQueryService.existsByGuildIdAndManagerId(deleteGuildRequest.guildId(),
+                deleteGuildRequest.managerId());
+        guildCommandRepository.delete(deleteGuildRequest.guildId());
+        guildReadCommandService.delete(deleteGuildRequest.guildId());
     }
 
     @Override
     public void modifyUserNicknameInGuild(ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest) {
         UserRead targetUserRead = userReadQueryService.searchByUserIdAndGuildId(
-                modifyUserNicknameInGuildRequest.getUserId(),
-                modifyUserNicknameInGuildRequest.getGuildId());
-        targetUserRead.modifyNickname(modifyUserNicknameInGuildRequest.getNickname());
+                modifyUserNicknameInGuildRequest.userId(),
+                modifyUserNicknameInGuildRequest.guildId());
+        targetUserRead.modifyNickname(modifyUserNicknameInGuildRequest.nickname());
     }
 }

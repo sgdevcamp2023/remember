@@ -26,17 +26,17 @@ public class UserCommandServiceImpl implements UserCommandService {
 
     @Override
     public void modifyProfile(ModifyUserProfileRequest modifyUserProfileRequest) {
-        User targetUser = userQueryService.searchByUserId(modifyUserProfileRequest.getUserId());
-        targetUser.modifyProfile(modifyUserProfileRequest.getProfile());
-        userReadQueryService.searchListByUserId(modifyUserProfileRequest.getUserId())
-                .forEach(target -> target.modifyProfile(modifyUserProfileRequest.getProfile()));
+        User targetUser = userQueryService.searchByUserId(modifyUserProfileRequest.userId());
+        targetUser.modifyProfile(modifyUserProfileRequest.profile());
+        userReadQueryService.searchListByUserId(modifyUserProfileRequest.userId())
+                .forEach(target -> target.modifyProfile(modifyUserProfileRequest.profile()));
     }
 
     @Override
     public void modifyNickname(ModifyUserNicknameRequest modifyUserNicknameRequest) {
-        User targetUser = userQueryService.searchByUserId(modifyUserNicknameRequest.getUserId());
-        targetUser.modifyProfile(modifyUserNicknameRequest.getNickname());
-        userReadQueryService.searchListByUserId(modifyUserNicknameRequest.getUserId())
-                .forEach(target -> target.modifyProfile(modifyUserNicknameRequest.getNickname()));
+        User targetUser = userQueryService.searchByUserId(modifyUserNicknameRequest.userId());
+        targetUser.modifyProfile(modifyUserNicknameRequest.nickname());
+        userReadQueryService.searchListByUserId(modifyUserNicknameRequest.userId())
+                .forEach(target -> target.modifyProfile(modifyUserNicknameRequest.nickname()));
     }
 }

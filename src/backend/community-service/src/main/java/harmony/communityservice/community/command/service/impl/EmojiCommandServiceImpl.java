@@ -24,9 +24,9 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
 
     @Override
     public void register(RegisterEmojiRequest registerEmojiRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(registerEmojiRequest.getBoardId());
+        Board targetBoard = boardQueryService.searchByBoardId(registerEmojiRequest.boardId());
         Emoji targetEmoji = emojiQueryService.searchByBoardAndEmojiType(targetBoard,
-                registerEmojiRequest.getEmojiType());
+                registerEmojiRequest.emojiType());
         if (targetEmoji == null) {
             notExistsEmoji(registerEmojiRequest, targetBoard);
         } else {
@@ -36,26 +36,26 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
 
     @Override
     public void delete(DeleteEmojiRequest deleteEmojiRequest) {
-        Emoji targetEmoji = emojiQueryService.searchByEmojiId(deleteEmojiRequest.getEmojiId());
+        Emoji targetEmoji = emojiQueryService.searchByEmojiId(deleteEmojiRequest.emojiId());
         targetEmoji.getEmojiUsers().stream()
-                .filter(user -> Objects.equals(user.getUserId(), deleteEmojiRequest.getUserId()))
+                .filter(user -> Objects.equals(user.getUserId(), deleteEmojiRequest.userId()))
                 .findAny()
                 .ifPresent(emojiUserCommandService::delete);
     }
 
     private void existsEmoji(RegisterEmojiRequest registerEmojiRequest, Emoji targetEmoji) {
         targetEmoji.getEmojiUsers().stream()
-                .filter(user -> Objects.equals(user.getUserId(), registerEmojiRequest.getUserId()))
+                .filter(user -> Objects.equals(user.getUserId(), registerEmojiRequest.userId()))
                 .findAny()
                 .ifPresent(e -> {
                     throw new DuplicatedEmojiException();
                 });
-        emojiUserCommandService.register(targetEmoji, registerEmojiRequest.getUserId());
+        emojiUserCommandService.register(targetEmoji, registerEmojiRequest.userId());
     }
 
     private void notExistsEmoji(RegisterEmojiRequest registerEmojiRequest, Board targetBoard) {
-        Emoji emoji = ToEmojiMapper.convert(targetBoard, registerEmojiRequest.getEmojiType());
+        Emoji emoji = ToEmojiMapper.convert(targetBoard, registerEmojiRequest.emojiType());
         emojiCommandRepository.save(emoji);
-        emojiUserCommandService.register(emoji, registerEmojiRequest.getUserId());
+        emojiUserCommandService.register(emoji, registerEmojiRequest.userId());
     }
 }

@@ -19,10 +19,6 @@ public class SearchUserStateResponse {
         this.state = state;
     }
 
-    /**
-     * 유저의 상태 수정 메서드
-     * @param state
-     */
     public void modifyState(String state) {
         this.state = state;
     }

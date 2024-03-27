@@ -6,9 +6,9 @@ import harmony.communityservice.community.domain.Guild;
 
 public class ToCategoryMapper {
 
-    public static Category convert(Guild guild, RegisterCategoryRequest requestDto) {
+    public static Category convert(Guild guild, RegisterCategoryRequest registerCategoryRequest) {
         return Category.builder()
-                .name(requestDto.getName())
+                .name(registerCategoryRequest.name())
                 .guild(guild)
                 .build();
     }
