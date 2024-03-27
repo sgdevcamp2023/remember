@@ -22,20 +22,20 @@ public class UserCommandController {
     private final UserCommandService userCommandService;
 
     @PostMapping("/register/user")
-    public BaseResponse<?> register(@RequestBody @Validated RegisterUserRequest userStoreRequestDto) {
-        userCommandService.register(userStoreRequestDto);
+    public BaseResponse<?> register(@RequestBody @Validated RegisterUserRequest registerUserRequest) {
+        userCommandService.register(registerUserRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @PatchMapping("/modify/user/profile")
-    public BaseResponse<?> modifyProfile(@RequestBody @Validated ModifyUserProfileRequest requestDto) {
-        userCommandService.modifyProfile(requestDto);
+    public BaseResponse<?> modifyProfile(@RequestBody @Validated ModifyUserProfileRequest modifyUserProfileRequest) {
+        userCommandService.modifyProfile(modifyUserProfileRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @PatchMapping("/modify/user/nickname")
-    public BaseResponse<?> modifyNickname(@RequestBody @Validated ModifyUserNicknameRequest requestDto) {
-        userCommandService.modifyNickname(requestDto);
+    public BaseResponse<?> modifyNickname(@RequestBody @Validated ModifyUserNicknameRequest modifyUserNicknameRequest) {
+        userCommandService.modifyNickname(modifyUserNicknameRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

@@ -7,12 +7,12 @@ import harmony.communityservice.community.domain.Room;
 import harmony.communityservice.community.domain.RoomUser;
 import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.mapper.ToRoomResponseDtoMapper;
-import harmony.communityservice.community.mapper.ToUserIdsMapper;
 import harmony.communityservice.community.mapper.ToSearchUserStateResponseMapper;
-import harmony.communityservice.community.query.dto.SearchUserStatusInDmRoomRequest;
+import harmony.communityservice.community.mapper.ToUserIdsMapper;
 import harmony.communityservice.community.query.dto.SearchRoomResponse;
 import harmony.communityservice.community.query.dto.SearchRoomsResponse;
 import harmony.communityservice.community.query.dto.SearchUserStateResponse;
+import harmony.communityservice.community.query.dto.SearchUserStatusInDmRoomRequest;
 import harmony.communityservice.community.query.repository.RoomQueryRepository;
 import harmony.communityservice.community.query.service.RoomQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
@@ -32,29 +32,30 @@ public class RoomQueryServiceImpl implements RoomQueryService {
 
     @Override
     public SearchRoomsResponse searchList(long userId) {
-        User findUser = userQueryService.searchByUserId(userId);
-        List<SearchRoomResponse> roomResponseDtos = findUser.getRoomUsers().stream()
+        User targetUser = userQueryService.searchByUserId(userId);
+        List<SearchRoomResponse> searchRoomResponses = targetUser.getRoomUsers().stream()
                 .map(RoomUser::getRoom)
                 .map(ToRoomResponseDtoMapper::convert)
                 .collect(Collectors.toList());
-        return new SearchRoomsResponse(roomResponseDtos);
+        return new SearchRoomsResponse(searchRoomResponses);
     }
 
     @Override
     public Map<Long, ?> searchUserStatesInRoom(long roomId) {
-        Room findRoom = roomQueryRepository.findByRoomId(roomId).orElseThrow(NotFoundDataException::new);
-        List<User> users = findRoom.getRoomUsers().stream()
+        Room targetRoom = roomQueryRepository.findByRoomId(roomId).orElseThrow(NotFoundDataException::new);
+        List<User> users = targetRoom.getRoomUsers().stream()
                 .map(RoomUser::getUser).toList();
         List<Long> userIds = users.stream()
                 .map(ToUserIdsMapper::convert).toList();
-        SearchUserStatusInDmRoomRequest requestDto = new SearchUserStatusInDmRoomRequest(userIds);
-        SearchDmUserStateFeignResponse stateFeignResponseDto = userStatusClient.getCommunityUsersState(requestDto);
-        Map<Long, String> connectionStates = stateFeignResponseDto.getConnectionStates();
+        SearchUserStatusInDmRoomRequest searchUserStatusInDmRoomRequest = new SearchUserStatusInDmRoomRequest(userIds);
+        SearchDmUserStateFeignResponse searchDmUserStateFeignResponse = userStatusClient.getCommunityUsersState(
+                searchUserStatusInDmRoomRequest);
+        Map<Long, String> connectionStates = searchDmUserStateFeignResponse.getConnectionStates();
         Map<Long, SearchUserStateResponse> userStates = new HashMap<>();
         for (User user : users) {
-            SearchUserStateResponse userStateResponseDto = ToSearchUserStateResponseMapper.convert(user, connectionStates.get(user.getUserId()));
-            userStates.put(user.getUserId(), userStateResponseDto);
-
+            SearchUserStateResponse searchUserStateResponse = ToSearchUserStateResponseMapper.convert(user,
+                    connectionStates.get(user.getUserId()));
+            userStates.put(user.getUserId(), searchUserStateResponse);
         }
         return userStates;
     }

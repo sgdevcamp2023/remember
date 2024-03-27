@@ -22,13 +22,14 @@ public class UserQueryController {
 
     @GetMapping("/search/user/status/guild/{guildId}/{userId}")
     public BaseResponse<?> searchUserStatusInGuild(@PathVariable Long guildId, @PathVariable Long userId) {
-        SearchUserStatesInGuildResponse userStatus = userReadQueryService.searchUserStatesInGuild(guildId, userId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", userStatus);
+        SearchUserStatesInGuildResponse searchUserStatesInGuildResponse = userReadQueryService.searchUserStatesInGuild(
+                guildId, userId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchUserStatesInGuildResponse);
     }
 
     @GetMapping("/search/user/status/dm/{dmId}/{userId}")
     public BaseResponse<?> searchDmRoom(@PathVariable Long dmId, @PathVariable Long userId) {
-        Map<Long, ?> userStatus = roomQueryService.searchUserStatesInRoom(dmId);
-        return new BaseResponse<>(HttpStatus.OK.value(),"OK",userStatus);
+        Map<Long, ?> userStates = roomQueryService.searchUserStatesInRoom(dmId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", userStates);
     }
 }

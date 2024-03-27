@@ -21,15 +21,15 @@ public class RoomCommandController {
     private final RoomCommandService roomCommandService;
 
     @PostMapping("/register/room")
-    public BaseResponse<?> register(@RequestBody @Validated RegisterRoomRequest requestDto) {
+    public BaseResponse<?> register(@RequestBody @Validated RegisterRoomRequest registerRoomRequest) {
 
-        roomCommandService.register(requestDto);
+        roomCommandService.register(registerRoomRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/room")
-    public BaseResponse<?> delete(@RequestBody @Validated DeleteRoomRequest requestDto) {
-        roomCommandService.delete(requestDto);
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteRoomRequest deleteRoomRequest) {
+        roomCommandService.delete(deleteRoomRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

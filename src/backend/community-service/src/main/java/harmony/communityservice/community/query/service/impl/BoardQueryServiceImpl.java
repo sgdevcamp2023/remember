@@ -27,37 +27,6 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     private static final int MAX_PAGE_COUNT = 50;
     private final BoardQueryRepository boardQueryRepository;
 
-    @Override
-    public List<SearchBoardResponse> searchList(long channelId, long lastBoardId) {
-        PageRequest pageRequest = PageRequest.of(0, MAX_PAGE_COUNT);
-
-        return boardQueryRepository.findByChannelOrderByBoardId(channelId, lastBoardId, pageRequest)
-                .stream()
-                .map(findBoard -> {
-                    List<SearchEmojiResponse> emojiResponseDtos = findBoard.getEmojis().stream()
-                            .map(ToSearchEmojiResponseMapper::convert)
-                            .collect(Collectors.toList());
-                    return ToSearchBoardsResponseMapper.convert(findBoard, emojiResponseDtos);
-                })
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Board searchByBoardId(Long boardId) {
-        return boardQueryRepository.findByBoardId(boardId).orElseThrow(NotFoundDataException::new);
-    }
-
-    @Override
-    public SearchBoardDetailResponse searchBoardDetail(long boardId) {
-        Board findBoard = searchByBoardId(boardId);
-        SearchCommentsResponse commentsResponseDto = makeSearchCommentsResponse(boardId,
-                findBoard);
-        SearchEmojisResponse emojisResponseDto = makeSearchEmojisResponse(findBoard);
-        SearchImagesResponse imagesResponseDto = makeSearchImagesResponse(findBoard);
-        return ToSearchBoardResponseMapper.convert(findBoard, commentsResponseDto, emojisResponseDto, imagesResponseDto,
-                boardId);
-    }
-
     private static SearchImagesResponse makeSearchImagesResponse(Board findBoard) {
         return new SearchImagesResponse(
                 findBoard.getImages().stream()
@@ -80,5 +49,36 @@ public class BoardQueryServiceImpl implements BoardQueryService {
                 .map(comment -> ToSearchCommentResponseMapper.convert(comment, boardId))
                 .collect(Collectors.toList());
         return new SearchCommentsResponse(searchCommentResponses);
+    }
+
+    @Override
+    public List<SearchBoardResponse> searchList(long channelId, long lastBoardId) {
+        PageRequest pageRequest = PageRequest.of(0, MAX_PAGE_COUNT);
+
+        return boardQueryRepository.findByChannelOrderByBoardId(channelId, lastBoardId, pageRequest)
+                .stream()
+                .map(findBoard -> {
+                    List<SearchEmojiResponse> searchEmojiResponses = findBoard.getEmojis().stream()
+                            .map(ToSearchEmojiResponseMapper::convert)
+                            .collect(Collectors.toList());
+                    return ToSearchBoardsResponseMapper.convert(findBoard, searchEmojiResponses);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Board searchByBoardId(Long boardId) {
+        return boardQueryRepository.findByBoardId(boardId).orElseThrow(NotFoundDataException::new);
+    }
+
+    @Override
+    public SearchBoardDetailResponse searchBoardDetail(long boardId) {
+        Board targetBoard = searchByBoardId(boardId);
+        SearchCommentsResponse searchCommentsResponse = makeSearchCommentsResponse(boardId,
+                targetBoard);
+        SearchEmojisResponse searchEmojisResponse = makeSearchEmojisResponse(targetBoard);
+        SearchImagesResponse searchImagesResponse = makeSearchImagesResponse(targetBoard);
+        return ToSearchBoardResponseMapper.convert(targetBoard, searchCommentsResponse, searchEmojisResponse,
+                searchImagesResponse, boardId);
     }
 }

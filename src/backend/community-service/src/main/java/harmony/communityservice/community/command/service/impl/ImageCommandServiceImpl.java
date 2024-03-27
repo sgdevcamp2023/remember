@@ -15,7 +15,7 @@ public class ImageCommandServiceImpl implements ImageCommandService {
     @Override
     public void registerImagesInBoard(List<String> imageUrls, Board board) {
         List<Image> images = imageUrls.stream()
-                .map(imageUrl -> new Image(board, imageUrl)).toList();
+                .map(url -> new Image(board, url)).toList();
         imageCommandRepository.saveAll(images);
     }
 }

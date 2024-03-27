@@ -22,13 +22,13 @@ public class BoardQueryController {
     @GetMapping("/search/board/list/{guildId}/{channelId}/{cursor}")
     public BaseResponse<?> searchList(@PathVariable Long guildId, @PathVariable Long channelId,
                                       @PathVariable Long cursor) {
-        List<SearchBoardResponse> boardResponseDtos = boardQueryService.searchList(channelId, cursor);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", boardResponseDtos);
+        List<SearchBoardResponse> searchBoardResponses = boardQueryService.searchList(channelId, cursor);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchBoardResponses);
     }
 
     @GetMapping("/search/board/{boardId}")
     private BaseResponse<?> search(@PathVariable Long boardId) {
-        SearchBoardDetailResponse boardResponseDto = boardQueryService.searchBoardDetail(boardId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", boardResponseDto);
+        SearchBoardDetailResponse searchBoardDetailResponse = boardQueryService.searchBoardDetail(boardId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchBoardDetailResponse);
     }
 }

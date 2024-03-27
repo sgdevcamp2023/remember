@@ -3,8 +3,8 @@ package harmony.communityservice.community.command.controller;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.community.command.dto.DeleteGuildRequest;
-import harmony.communityservice.community.command.dto.RegisterGuildRequest;
 import harmony.communityservice.community.command.dto.ModifyUserNicknameInGuildRequest;
+import harmony.communityservice.community.command.dto.RegisterGuildRequest;
 import harmony.communityservice.community.command.service.GuildCommandService;
 import harmony.communityservice.community.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +30,9 @@ public class GuildCommandController {
 
     @PostMapping("/register/guild")
     public BaseResponse<?> register(
-            @RequestPart(value = "requestDto") @Validated RegisterGuildRequest requestDto,
+            @RequestPart(value = "requestDto") @Validated RegisterGuildRequest registerGuildRequest,
             @RequestPart(name = "profile", required = false) MultipartFile profile) {
-        GuildRead guildRead = guildCommandService.register(requestDto, profile);
+        GuildRead guildRead = guildCommandService.register(registerGuildRequest, profile);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", guildRead);
     }
 
@@ -43,15 +43,16 @@ public class GuildCommandController {
     }
 
     @DeleteMapping("/delete/guild")
-    public BaseResponse<?> delete(@RequestBody @Validated DeleteGuildRequest requestDto) {
-        guildCommandService.delete(requestDto);
-        producerService.publishGuildDeletionEvent(requestDto.getGuildId());
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteGuildRequest deleteGuildRequest) {
+        guildCommandService.delete(deleteGuildRequest);
+        producerService.publishGuildDeletionEvent(deleteGuildRequest.getGuildId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @PatchMapping("/modify/guild/username")
-    public BaseResponse<?> modifyNicknameInGuild(@RequestBody @Validated ModifyUserNicknameInGuildRequest requestDto) {
-        guildCommandService.modifyUserNicknameInGuild(requestDto);
+    public BaseResponse<?> modifyNicknameInGuild(
+            @RequestBody @Validated ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest) {
+        guildCommandService.modifyUserNicknameInGuild(modifyUserNicknameInGuildRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

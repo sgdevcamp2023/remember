@@ -13,6 +13,7 @@ public class ChannelReadQueryServiceImpl implements ChannelReadQueryService {
 
     private final ChannelReadQueryRepository channelReadQueryRepository;
     private final UserReadQueryService userReadQueryService;
+
     @Override
     public Map<Long, ChannelRead> searchMapByGuildId(Long guildId, Long userId) {
         userReadQueryService.existsByUserIdAndGuildId(userId, guildId);
@@ -20,7 +21,6 @@ public class ChannelReadQueryServiceImpl implements ChannelReadQueryService {
         for (ChannelRead channelRead : channelReadQueryRepository.findChannelReadsByGuildId(guildId)) {
             channelReads.put(channelRead.getChannelReadId(), channelRead);
         }
-
         return channelReads;
     }
 }

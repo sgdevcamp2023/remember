@@ -21,23 +21,22 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
     @Override
     public void register(RegisterCommentRequest registerCommentRequest) {
-
-        Board findBoard = boardQueryService.searchByBoardId(registerCommentRequest.getBoardId());
-        Comment comment = ToCommentMapper.convert(registerCommentRequest, findBoard);
+        Board targetBoard = boardQueryService.searchByBoardId(registerCommentRequest.getBoardId());
+        Comment comment = ToCommentMapper.convert(registerCommentRequest, targetBoard);
         commentCommandRepository.save(comment);
     }
 
     @Override
     public void modify(ModifyCommentRequest modifyCommentRequest) {
-        Comment findComment = commentQueryService.searchById(modifyCommentRequest.getCommentId());
-        findComment.verifyWriter(modifyCommentRequest.getUserId());
-        findComment.modify(modifyCommentRequest.getComment());
+        Comment targetComment = commentQueryService.searchById(modifyCommentRequest.getCommentId());
+        targetComment.verifyWriter(modifyCommentRequest.getUserId());
+        targetComment.modify(modifyCommentRequest.getComment());
     }
 
     @Override
     public void delete(DeleteCommentRequest deleteCommentRequest) {
-        Comment findComment = commentQueryService.searchById(deleteCommentRequest.getCommentId());
-        findComment.verifyWriter(deleteCommentRequest.getUserId());
-        commentCommandRepository.delete(findComment);
+        Comment targetComment = commentQueryService.searchById(deleteCommentRequest.getCommentId());
+        targetComment.verifyWriter(deleteCommentRequest.getUserId());
+        commentCommandRepository.delete(targetComment);
     }
 }

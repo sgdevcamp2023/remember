@@ -27,22 +27,22 @@ public class BoardCommandController {
 
     @PostMapping("/register/board")
     public BaseResponse<?> register(
-            @RequestPart(value = "requestDto") RegisterBoardRequest boardRegistrationDto,
+            @RequestPart(value = "requestDto") RegisterBoardRequest registerBoardRequest,
             @RequestPart(name = "images", required = false) List<MultipartFile> images) {
 
-        boardCommandService.register(boardRegistrationDto, images);
+        boardCommandService.register(registerBoardRequest, images);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @PatchMapping("/update/board")
-    public BaseResponse<?> modify(@RequestBody @Validated ModifyBoardRequest boardUpdateRequestDto) {
-        boardCommandService.modify(boardUpdateRequestDto);
+    public BaseResponse<?> modify(@RequestBody @Validated ModifyBoardRequest modifyBoardRequest) {
+        boardCommandService.modify(modifyBoardRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/board")
-    public BaseResponse<?> delete(@RequestBody @Validated DeleteBoardRequest requestDto) {
-        boardCommandService.delete(requestDto);
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteBoardRequest deleteBoardRequest) {
+        boardCommandService.delete(deleteBoardRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

@@ -18,8 +18,8 @@ import harmony.communityservice.community.domain.GuildRead;
 import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.mapper.ToGuildMapper;
-import harmony.communityservice.community.mapper.ToSearchGuildReadRequestMapper;
 import harmony.communityservice.community.mapper.ToRegisterUserReadRequestMapper;
+import harmony.communityservice.community.mapper.ToSearchGuildReadRequestMapper;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
@@ -42,32 +42,33 @@ public class GuildCommandServiceImpl implements GuildCommandService {
 
     @Override
     public GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
-        String imageUrl = contentService.convertFileToUrl(profile);
-        Guild guild = ToGuildMapper.convert(registerGuildRequest, imageUrl);
+        String uploadedImageUrl = contentService.convertFileToUrl(profile);
+        Guild guild = ToGuildMapper.convert(registerGuildRequest, uploadedImageUrl);
         guildCommandRepository.save(guild);
-        RegisterGuildReadRequest guildReadRequestDto = ToSearchGuildReadRequestMapper.convert(guild,
+        RegisterGuildReadRequest registerGuildReadRequest = ToSearchGuildReadRequestMapper.convert(guild,
                 registerGuildRequest.getManagerId());
-        GuildRead guildRead = guildReadCommandService.register(guildReadRequestDto);
-        User findUser = userQueryService.searchByUserId(registerGuildRequest.getManagerId());
-        guildUserCommandService.register(guild, findUser);
-        RegisterUserReadRequest userReadRequestDto = ToRegisterUserReadRequestMapper.convert(guild, findUser);
-        userReadCommandService.register(userReadRequestDto);
-        RegisterChannelRequest channelRegistrationRequestDto = new RegisterChannelRequest(
+        GuildRead guildRead = guildReadCommandService.register(registerGuildReadRequest);
+        User targetUser = userQueryService.searchByUserId(registerGuildRequest.getManagerId());
+        guildUserCommandService.register(guild, targetUser);
+        RegisterUserReadRequest registerUserReadRequest = ToRegisterUserReadRequestMapper.convert(guild, targetUser);
+        userReadCommandService.register(registerUserReadRequest);
+        RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
                 guild.getGuildId(), "기본채널", registerGuildRequest.getManagerId(), 0L, "TEXT");
-        channelCommandService.register(channelRegistrationRequestDto);
+        channelCommandService.register(registerChannelRequest);
         return guildRead;
     }
 
     @Override
     public void joinByInvitationCode(String invitationCode, Long userId) {
-        List<String> splitCodes = List.of(invitationCode.split("\\."));
-        Guild findGuild = guildQueryService.searchByInvitationCode(splitCodes.get(0));
-        RegisterGuildReadRequest guildReadRequestDto = ToSearchGuildReadRequestMapper.convert(findGuild, userId);
-        guildReadCommandService.register(guildReadRequestDto);
-        User findUser = userQueryService.searchByUserId(userId);
-        guildUserCommandService.register(findGuild, findUser);
-        RegisterUserReadRequest userReadRequestDto = ToRegisterUserReadRequestMapper.convert(findGuild, findUser);
-        userReadCommandService.register(userReadRequestDto);
+        List<String> parsedInvitationCodes = List.of(invitationCode.split("\\."));
+        Guild targetGuild = guildQueryService.searchByInvitationCode(parsedInvitationCodes.get(0));
+        RegisterGuildReadRequest registerGuildReadRequest = ToSearchGuildReadRequestMapper.convert(targetGuild, userId);
+        guildReadCommandService.register(registerGuildReadRequest);
+        User targetUser = userQueryService.searchByUserId(userId);
+        guildUserCommandService.register(targetGuild, targetUser);
+        RegisterUserReadRequest registerUserReadRequest = ToRegisterUserReadRequestMapper.convert(targetGuild,
+                targetUser);
+        userReadCommandService.register(registerUserReadRequest);
     }
 
     @Override
@@ -80,9 +81,9 @@ public class GuildCommandServiceImpl implements GuildCommandService {
 
     @Override
     public void modifyUserNicknameInGuild(ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest) {
-        UserRead findUserRead = userReadQueryService.searchByUserIdAndGuildId(
+        UserRead targetUserRead = userReadQueryService.searchByUserIdAndGuildId(
                 modifyUserNicknameInGuildRequest.getUserId(),
                 modifyUserNicknameInGuildRequest.getGuildId());
-        findUserRead.modifyNickname(modifyUserNicknameInGuildRequest.getNickname());
+        targetUserRead.modifyNickname(modifyUserNicknameInGuildRequest.getNickname());
     }
 }

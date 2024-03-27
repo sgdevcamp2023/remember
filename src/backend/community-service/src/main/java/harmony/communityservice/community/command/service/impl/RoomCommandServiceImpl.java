@@ -37,16 +37,16 @@ public class RoomCommandServiceImpl implements RoomCommandService {
         List<RoomUser> firstRooms = firstUser.getRoomUsers();
         List<RoomUser> secondRooms = secondUser.getRoomUsers();
         Optional<RoomUser> firstRoomUser = firstRooms.stream()
-                .flatMap(roomUser -> secondRooms.stream()
-                        .filter(secondRoomUser -> roomUser.getRoom().getRoomId()
-                                .equals(secondRoomUser.getRoom().getRoomId())))
+                .flatMap(first -> secondRooms.stream()
+                        .filter(second -> first.getRoom().getRoomId()
+                                .equals(second.getRoom().getRoomId())))
                 .findFirst();
         firstRoomUser.ifPresent(roomUser -> {
             long roomId = roomUser.getRoom().getRoomId();
             roomCommandRepository.deleteByRoomId(roomId);
             roomUserCommandService.delete(roomUser);
             secondRooms.stream()
-                    .filter(secondRoomUser -> secondRoomUser.getRoom().getRoomId() == roomId)
+                    .filter(user -> user.getRoom().getRoomId() == roomId)
                     .findFirst()
                     .ifPresent(roomUserCommandService::delete);
         });

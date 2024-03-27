@@ -21,14 +21,14 @@ public class EmojiCommandController {
     private final EmojiCommandService emojiCommandService;
 
     @PostMapping("/register/board/emoji")
-    public BaseResponse<?> register(@RequestBody @Validated RegisterEmojiRequest requestDto) {
-        emojiCommandService.register(requestDto);
+    public BaseResponse<?> register(@RequestBody @Validated RegisterEmojiRequest registerEmojiRequest) {
+        emojiCommandService.register(registerEmojiRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/emoji")
-    public BaseResponse<?> delete(@RequestBody @Validated DeleteEmojiRequest requestDto) {
-        emojiCommandService.delete(requestDto);
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteEmojiRequest deleteEmojiRequest) {
+        emojiCommandService.delete(deleteEmojiRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

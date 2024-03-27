@@ -31,19 +31,19 @@ public class LogControllerAop {
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         Signature signature = joinPoint.getSignature();
-        String apiAddr = request.getRequestURI();
-        String methodName = signature.getName();
+        String apiPath = request.getRequestURI();
+        String logMethodName = signature.getName();
         String traceId = request.getHeader("trace-id");
         String userId = request.getHeader("user-id");
-        String httpMethod = request.getMethod();
+        String requestHttpMethod = request.getMethod();
         MDC.put("Trace-Id", traceId);
-        MDC.put("Api-Addr", apiAddr);
-        MDC.put("Http-Method", httpMethod);
+        MDC.put("Api-Path", apiPath);
+        MDC.put("Http-Method", requestHttpMethod);
         MDC.put("User-Id", userId);
         try {
             return joinPoint.proceed();
         } finally {
-            log.info(methodName);
+            log.info(logMethodName);
             MDC.remove("Trace-Id");
             MDC.remove("Api-Addr");
             MDC.remove("Http-Method");

@@ -19,7 +19,7 @@ public class RoomQueryController {
 
     @GetMapping("/search/rooms/{userId}")
     public BaseResponse<?> search(@PathVariable Long userId) {
-        SearchRoomsResponse roomsResponseDto = roomQueryService.searchList(userId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", roomsResponseDto);
+        SearchRoomsResponse searchRoomsResponse = roomQueryService.searchList(userId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchRoomsResponse);
     }
 }

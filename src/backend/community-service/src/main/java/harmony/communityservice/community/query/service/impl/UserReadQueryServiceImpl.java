@@ -5,8 +5,8 @@ import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.feign.UserStatusClient;
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.query.dto.SearchUserStateResponse;
-import harmony.communityservice.community.query.dto.SearchUserStatesInGuildResponse;
 import harmony.communityservice.community.query.dto.SearchUserStatesInGuildRequest;
+import harmony.communityservice.community.query.dto.SearchUserStatesInGuildResponse;
 import harmony.communityservice.community.query.repository.UserReadQueryRepository;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import java.util.HashMap;
@@ -15,9 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 public class UserReadQueryServiceImpl implements UserReadQueryService {
 
@@ -26,9 +24,9 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
 
     private static Map<Long, SearchUserStateResponse> makeUserStatesInGuild(
             List<SearchUserStateResponse> stateResponses, SearchUserStateInGuildAndRoomFeignResponse userState) {
-        stateResponses.forEach(dto -> dto.modifyState(userState.getConnectionStates().get(dto.getUserId())));
+        stateResponses.forEach(state -> state.modifyState(userState.getConnectionStates().get(state.getUserId())));
         return stateResponses.stream()
-                .collect(Collectors.toMap(SearchUserStateResponse::getUserId, dto -> dto));
+                .collect(Collectors.toMap(SearchUserStateResponse::getUserId, state -> state));
     }
 
     @Override
@@ -51,32 +49,34 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
     @Override
     public SearchUserStatesInGuildResponse searchUserStatesInGuild(long guildId, long userId) {
         existsByUserIdAndGuildId(userId, guildId);
-        List<SearchUserStateResponse> responseDtos = makeSearchUserStateResponses(guildId);
-        List<Long> userIds = responseDtos.stream()
+        List<SearchUserStateResponse> searchUserStateResponses = makeSearchUserStateResponses(guildId);
+        List<Long> userIds = searchUserStateResponses.stream()
                 .map(SearchUserStateResponse::getUserId)
                 .collect(Collectors.toList());
-        SearchUserStatesInGuildRequest userStatusRequestDto = new SearchUserStatesInGuildRequest(guildId, userIds);
-        SearchUserStateInGuildAndRoomFeignResponse userState = userStatusClient.userStatus(userStatusRequestDto);
-        log.info("{}", userState);
+        SearchUserStatesInGuildRequest searchUserStatesInGuildRequest = new SearchUserStatesInGuildRequest(guildId,
+                userIds);
+        SearchUserStateInGuildAndRoomFeignResponse userState = userStatusClient.userStatus(
+                searchUserStatesInGuildRequest);
         Map<Long, SearchUserStateResponse> guildStates = makeUserStatesInGuild(
-                responseDtos, userState);
+                searchUserStateResponses, userState);
         Map<Long, Map<Long, ?>> voiceChannelStates = getUserStatesInVoiceChannel(guildId, userState);
         return new SearchUserStatesInGuildResponse(guildStates, voiceChannelStates);
     }
 
     private List<SearchUserStateResponse> makeSearchUserStateResponses(long guildId) {
-        List<UserRead> findUserReads = userReadQueryRepository.findUserReadsByGuildId(guildId);
-        return findUserReads.stream()
-                .map(findUserRead -> {
+        List<UserRead> targetUserReads = userReadQueryRepository.findUserReadsByGuildId(guildId);
+        return targetUserReads.stream()
+                .map(userRead -> {
                     return SearchUserStateResponse.builder()
-                            .userName(findUserRead.getNickname())
-                            .profile(findUserRead.getProfile())
-                            .userId(findUserRead.getUserId())
+                            .userName(userRead.getNickname())
+                            .profile(userRead.getProfile())
+                            .userId(userRead.getUserId())
                             .build();
                 }).toList();
     }
 
-    private Map<Long, Map<Long, ?>> getUserStatesInVoiceChannel(long guildId, SearchUserStateInGuildAndRoomFeignResponse userState) {
+    private Map<Long, Map<Long, ?>> getUserStatesInVoiceChannel(long guildId,
+                                                                SearchUserStateInGuildAndRoomFeignResponse userState) {
         Map<Long, Set<Long>> channelStates = userState.getChannelStates();
         Map<Long, Map<Long, ?>> voiceChannelStates = new HashMap<>();
         for (Long channelId : channelStates.keySet()) {

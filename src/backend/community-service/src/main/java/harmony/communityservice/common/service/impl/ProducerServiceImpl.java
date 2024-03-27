@@ -16,17 +16,17 @@ public class ProducerServiceImpl implements ProducerService {
 
     @Override
     public void publishGuildDeletionEvent(Long guildId) {
-        CommunityEvent kafkaEventDto = CommunityEvent.builder()
+        CommunityEvent event = CommunityEvent.builder()
                 .type("DELETE-GUILD")
                 .guildId(guildId)
                 .build();
-        kafkaTemplateForCommunity.send(communityEvent, kafkaEventDto);
+        kafkaTemplateForCommunity.send(communityEvent, event);
     }
 
     @Override
     public void publishChannelCreationEvent(Long guildId, Long categoryId, Long channelId, String channelName,
                                   String channelType) {
-        CommunityEvent kafkaEventDto = CommunityEvent.builder()
+        CommunityEvent event = CommunityEvent.builder()
                 .type("CREATE-CHANNEL")
                 .guildId(guildId)
                 .channelType(channelType)
@@ -34,27 +34,27 @@ public class ProducerServiceImpl implements ProducerService {
                 .channelReadId(channelId)
                 .categoryId(categoryId)
                 .build();
-        kafkaTemplateForCommunity.send(communityEvent, kafkaEventDto);
+        kafkaTemplateForCommunity.send(communityEvent, event);
     }
 
     @Override
     public void publishChannelDeletionEvent(Long channelId) {
-        CommunityEvent kafkaEventDto = CommunityEvent.builder()
+        CommunityEvent event = CommunityEvent.builder()
                 .type("DELETE-CHANNEL")
                 .channelReadId(channelId)
                 .build();
-        kafkaTemplateForCommunity.send(communityEvent, kafkaEventDto);
+        kafkaTemplateForCommunity.send(communityEvent, event);
     }
 
     @Override
     public void publishGuildCreationEvent(GuildRead guildRead) {
-        CommunityEvent kafkaEventDto = CommunityEvent.builder()
+        CommunityEvent event = CommunityEvent.builder()
                 .type("CREATE-GUILD")
                 .guildId(guildRead.getGuildId())
                 .guildReadId(guildRead.getGuildReadId())
                 .name(guildRead.getName())
                 .profile(guildRead.getProfile())
                 .build();
-        kafkaTemplateForCommunity.send(communityEvent, kafkaEventDto);
+        kafkaTemplateForCommunity.send(communityEvent, event);
     }
 }

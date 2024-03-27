@@ -31,27 +31,27 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     @Override
     public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images) {
         userReadQueryService.existsByUserIdAndGuildId(registerBoardRequest.getUserId(), registerBoardRequest.getGuildId());
-        List<String> imageUrls = images.stream()
+        List<String> uploadedImageUrls = images.stream()
                 .map(contentService::convertFileToUrl).toList();
-        UserRead findUserRead = userReadQueryService.searchByUserIdAndGuildId(registerBoardRequest.getUserId(),
+        UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(registerBoardRequest.getUserId(),
                 registerBoardRequest.getGuildId());
-        Channel findChannel = channelQueryService.searchByChannelId(registerBoardRequest.getChannelId());
-        Board board = ToBoardMapper.convert(registerBoardRequest, findUserRead, findChannel);
+        Channel targetChannel = channelQueryService.searchByChannelId(registerBoardRequest.getChannelId());
+        Board board = ToBoardMapper.convert(registerBoardRequest, boardWriter, targetChannel);
         boardCommandRepository.save(board);
-        imageCommandService.registerImagesInBoard(imageUrls, board);
+        imageCommandService.registerImagesInBoard(uploadedImageUrls, board);
     }
 
     @Override
     public void modify(ModifyBoardRequest modifyBoardRequest) {
-        Board findBoard = boardQueryService.searchByBoardId(modifyBoardRequest.getBoardId());
-        findBoard.verifyWriter(modifyBoardRequest.getUserId());
-        findBoard.modifyTitleAndContent(modifyBoardRequest.getTitle(), modifyBoardRequest.getContent());
+        Board targetBoard = boardQueryService.searchByBoardId(modifyBoardRequest.getBoardId());
+        targetBoard.verifyWriter(modifyBoardRequest.getUserId());
+        targetBoard.modifyTitleAndContent(modifyBoardRequest.getTitle(), modifyBoardRequest.getContent());
     }
 
     @Override
     public void delete(DeleteBoardRequest deleteBoardRequest) {
-        Board findBoard = boardQueryService.searchByBoardId(deleteBoardRequest.getBoardId());
-        findBoard.verifyWriter(deleteBoardRequest.getUserId());
-        boardCommandRepository.delete(findBoard);
+        Board targetBoard = boardQueryService.searchByBoardId(deleteBoardRequest.getBoardId());
+        targetBoard.verifyWriter(deleteBoardRequest.getUserId());
+        boardCommandRepository.delete(targetBoard);
     }
 }

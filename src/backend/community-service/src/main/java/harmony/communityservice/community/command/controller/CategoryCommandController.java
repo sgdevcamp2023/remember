@@ -23,20 +23,20 @@ public class CategoryCommandController {
     private final CategoryCommandService categoryCommandService;
 
     @PostMapping("/register/category")
-    public BaseResponse<?> register(@RequestBody @Validated RegisterCategoryRequest requestDto) {
-        categoryCommandService.register(requestDto);
+    public BaseResponse<?> register(@RequestBody @Validated RegisterCategoryRequest registerCategoryRequest) {
+        categoryCommandService.register(registerCategoryRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/category")
-    public BaseResponse<?> delete(@RequestBody @Validated DeleteCategoryRequest requestDto) {
-        categoryCommandService.delete(requestDto);
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteCategoryRequest deleteCategoryRequest) {
+        categoryCommandService.delete(deleteCategoryRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @PatchMapping("/modify/category")
-    public BaseResponse<?> modify(@RequestBody @Validated ModifyCategoryRequest requestDto) {
-        categoryCommandService.modify(requestDto);
+    public BaseResponse<?> modify(@RequestBody @Validated ModifyCategoryRequest modifyCategoryRequest) {
+        categoryCommandService.modify(modifyCategoryRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

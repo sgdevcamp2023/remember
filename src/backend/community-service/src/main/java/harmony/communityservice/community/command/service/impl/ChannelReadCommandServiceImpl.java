@@ -14,7 +14,6 @@ public class ChannelReadCommandServiceImpl implements ChannelReadCommandService 
 
     @Override
     public void register(long guildId, Channel channel) {
-
         ChannelRead channelRead = ToChannelReadMapper.convert(channel, guildId);
         channelReadCommandRepository.save(channelRead);
     }

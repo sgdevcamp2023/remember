@@ -23,20 +23,20 @@ public class CommentCommandController {
     private final CommentCommandService commentCommandService;
 
     @PostMapping("/register/board/comment")
-    public BaseResponse<?> register(@RequestBody @Validated RegisterCommentRequest requestDto) {
-        commentCommandService.register(requestDto);
+    public BaseResponse<?> register(@RequestBody @Validated RegisterCommentRequest registerCommentRequest) {
+        commentCommandService.register(registerCommentRequest);
         return new BaseResponse<>(HttpStatus.OK.value(),"OK");
     }
 
     @PatchMapping("/modify/comment")
-    public BaseResponse<?> modify(@RequestBody @Validated ModifyCommentRequest requestDto) {
-        commentCommandService.modify(requestDto);
+    public BaseResponse<?> modify(@RequestBody @Validated ModifyCommentRequest modifyCommentRequest) {
+        commentCommandService.modify(modifyCommentRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/comment")
-    public BaseResponse<?> delete(@RequestBody @Validated DeleteCommentRequest requestDto) {
-        commentCommandService.delete(requestDto);
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteCommentRequest deleteCommentRequest) {
+        commentCommandService.delete(deleteCommentRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

@@ -1,8 +1,8 @@
 package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.query.dto.SearchGuildInvitationCodeRequest;
 import harmony.communityservice.community.domain.GuildRead;
+import harmony.communityservice.community.query.dto.SearchGuildInvitationCodeRequest;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.GuildReadQueryService;
 import java.util.Map;
@@ -25,14 +25,15 @@ public class GuildQueryController {
     private final GuildReadQueryService guildReadQueryService;
 
     @PostMapping("/search/invitation/code/guild")
-    public BaseResponse<?> searchInvitationCode(@RequestBody @Validated SearchGuildInvitationCodeRequest requestDto) {
-        String code = guildQueryService.searchInvitationCode(requestDto);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", code);
+    public BaseResponse<?> searchInvitationCode(
+            @RequestBody @Validated SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest) {
+        String invitationCode = guildQueryService.searchInvitationCode(searchGuildInvitationCodeRequest);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", invitationCode);
     }
 
     @GetMapping("/search/guild/{userId}")
     public BaseResponse<?> searchBelongToUser(@PathVariable Long userId) {
-        Map<Long, GuildRead> findGuildReads = guildReadQueryService.searchMapByUserId(userId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", findGuildReads);
+        Map<Long, GuildRead> guildReads = guildReadQueryService.searchMapByUserId(userId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", guildReads);
     }
 }

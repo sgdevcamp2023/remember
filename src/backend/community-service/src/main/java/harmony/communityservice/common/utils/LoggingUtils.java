@@ -8,13 +8,13 @@ import org.slf4j.MDC;
 public class LoggingUtils {
 
     public static void errorLogging(HttpServletRequest request, String exception) {
-        String apiAddr = request.getRequestURI();
+        String apiPath = request.getRequestURI();
         String traceId = request.getHeader("trace-id");
         String userId = request.getHeader("user-id");
-        String httpMethod = request.getMethod();
+        String requestHttpMethod = request.getMethod();
         MDC.put("Trace-Id", traceId);
-        MDC.put("Api-Addr", apiAddr);
-        MDC.put("Http-Method", httpMethod);
+        MDC.put("Api-Addr", apiPath);
+        MDC.put("Http-Method", requestHttpMethod);
         MDC.put("User-Id", userId);
         log.error(exception);
         MDC.remove("Trace-Id");

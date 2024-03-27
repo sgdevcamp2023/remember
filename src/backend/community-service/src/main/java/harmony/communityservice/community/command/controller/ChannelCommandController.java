@@ -23,23 +23,23 @@ public class ChannelCommandController {
     private final ProducerService producerService;
 
     @PostMapping("/register/category/channel")
-    public BaseResponse<?> registerChannelInCategory(@RequestBody @Validated RegisterChannelRequest requestDto) {
-        Long channelId = channelCommandService.register(requestDto);
-        producerService.publishChannelCreationEvent(requestDto.getGuildId(), requestDto.getCategoryId(), channelId,
-                requestDto.getName(), requestDto.getType());
+    public BaseResponse<?> registerChannelInCategory(@RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
+        Long channelId = channelCommandService.register(registerChannelRequest);
+        producerService.publishChannelCreationEvent(registerChannelRequest.getGuildId(), registerChannelRequest.getCategoryId(), channelId,
+                registerChannelRequest.getName(), registerChannelRequest.getType());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @PostMapping("/register/guild/channel")
-    public BaseResponse<?> registerChannelInGuild(@RequestBody @Validated RegisterChannelRequest requestDto) {
-        channelCommandService.register(requestDto);
+    public BaseResponse<?> registerChannelInGuild(@RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
+        channelCommandService.register(registerChannelRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/channel")
-    public BaseResponse<?> delete(@RequestBody @Validated DeleteChannelRequest requestDto) {
-        channelCommandService.delete(requestDto);
-        producerService.publishChannelDeletionEvent(requestDto.getChannelId());
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteChannelRequest deleteChannelRequest) {
+        channelCommandService.delete(deleteChannelRequest);
+        producerService.publishChannelDeletionEvent(deleteChannelRequest.getChannelId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }
