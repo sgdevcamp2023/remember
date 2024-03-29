@@ -30,10 +30,14 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     public void register(RegisterCategoryRequest registerCategoryRequest) {
         userReadQueryService.existsByUserIdAndGuildId(registerCategoryRequest.userId(),
                 registerCategoryRequest.guildId());
-        Guild targetGuild = guildQueryService.searchByGuildId(registerCategoryRequest.guildId());
-        Category category = ToCategoryMapper.convert(targetGuild, registerCategoryRequest);
+        Category category = createCategory(registerCategoryRequest);
         categoryCommandRepository.save(category);
         categoryReadCommandService.register(category, registerCategoryRequest.guildId());
+    }
+
+    private Category createCategory(RegisterCategoryRequest registerCategoryRequest) {
+        Guild targetGuild = guildQueryService.searchByGuildId(registerCategoryRequest.guildId());
+        return ToCategoryMapper.convert(targetGuild, registerCategoryRequest);
     }
 
     @Override
@@ -50,10 +54,18 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
                 modifyCategoryRequest.guildId());
         categoryReadQueryService.existsByCategoryIdAndGuildId(modifyCategoryRequest.categoryId(),
                 modifyCategoryRequest.guildId());
-        Category targetCategory = categoryQueryService.searchByCategoryId(modifyCategoryRequest.categoryId());
+        modifyCategory(modifyCategoryRequest);
+        modifyCategoryRead(modifyCategoryRequest);
+    }
+
+    private void modifyCategoryRead(ModifyCategoryRequest modifyCategoryRequest) {
         CategoryRead targetCategoryRead = categoryReadQueryService.searchByCategoryId(
                 modifyCategoryRequest.categoryId());
-        targetCategory.modifyName(modifyCategoryRequest.name());
         targetCategoryRead.modifyName(modifyCategoryRequest.name());
+    }
+
+    private void modifyCategory(ModifyCategoryRequest modifyCategoryRequest) {
+        Category targetCategory = categoryQueryService.searchByCategoryId(modifyCategoryRequest.categoryId());
+        targetCategory.modifyName(modifyCategoryRequest.name());
     }
 }

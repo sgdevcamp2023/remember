@@ -21,9 +21,13 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
     @Override
     public void register(RegisterCommentRequest registerCommentRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(registerCommentRequest.boardId());
-        Comment comment = ToCommentMapper.convert(registerCommentRequest, targetBoard);
+        Comment comment = createComment(registerCommentRequest);
         commentCommandRepository.save(comment);
+    }
+
+    private Comment createComment(RegisterCommentRequest registerCommentRequest) {
+        Board targetBoard = boardQueryService.searchByBoardId(registerCommentRequest.boardId());
+        return ToCommentMapper.convert(registerCommentRequest, targetBoard);
     }
 
     @Override

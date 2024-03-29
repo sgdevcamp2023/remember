@@ -31,14 +31,18 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     @Override
     public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images) {
         userReadQueryService.existsByUserIdAndGuildId(registerBoardRequest.userId(), registerBoardRequest.guildId());
+        Board board = createBoard(registerBoardRequest);
+        boardCommandRepository.save(board);
         List<String> uploadedImageUrls = images.stream()
                 .map(contentService::convertFileToUrl).toList();
+        imageCommandService.registerImagesInBoard(uploadedImageUrls, board);
+    }
+
+    private Board createBoard(RegisterBoardRequest registerBoardRequest) {
         UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(registerBoardRequest.userId(),
                 registerBoardRequest.guildId());
         Channel targetChannel = channelQueryService.searchByChannelId(registerBoardRequest.channelId());
-        Board board = ToBoardMapper.convert(registerBoardRequest, boardWriter, targetChannel);
-        boardCommandRepository.save(board);
-        imageCommandService.registerImagesInBoard(uploadedImageUrls, board);
+        return ToBoardMapper.convert(registerBoardRequest, boardWriter, targetChannel);
     }
 
     @Override

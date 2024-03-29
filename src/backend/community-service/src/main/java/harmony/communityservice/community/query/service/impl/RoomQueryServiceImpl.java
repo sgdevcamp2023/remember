@@ -45,12 +45,13 @@ public class RoomQueryServiceImpl implements RoomQueryService {
         Room targetRoom = roomQueryRepository.findByRoomId(roomId).orElseThrow(NotFoundDataException::new);
         List<User> users = targetRoom.getRoomUsers().stream()
                 .map(RoomUser::getUser).toList();
-        List<Long> userIds = users.stream()
-                .map(ToUserIdsMapper::convert).toList();
-        SearchUserStatusInDmRoomRequest searchUserStatusInDmRoomRequest = new SearchUserStatusInDmRoomRequest(userIds);
-        SearchDmUserStateFeignResponse searchDmUserStateFeignResponse = userStatusClient.getCommunityUsersState(
-                searchUserStatusInDmRoomRequest);
-        Map<Long, String> connectionStates = searchDmUserStateFeignResponse.getConnectionStates();
+        Map<Long, String> connectionStates = getConnectionStates(users);
+        return makeCurrentUserStates(
+                users, connectionStates);
+    }
+
+    private Map<Long, SearchUserStateResponse> makeCurrentUserStates(List<User> users,
+                                                                                        Map<Long, String> connectionStates) {
         Map<Long, SearchUserStateResponse> userStates = new HashMap<>();
         for (User user : users) {
             SearchUserStateResponse searchUserStateResponse = ToSearchUserStateResponseMapper.convert(user,
@@ -58,5 +59,14 @@ public class RoomQueryServiceImpl implements RoomQueryService {
             userStates.put(user.getUserId(), searchUserStateResponse);
         }
         return userStates;
+    }
+
+    private Map<Long, String> getConnectionStates(List<User> users) {
+        List<Long> userIds = users.stream()
+                .map(ToUserIdsMapper::convert).toList();
+        SearchUserStatusInDmRoomRequest searchUserStatusInDmRoomRequest = new SearchUserStatusInDmRoomRequest(userIds);
+        SearchDmUserStateFeignResponse searchDmUserStateFeignResponse = userStatusClient.getCommunityUsersState(
+                searchUserStatusInDmRoomRequest);
+        return searchDmUserStateFeignResponse.getConnectionStates();
     }
 }

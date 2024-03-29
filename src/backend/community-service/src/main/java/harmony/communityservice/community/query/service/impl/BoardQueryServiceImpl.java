@@ -27,7 +27,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     private static final int MAX_PAGE_COUNT = 50;
     private final BoardQueryRepository boardQueryRepository;
 
-    private static SearchImagesResponse makeSearchImagesResponse(Board findBoard) {
+    private  SearchImagesResponse makeSearchImagesResponse(Board findBoard) {
         return new SearchImagesResponse(
                 findBoard.getImages().stream()
                         .map(image -> new SearchImageResponse(image.getImageAddr()))
@@ -35,7 +35,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
         );
     }
 
-    private static SearchEmojisResponse makeSearchEmojisResponse(Board findBoard) {
+    private  SearchEmojisResponse makeSearchEmojisResponse(Board findBoard) {
         List<Emoji> emojis = findBoard.getEmojis();
         return new SearchEmojisResponse(
                 emojis.stream()
@@ -44,7 +44,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
         );
     }
 
-    private static SearchCommentsResponse makeSearchCommentsResponse(long boardId, Board findBoard) {
+    private  SearchCommentsResponse makeSearchCommentsResponse(long boardId, Board findBoard) {
         List<SearchCommentResponse> searchCommentResponses = findBoard.getComments().stream()
                 .map(comment -> ToSearchCommentResponseMapper.convert(comment, boardId))
                 .collect(Collectors.toList());

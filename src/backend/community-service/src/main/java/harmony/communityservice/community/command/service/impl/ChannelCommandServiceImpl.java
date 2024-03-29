@@ -22,12 +22,17 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
 
     @Override
     public Long register(RegisterChannelRequest registerChannelRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(registerChannelRequest.userId(), registerChannelRequest.guildId());
-        Guild guild = guildQueryService.searchByGuildId(registerChannelRequest.guildId());
-        Channel channel = ToChannelMapper.convert(registerChannelRequest, guild);
+        userReadQueryService.existsByUserIdAndGuildId(registerChannelRequest.userId(),
+                registerChannelRequest.guildId());
+        Channel channel = createChannel(registerChannelRequest);
         channelCommandRepository.save(channel);
         channelReadCommandService.register(registerChannelRequest.guildId(), channel);
         return channel.getChannelId();
+    }
+
+    private Channel createChannel(RegisterChannelRequest registerChannelRequest) {
+        Guild guild = guildQueryService.searchByGuildId(registerChannelRequest.guildId());
+        return ToChannelMapper.convert(registerChannelRequest, guild);
     }
 
     @Override

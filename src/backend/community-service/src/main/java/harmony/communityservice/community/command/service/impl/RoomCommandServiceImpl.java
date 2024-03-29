@@ -32,10 +32,8 @@ public class RoomCommandServiceImpl implements RoomCommandService {
 
     @Override
     public void delete(DeleteRoomRequest deleteRoomRequest) {
-        User firstUser = userQueryService.searchByUserId(deleteRoomRequest.firstUser());
-        User secondUser = userQueryService.searchByUserId(deleteRoomRequest.secondUser());
-        List<RoomUser> firstRooms = firstUser.getRoomUsers();
-        List<RoomUser> secondRooms = secondUser.getRoomUsers();
+        List<RoomUser> firstRooms = userQueryService.searchByUserId(deleteRoomRequest.firstUser()).getRoomUsers();
+        List<RoomUser> secondRooms = userQueryService.searchByUserId(deleteRoomRequest.secondUser()).getRoomUsers();
         Optional<RoomUser> firstRoomUser = firstRooms.stream()
                 .flatMap(first -> secondRooms.stream()
                         .filter(second -> first.getRoom().getRoomId()

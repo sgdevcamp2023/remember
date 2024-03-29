@@ -26,17 +26,18 @@ public class UserCommandServiceImpl implements UserCommandService {
 
     @Override
     public void modifyProfile(ModifyUserProfileRequest modifyUserProfileRequest) {
-        User targetUser = userQueryService.searchByUserId(modifyUserProfileRequest.userId());
-        targetUser.modifyProfile(modifyUserProfileRequest.profile());
-        userReadQueryService.searchListByUserId(modifyUserProfileRequest.userId())
-                .forEach(target -> target.modifyProfile(modifyUserProfileRequest.profile()));
+        modifyUserInfo(modifyUserProfileRequest.userId(), modifyUserProfileRequest.profile());
     }
 
     @Override
     public void modifyNickname(ModifyUserNicknameRequest modifyUserNicknameRequest) {
-        User targetUser = userQueryService.searchByUserId(modifyUserNicknameRequest.userId());
-        targetUser.modifyProfile(modifyUserNicknameRequest.nickname());
-        userReadQueryService.searchListByUserId(modifyUserNicknameRequest.userId())
-                .forEach(target -> target.modifyProfile(modifyUserNicknameRequest.nickname()));
+        modifyUserInfo(modifyUserNicknameRequest.userId(), modifyUserNicknameRequest.nickname());
+    }
+
+    private void modifyUserInfo(Long userId, String userInfo) {
+        User targetUser = userQueryService.searchByUserId(userId);
+        targetUser.modifyProfile(userInfo);
+        userReadQueryService.searchListByUserId(userId)
+                .forEach(target -> target.modifyProfile(userInfo));
     }
 }

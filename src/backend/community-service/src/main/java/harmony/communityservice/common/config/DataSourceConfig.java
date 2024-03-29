@@ -43,13 +43,10 @@ public class DataSourceConfig {
     ) {
 
         RoutingDataSource routingDataSource = new RoutingDataSource();
-
         Map<Object, Object> datasourceMap = ImmutableMap.<Object, Object>builder()
-
                 .put("source", sourceDataSource)
                 .put("replica", replicaDataSource)
                 .build();
-
         routingDataSource.setTargetDataSources(datasourceMap);
         routingDataSource.setDefaultTargetDataSource(sourceDataSource);
 

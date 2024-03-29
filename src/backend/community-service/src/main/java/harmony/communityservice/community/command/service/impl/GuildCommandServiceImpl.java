@@ -42,34 +42,45 @@ public class GuildCommandServiceImpl implements GuildCommandService {
 
     @Override
     public GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
-        String uploadedImageUrl = contentService.convertFileToUrl(profile);
-        Guild guild = ToGuildMapper.convert(registerGuildRequest, uploadedImageUrl);
+        Guild guild = createGuild(registerGuildRequest, profile);
         guildCommandRepository.save(guild);
-        RegisterGuildReadRequest registerGuildReadRequest = ToSearchGuildReadRequestMapper.convert(guild,
-                registerGuildRequest.managerId());
-        GuildRead guildRead = guildReadCommandService.register(registerGuildReadRequest);
-        User targetUser = userQueryService.searchByUserId(registerGuildRequest.managerId());
-        guildUserCommandService.register(guild, targetUser);
-        RegisterUserReadRequest registerUserReadRequest = ToRegisterUserReadRequestMapper.convert(guild, targetUser);
-        userReadCommandService.register(registerUserReadRequest);
-        RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
-                guild.getGuildId(), "기본채널", registerGuildRequest.managerId(), 0L, "TEXT");
-        channelCommandService.register(registerChannelRequest);
-        return guildRead;
+        registerUserAndUserRead(registerGuildRequest.managerId(), guild);
+        registerChannel(registerGuildRequest, guild);
+        return registerGuildRead(registerGuildRequest.managerId(), guild);
     }
 
     @Override
     public void joinByInvitationCode(String invitationCode, Long userId) {
         List<String> parsedInvitationCodes = List.of(invitationCode.split("\\."));
         Guild targetGuild = guildQueryService.searchByInvitationCode(parsedInvitationCodes.get(0));
-        RegisterGuildReadRequest registerGuildReadRequest = ToSearchGuildReadRequestMapper.convert(targetGuild, userId);
-        guildReadCommandService.register(registerGuildReadRequest);
+        registerGuildRead(userId, targetGuild);
+        registerUserAndUserRead(userId, targetGuild);
+    }
+
+    private void registerChannel(RegisterGuildRequest registerGuildRequest, Guild guild) {
+        RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
+                guild.getGuildId(), "기본채널", registerGuildRequest.managerId(), 0L, "TEXT");
+        channelCommandService.register(registerChannelRequest);
+    }
+
+    private void registerUserAndUserRead(Long userId, Guild guild) {
         User targetUser = userQueryService.searchByUserId(userId);
-        guildUserCommandService.register(targetGuild, targetUser);
-        RegisterUserReadRequest registerUserReadRequest = ToRegisterUserReadRequestMapper.convert(targetGuild,
-                targetUser);
+        guildUserCommandService.register(guild, targetUser);
+        RegisterUserReadRequest registerUserReadRequest = ToRegisterUserReadRequestMapper.convert(guild, targetUser);
         userReadCommandService.register(registerUserReadRequest);
     }
+
+    private GuildRead registerGuildRead(Long userId, Guild guild) {
+        RegisterGuildReadRequest registerGuildReadRequest = ToSearchGuildReadRequestMapper.convert(guild,
+                userId);
+        return guildReadCommandService.register(registerGuildReadRequest);
+    }
+
+    private Guild createGuild(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
+        String uploadedImageUrl = contentService.convertFileToUrl(profile);
+        return ToGuildMapper.convert(registerGuildRequest, uploadedImageUrl);
+    }
+
 
     @Override
     public void delete(DeleteGuildRequest deleteGuildRequest) {

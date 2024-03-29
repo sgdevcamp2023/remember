@@ -21,7 +21,6 @@ public class GuildQueryServiceImpl implements GuildQueryService {
                 searchGuildInvitationCodeRequest.guildId());
         Guild guild = guildQueryRepository.findById(searchGuildInvitationCodeRequest.guildId())
                 .orElseThrow(NotFoundDataException::new);
-
         return ToInvitationCodeMapper.convert(guild.getInviteCode(), searchGuildInvitationCodeRequest.userId(),
                 searchGuildInvitationCodeRequest.guildId());
     }

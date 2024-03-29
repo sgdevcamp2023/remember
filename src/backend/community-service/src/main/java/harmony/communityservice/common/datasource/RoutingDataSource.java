@@ -10,13 +10,6 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     protected Object determineCurrentLookupKey() {
 
         boolean isReadOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
-
-        if (isReadOnly) {
-            log.info("replicaDB 사용 중");
-        } else {
-            log.info("sourceDB 사용 중");
-        }
-
         return isReadOnly ? "replica" : "source";
     }
 }
