@@ -40,9 +40,9 @@ public class RoomCommandServiceImpl implements RoomCommandService {
                                 .equals(second.getRoom().getRoomId())))
                 .findFirst();
         firstRoomUser.ifPresent(roomUser -> {
+            roomUserCommandService.delete(roomUser);
             long roomId = roomUser.getRoom().getRoomId();
             roomCommandRepository.deleteByRoomId(roomId);
-            roomUserCommandService.delete(roomUser);
             secondRooms.stream()
                     .filter(user -> user.getRoom().getRoomId() == roomId)
                     .findFirst()

@@ -22,7 +22,6 @@ public class RoomCommandController {
 
     @PostMapping("/register/room")
     public BaseResponse<?> register(@RequestBody @Validated RegisterRoomRequest registerRoomRequest) {
-
         roomCommandService.register(registerRoomRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }

@@ -33,7 +33,8 @@ public class RoomQueryServiceImpl implements RoomQueryService {
     @Override
     public SearchRoomsResponse searchList(long userId) {
         User targetUser = userQueryService.searchByUserId(userId);
-        List<SearchRoomResponse> searchRoomResponses = targetUser.getRoomUsers().stream()
+        List<SearchRoomResponse> searchRoomResponses = targetUser.getRoomUsers()
+                .stream()
                 .map(RoomUser::getRoom)
                 .map(ToRoomResponseDtoMapper::convert)
                 .collect(Collectors.toList());
@@ -46,12 +47,11 @@ public class RoomQueryServiceImpl implements RoomQueryService {
         List<User> users = targetRoom.getRoomUsers().stream()
                 .map(RoomUser::getUser).toList();
         Map<Long, String> connectionStates = getConnectionStates(users);
-        return makeCurrentUserStates(
-                users, connectionStates);
+        return makeCurrentUserStates(users, connectionStates);
     }
 
     private Map<Long, SearchUserStateResponse> makeCurrentUserStates(List<User> users,
-                                                                                        Map<Long, String> connectionStates) {
+                                                                     Map<Long, String> connectionStates) {
         Map<Long, SearchUserStateResponse> userStates = new HashMap<>();
         for (User user : users) {
             SearchUserStateResponse searchUserStateResponse = ToSearchUserStateResponseMapper.convert(user,

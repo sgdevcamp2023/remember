@@ -28,14 +28,13 @@ public class LogControllerAop {
 
     @Around("commandController()||queryController()")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        Signature signature = joinPoint.getSignature();
-        String logMethodName = signature.getName();
         try {
             return joinPoint.proceed();
         } finally {
-            LoggingUtils.printLog(request,logMethodName,true);
-
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            Signature signature = joinPoint.getSignature();
+            String logMethodName = signature.getName();
+            LoggingUtils.printLog(request, logMethodName, true);
         }
     }
 }

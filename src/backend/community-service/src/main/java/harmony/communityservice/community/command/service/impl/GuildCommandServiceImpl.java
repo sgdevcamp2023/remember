@@ -44,7 +44,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     public GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
         Guild guild = createGuild(registerGuildRequest, profile);
         guildCommandRepository.save(guild);
-        registerUserAndUserRead(registerGuildRequest.managerId(), guild);
+        registerGuildUserAndUserRead(registerGuildRequest.managerId(), guild);
         registerChannel(registerGuildRequest, guild);
         return registerGuildRead(registerGuildRequest.managerId(), guild);
     }
@@ -54,7 +54,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         List<String> parsedInvitationCodes = List.of(invitationCode.split("\\."));
         Guild targetGuild = guildQueryService.searchByInvitationCode(parsedInvitationCodes.get(0));
         registerGuildRead(userId, targetGuild);
-        registerUserAndUserRead(userId, targetGuild);
+        registerGuildUserAndUserRead(userId, targetGuild);
     }
 
     private void registerChannel(RegisterGuildRequest registerGuildRequest, Guild guild) {
@@ -63,7 +63,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         channelCommandService.register(registerChannelRequest);
     }
 
-    private void registerUserAndUserRead(Long userId, Guild guild) {
+    private void registerGuildUserAndUserRead(Long userId, Guild guild) {
         User targetUser = userQueryService.searchByUserId(userId);
         guildUserCommandService.register(guild, targetUser);
         RegisterUserReadRequest registerUserReadRequest = ToRegisterUserReadRequestMapper.convert(guild, targetUser);

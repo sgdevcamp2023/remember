@@ -37,14 +37,18 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
     @Override
     public void delete(DeleteEmojiRequest deleteEmojiRequest) {
         Emoji targetEmoji = emojiQueryService.searchByEmojiId(deleteEmojiRequest.emojiId());
-        targetEmoji.getEmojiUsers().stream()
+        targetEmoji
+                .getEmojiUsers()
+                .stream()
                 .filter(user -> Objects.equals(user.getUserId(), deleteEmojiRequest.userId()))
                 .findAny()
                 .ifPresent(emojiUserCommandService::delete);
     }
 
     private void existsEmoji(RegisterEmojiRequest registerEmojiRequest, Emoji targetEmoji) {
-        targetEmoji.getEmojiUsers().stream()
+        targetEmoji
+                .getEmojiUsers()
+                .stream()
                 .filter(user -> Objects.equals(user.getUserId(), registerEmojiRequest.userId()))
                 .findAny()
                 .ifPresent(e -> {

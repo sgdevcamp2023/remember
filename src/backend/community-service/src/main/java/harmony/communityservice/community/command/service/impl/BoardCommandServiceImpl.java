@@ -33,15 +33,19 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         userReadQueryService.existsByUserIdAndGuildId(registerBoardRequest.userId(), registerBoardRequest.guildId());
         Board board = createBoard(registerBoardRequest);
         boardCommandRepository.save(board);
+        createImages(images, board);
+    }
+
+    private void createImages(List<MultipartFile> images, Board board) {
         List<String> uploadedImageUrls = images.stream()
                 .map(contentService::convertFileToUrl).toList();
         imageCommandService.registerImagesInBoard(uploadedImageUrls, board);
     }
 
     private Board createBoard(RegisterBoardRequest registerBoardRequest) {
+        Channel targetChannel = channelQueryService.searchByChannelId(registerBoardRequest.channelId());
         UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(registerBoardRequest.userId(),
                 registerBoardRequest.guildId());
-        Channel targetChannel = channelQueryService.searchByChannelId(registerBoardRequest.channelId());
         return ToBoardMapper.convert(registerBoardRequest, boardWriter, targetChannel);
     }
 

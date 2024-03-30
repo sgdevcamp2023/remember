@@ -65,8 +65,7 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
                 .collect(Collectors.toList());
         SearchUserStatesInGuildRequest searchUserStatesInGuildRequest = new SearchUserStatesInGuildRequest(guildId,
                 userIds);
-        return userStatusClient.userStatus(
-                searchUserStatesInGuildRequest);
+        return userStatusClient.userStatus(searchUserStatesInGuildRequest);
     }
 
     private List<SearchUserStateResponse> makeSearchUserStateResponses(long guildId) {

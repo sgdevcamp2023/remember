@@ -31,15 +31,14 @@ public class LogAop {
     @Pointcut("execution(* harmony.communityservice.community.query.repository.impl..*.*(..))")
     public void queryRepository() {
     }
-
-
+    
     @Around("commandService()||commandRepository()||queryService()||queryRepository()")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
-        Signature signature = joinPoint.getSignature();
-        String logMethodName = signature.getName();
         try {
             return joinPoint.proceed();
         } finally {
+            Signature signature = joinPoint.getSignature();
+            String logMethodName = signature.getName();
             log.info(logMethodName);
         }
     }

@@ -20,14 +20,12 @@ public class InnerApiQueryService {
     private final GuildReadQueryService guildReadQueryService;
 
     public SearchRoomsAndGuildsResponse search(long userId) {
+        Map<Long, GuildRead> targetGuildReads = guildReadQueryService.searchMapByUserId(userId);
+        List<Long> guildIds = new ArrayList<>(targetGuildReads.keySet());
         List<Long> roomIds = userQueryService.searchByUserId(userId)
                 .getRoomUsers()
                 .stream()
                 .map(user -> user.getRoom().getRoomId()).toList();
-        Map<Long, GuildRead> targetGuildReads = guildReadQueryService.searchMapByUserId(userId);
-        List<Long> guildIds = new ArrayList<>(targetGuildReads.keySet());
-
         return new SearchRoomsAndGuildsResponse(roomIds, guildIds);
-
     }
 }
