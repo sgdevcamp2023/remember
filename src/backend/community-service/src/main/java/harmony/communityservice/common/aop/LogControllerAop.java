@@ -33,8 +33,7 @@ public class LogControllerAop {
         } finally {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             Signature signature = joinPoint.getSignature();
-            String logMethodName = signature.getName();
-            LoggingUtils.printLog(request, logMethodName, true);
+            LoggingUtils.printLog(request, signature.getName(), true);
         }
     }
 }

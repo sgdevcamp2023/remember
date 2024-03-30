@@ -23,15 +23,17 @@ public class ChannelCommandController {
     private final ProducerService producerService;
 
     @PostMapping("/register/category/channel")
-    public BaseResponse<?> registerChannelInCategory(@RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
-        Long channelId = channelCommandService.register(registerChannelRequest);
-        producerService.publishChannelCreationEvent(registerChannelRequest.guildId(), registerChannelRequest.categoryId(), channelId,
+    public BaseResponse<?> registerChannelInCategory(
+            @RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
+        producerService.publishChannelCreationEvent(registerChannelRequest.guildId(),
+                registerChannelRequest.categoryId(), channelCommandService.register(registerChannelRequest),
                 registerChannelRequest.name(), registerChannelRequest.type());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @PostMapping("/register/guild/channel")
-    public BaseResponse<?> registerChannelInGuild(@RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
+    public BaseResponse<?> registerChannelInGuild(
+            @RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
         channelCommandService.register(registerChannelRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }

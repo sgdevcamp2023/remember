@@ -6,7 +6,6 @@ import harmony.communityservice.community.command.dto.DeleteGuildRequest;
 import harmony.communityservice.community.command.dto.ModifyUserNicknameInGuildRequest;
 import harmony.communityservice.community.command.dto.RegisterGuildRequest;
 import harmony.communityservice.community.command.service.GuildCommandService;
-import harmony.communityservice.community.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -32,8 +31,8 @@ public class GuildCommandController {
     public BaseResponse<?> register(
             @RequestPart(value = "requestDto") @Validated RegisterGuildRequest registerGuildRequest,
             @RequestPart(name = "profile", required = false) MultipartFile profile) {
-        GuildRead guildRead = guildCommandService.register(registerGuildRequest, profile);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", guildRead);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK",
+                guildCommandService.register(registerGuildRequest, profile));
     }
 
     @GetMapping("/join/guild/{invitationCode}/{userId}")

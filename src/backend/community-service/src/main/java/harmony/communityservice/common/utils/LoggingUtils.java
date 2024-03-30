@@ -7,14 +7,10 @@ import org.slf4j.MDC;
 @Slf4j
 public class LoggingUtils {
     public static void printLog(HttpServletRequest request, String message, boolean type) {
-        String apiPath = request.getRequestURI();
-        String traceId = request.getHeader("trace-id");
-        String userId = request.getHeader("user-id");
-        String requestHttpMethod = request.getMethod();
-        MDC.put("Trace-Id", traceId);
-        MDC.put("Api-Addr", apiPath);
-        MDC.put("Http-Method", requestHttpMethod);
-        MDC.put("User-Id", userId);
+        MDC.put("Trace-Id", request.getHeader("trace-id"));
+        MDC.put("Api-Addr", request.getRequestURI());
+        MDC.put("Http-Method", request.getMethod());
+        MDC.put("User-Id", request.getHeader("user-id"));
         if (type) {
             log.info(message);
         }else{

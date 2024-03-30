@@ -46,16 +46,14 @@ public class RoomQueryServiceImpl implements RoomQueryService {
         Room targetRoom = roomQueryRepository.findByRoomId(roomId).orElseThrow(NotFoundDataException::new);
         List<User> users = targetRoom.getRoomUsers().stream()
                 .map(RoomUser::getUser).toList();
-        Map<Long, String> connectionStates = getConnectionStates(users);
-        return makeCurrentUserStates(users, connectionStates);
+        return makeCurrentUserStates(users);
     }
 
-    private Map<Long, SearchUserStateResponse> makeCurrentUserStates(List<User> users,
-                                                                     Map<Long, String> connectionStates) {
+    private Map<Long, SearchUserStateResponse> makeCurrentUserStates(List<User> users) {
         Map<Long, SearchUserStateResponse> userStates = new HashMap<>();
         for (User user : users) {
             SearchUserStateResponse searchUserStateResponse = ToSearchUserStateResponseMapper.convert(user,
-                    connectionStates.get(user.getUserId()));
+                    getConnectionStates(users).get(user.getUserId()));
             userStates.put(user.getUserId(), searchUserStateResponse);
         }
         return userStates;

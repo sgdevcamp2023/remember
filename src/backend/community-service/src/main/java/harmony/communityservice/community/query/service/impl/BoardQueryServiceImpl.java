@@ -27,7 +27,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     private static final int MAX_PAGE_COUNT = 50;
     private final BoardQueryRepository boardQueryRepository;
 
-    private  SearchImagesResponse makeSearchImagesResponse(Board findBoard) {
+    private SearchImagesResponse makeSearchImagesResponse(Board findBoard) {
         return new SearchImagesResponse(
                 findBoard.getImages().stream()
                         .map(image -> new SearchImageResponse(image.getImageAddr()))
@@ -35,7 +35,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
         );
     }
 
-    private  SearchEmojisResponse makeSearchEmojisResponse(Board findBoard) {
+    private SearchEmojisResponse makeSearchEmojisResponse(Board findBoard) {
         List<Emoji> emojis = findBoard.getEmojis();
         return new SearchEmojisResponse(
                 emojis.stream()
@@ -44,9 +44,9 @@ public class BoardQueryServiceImpl implements BoardQueryService {
         );
     }
 
-    private  SearchCommentsResponse makeSearchCommentsResponse(long boardId, Board findBoard) {
+    private SearchCommentsResponse makeSearchCommentsResponse(Board findBoard) {
         List<SearchCommentResponse> searchCommentResponses = findBoard.getComments().stream()
-                .map(comment -> ToSearchCommentResponseMapper.convert(comment, boardId))
+                .map(comment -> ToSearchCommentResponseMapper.convert(comment, findBoard.getBoardId()))
                 .collect(Collectors.toList());
         return new SearchCommentsResponse(searchCommentResponses);
     }
@@ -74,8 +74,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     @Override
     public SearchBoardDetailResponse searchBoardDetail(long boardId) {
         Board targetBoard = searchByBoardId(boardId);
-        SearchCommentsResponse searchCommentsResponse = makeSearchCommentsResponse(boardId,
-                targetBoard);
+        SearchCommentsResponse searchCommentsResponse = makeSearchCommentsResponse(targetBoard);
         SearchEmojisResponse searchEmojisResponse = makeSearchEmojisResponse(targetBoard);
         SearchImagesResponse searchImagesResponse = makeSearchImagesResponse(targetBoard);
         return ToSearchBoardResponseMapper.convert(targetBoard, searchCommentsResponse, searchEmojisResponse,

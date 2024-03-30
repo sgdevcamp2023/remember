@@ -22,13 +22,6 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
     private final UserStatusClient userStatusClient;
     private final UserReadQueryRepository userReadQueryRepository;
 
-    private Map<Long, SearchUserStateResponse> makeUserStatesInGuild(
-            List<SearchUserStateResponse> stateResponses, SearchUserStateInGuildAndRoomFeignResponse userState) {
-        stateResponses.forEach(state -> state.modifyState(userState.getConnectionStates().get(state.getUserId())));
-        return stateResponses.stream()
-                .collect(Collectors.toMap(SearchUserStateResponse::getUserId, state -> state));
-    }
-
     @Override
     public void existsByUserIdAndGuildId(long userId, long guildId) {
         if (!userReadQueryRepository.existByUserIdAndGuildId(userId, guildId)) {
@@ -66,6 +59,13 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
         SearchUserStatesInGuildRequest searchUserStatesInGuildRequest = new SearchUserStatesInGuildRequest(guildId,
                 userIds);
         return userStatusClient.userStatus(searchUserStatesInGuildRequest);
+    }
+
+    private Map<Long, SearchUserStateResponse> makeUserStatesInGuild(
+            List<SearchUserStateResponse> stateResponses, SearchUserStateInGuildAndRoomFeignResponse userState) {
+        stateResponses.forEach(state -> state.modifyState(userState.getConnectionStates().get(state.getUserId())));
+        return stateResponses.stream()
+                .collect(Collectors.toMap(SearchUserStateResponse::getUserId, state -> state));
     }
 
     private List<SearchUserStateResponse> makeSearchUserStateResponses(long guildId) {
