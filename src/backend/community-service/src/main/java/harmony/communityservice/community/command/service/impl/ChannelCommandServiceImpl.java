@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.community.command.dto.DeleteChannelRequest;
 import harmony.communityservice.community.command.dto.RegisterChannelRequest;
 import harmony.communityservice.community.command.repository.ChannelCommandRepository;
@@ -22,8 +23,8 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
 
     @Override
     public Long register(RegisterChannelRequest registerChannelRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(registerChannelRequest.userId(),
-                registerChannelRequest.guildId());
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(registerChannelRequest.userId(), registerChannelRequest.guildId()));
         Channel channel = createChannel(registerChannelRequest);
         channelCommandRepository.save(channel);
         channelReadCommandService.register(registerChannelRequest.guildId(), channel);
@@ -37,7 +38,8 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
 
     @Override
     public void delete(DeleteChannelRequest deleteChannelRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(deleteChannelRequest.userId(), deleteChannelRequest.guildId());
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(deleteChannelRequest.userId(), deleteChannelRequest.guildId()));
         channelReadCommandService.delete(deleteChannelRequest.channelId());
         channelCommandRepository.deleteByChannelId(deleteChannelRequest.channelId());
     }

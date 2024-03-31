@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.common.dto.SearchUserReadRequest;
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.community.command.dto.DeleteGuildRequest;
 import harmony.communityservice.community.command.dto.ModifyUserNicknameInGuildRequest;
@@ -93,8 +94,8 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     @Override
     public void modifyUserNicknameInGuild(ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest) {
         UserRead targetUserRead = userReadQueryService.searchByUserIdAndGuildId(
-                modifyUserNicknameInGuildRequest.userId(),
-                modifyUserNicknameInGuildRequest.guildId());
+                new SearchUserReadRequest(modifyUserNicknameInGuildRequest.userId(),
+                        modifyUserNicknameInGuildRequest.guildId()));
         targetUserRead.modifyNickname(modifyUserNicknameInGuildRequest.nickname());
     }
 }

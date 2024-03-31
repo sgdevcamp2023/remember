@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.community.domain.ChannelRead;
 import harmony.communityservice.community.query.repository.ChannelReadQueryRepository;
 import harmony.communityservice.community.query.service.ChannelReadQueryService;
@@ -16,7 +17,7 @@ public class ChannelReadQueryServiceImpl implements ChannelReadQueryService {
 
     @Override
     public Map<Long, ChannelRead> searchMapByGuildId(Long guildId, Long userId) {
-        userReadQueryService.existsByUserIdAndGuildId(userId, guildId);
+        userReadQueryService.existsByUserIdAndGuildId(new VerifyGuildMemberRequest(userId, guildId));
         Map<Long, ChannelRead> channelReads = new HashMap<>();
         for (ChannelRead channelRead : channelReadQueryRepository.findChannelReadsByGuildId(guildId)) {
             channelReads.put(channelRead.getChannelReadId(), channelRead);

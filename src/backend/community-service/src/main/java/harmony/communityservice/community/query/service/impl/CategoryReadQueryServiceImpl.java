@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.community.domain.CategoryRead;
 import harmony.communityservice.community.query.repository.CategoryReadQueryRepository;
@@ -15,7 +16,7 @@ public class CategoryReadQueryServiceImpl implements CategoryReadQueryService {
 
     @Override
     public List<CategoryRead> searchListByGuildId(long guildId, long userId) {
-        userReadQueryService.existsByUserIdAndGuildId(userId, guildId);
+        userReadQueryService.existsByUserIdAndGuildId(new VerifyGuildMemberRequest(userId, guildId));
         return categoryReadQueryRepository.findAllByGuildId(guildId);
     }
 

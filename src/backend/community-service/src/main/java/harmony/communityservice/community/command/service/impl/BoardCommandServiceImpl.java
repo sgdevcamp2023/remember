@@ -1,5 +1,7 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.common.dto.SearchUserReadRequest;
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.community.command.dto.DeleteBoardRequest;
 import harmony.communityservice.community.command.dto.RegisterBoardRequest;
@@ -30,7 +32,8 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     @Override
     public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images) {
-        userReadQueryService.existsByUserIdAndGuildId(registerBoardRequest.userId(), registerBoardRequest.guildId());
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(registerBoardRequest.userId(), registerBoardRequest.guildId()));
         Board board = createBoard(registerBoardRequest);
         boardCommandRepository.save(board);
         createImages(images, board);
@@ -44,8 +47,8 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     private Board createBoard(RegisterBoardRequest registerBoardRequest) {
         Channel targetChannel = channelQueryService.searchByChannelId(registerBoardRequest.channelId());
-        UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(registerBoardRequest.userId(),
-                registerBoardRequest.guildId());
+        UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(
+                new SearchUserReadRequest(registerBoardRequest.userId(), registerBoardRequest.guildId()));
         return ToBoardMapper.convert(registerBoardRequest, boardWriter, targetChannel);
     }
 

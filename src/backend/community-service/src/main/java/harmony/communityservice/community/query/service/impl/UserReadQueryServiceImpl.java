@@ -1,6 +1,8 @@
 package harmony.communityservice.community.query.service.impl;
 
+import harmony.communityservice.common.dto.SearchUserReadRequest;
 import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.feign.UserStatusClient;
 import harmony.communityservice.community.domain.UserRead;
@@ -23,15 +25,17 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
     private final UserReadQueryRepository userReadQueryRepository;
 
     @Override
-    public void existsByUserIdAndGuildId(long userId, long guildId) {
-        if (!userReadQueryRepository.existByUserIdAndGuildId(userId, guildId)) {
+    public void existsByUserIdAndGuildId(VerifyGuildMemberRequest verifyGuildMemberRequest) {
+        if (!userReadQueryRepository.existByUserIdAndGuildId(verifyGuildMemberRequest.userId(),
+                verifyGuildMemberRequest.guildId())) {
             throw new NotFoundDataException();
         }
     }
 
     @Override
-    public UserRead searchByUserIdAndGuildId(long userId, long guildId) {
-        return userReadQueryRepository.findByUserIdAndGuildId(userId, guildId).orElseThrow(NotFoundDataException::new);
+    public UserRead searchByUserIdAndGuildId(SearchUserReadRequest searchUserReadRequest) {
+        return userReadQueryRepository.findByUserIdAndGuildId(searchUserReadRequest.userId(),
+                searchUserReadRequest.guildId()).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
@@ -41,7 +45,7 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
 
     @Override
     public SearchUserStatesInGuildResponse searchUserStatesInGuild(long guildId, long userId) {
-        existsByUserIdAndGuildId(userId, guildId);
+        existsByUserIdAndGuildId(new VerifyGuildMemberRequest(userId, guildId));
         List<SearchUserStateResponse> searchUserStateResponses = makeSearchUserStateResponses(guildId);
         SearchUserStateInGuildAndRoomFeignResponse userState = getSearchUserStateInGuildAndRoomFeignResponse(
                 guildId, searchUserStateResponses);
@@ -88,7 +92,7 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
             Set<Long> voiceUserIds = channelStates.get(channelId);
             Map<Long, UserRead> userReads = new HashMap<>();
             for (Long voiceUserId : voiceUserIds) {
-                UserRead findUserRead = searchByUserIdAndGuildId(voiceUserId, guildId);
+                UserRead findUserRead = searchByUserIdAndGuildId(new SearchUserReadRequest(voiceUserId, guildId));
                 userReads.put(findUserRead.getUserId(), findUserRead);
             }
             voiceChannelStates.put(channelId, userReads);

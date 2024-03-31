@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.community.command.dto.DeleteCategoryRequest;
 import harmony.communityservice.community.command.dto.ModifyCategoryRequest;
 import harmony.communityservice.community.command.dto.RegisterCategoryRequest;
@@ -28,8 +29,8 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
 
     @Override
     public void register(RegisterCategoryRequest registerCategoryRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(registerCategoryRequest.userId(),
-                registerCategoryRequest.guildId());
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(registerCategoryRequest.userId(), registerCategoryRequest.guildId()));
         Category category = createCategory(registerCategoryRequest);
         categoryCommandRepository.save(category);
         categoryReadCommandService.register(category, registerCategoryRequest.guildId());
@@ -42,16 +43,16 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
 
     @Override
     public void delete(DeleteCategoryRequest deleteCategoryRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(deleteCategoryRequest.userId(),
-                deleteCategoryRequest.guildId());
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(deleteCategoryRequest.userId(), deleteCategoryRequest.guildId()));
         categoryCommandRepository.deleteByCategoryId(deleteCategoryRequest.categoryId());
         categoryReadCommandService.delete(deleteCategoryRequest.categoryId());
     }
 
     @Override
     public void modify(ModifyCategoryRequest modifyCategoryRequest) {
-        userReadQueryService.existsByUserIdAndGuildId(modifyCategoryRequest.userId(),
-                modifyCategoryRequest.guildId());
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(modifyCategoryRequest.userId(), modifyCategoryRequest.guildId()));
         categoryReadQueryService.existsByCategoryIdAndGuildId(modifyCategoryRequest.categoryId(),
                 modifyCategoryRequest.guildId());
         modifyCategory(modifyCategoryRequest);
