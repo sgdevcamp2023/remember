@@ -1,6 +1,7 @@
 package harmony.communityservice.community.query.service.impl;
 
 import harmony.communityservice.community.domain.GuildRead;
+import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.query.dto.SearchRoomsAndGuildsResponse;
 import harmony.communityservice.community.query.service.GuildReadQueryService;
 import harmony.communityservice.community.query.service.UserQueryService;
@@ -22,10 +23,7 @@ public class InnerApiQueryService {
     public SearchRoomsAndGuildsResponse search(long userId) {
         Map<Long, GuildRead> targetGuildReads = guildReadQueryService.searchMapByUserId(userId);
         List<Long> guildIds = new ArrayList<>(targetGuildReads.keySet());
-        List<Long> roomIds = userQueryService.searchByUserId(userId)
-                .getRoomUsers()
-                .stream()
-                .map(user -> user.getRoom().getRoomId()).toList();
-        return new SearchRoomsAndGuildsResponse(roomIds, guildIds);
+        User targetUser = userQueryService.searchByUserId(userId);
+        return new SearchRoomsAndGuildsResponse(targetUser.getRoomIds(), guildIds);
     }
 }

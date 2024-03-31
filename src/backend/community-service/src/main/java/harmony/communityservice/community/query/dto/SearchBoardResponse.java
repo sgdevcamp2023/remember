@@ -13,7 +13,7 @@ public record SearchBoardResponse(
         Long userId,
         boolean modified,
         String createdAt,
-        List<SearchEmojiResponse> emojiResponseDtos,
+        List<SearchEmojiResponse> searchEmojiResponses,
         int commentCount
 ) {
 }

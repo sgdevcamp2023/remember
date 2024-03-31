@@ -11,9 +11,9 @@ public record SearchBoardDetailResponse(
         Long userId,
         boolean modified,
         String createdAt,
-        SearchCommentsResponse commentsResponseDto,
-        SearchImagesResponse imagesResponseDto,
-        SearchEmojisResponse emojisResponseDto
+        SearchCommentsResponse searchCommentsResponse,
+        SearchImagesResponse searchImagesResponse,
+        SearchEmojisResponse searchEmojisResponse
 ) {
 }
 

@@ -1,5 +1,8 @@
 package harmony.communityservice.community.domain;
 
+import harmony.communityservice.community.mapper.ToRoomResponseDtoMapper;
+import harmony.communityservice.community.query.dto.SearchRoomResponse;
+import harmony.communityservice.community.query.dto.SearchRoomsResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +37,7 @@ public class User {
     @NotBlank
     private String profile;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<GuildUser> guildUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -53,5 +57,21 @@ public class User {
 
     public void modifyNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public List<Long> getRoomIds() {
+        return roomUsers
+                .stream()
+                .map(user -> user.getRoom().getRoomId())
+                .toList();
+    }
+
+    public SearchRoomsResponse makeSearchRoomsResponse() {
+        List<SearchRoomResponse> searchRoomResponses = roomUsers
+                .stream()
+                .map(RoomUser::getRoom)
+                .map(ToRoomResponseDtoMapper::convert)
+                .collect(Collectors.toList());
+        return new SearchRoomsResponse(searchRoomResponses);
     }
 }

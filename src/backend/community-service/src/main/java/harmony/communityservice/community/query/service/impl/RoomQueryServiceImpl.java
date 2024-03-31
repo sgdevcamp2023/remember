@@ -33,12 +33,7 @@ public class RoomQueryServiceImpl implements RoomQueryService {
     @Override
     public SearchRoomsResponse searchList(long userId) {
         User targetUser = userQueryService.searchByUserId(userId);
-        List<SearchRoomResponse> searchRoomResponses = targetUser.getRoomUsers()
-                .stream()
-                .map(RoomUser::getRoom)
-                .map(ToRoomResponseDtoMapper::convert)
-                .collect(Collectors.toList());
-        return new SearchRoomsResponse(searchRoomResponses);
+        return targetUser.makeSearchRoomsResponse();
     }
 
     @Override

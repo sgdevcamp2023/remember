@@ -2,12 +2,9 @@ package harmony.communityservice.community.mapper;
 
 import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.query.dto.SearchBoardResponse;
-import harmony.communityservice.community.query.dto.SearchEmojiResponse;
-import java.util.List;
 
 public class ToSearchBoardsResponseMapper {
-
-    public static SearchBoardResponse convert(Board targetBoard, List<SearchEmojiResponse> searchEmojiResponses) {
+    public static SearchBoardResponse convert(Board targetBoard) {
         return SearchBoardResponse.builder()
                 .boardId(targetBoard.getBoardId())
                 .commentCount(targetBoard.countComments())
@@ -18,7 +15,7 @@ public class ToSearchBoardsResponseMapper {
                 .createdAt(targetBoard.getCreatedAt())
                 .channelId(targetBoard.getChannel().getChannelId())
                 .modified(targetBoard.isModified())
-                .emojiResponseDtos(searchEmojiResponses)
+                .searchEmojiResponses(targetBoard.makeSearchEmojisResponse().getSearchEmojiResponses())
                 .build();
     }
 }
