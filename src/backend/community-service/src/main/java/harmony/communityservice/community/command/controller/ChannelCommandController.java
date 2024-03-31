@@ -25,9 +25,8 @@ public class ChannelCommandController {
     @PostMapping("/register/category/channel")
     public BaseResponse<?> registerChannelInCategory(
             @RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
-        producerService.publishChannelCreationEvent(registerChannelRequest.guildId(),
-                registerChannelRequest.categoryId(), channelCommandService.register(registerChannelRequest),
-                registerChannelRequest.name(), registerChannelRequest.type());
+        producerService.publishChannelCreationEvent(registerChannelRequest,
+                channelCommandService.register(registerChannelRequest));
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 

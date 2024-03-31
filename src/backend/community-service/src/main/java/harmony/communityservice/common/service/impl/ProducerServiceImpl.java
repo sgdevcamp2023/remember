@@ -2,6 +2,7 @@ package harmony.communityservice.common.service.impl;
 
 import harmony.communityservice.common.dto.CommunityEvent;
 import harmony.communityservice.common.service.ProducerService;
+import harmony.communityservice.community.command.dto.RegisterChannelRequest;
 import harmony.communityservice.community.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,15 +25,14 @@ public class ProducerServiceImpl implements ProducerService {
     }
 
     @Override
-    public void publishChannelCreationEvent(Long guildId, Long categoryId, Long channelId, String channelName,
-                                  String channelType) {
+    public void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Long channelId) {
         CommunityEvent event = CommunityEvent.builder()
                 .type("CREATE-CHANNEL")
-                .guildId(guildId)
-                .channelType(channelType)
-                .channelName(channelName)
+                .guildId(registerChannelRequest.guildId())
+                .channelType(registerChannelRequest.type())
+                .channelName(registerChannelRequest.name())
                 .channelReadId(channelId)
-                .categoryId(categoryId)
+                .categoryId(registerChannelRequest.categoryId())
                 .build();
         kafkaTemplateForCommunity.send(communityEvent, event);
     }

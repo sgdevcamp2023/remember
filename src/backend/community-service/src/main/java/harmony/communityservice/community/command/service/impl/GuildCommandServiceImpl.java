@@ -8,6 +8,7 @@ import harmony.communityservice.community.command.dto.RegisterChannelRequest;
 import harmony.communityservice.community.command.dto.RegisterGuildReadRequest;
 import harmony.communityservice.community.command.dto.RegisterGuildRequest;
 import harmony.communityservice.community.command.dto.RegisterUserReadRequest;
+import harmony.communityservice.community.command.dto.RegisterUserUsingInvitationCodeRequest;
 import harmony.communityservice.community.command.repository.GuildCommandRepository;
 import harmony.communityservice.community.command.service.ChannelCommandService;
 import harmony.communityservice.community.command.service.GuildCommandService;
@@ -51,11 +52,11 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     }
 
     @Override
-    public void joinByInvitationCode(String invitationCode, Long userId) {
-        List<String> parsedInvitationCodes = List.of(invitationCode.split("\\."));
+    public void joinByInvitationCode(RegisterUserUsingInvitationCodeRequest registerUserUsingInvitationCodeRequest) {
+        List<String> parsedInvitationCodes = List.of(registerUserUsingInvitationCodeRequest.invitationCode().split("\\."));
         Guild targetGuild = guildQueryService.searchByInvitationCode(parsedInvitationCodes.get(0));
-        registerGuildRead(userId, targetGuild);
-        registerGuildUserAndUserRead(userId, targetGuild);
+        registerGuildRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild);
+        registerGuildUserAndUserRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild);
     }
 
     private void registerChannel(RegisterGuildRequest registerGuildRequest, Guild guild) {

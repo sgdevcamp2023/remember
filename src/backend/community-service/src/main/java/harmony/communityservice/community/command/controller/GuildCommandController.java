@@ -5,6 +5,7 @@ import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.community.command.dto.DeleteGuildRequest;
 import harmony.communityservice.community.command.dto.ModifyUserNicknameInGuildRequest;
 import harmony.communityservice.community.command.dto.RegisterGuildRequest;
+import harmony.communityservice.community.command.dto.RegisterUserUsingInvitationCodeRequest;
 import harmony.communityservice.community.command.service.GuildCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class GuildCommandController {
 
     @PostMapping("/register/guild")
     public BaseResponse<?> register(
-            @RequestPart(value = "requestDto") @Validated RegisterGuildRequest registerGuildRequest,
+            @RequestPart(value = "registerGuildRequest") @Validated RegisterGuildRequest registerGuildRequest,
             @RequestPart(name = "profile", required = false) MultipartFile profile) {
         return new BaseResponse<>(HttpStatus.OK.value(), "OK",
                 guildCommandService.register(registerGuildRequest, profile));
@@ -37,7 +38,7 @@ public class GuildCommandController {
 
     @GetMapping("/join/guild/{invitationCode}/{userId}")
     public BaseResponse<?> joinByInvitationCode(@PathVariable String invitationCode, @PathVariable Long userId) {
-        guildCommandService.joinByInvitationCode(invitationCode, userId);
+        guildCommandService.joinByInvitationCode(new RegisterUserUsingInvitationCodeRequest(invitationCode, userId));
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 

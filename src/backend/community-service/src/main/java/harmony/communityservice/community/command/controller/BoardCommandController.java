@@ -27,7 +27,7 @@ public class BoardCommandController {
 
     @PostMapping("/register/board")
     public BaseResponse<?> register(
-            @RequestPart(value = "requestDto") RegisterBoardRequest registerBoardRequest,
+            @RequestPart(value = "registerBoardRequest") RegisterBoardRequest registerBoardRequest,
             @RequestPart(name = "images", required = false) List<MultipartFile> images) {
         boardCommandService.register(registerBoardRequest, images);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
