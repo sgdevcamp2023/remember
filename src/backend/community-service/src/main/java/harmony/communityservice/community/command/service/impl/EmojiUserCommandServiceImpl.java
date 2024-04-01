@@ -13,7 +13,7 @@ public class EmojiUserCommandServiceImpl implements EmojiUserCommandService {
     private final EmojiUserCommandRepository emojiUserCommandRepository;
 
     @Override
-    public void save(Emoji emoji, Long userId) {
+    public void register(Emoji emoji, Long userId) {
         EmojiUser emojiUser = ToEmojiUserMapper.convert(emoji, userId);
         emojiUserCommandRepository.save(emojiUser);
     }

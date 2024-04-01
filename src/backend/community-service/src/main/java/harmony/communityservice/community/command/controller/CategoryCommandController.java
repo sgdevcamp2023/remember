@@ -1,9 +1,9 @@
 package harmony.communityservice.community.command.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.command.dto.CategoryDeleteRequestDto;
-import harmony.communityservice.community.command.dto.CategoryRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.CategoryUpdateRequestDto;
+import harmony.communityservice.community.command.dto.DeleteCategoryRequest;
+import harmony.communityservice.community.command.dto.RegisterCategoryRequest;
+import harmony.communityservice.community.command.dto.ModifyCategoryRequest;
 import harmony.communityservice.community.command.service.CategoryCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,21 +22,21 @@ public class CategoryCommandController {
 
     private final CategoryCommandService categoryCommandService;
 
-    @PostMapping("/registration/category")
-    public BaseResponse<?> registration(@RequestBody @Validated CategoryRegistrationRequestDto requestDto) {
-        categoryCommandService.save(requestDto);
+    @PostMapping("/register/category")
+    public BaseResponse<?> register(@RequestBody @Validated RegisterCategoryRequest registerCategoryRequest) {
+        categoryCommandService.register(registerCategoryRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/category")
-    public BaseResponse<?> delete(@RequestBody @Validated CategoryDeleteRequestDto requestDto) {
-        categoryCommandService.delete(requestDto);
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteCategoryRequest deleteCategoryRequest) {
+        categoryCommandService.delete(deleteCategoryRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
-    @PatchMapping("/change/category")
-    public BaseResponse<?> update(@RequestBody @Validated CategoryUpdateRequestDto requestDto) {
-        categoryCommandService.update(requestDto);
+    @PatchMapping("/modify/category")
+    public BaseResponse<?> modify(@RequestBody @Validated ModifyCategoryRequest modifyCategoryRequest) {
+        categoryCommandService.modify(modifyCategoryRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

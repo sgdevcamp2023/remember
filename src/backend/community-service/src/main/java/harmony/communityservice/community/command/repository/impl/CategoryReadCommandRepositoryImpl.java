@@ -15,7 +15,7 @@ public class CategoryReadCommandRepositoryImpl implements CategoryReadCommandRep
     }
 
     @Override
-    public void delete(Long categoryReadId) {
+    public void deleteByCategoryReadId(Long categoryReadId) {
         jpaCategoryReadCommandRepository.deleteById(categoryReadId);
     }
 }

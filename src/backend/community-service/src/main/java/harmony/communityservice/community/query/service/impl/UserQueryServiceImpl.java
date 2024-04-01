@@ -12,7 +12,7 @@ public class UserQueryServiceImpl implements UserQueryService {
     private final UserQueryRepository userQueryRepository;
 
     @Override
-    public User findUser(Long userId) {
+    public User searchByUserId(Long userId) {
         return userQueryRepository.findById(userId).orElseThrow(NotFoundDataException::new);
     }
 }

@@ -1,7 +1,7 @@
 package harmony.communityservice.community.command.service.impl;
 
 import harmony.communityservice.common.service.ProducerService;
-import harmony.communityservice.community.command.dto.GuildReadRequestDto;
+import harmony.communityservice.community.command.dto.RegisterGuildReadRequest;
 import harmony.communityservice.community.command.repository.GuildReadCommandRepository;
 import harmony.communityservice.community.command.service.GuildReadCommandService;
 import harmony.communityservice.community.domain.GuildRead;
@@ -15,8 +15,8 @@ public class GuildReadCommandServiceImpl implements GuildReadCommandService {
     private final ProducerService producerService;
 
     @Override
-    public GuildRead save(GuildReadRequestDto requestDto) {
-        GuildRead guildRead = ToGuildReadMapper.convert(requestDto);
+    public GuildRead register(RegisterGuildReadRequest registerGuildReadRequest) {
+        GuildRead guildRead = ToGuildReadMapper.convert(registerGuildReadRequest);
         repository.save(guildRead);
 //        producerService.sendCreateGuild(guildRead);
         return guildRead;

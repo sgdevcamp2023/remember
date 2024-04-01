@@ -6,7 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface EmojiQueryService {
-    Emoji findByBoardAndEmojiType(Board board, Long emojiType);
 
-    Emoji findById(Long emojiId);
+    Emoji searchByBoardAndEmojiType(Board board, Long emojiType);
+
+    Emoji searchByEmojiId(Long emojiId);
 }

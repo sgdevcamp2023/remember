@@ -1,7 +1,7 @@
 package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.query.dto.RoomGuildResponseDto;
+import harmony.communityservice.community.query.dto.SearchRoomsAndGuildsResponse;
 import harmony.communityservice.community.query.service.impl.InnerApiQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,9 @@ public class InnerApiQueryController {
 
     private final InnerApiQueryService innerApiQueryService;
 
-    @GetMapping("/check/room/guild/{userId}")
-    public BaseResponse<?> search(@PathVariable Long userId) {
-        RoomGuildResponseDto roomGuildResponseDto = innerApiQueryService.search(userId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", roomGuildResponseDto);
+    @GetMapping("/search/rooms/guilds/{userId}")
+    public BaseResponse<?> searchRoomsAndGuildsBelongToUser(@PathVariable Long userId) {
+        SearchRoomsAndGuildsResponse searchRoomsAndGuildsResponse = innerApiQueryService.search(userId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchRoomsAndGuildsResponse);
     }
 }

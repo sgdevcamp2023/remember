@@ -12,7 +12,7 @@ public class ChannelQueryServiceImpl implements ChannelQueryService {
     private final ChannelQueryRepository channelQueryRepository;
 
     @Override
-    public Channel findChannelByChannelId(long channelId) {
+    public Channel searchByChannelId(long channelId) {
         return channelQueryRepository.findByChannelId(channelId).orElseThrow(NotFoundDataException::new);
     }
 }

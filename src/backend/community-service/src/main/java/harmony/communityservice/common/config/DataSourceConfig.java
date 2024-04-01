@@ -42,17 +42,13 @@ public class DataSourceConfig {
             @Qualifier(REPLICA_DATASOURCE) DataSource replicaDataSource
     ) {
 
-        RoutingDataSource routingDataSource = new RoutingDataSource();
-
         Map<Object, Object> datasourceMap = ImmutableMap.<Object, Object>builder()
-
                 .put("source", sourceDataSource)
                 .put("replica", replicaDataSource)
                 .build();
-
+        RoutingDataSource routingDataSource = new RoutingDataSource();
         routingDataSource.setTargetDataSources(datasourceMap);
         routingDataSource.setDefaultTargetDataSource(sourceDataSource);
-
         return routingDataSource;
     }
 

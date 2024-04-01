@@ -1,8 +1,8 @@
 package harmony.communityservice.community.command.service.impl;
 
-import harmony.communityservice.community.command.dto.UserNicknameUpdateRequestDto;
-import harmony.communityservice.community.command.dto.UserProfileUpdateRequestDto;
-import harmony.communityservice.community.command.dto.UserStoreRequestDto;
+import harmony.communityservice.community.command.dto.ModifyUserNicknameRequest;
+import harmony.communityservice.community.command.dto.ModifyUserProfileRequest;
+import harmony.communityservice.community.command.dto.RegisterUserRequest;
 import harmony.communityservice.community.command.repository.UserCommandRepository;
 import harmony.communityservice.community.command.service.UserCommandService;
 import harmony.communityservice.community.domain.User;
@@ -19,24 +19,25 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final UserReadQueryService userReadQueryService;
 
     @Override
-    public void save(UserStoreRequestDto requestDto) {
-        User user = ToUserMapper.convert(requestDto);
+    public void register(RegisterUserRequest registerUserRequest) {
+        User user = ToUserMapper.convert(registerUserRequest);
         userCommandRepository.save(user);
     }
 
     @Override
-    public void updateProfile(UserProfileUpdateRequestDto requestDto) {
-        User findUser = userQueryService.findUser(requestDto.getUserId());
-        findUser.updateProfile(requestDto.getProfile());
-        userReadQueryService.findUserReadsByUserId(requestDto.getUserId())
-                .forEach(findUserRead -> findUserRead.updateProfile(requestDto.getProfile()));
+    public void modifyProfile(ModifyUserProfileRequest modifyUserProfileRequest) {
+        modifyUserInfo(modifyUserProfileRequest.userId(), modifyUserProfileRequest.profile());
     }
 
     @Override
-    public void updateNickname(UserNicknameUpdateRequestDto requestDto) {
-        User findUser = userQueryService.findUser(requestDto.getUserId());
-        findUser.updateProfile(requestDto.getNickname());
-        userReadQueryService.findUserReadsByUserId(requestDto.getUserId())
-                .forEach(findUserRead -> findUserRead.updateProfile(requestDto.getNickname()));
+    public void modifyNickname(ModifyUserNicknameRequest modifyUserNicknameRequest) {
+        modifyUserInfo(modifyUserNicknameRequest.userId(), modifyUserNicknameRequest.nickname());
+    }
+
+    private void modifyUserInfo(Long userId, String userInfo) {
+        User targetUser = userQueryService.searchByUserId(userId);
+        targetUser.modifyProfile(userInfo);
+        userReadQueryService.searchListByUserId(userId)
+                .forEach(target -> target.modifyProfile(userInfo));
     }
 }

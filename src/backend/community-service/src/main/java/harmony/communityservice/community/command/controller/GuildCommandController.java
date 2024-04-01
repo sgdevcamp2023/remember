@@ -2,11 +2,11 @@ package harmony.communityservice.community.command.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.common.service.ProducerService;
-import harmony.communityservice.community.command.dto.GuildDeleteRequestDto;
-import harmony.communityservice.community.command.dto.GuildRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.GuildUpdateNicknameRequestDto;
+import harmony.communityservice.community.command.dto.DeleteGuildRequest;
+import harmony.communityservice.community.command.dto.ModifyUserNicknameInGuildRequest;
+import harmony.communityservice.community.command.dto.RegisterGuildRequest;
+import harmony.communityservice.community.command.dto.RegisterUserUsingInvitationCodeRequest;
 import harmony.communityservice.community.command.service.GuildCommandService;
-import harmony.communityservice.community.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -28,31 +28,31 @@ public class GuildCommandController {
     private final GuildCommandService guildCommandService;
     private final ProducerService producerService;
 
-    @PostMapping("/registration/guild")
-    public BaseResponse<?> registration(
-            @RequestPart(value = "requestDto") @Validated GuildRegistrationRequestDto requestDto,
+    @PostMapping("/register/guild")
+    public BaseResponse<?> register(
+            @RequestPart(value = "registerGuildRequest") @Validated RegisterGuildRequest registerGuildRequest,
             @RequestPart(name = "profile", required = false) MultipartFile profile) {
-        GuildRead guildRead = guildCommandService.save(requestDto, profile);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", guildRead);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK",
+                guildCommandService.register(registerGuildRequest, profile));
     }
 
-
     @GetMapping("/join/guild/{invitationCode}/{userId}")
-    public BaseResponse<?> join(@PathVariable String invitationCode, @PathVariable Long userId) {
-        guildCommandService.join(invitationCode, userId);
+    public BaseResponse<?> joinByInvitationCode(@PathVariable String invitationCode, @PathVariable Long userId) {
+        guildCommandService.joinByInvitationCode(new RegisterUserUsingInvitationCodeRequest(invitationCode, userId));
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/guild")
-    public BaseResponse<?> delete(@RequestBody @Validated GuildDeleteRequestDto requestDto) {
-        guildCommandService.remove(requestDto);
-        producerService.sendDeleteGuild(requestDto.getGuildId());
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteGuildRequest deleteGuildRequest) {
+        guildCommandService.delete(deleteGuildRequest);
+        producerService.publishGuildDeletionEvent(deleteGuildRequest.guildId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
-    @PatchMapping("/change/guild/username")
-    public BaseResponse<?> updateGuildNickname(@RequestBody @Validated GuildUpdateNicknameRequestDto requestDto) {
-        guildCommandService.updateGuildNickname(requestDto);
+    @PatchMapping("/modify/guild/username")
+    public BaseResponse<?> modifyNicknameInGuild(
+            @RequestBody @Validated ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest) {
+        guildCommandService.modifyUserNicknameInGuild(modifyUserNicknameInGuildRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

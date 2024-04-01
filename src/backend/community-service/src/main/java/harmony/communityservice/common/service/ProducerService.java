@@ -1,13 +1,14 @@
 package harmony.communityservice.common.service;
 
+import harmony.communityservice.community.command.dto.RegisterChannelRequest;
 import harmony.communityservice.community.domain.GuildRead;
 
 public interface ProducerService {
-    void sendDeleteGuild(Long guildId);
+    void publishGuildDeletionEvent(Long guildId);
 
-    void sendCreateChannel(Long guildId, Long categoryId, Long channelId, String channelName, String channelType);
+    void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Long channelId);
 
-    void sendDeleteChannel(Long channelId);
+    void publishChannelDeletionEvent(Long channelId);
 
-    void sendCreateGuild(GuildRead guildRead);
+    void publishGuildCreationEvent(GuildRead guildRead);
 }

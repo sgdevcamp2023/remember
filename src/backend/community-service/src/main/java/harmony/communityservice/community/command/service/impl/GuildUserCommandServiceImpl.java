@@ -12,7 +12,7 @@ public class GuildUserCommandServiceImpl implements GuildUserCommandService {
 
     private final GuildUserCommandRepository guildUserCommandRepository;
     @Override
-    public void save(Guild guild, User user) {
+    public void register(Guild guild, User user) {
         GuildUser guildUser = GuildUser.make(user,guild);
         guildUserCommandRepository.save(guildUser);
     }

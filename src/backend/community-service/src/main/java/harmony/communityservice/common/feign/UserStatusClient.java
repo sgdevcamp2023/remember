@@ -2,10 +2,10 @@ package harmony.communityservice.common.feign;
 
 
 import harmony.communityservice.common.config.HeaderConfig;
-import harmony.communityservice.common.dto.DmUserStateFeignResponseDto;
-import harmony.communityservice.common.dto.UserStateFeignResponseDto;
-import harmony.communityservice.community.query.dto.DmUserStatesRequestDto;
-import harmony.communityservice.community.query.dto.UserStatusRequestDto;
+import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
+import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
+import harmony.communityservice.community.query.dto.SearchUserStatesInGuildRequest;
+import harmony.communityservice.community.query.dto.SearchUserStatusInDmRoomRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserStatusClient {
 
     @PostMapping("/api/state/community/user/info")
-    UserStateFeignResponseDto userStatus(@RequestBody UserStatusRequestDto requestDto);
+    SearchUserStateInGuildAndRoomFeignResponse userStatus(
+            @RequestBody SearchUserStatesInGuildRequest searchUserStatesInGuildRequest);
 
     @PostMapping("/api/state/direct/user/info")
-    DmUserStateFeignResponseDto getCommunityUsersState(@RequestBody DmUserStatesRequestDto requestDto);
+    SearchDmUserStateFeignResponse getCommunityUsersState(
+            @RequestBody SearchUserStatusInDmRoomRequest searchUserStatusInDmRoomRequest);
 }

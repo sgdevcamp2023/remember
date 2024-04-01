@@ -1,17 +1,18 @@
 package harmony.communityservice.community.query.service;
 
-import harmony.communityservice.community.query.dto.InvitationRequestDto;
+import harmony.communityservice.community.query.dto.SearchGuildInvitationCodeRequest;
 import harmony.communityservice.community.domain.Guild;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface GuildQueryService {
 
-    String findInviteCode(InvitationRequestDto requestDto);
 
-    Guild findGuildByInviteCode(String code);
+    String searchInvitationCode(SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest);
 
-    Guild findByGuildId(Long guildId);
+    Guild searchByInvitationCode(String code);
 
-    boolean existsGuildByGuildIdAndManagerId(Long guildId, Long managerId);
+    Guild searchByGuildId(Long guildId);
+
+    boolean existsByGuildIdAndManagerId(Long guildId, Long managerId);
 }

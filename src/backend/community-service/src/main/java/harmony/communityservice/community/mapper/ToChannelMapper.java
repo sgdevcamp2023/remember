@@ -1,16 +1,16 @@
 package harmony.communityservice.community.mapper;
 
-import harmony.communityservice.community.command.dto.ChannelRegistrationRequestDto;
+import harmony.communityservice.community.command.dto.RegisterChannelRequest;
 import harmony.communityservice.community.domain.Channel;
 import harmony.communityservice.community.domain.Guild;
 
 public class ToChannelMapper {
 
-    public static Channel convert(ChannelRegistrationRequestDto requestDto, Guild guild) {
+    public static Channel convert(RegisterChannelRequest registerChannelRequest, Guild guild) {
         return Channel.builder()
-                .name(requestDto.getName())
-                .type(requestDto.getType())
-                .categoryId(requestDto.getCategoryId())
+                .name(registerChannelRequest.name())
+                .type(registerChannelRequest.type())
+                .categoryId(registerChannelRequest.categoryId())
                 .guild(guild)
                 .build();
     }

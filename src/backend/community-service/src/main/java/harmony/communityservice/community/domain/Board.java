@@ -1,5 +1,12 @@
 package harmony.communityservice.community.domain;
 
+import harmony.communityservice.community.mapper.ToSearchCommentResponseMapper;
+import harmony.communityservice.community.mapper.ToSearchEmojiResponseMapper;
+import harmony.communityservice.community.query.dto.SearchCommentResponse;
+import harmony.communityservice.community.query.dto.SearchCommentsResponse;
+import harmony.communityservice.community.query.dto.SearchEmojisResponse;
+import harmony.communityservice.community.query.dto.SearchImageResponse;
+import harmony.communityservice.community.query.dto.SearchImagesResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -18,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +43,7 @@ public class Board {
     private Long boardId;
 
     @ManyToOne
-    @JoinColumn(name = "channel_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "channel_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Channel channel;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
@@ -94,21 +102,44 @@ public class Board {
         this.writerProfile = writerProfile;
     }
 
-    public int commentCount() {
+    public int countComments() {
         return comments.size();
     }
 
-    public void checkWriter(Long userId) {
+    public void verifyWriter(Long userId) {
         if (!this.userId.equals(userId)) {
             throw new IllegalStateException();
         }
     }
 
-    public void updateBoard(String title, String content) {
+    public void modifyTitleAndContent(String title, String content) {
         this.title = title;
         this.content = content;
         this.modified = true;
         this.modifiedAt = LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public SearchImagesResponse makeSearchImagesResponse() {
+        return new SearchImagesResponse(
+                this.images.stream()
+                        .map(image -> new SearchImageResponse(image.getImageAddr()))
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public SearchEmojisResponse makeSearchEmojisResponse() {
+        return new SearchEmojisResponse(
+                this.emojis.stream()
+                        .map(ToSearchEmojiResponseMapper::convert)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public SearchCommentsResponse makeSearchCommentsResponse() {
+        List<SearchCommentResponse> searchCommentResponses = this.comments.stream()
+                .map(comment -> ToSearchCommentResponseMapper.convert(comment, boardId))
+                .collect(Collectors.toList());
+        return new SearchCommentsResponse(searchCommentResponses);
     }
 }

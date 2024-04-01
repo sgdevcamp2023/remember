@@ -2,8 +2,6 @@ package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
@@ -39,7 +37,7 @@ public class CategoryRead {
         this.name = name;
     }
 
-    public void updateName(String newName) {
+    public void modifyName(String newName) {
         this.name = newName;
     }
 }
