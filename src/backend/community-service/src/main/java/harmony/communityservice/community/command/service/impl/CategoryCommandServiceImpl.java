@@ -1,8 +1,9 @@
 package harmony.communityservice.community.command.service.impl;
 
-import harmony.communityservice.community.command.dto.CategoryDeleteRequestDto;
-import harmony.communityservice.community.command.dto.CategoryRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.CategoryUpdateRequestDto;
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
+import harmony.communityservice.community.command.dto.DeleteCategoryRequest;
+import harmony.communityservice.community.command.dto.ModifyCategoryRequest;
+import harmony.communityservice.community.command.dto.RegisterCategoryRequest;
 import harmony.communityservice.community.command.repository.CategoryCommandRepository;
 import harmony.communityservice.community.command.service.CategoryCommandService;
 import harmony.communityservice.community.command.service.CategoryReadCommandService;
@@ -25,29 +26,47 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     private final CategoryReadCommandService categoryReadCommandService;
     private final CategoryReadQueryService categoryReadQueryService;
     private final CategoryQueryService categoryQueryService;
+
     @Override
-    public void save(CategoryRegistrationRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        Guild findGuild = guildQueryService.findByGuildId(requestDto.getGuildId());
-        Category category = ToCategoryMapper.convert(findGuild, requestDto);
+    public void register(RegisterCategoryRequest registerCategoryRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(registerCategoryRequest.userId(), registerCategoryRequest.guildId()));
+        Category category = createCategory(registerCategoryRequest);
         categoryCommandRepository.save(category);
-        categoryReadCommandService.save(category, requestDto.getGuildId());
+        categoryReadCommandService.register(category, registerCategoryRequest.guildId());
+    }
+
+    private Category createCategory(RegisterCategoryRequest registerCategoryRequest) {
+        Guild targetGuild = guildQueryService.searchByGuildId(registerCategoryRequest.guildId());
+        return ToCategoryMapper.convert(targetGuild, registerCategoryRequest);
     }
 
     @Override
-    public void delete(CategoryDeleteRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        categoryCommandRepository.deleteByCategoryId(requestDto.getCategoryId());
-        categoryReadCommandService.delete(requestDto.getCategoryId());
+    public void delete(DeleteCategoryRequest deleteCategoryRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(deleteCategoryRequest.userId(), deleteCategoryRequest.guildId()));
+        categoryCommandRepository.deleteByCategoryId(deleteCategoryRequest.categoryId());
+        categoryReadCommandService.delete(deleteCategoryRequest.categoryId());
     }
 
     @Override
-    public void update(CategoryUpdateRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        categoryReadQueryService.existsByCategoryIdAndGuildId(requestDto.getCategoryId(), requestDto.getGuildId());
-        Category findCategory = categoryQueryService.findByCategoryId(requestDto.getCategoryId());
-        CategoryRead findCategoryRead = categoryReadQueryService.findByCategoryId(requestDto.getCategoryId());
-        findCategory.updateName(requestDto.getName());
-        findCategoryRead.updateName(requestDto.getName());
+    public void modify(ModifyCategoryRequest modifyCategoryRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(modifyCategoryRequest.userId(), modifyCategoryRequest.guildId()));
+        categoryReadQueryService.existsByCategoryIdAndGuildId(modifyCategoryRequest.categoryId(),
+                modifyCategoryRequest.guildId());
+        modifyCategory(modifyCategoryRequest);
+        modifyCategoryRead(modifyCategoryRequest);
+    }
+
+    private void modifyCategoryRead(ModifyCategoryRequest modifyCategoryRequest) {
+        CategoryRead targetCategoryRead = categoryReadQueryService.searchByCategoryId(
+                modifyCategoryRequest.categoryId());
+        targetCategoryRead.modifyName(modifyCategoryRequest.name());
+    }
+
+    private void modifyCategory(ModifyCategoryRequest modifyCategoryRequest) {
+        Category targetCategory = categoryQueryService.searchByCategoryId(modifyCategoryRequest.categoryId());
+        targetCategory.modifyName(modifyCategoryRequest.name());
     }
 }

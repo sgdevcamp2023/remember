@@ -22,7 +22,7 @@ public class GcsContentService implements ContentService {
     private String bucketUrl;
 
     @Override
-    public String imageConvertUrl(MultipartFile image) {
+    public String convertFileToUrl(MultipartFile image) {
         try {
             String uuid = UUID.randomUUID().toString();
             String ext = image.getContentType();

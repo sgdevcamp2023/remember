@@ -6,5 +6,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface UserQueryService {
 
-    User findUser(Long userId);
+    User searchByUserId(Long userId);
 }

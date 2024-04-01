@@ -46,11 +46,11 @@ public class UserRead {
         this.nickname = nickname;
     }
 
-    public void updateNickname(String nickname) {
+    public void modifyNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    public void updateProfile(String profile){
+    public void modifyProfile(String profile){
         this.profile = profile;
     }
 }

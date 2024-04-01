@@ -1,17 +1,17 @@
 package harmony.communityservice.community.query.service;
 
 import harmony.communityservice.community.domain.Board;
-import harmony.communityservice.community.query.dto.BoardResponseDto;
-import harmony.communityservice.community.query.dto.BoardsResponseDto;
+import harmony.communityservice.community.query.dto.SearchBoardDetailResponse;
+import harmony.communityservice.community.query.dto.SearchBoardResponse;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface BoardQueryService {
 
-    List<BoardsResponseDto> findBoards(long channelId, long lastBoardId);
+    List<SearchBoardResponse> searchList(long channelId, long lastBoardId);
 
-    Board findBoardByBoardId(Long boardId);
+    Board searchByBoardId(Long boardId);
 
-    BoardResponseDto make(long boardId);
+    SearchBoardDetailResponse searchBoardDetail(long boardId);
 }

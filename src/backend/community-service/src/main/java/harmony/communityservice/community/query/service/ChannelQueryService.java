@@ -6,5 +6,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface ChannelQueryService {
 
-    Channel findChannelByChannelId(long channelId);
+    Channel searchByChannelId(long channelId);
 }

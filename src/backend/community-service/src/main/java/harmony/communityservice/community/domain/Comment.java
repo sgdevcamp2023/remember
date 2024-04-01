@@ -1,19 +1,20 @@
 package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "comment")
+@Table(name = "comment", indexes = @Index(name = "idx__boardId",columnList = "board_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
 
@@ -31,7 +32,7 @@ public class Comment {
     private Long commentId;
 
     @ManyToOne
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "board_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Board board;
 
     @NotBlank
@@ -55,10 +56,10 @@ public class Comment {
     private boolean modified;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @Column(name = "modified_at")
-    private LocalDateTime modifiedAt;
+    private String modifiedAt;
 
     @Builder
     public Comment(Board board, String comment, Long userId, String writerName,String writerProfile) {
@@ -68,19 +69,22 @@ public class Comment {
         this.writerName = writerName;
         this.modified = false;
         this.writerProfile = writerProfile;
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.modifiedAt = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public void checkWriter(Long writerId) {
+    public void verifyWriter(Long writerId) {
         if (!this.userId.equals(writerId)) {
             throw new IllegalStateException();
         }
     }
 
-    public void updateComment(String comment) {
+    public void modify(String comment) {
         this.comment = comment;
         this.modified = true;
-        this.modifiedAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }

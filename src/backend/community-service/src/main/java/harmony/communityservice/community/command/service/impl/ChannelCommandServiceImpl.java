@@ -1,7 +1,8 @@
 package harmony.communityservice.community.command.service.impl;
 
-import harmony.communityservice.community.command.dto.ChannelDeleteRequestDto;
-import harmony.communityservice.community.command.dto.ChannelRegistrationRequestDto;
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
+import harmony.communityservice.community.command.dto.DeleteChannelRequest;
+import harmony.communityservice.community.command.dto.RegisterChannelRequest;
 import harmony.communityservice.community.command.repository.ChannelCommandRepository;
 import harmony.communityservice.community.command.service.ChannelCommandService;
 import harmony.communityservice.community.command.service.ChannelReadCommandService;
@@ -21,19 +22,25 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
     private final ChannelReadCommandService channelReadCommandService;
 
     @Override
-    public Long registration(ChannelRegistrationRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        Guild guild = guildQueryService.findByGuildId(requestDto.getGuildId());
-        Channel channel = ToChannelMapper.convert(requestDto, guild);
+    public Long register(RegisterChannelRequest registerChannelRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(registerChannelRequest.userId(), registerChannelRequest.guildId()));
+        Channel channel = createChannel(registerChannelRequest);
         channelCommandRepository.save(channel);
-        channelReadCommandService.registration(requestDto.getGuildId(), channel);
+        channelReadCommandService.register(registerChannelRequest.guildId(), channel);
         return channel.getChannelId();
     }
 
+    private Channel createChannel(RegisterChannelRequest registerChannelRequest) {
+        Guild guild = guildQueryService.searchByGuildId(registerChannelRequest.guildId());
+        return ToChannelMapper.convert(registerChannelRequest, guild);
+    }
+
     @Override
-    public void remove(ChannelDeleteRequestDto requestDto) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        channelReadCommandService.remove(requestDto.getChannelId());
-        channelCommandRepository.deleteByChannelId(requestDto.getChannelId());
+    public void delete(DeleteChannelRequest deleteChannelRequest) {
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(deleteChannelRequest.userId(), deleteChannelRequest.guildId()));
+        channelReadCommandService.delete(deleteChannelRequest.channelId());
+        channelCommandRepository.deleteByChannelId(deleteChannelRequest.channelId());
     }
 }

@@ -1,13 +1,13 @@
 package harmony.communityservice.community.command.service;
 
-import harmony.communityservice.community.command.dto.EmojiDeleteRequestDto;
-import harmony.communityservice.community.command.dto.EmojiRegistrationRequestDto;
+import harmony.communityservice.community.command.dto.DeleteEmojiRequest;
+import harmony.communityservice.community.command.dto.RegisterEmojiRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface EmojiCommandService {
 
-    void save(EmojiRegistrationRequestDto emojiRegistrationRequestDto);
+    void register(RegisterEmojiRequest registerEmojiRequest);
 
-    void delete(EmojiDeleteRequestDto emojiDeleteRequestDto);
+    void delete(DeleteEmojiRequest deleteEmojiRequest);
 }

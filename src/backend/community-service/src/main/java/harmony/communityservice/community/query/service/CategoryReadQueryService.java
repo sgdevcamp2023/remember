@@ -7,9 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface CategoryReadQueryService {
 
-    List<CategoryRead> findCategoryReadsByGuildId(long guildId, long userId);
+    List<CategoryRead> searchListByGuildId(long guildId, long userId);
 
-    CategoryRead findByCategoryId(long categoryId);
+    CategoryRead searchByCategoryId(long categoryId);
 
     void existsByCategoryIdAndGuildId(long categoryId, long guildId);
 }

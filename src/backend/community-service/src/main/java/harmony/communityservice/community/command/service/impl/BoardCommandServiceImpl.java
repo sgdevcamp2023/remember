@@ -1,9 +1,11 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.common.dto.SearchUserReadRequest;
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.common.service.ContentService;
-import harmony.communityservice.community.command.dto.BoardDeleteRequestDto;
-import harmony.communityservice.community.command.dto.BoardRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.BoardUpdateRequestDto;
+import harmony.communityservice.community.command.dto.DeleteBoardRequest;
+import harmony.communityservice.community.command.dto.RegisterBoardRequest;
+import harmony.communityservice.community.command.dto.ModifyBoardRequest;
 import harmony.communityservice.community.command.repository.BoardCommandRepository;
 import harmony.communityservice.community.command.service.BoardCommandService;
 import harmony.communityservice.community.command.service.ImageCommandService;
@@ -29,29 +31,38 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     private final BoardQueryService boardQueryService;
 
     @Override
-    public void save(BoardRegistrationRequestDto requestDto, List<MultipartFile> images) {
-        userReadQueryService.existsUserIdAndGuildId(requestDto.getUserId(), requestDto.getGuildId());
-        List<String> imageUrls = images.stream()
-                .map(contentService::imageConvertUrl).toList();
-        UserRead findUserRead = userReadQueryService.findUserReadIdAndGuildId(requestDto.getUserId(),
-                requestDto.getGuildId());
-        Channel findChannel = channelQueryService.findChannelByChannelId(requestDto.getChannelId());
-        Board board = ToBoardMapper.convert(requestDto, findUserRead, findChannel);
+    public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images) {
+        userReadQueryService.existsByUserIdAndGuildId(
+                new VerifyGuildMemberRequest(registerBoardRequest.userId(), registerBoardRequest.guildId()));
+        Board board = createBoard(registerBoardRequest);
         boardCommandRepository.save(board);
-        imageCommandService.saveImages(imageUrls, board);
+        createImages(images, board);
+    }
+
+    private void createImages(List<MultipartFile> images, Board board) {
+        List<String> uploadedImageUrls = images.stream()
+                .map(contentService::convertFileToUrl).toList();
+        imageCommandService.registerImagesInBoard(uploadedImageUrls, board);
+    }
+
+    private Board createBoard(RegisterBoardRequest registerBoardRequest) {
+        Channel targetChannel = channelQueryService.searchByChannelId(registerBoardRequest.channelId());
+        UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(
+                new SearchUserReadRequest(registerBoardRequest.userId(), registerBoardRequest.guildId()));
+        return ToBoardMapper.convert(registerBoardRequest, boardWriter, targetChannel);
     }
 
     @Override
-    public void update(BoardUpdateRequestDto boardUpdateRequestDto) {
-        Board findBoard = boardQueryService.findBoardByBoardId(boardUpdateRequestDto.getBoardId());
-        findBoard.checkWriter(boardUpdateRequestDto.getUserId());
-        findBoard.updateBoard(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
+    public void modify(ModifyBoardRequest modifyBoardRequest) {
+        Board targetBoard = boardQueryService.searchByBoardId(modifyBoardRequest.boardId());
+        targetBoard.verifyWriter(modifyBoardRequest.userId());
+        targetBoard.modifyTitleAndContent(modifyBoardRequest.title(), modifyBoardRequest.content());
     }
 
     @Override
-    public void delete(BoardDeleteRequestDto requestDto) {
-        Board findBoard = boardQueryService.findBoardByBoardId(requestDto.getBoardId());
-        findBoard.checkWriter(requestDto.getUserId());
-        boardCommandRepository.delete(findBoard);
+    public void delete(DeleteBoardRequest deleteBoardRequest) {
+        Board targetBoard = boardQueryService.searchByBoardId(deleteBoardRequest.boardId());
+        targetBoard.verifyWriter(deleteBoardRequest.userId());
+        boardCommandRepository.delete(targetBoard);
     }
 }

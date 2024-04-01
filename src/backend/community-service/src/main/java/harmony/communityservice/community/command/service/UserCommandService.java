@@ -1,15 +1,15 @@
 package harmony.communityservice.community.command.service;
 
-import harmony.communityservice.community.command.dto.UserNicknameUpdateRequestDto;
-import harmony.communityservice.community.command.dto.UserProfileUpdateRequestDto;
-import harmony.communityservice.community.command.dto.UserStoreRequestDto;
+import harmony.communityservice.community.command.dto.ModifyUserNicknameRequest;
+import harmony.communityservice.community.command.dto.ModifyUserProfileRequest;
+import harmony.communityservice.community.command.dto.RegisterUserRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface UserCommandService {
-    void save(UserStoreRequestDto requestDto);
+    void register(RegisterUserRequest registerUserRequest);
 
-    void updateProfile(UserProfileUpdateRequestDto requestDto);
+    void modifyProfile(ModifyUserProfileRequest modifyUserProfileRequest);
 
-    void updateNickname(UserNicknameUpdateRequestDto requestDto);
+    void modifyNickname(ModifyUserNicknameRequest modifyUserNicknameRequest);
 }

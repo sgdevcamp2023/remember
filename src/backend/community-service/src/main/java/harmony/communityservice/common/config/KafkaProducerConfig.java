@@ -1,6 +1,6 @@
 package harmony.communityservice.common.config;
 
-import harmony.communityservice.common.dto.CommunityEventDto;
+import harmony.communityservice.common.dto.CommunityEvent;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -30,12 +30,12 @@ public class KafkaProducerConfig {
         return config;
     }
 
-    public ProducerFactory<String, CommunityEventDto> producerFactoryForCommunity() {
+    public ProducerFactory<String, CommunityEvent> producerFactoryForCommunity() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
     @Bean
-    public KafkaTemplate<String, CommunityEventDto> kafkaTemplateForCommunity() {
+    public KafkaTemplate<String, CommunityEvent> kafkaTemplateForCommunity() {
         return new KafkaTemplate<>(producerFactoryForCommunity());
     }
 

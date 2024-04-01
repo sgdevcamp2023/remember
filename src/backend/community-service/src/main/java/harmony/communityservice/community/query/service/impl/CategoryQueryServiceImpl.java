@@ -12,7 +12,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
     private final CategoryQueryRepository categoryQueryRepository;
 
     @Override
-    public Category findByCategoryId(Long categoryId) {
+    public Category searchByCategoryId(Long categoryId) {
         return categoryQueryRepository.findByCategoryId(categoryId).orElseThrow(NotFoundDataException::new);
     }
 }

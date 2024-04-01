@@ -3,7 +3,6 @@ package harmony.communityservice.community.query.controller;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.community.domain.ChannelRead;
 import harmony.communityservice.community.query.service.ChannelReadQueryService;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,10 +18,9 @@ public class ChannelQueryController {
 
     private final ChannelReadQueryService channelReadQueryService;
 
-    @GetMapping("/check/guild/channel/{guildId}/{userId}")
-    public BaseResponse<?> search(@PathVariable Long guildId, @PathVariable Long userId) {
-        Map<Long, ChannelRead> channelReads = channelReadQueryService.findChannelsByGuildId(guildId, userId);
+    @GetMapping("/search/channel/list/{guildId}/{userId}")
+    public BaseResponse<?> searchList(@PathVariable Long guildId, @PathVariable Long userId) {
+        Map<Long, ChannelRead> channelReads = channelReadQueryService.searchMapByGuildId(guildId, userId);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", channelReads);
     }
-
 }

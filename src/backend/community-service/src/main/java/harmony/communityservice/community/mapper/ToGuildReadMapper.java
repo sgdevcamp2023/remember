@@ -1,16 +1,16 @@
 package harmony.communityservice.community.mapper;
 
-import harmony.communityservice.community.command.dto.GuildReadRequestDto;
+import harmony.communityservice.community.command.dto.RegisterGuildReadRequest;
 import harmony.communityservice.community.domain.GuildRead;
 
 public class ToGuildReadMapper {
 
-    public static GuildRead convert(GuildReadRequestDto requestDto) {
+    public static GuildRead convert(RegisterGuildReadRequest registerGuildReadRequest) {
         return GuildRead.builder()
-                .guildId(requestDto.getGuildId())
-                .userId(requestDto.getUserId())
-                .profile(requestDto.getProfile())
-                .name(requestDto.getName())
+                .guildId(registerGuildReadRequest.guildId())
+                .userId(registerGuildReadRequest.userId())
+                .profile(registerGuildReadRequest.profile())
+                .name(registerGuildReadRequest.name())
                 .build();
     }
 }

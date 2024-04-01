@@ -1,8 +1,8 @@
 package harmony.communityservice.community.command.service.impl;
 
 import harmony.communityservice.common.exception.DuplicatedEmojiException;
-import harmony.communityservice.community.command.dto.EmojiDeleteRequestDto;
-import harmony.communityservice.community.command.dto.EmojiRegistrationRequestDto;
+import harmony.communityservice.community.command.dto.DeleteEmojiRequest;
+import harmony.communityservice.community.command.dto.RegisterEmojiRequest;
 import harmony.communityservice.community.command.repository.EmojiCommandRepository;
 import harmony.communityservice.community.command.service.EmojiCommandService;
 import harmony.communityservice.community.command.service.EmojiUserCommandService;
@@ -23,39 +23,43 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
     private final EmojiQueryService emojiQueryService;
 
     @Override
-    public void save(EmojiRegistrationRequestDto emojiRegistrationRequestDto) {
-        Board findBoard = boardQueryService.findBoardByBoardId(emojiRegistrationRequestDto.getBoardId());
-        Emoji findEmoji = emojiQueryService.findByBoardAndEmojiType(findBoard,
-                emojiRegistrationRequestDto.getEmojiType());
-        if (findEmoji == null) {
-            notExistsEmoji(emojiRegistrationRequestDto, findBoard);
+    public void register(RegisterEmojiRequest registerEmojiRequest) {
+        Board targetBoard = boardQueryService.searchByBoardId(registerEmojiRequest.boardId());
+        Emoji targetEmoji = emojiQueryService.searchByBoardAndEmojiType(targetBoard,
+                registerEmojiRequest.emojiType());
+        if (targetEmoji == null) {
+            notExistsEmoji(registerEmojiRequest, targetBoard);
         } else {
-            existsEmoji(emojiRegistrationRequestDto, findEmoji);
+            existsEmoji(registerEmojiRequest, targetEmoji);
         }
     }
 
     @Override
-    public void delete(EmojiDeleteRequestDto requestDto) {
-        Emoji findEmoji = emojiQueryService.findById(requestDto.getEmojiId());
-        findEmoji.getEmojiUsers().stream()
-                .filter(emojiUser -> Objects.equals(emojiUser.getUserId(), requestDto.getUserId()))
+    public void delete(DeleteEmojiRequest deleteEmojiRequest) {
+        Emoji targetEmoji = emojiQueryService.searchByEmojiId(deleteEmojiRequest.emojiId());
+        targetEmoji
+                .getEmojiUsers()
+                .stream()
+                .filter(user -> Objects.equals(user.getUserId(), deleteEmojiRequest.userId()))
                 .findAny()
                 .ifPresent(emojiUserCommandService::delete);
     }
 
-    private void existsEmoji(EmojiRegistrationRequestDto emojiRegistrationRequestDto, Emoji findEmoji) {
-        findEmoji.getEmojiUsers().stream()
-                .filter(emojiUser -> Objects.equals(emojiUser.getUserId(), emojiRegistrationRequestDto.getUserId()))
+    private void existsEmoji(RegisterEmojiRequest registerEmojiRequest, Emoji targetEmoji) {
+        targetEmoji
+                .getEmojiUsers()
+                .stream()
+                .filter(user -> Objects.equals(user.getUserId(), registerEmojiRequest.userId()))
                 .findAny()
                 .ifPresent(e -> {
                     throw new DuplicatedEmojiException();
                 });
-        emojiUserCommandService.save(findEmoji, emojiRegistrationRequestDto.getUserId());
+        emojiUserCommandService.register(targetEmoji, registerEmojiRequest.userId());
     }
 
-    private void notExistsEmoji(EmojiRegistrationRequestDto emojiRegistrationRequestDto, Board findBoard) {
-        Emoji emoji = ToEmojiMapper.convert(findBoard, emojiRegistrationRequestDto.getEmojiType());
+    private void notExistsEmoji(RegisterEmojiRequest registerEmojiRequest, Board targetBoard) {
+        Emoji emoji = ToEmojiMapper.convert(targetBoard, registerEmojiRequest.emojiType());
         emojiCommandRepository.save(emoji);
-        emojiUserCommandService.save(emoji, emojiRegistrationRequestDto.getUserId());
+        emojiUserCommandService.register(emoji, registerEmojiRequest.userId());
     }
 }
