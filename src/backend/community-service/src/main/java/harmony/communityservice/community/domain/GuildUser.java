@@ -1,7 +1,9 @@
 package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,11 +26,11 @@ public class GuildUser {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "guild_id")
+    @JoinColumn(name = "guild_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Guild guild;
 
     private GuildUser(User user, Guild guild) {

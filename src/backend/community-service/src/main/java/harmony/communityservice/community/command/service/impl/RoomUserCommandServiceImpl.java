@@ -13,13 +13,13 @@ public class RoomUserCommandServiceImpl implements RoomUserCommandService {
     private final RoomUserCommandRepository roomUserCommandRepository;
 
     @Override
-    public void save(Room room, User user) {
+    public void register(Room room, User user) {
         RoomUser roomUser = RoomUser.make(room, user);
         roomUserCommandRepository.save(roomUser);
     }
 
     @Override
-    public void deleteByRoomUser(RoomUser roomUser) {
-        roomUserCommandRepository.deleteByRoomUser(roomUser);
+    public void delete(RoomUser roomUser) {
+        roomUserCommandRepository.delete(roomUser);
     }
 }

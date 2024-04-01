@@ -6,17 +6,16 @@ import org.slf4j.MDC;
 
 @Slf4j
 public class LoggingUtils {
-
-    public static void errorLogging(HttpServletRequest request, String exception) {
-        String apiAddr = request.getRequestURI();
-        String traceId = request.getHeader("trace-id");
-        String userId = request.getHeader("user-id");
-        String httpMethod = request.getMethod();
-        MDC.put("Trace-Id", traceId);
-        MDC.put("Api-Addr", apiAddr);
-        MDC.put("Http-Method", httpMethod);
-        MDC.put("User-Id", userId);
-        log.error(exception);
+    public static void printLog(HttpServletRequest request, String message, boolean type) {
+        MDC.put("Trace-Id", request.getHeader("trace-id"));
+        MDC.put("Api-Addr", request.getRequestURI());
+        MDC.put("Http-Method", request.getMethod());
+        MDC.put("User-Id", request.getHeader("user-id"));
+        if (type) {
+            log.info(message);
+        }else{
+            log.error(message);
+        }
         MDC.remove("Trace-Id");
         MDC.remove("Api-Addr");
         MDC.remove("Http-Method");

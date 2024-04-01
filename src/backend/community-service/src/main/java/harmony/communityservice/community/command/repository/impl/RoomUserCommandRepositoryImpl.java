@@ -16,7 +16,7 @@ public class RoomUserCommandRepositoryImpl implements RoomUserCommandRepository 
     }
 
     @Override
-    public void deleteByRoomUser(RoomUser roomUser) {
+    public void delete(RoomUser roomUser) {
         jpaRoomUserCommandRepository.delete(roomUser);
     }
 }

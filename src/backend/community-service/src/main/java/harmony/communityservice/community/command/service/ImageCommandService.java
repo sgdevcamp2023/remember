@@ -4,8 +4,9 @@ import harmony.communityservice.community.domain.Board;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Transactional
 public interface ImageCommandService {
 
-    void saveImages(List<String> imageUrls, Board board);
+    void registerImagesInBoard(List<String> imageUrls, Board board);
 }

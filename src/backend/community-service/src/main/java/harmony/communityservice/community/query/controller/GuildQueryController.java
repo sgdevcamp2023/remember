@@ -1,11 +1,10 @@
 package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.query.dto.InvitationRequestDto;
 import harmony.communityservice.community.domain.GuildRead;
+import harmony.communityservice.community.query.dto.SearchGuildInvitationCodeRequest;
 import harmony.communityservice.community.query.service.GuildQueryService;
 import harmony.communityservice.community.query.service.GuildReadQueryService;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,15 +24,16 @@ public class GuildQueryController {
     private final GuildQueryService guildQueryService;
     private final GuildReadQueryService guildReadQueryService;
 
-    @PostMapping("/invitation/guild")
-    public BaseResponse<?> invitation(@RequestBody @Validated InvitationRequestDto requestDto) {
-        String code = guildQueryService.findInviteCode(requestDto);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", code);
+    @PostMapping("/search/invitation/code/guild")
+    public BaseResponse<?> searchInvitationCode(
+            @RequestBody @Validated SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest) {
+        String invitationCode = guildQueryService.searchInvitationCode(searchGuildInvitationCodeRequest);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", invitationCode);
     }
 
-    @GetMapping("/check/guild/{userId}")
-    public BaseResponse<?> checkGuild(@PathVariable Long userId) {
-        Map<Long, GuildRead> findGuildReads = guildReadQueryService.findGuildReadsByUserId(userId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", findGuildReads);
+    @GetMapping("/search/guild/{userId}")
+    public BaseResponse<?> searchBelongToUser(@PathVariable Long userId) {
+        Map<Long, GuildRead> guildReads = guildReadQueryService.searchMapByUserId(userId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", guildReads);
     }
 }

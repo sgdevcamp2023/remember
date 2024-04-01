@@ -1,9 +1,9 @@
 package harmony.communityservice.community.command.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.command.dto.CommentDeleteRequestDto;
-import harmony.communityservice.community.command.dto.CommentRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.CommentUpdateRequestDto;
+import harmony.communityservice.community.command.dto.DeleteCommentRequest;
+import harmony.communityservice.community.command.dto.RegisterCommentRequest;
+import harmony.communityservice.community.command.dto.ModifyCommentRequest;
 import harmony.communityservice.community.command.service.CommentCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,23 +22,21 @@ public class CommentCommandController {
 
     private final CommentCommandService commentCommandService;
 
-    @PostMapping("/registration/board/comment")
-    public BaseResponse<?> registration(@RequestBody @Validated CommentRegistrationRequestDto requestDto) {
-
-        commentCommandService.save(requestDto);
+    @PostMapping("/register/board/comment")
+    public BaseResponse<?> register(@RequestBody @Validated RegisterCommentRequest registerCommentRequest) {
+        commentCommandService.register(registerCommentRequest);
         return new BaseResponse<>(HttpStatus.OK.value(),"OK");
-
     }
 
-    @PatchMapping("/change/comment")
-    public BaseResponse<?> update(@RequestBody @Validated CommentUpdateRequestDto requestDto) {
-        commentCommandService.updateComment(requestDto);
+    @PatchMapping("/modify/comment")
+    public BaseResponse<?> modify(@RequestBody @Validated ModifyCommentRequest modifyCommentRequest) {
+        commentCommandService.modify(modifyCommentRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @DeleteMapping("/delete/comment")
-    public BaseResponse<?> delete(@RequestBody @Validated CommentDeleteRequestDto requestDto) {
-        commentCommandService.delete(requestDto);
+    public BaseResponse<?> delete(@RequestBody @Validated DeleteCommentRequest deleteCommentRequest) {
+        commentCommandService.delete(deleteCommentRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

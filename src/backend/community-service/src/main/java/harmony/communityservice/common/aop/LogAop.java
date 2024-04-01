@@ -32,15 +32,17 @@ public class LogAop {
     public void queryRepository() {
     }
 
-
     @Around("commandService()||commandRepository()||queryService()||queryRepository()")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
-        Signature signature = joinPoint.getSignature();
-        String methodName = signature.getName();
         try {
             return joinPoint.proceed();
         } finally {
-            log.info(methodName);
+            Signature signature = joinPoint.getSignature();
+            log.info(signature.getName());
         }
     }
 }
+
+
+
+

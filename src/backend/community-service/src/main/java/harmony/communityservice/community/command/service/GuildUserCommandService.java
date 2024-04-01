@@ -7,5 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface GuildUserCommandService {
 
-    void save(Guild guild, User user);
+    void register(Guild guild, User user);
 }

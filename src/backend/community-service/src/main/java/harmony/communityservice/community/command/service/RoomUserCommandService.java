@@ -7,7 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface RoomUserCommandService {
-    void save(Room room, User user);
 
-    void deleteByRoomUser(RoomUser roomUser);
+    void register(Room room, User user);
+
+    void delete(RoomUser roomUser);
 }

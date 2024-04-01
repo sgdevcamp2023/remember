@@ -2,16 +2,21 @@ package harmony.communityservice.community.domain;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +24,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "channel")
+@Table(name = "channel",indexes = @Index(name = "idx__categoryId__guildId",columnList = "category_id, guild_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel {
 
@@ -29,7 +34,7 @@ public class Channel {
     private Long channelId;
 
     @ManyToOne
-    @JoinColumn(name = "guild_id")
+    @JoinColumn(name = "guild_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Guild guild;
 
     @Nullable
@@ -40,7 +45,7 @@ public class Channel {
     private String name;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "channel_type")
@@ -52,7 +57,8 @@ public class Channel {
         this.guild = guild;
         this.categoryId = categoryId;
         this.name = name;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.type = ChannelType.valueOf(type);
     }
 }

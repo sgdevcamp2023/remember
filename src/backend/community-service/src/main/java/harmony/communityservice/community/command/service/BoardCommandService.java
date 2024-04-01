@@ -1,17 +1,17 @@
 package harmony.communityservice.community.command.service;
 
-import harmony.communityservice.community.command.dto.BoardDeleteRequestDto;
-import harmony.communityservice.community.command.dto.BoardRegistrationRequestDto;
-import harmony.communityservice.community.command.dto.BoardUpdateRequestDto;
+import harmony.communityservice.community.command.dto.DeleteBoardRequest;
+import harmony.communityservice.community.command.dto.RegisterBoardRequest;
+import harmony.communityservice.community.command.dto.ModifyBoardRequest;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
 public interface BoardCommandService {
-    void save(BoardRegistrationRequestDto requestDto, List<MultipartFile> images);
+    void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images);
 
-    void update(BoardUpdateRequestDto boardUpdateRequestDto);
+    void modify(ModifyBoardRequest modifyBoardRequest);
 
-    void delete(BoardDeleteRequestDto requestDto);
+    void delete(DeleteBoardRequest deleteBoardRequest);
 }

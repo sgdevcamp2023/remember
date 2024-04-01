@@ -13,12 +13,12 @@ public class EmojiQueryServiceImpl implements EmojiQueryService {
     private final EmojiQueryRepository emojiQueryRepository;
 
     @Override
-    public Emoji findByBoardAndEmojiType(Board board, Long emojiType) {
+    public Emoji searchByBoardAndEmojiType(Board board, Long emojiType) {
         return emojiQueryRepository.findByBoardAndEmojiType(board,emojiType).orElse(null);
     }
 
     @Override
-    public Emoji findById(Long emojiId) {
+    public Emoji searchByEmojiId(Long emojiId) {
         return emojiQueryRepository.findByEmojiId(emojiId).orElseThrow(NotFoundDataException::new);
     }
 }

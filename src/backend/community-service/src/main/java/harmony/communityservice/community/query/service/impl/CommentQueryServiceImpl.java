@@ -12,7 +12,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
     private final CommentQueryRepository commentQueryRepository;
 
     @Override
-    public Comment findById(Long commentId) {
+    public Comment searchById(Long commentId) {
         return commentQueryRepository.findCommentById(commentId).orElseThrow(NotFoundDataException::new);
     }
 }

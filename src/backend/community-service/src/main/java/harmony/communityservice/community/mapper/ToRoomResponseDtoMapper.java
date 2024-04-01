@@ -1,12 +1,12 @@
 package harmony.communityservice.community.mapper;
 
 import harmony.communityservice.community.domain.Room;
-import harmony.communityservice.community.query.dto.RoomResponseDto;
+import harmony.communityservice.community.query.dto.SearchRoomResponse;
 
 public class ToRoomResponseDtoMapper {
 
-    public static RoomResponseDto convert(Room room) {
-        return RoomResponseDto.builder()
+    public static SearchRoomResponse convert(Room room) {
+        return SearchRoomResponse.builder()
                 .profile(room.getProfile())
                 .name(room.getName())
                 .roomId(room.getRoomId())

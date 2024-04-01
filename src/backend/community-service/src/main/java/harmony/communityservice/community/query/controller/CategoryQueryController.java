@@ -18,9 +18,9 @@ public class CategoryQueryController {
 
     private final CategoryReadQueryService categoryReadQueryService;
 
-    @GetMapping("/check/category/{guildId}/{userId}")
-    public BaseResponse<?> findCategories(@PathVariable Long guildId, @PathVariable Long userId) {
-        List<CategoryRead> categoryReads = categoryReadQueryService.findCategoryReadsByGuildId(guildId,
+    @GetMapping("/search/category/{guildId}/{userId}")
+    public BaseResponse<?> searchInGuild(@PathVariable Long guildId, @PathVariable Long userId) {
+        List<CategoryRead> categoryReads = categoryReadQueryService.searchListByGuildId(guildId,
                 userId);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", categoryReads);
     }

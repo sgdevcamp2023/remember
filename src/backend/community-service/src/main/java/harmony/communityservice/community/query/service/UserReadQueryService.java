@@ -1,18 +1,20 @@
 package harmony.communityservice.community.query.service;
 
+import harmony.communityservice.common.dto.SearchUserReadRequest;
+import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.community.domain.UserRead;
-import harmony.communityservice.community.query.dto.UserStatesResponseDto;
+import harmony.communityservice.community.query.dto.SearchUserStatesInGuildResponse;
 import java.util.List;
-import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface UserReadQueryService {
-    void existsUserIdAndGuildId(long userId, long guildId);
 
-    UserRead findUserReadIdAndGuildId(long userId, long guildId);
+    void existsByUserIdAndGuildId(VerifyGuildMemberRequest verifyGuildMemberRequest);
 
-    List<UserRead> findUserReadsByUserId(long userId);
+    UserRead searchByUserIdAndGuildId(SearchUserReadRequest searchUserReadRequest);
 
-    UserStatesResponseDto findUserStatus(long guildId, long userId);
+    List<UserRead> searchListByUserId(long userId);
+
+    SearchUserStatesInGuildResponse searchUserStatesInGuild(long guildId, long userId);
 }
