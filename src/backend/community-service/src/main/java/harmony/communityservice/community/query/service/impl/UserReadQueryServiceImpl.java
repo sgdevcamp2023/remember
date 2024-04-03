@@ -58,18 +58,19 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
 
     private List<SearchUserStateResponse> makeSearchUserStateResponses(long guildId) {
         List<UserRead> targetUserReads = userReadQueryRepository.findUserReadsByGuildId(guildId);
-        return targetUserReads.stream()
-                .map(ToSearchUserStateResponseMapper::convert).toList();
+        return targetUserReads
+                .stream()
+                .map(ToSearchUserStateResponseMapper::convert)
+                .toList();
     }
 
     private SearchUserStateInGuildAndRoomFeignResponse getSearchUserStateInGuildAndRoomFeignResponse(long guildId,
                                                                                                      List<SearchUserStateResponse> searchUserStateResponses) {
-        List<Long> userIds = searchUserStateResponses.stream()
+        List<Long> userIds = searchUserStateResponses
+                .stream()
                 .map(SearchUserStateResponse::getUserId)
                 .collect(Collectors.toList());
-        SearchUserStatesInGuildRequest searchUserStatesInGuildRequest = new SearchUserStatesInGuildRequest(guildId,
-                userIds);
-        return userStatusClient.userStatus(searchUserStatesInGuildRequest);
+        return userStatusClient.userStatus(new SearchUserStatesInGuildRequest(guildId, userIds));
     }
 
     private Map<Long, SearchUserStateResponse> makeUserStatesInGuild(
@@ -85,13 +86,18 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
         Map<Long, Map<Long, ?>> voiceChannelStates = new HashMap<>();
         for (Long channelId : channelStates.keySet()) {
             Set<Long> voiceUserIds = channelStates.get(channelId);
-            Map<Long, UserRead> userReads = new HashMap<>();
-            for (Long voiceUserId : voiceUserIds) {
-                UserRead findUserRead = searchByUserIdAndGuildId(new SearchUserReadRequest(voiceUserId, guildId));
-                userReads.put(findUserRead.getUserId(), findUserRead);
-            }
+            Map<Long, UserRead> userReads = getUserReads(guildId, voiceUserIds);
             voiceChannelStates.put(channelId, userReads);
         }
         return voiceChannelStates;
+    }
+
+    private Map<Long, UserRead> getUserReads(long guildId, Set<Long> voiceUserIds) {
+        Map<Long, UserRead> userReads = new HashMap<>();
+        for (Long voiceUserId : voiceUserIds) {
+            UserRead findUserRead = searchByUserIdAndGuildId(new SearchUserReadRequest(voiceUserId, guildId));
+            userReads.put(findUserRead.getUserId(), findUserRead);
+        }
+        return userReads;
     }
 }

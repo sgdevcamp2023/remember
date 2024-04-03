@@ -6,12 +6,12 @@ import org.slf4j.MDC;
 
 @Slf4j
 public class LoggingUtils {
-    public static void printLog(HttpServletRequest request, String message, boolean type) {
+    public static void printLog(HttpServletRequest request, String message, boolean logType) {
         MDC.put("Trace-Id", request.getHeader("trace-id"));
         MDC.put("Api-Addr", request.getRequestURI());
         MDC.put("Http-Method", request.getMethod());
         MDC.put("User-Id", request.getHeader("user-id"));
-        if (type) {
+        if (logType) {
             infoLog(message);
         } else {
             errorLog(message);

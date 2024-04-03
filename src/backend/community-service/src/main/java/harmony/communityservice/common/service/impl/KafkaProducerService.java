@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
 @RequiredArgsConstructor
-public class ProducerServiceImpl implements ProducerService {
+public class KafkaProducerService implements ProducerService {
 
     private final KafkaTemplate<String, CommunityEvent> kafkaTemplateForCommunity;
     @Value("${spring.kafka.producer.community-event-topic}")

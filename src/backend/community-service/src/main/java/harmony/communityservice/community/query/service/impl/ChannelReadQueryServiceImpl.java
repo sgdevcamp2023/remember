@@ -18,6 +18,10 @@ public class ChannelReadQueryServiceImpl implements ChannelReadQueryService {
     @Override
     public Map<Long, ChannelRead> searchMapByGuildId(Long guildId, Long userId) {
         userReadQueryService.existsByUserIdAndGuildId(new VerifyGuildMemberRequest(userId, guildId));
+        return findChannelReads(guildId);
+    }
+
+    private Map<Long, ChannelRead> findChannelReads(Long guildId) {
         Map<Long, ChannelRead> channelReads = new HashMap<>();
         for (ChannelRead channelRead : channelReadQueryRepository.findChannelReadsByGuildId(guildId)) {
             channelReads.put(channelRead.getChannelReadId(), channelRead);
