@@ -12,13 +12,21 @@ public class LoggingUtils {
         MDC.put("Http-Method", request.getMethod());
         MDC.put("User-Id", request.getHeader("user-id"));
         if (type) {
-            log.info(message);
-        }else{
-            log.error(message);
+            infoLog(message);
+        } else {
+            errorLog(message);
         }
         MDC.remove("Trace-Id");
         MDC.remove("Api-Addr");
         MDC.remove("Http-Method");
         MDC.remove("User-Id");
+    }
+
+    private static void errorLog(String message) {
+        log.error(message);
+    }
+
+    private static void infoLog(String message) {
+        log.info(message);
     }
 }
