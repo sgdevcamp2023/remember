@@ -1,6 +1,5 @@
 package harmony.communityservice.common.utils;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -8,19 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class InfoLogPrinter extends LogPrinter {
     @Override
-    public void logging(HttpServletRequest request, String message) {
-        putLogInfo(request);
+    public void doLogging(String message) {
         log.info(message);
-        removeLogInfo();
-    }
-
-    @Override
-    protected void removeLogInfo() {
-        super.removeLogInfo();
-    }
-
-    @Override
-    protected void putLogInfo(HttpServletRequest request) {
-        super.putLogInfo(request);
     }
 }
