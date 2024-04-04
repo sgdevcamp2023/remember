@@ -1,6 +1,6 @@
 package harmony.communityservice.common.aop;
 
-import harmony.communityservice.common.utils.LoggingUtils;
+import harmony.communityservice.common.utils.InfoLogPrinter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,6 +17,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 @RequiredArgsConstructor
 public class LogControllerAop {
+
+    private final InfoLogPrinter infoLogPrinter;
+
     @Pointcut("execution(* harmony.communityservice.community.command.controller..*.*(..))")
     public void commandController() {
     }
@@ -33,7 +36,7 @@ public class LogControllerAop {
         } finally {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             Signature signature = joinPoint.getSignature();
-            LoggingUtils.printLog(request, signature.getName(), true);
+            infoLogPrinter.logging(request, signature.getName());
         }
     }
 }
