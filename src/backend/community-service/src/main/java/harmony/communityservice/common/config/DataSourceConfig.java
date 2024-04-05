@@ -16,8 +16,8 @@ import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 @Configuration
 public class DataSourceConfig {
 
-    public static final String SOURCE_DATASOURCE = "sourceDataSource";
-    public static final String REPLICA_DATASOURCE = "replicaDataSource";
+    private static final String SOURCE_DATASOURCE = "sourceDataSource";
+    private static final String REPLICA_DATASOURCE = "replicaDataSource";
 
     @Bean(SOURCE_DATASOURCE)
     @ConfigurationProperties(prefix = "spring.datasource.source.hikari")
