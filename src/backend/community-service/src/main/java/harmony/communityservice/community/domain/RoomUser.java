@@ -42,4 +42,8 @@ public class RoomUser {
     public static RoomUser make(Room room, User user) {
         return new RoomUser(room, user);
     }
+
+    public boolean sameRoomId(long roomId) {
+        return room.getRoomId().equals(roomId);
+    }
 }

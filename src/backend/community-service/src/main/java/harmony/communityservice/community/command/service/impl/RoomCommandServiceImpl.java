@@ -40,33 +40,29 @@ public class RoomCommandServiceImpl implements RoomCommandService {
         }
     }
 
-    private void deleteSecondRoomUser(List<RoomUser> secondRoomUsers, long roomId) {
-        for (RoomUser secondRoomUser : secondRoomUsers) {
-            if (verifySameRoomId(secondRoomUser.getRoom().getRoomId(), roomId)) {
-                roomUserCommandService.delete(secondRoomUser);
-                break;
-            }
-        }
-    }
-
     private long deleteRoom(RoomUser firstRoomUser) {
         long roomId = firstRoomUser.getRoom().getRoomId();
         roomCommandRepository.deleteByRoomId(roomId);
         return roomId;
     }
 
+    private void deleteSecondRoomUser(List<RoomUser> secondRoomUsers, long roomId) {
+        for (RoomUser secondRoomUser : secondRoomUsers) {
+            if (secondRoomUser.sameRoomId(roomId)) {
+                roomUserCommandService.delete(secondRoomUser);
+                break;
+            }
+        }
+    }
+
     private RoomUser findFirstRoomUser(List<RoomUser> firstRoomUsers, List<RoomUser> secondRoomUsers) {
         for (RoomUser firstRoomUser : firstRoomUsers) {
             for (RoomUser secondRoomUser : secondRoomUsers) {
-                if (verifySameRoomId(firstRoomUser.getRoom().getRoomId(), secondRoomUser.getRoom().getRoomId())) {
+                if (firstRoomUser.sameRoomId(secondRoomUser.getRoom().getRoomId())) {
                     return firstRoomUser;
                 }
             }
         }
         return null;
-    }
-
-    private boolean verifySameRoomId(long firstRoomId, long secondRoomId) {
-        return firstRoomId == secondRoomId;
     }
 }

@@ -11,7 +11,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -49,6 +48,13 @@ public class Room {
         this.profile = profile;
         this.createdAt = LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public List<User> makeUsers() {
+        return roomUsers
+                .stream()
+                .map(RoomUser::getUser)
+                .toList();
     }
 
 }

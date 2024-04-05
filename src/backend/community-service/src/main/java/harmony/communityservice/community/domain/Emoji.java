@@ -15,6 +15,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,7 +34,7 @@ public class Emoji {
     private Long emojiId;
 
     @ManyToOne
-    @JoinColumn(name = "board_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Board board;
 
     @Column(name = "emoji_type")
@@ -45,5 +47,12 @@ public class Emoji {
     public Emoji(Board board, Long emojiType) {
         this.board = board;
         this.emojiType = emojiType;
+    }
+
+    public Optional<EmojiUser> exist(long userId) {
+        return emojiUsers
+                .stream()
+                .filter(user -> Objects.equals(user.getUserId(), userId))
+                .findAny();
     }
 }

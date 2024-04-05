@@ -36,10 +36,7 @@ public class RoomQueryServiceImpl implements RoomQueryService {
     @Override
     public Map<Long, ?> searchUserStatesInRoom(long roomId) {
         Room targetRoom = roomQueryRepository.findByRoomId(roomId).orElseThrow(NotFoundDataException::new);
-        List<User> users = targetRoom.getRoomUsers()
-                .stream()
-                .map(RoomUser::getUser)
-                .toList();
+        List<User> users = targetRoom.makeUsers();
         return makeCurrentUserStates(users);
     }
 

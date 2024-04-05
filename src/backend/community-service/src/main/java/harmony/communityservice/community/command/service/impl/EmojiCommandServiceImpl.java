@@ -11,7 +11,6 @@ import harmony.communityservice.community.domain.Emoji;
 import harmony.communityservice.community.mapper.ToEmojiMapper;
 import harmony.communityservice.community.query.service.BoardQueryService;
 import harmony.communityservice.community.query.service.EmojiQueryService;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -34,23 +33,9 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
         }
     }
 
-    @Override
-    public void delete(DeleteEmojiRequest deleteEmojiRequest) {
-        Emoji targetEmoji = emojiQueryService.searchByEmojiId(deleteEmojiRequest.emojiId());
-        targetEmoji
-                .getEmojiUsers()
-                .stream()
-                .filter(user -> Objects.equals(user.getUserId(), deleteEmojiRequest.userId()))
-                .findAny()
-                .ifPresent(emojiUserCommandService::delete);
-    }
-
     private void existsEmoji(RegisterEmojiRequest registerEmojiRequest, Emoji targetEmoji) {
         targetEmoji
-                .getEmojiUsers()
-                .stream()
-                .filter(user -> Objects.equals(user.getUserId(), registerEmojiRequest.userId()))
-                .findAny()
+                .exist(registerEmojiRequest.userId())
                 .ifPresent(e -> {
                     throw new DuplicatedEmojiException();
                 });
@@ -61,5 +46,13 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
         Emoji emoji = ToEmojiMapper.convert(targetBoard, registerEmojiRequest.emojiType());
         emojiCommandRepository.save(emoji);
         emojiUserCommandService.register(emoji, registerEmojiRequest.userId());
+    }
+
+    @Override
+    public void delete(DeleteEmojiRequest deleteEmojiRequest) {
+        Emoji targetEmoji = emojiQueryService.searchByEmojiId(deleteEmojiRequest.emojiId());
+        targetEmoji
+                .exist(deleteEmojiRequest.userId())
+                .ifPresent(emojiUserCommandService::delete);
     }
 }
