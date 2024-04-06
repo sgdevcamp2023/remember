@@ -33,6 +33,7 @@ public class Category {
     private Guild guild;
 
     @NotBlank
+    @Column(name = "category_name")
     private String name;
 
     @Embedded
