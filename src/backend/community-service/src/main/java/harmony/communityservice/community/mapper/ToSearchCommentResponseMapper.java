@@ -9,12 +9,12 @@ public class ToSearchCommentResponseMapper {
         return SearchCommentResponse.builder()
                 .commentId(comment.getCommentId())
                 .comment(comment.getComment())
-                .writerName(comment.getWriterName())
-                .userId(comment.getUserId())
-                .writerProfile(comment.getWriterProfile())
-                .modified(comment.isModified())
+                .writerName(comment.getWriterInfo().getWriterName())
+                .userId(comment.getWriterInfo().getWriterId())
+                .writerProfile(comment.getWriterInfo().getWriterProfile())
+                .modified(comment.getModifiedInfo().isModified())
                 .boardId(boardId)
-                .createdAt(comment.getCreatedAt())
+                .createdAt(comment.getCreationTime().getCreatedAt())
                 .build();
     }
 }

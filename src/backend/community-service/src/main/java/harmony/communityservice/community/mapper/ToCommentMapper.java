@@ -10,7 +10,7 @@ public class ToCommentMapper {
         return Comment.builder()
                 .comment(registerCommentRequest.comment())
                 .board(findBoard)
-                .userId(registerCommentRequest.userId())
+                .writerId(registerCommentRequest.userId())
                 .writerName(registerCommentRequest.writerName())
                 .writerProfile(registerCommentRequest.writerProfile())
                 .build();
