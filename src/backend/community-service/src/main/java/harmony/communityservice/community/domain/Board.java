@@ -9,6 +9,7 @@ import harmony.communityservice.community.query.dto.SearchImageResponse;
 import harmony.communityservice.community.query.dto.SearchImagesResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -19,10 +20,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,69 +52,48 @@ public class Board {
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Emoji> emojis = new ArrayList<>();
 
-    @NotBlank
-    @Column(name = "title")
-    private String title;
+    @Embedded
+    private Content content;
 
-    @NotBlank
-    @Column(name = "content")
-    private String content;
+    @Embedded
+    private WriterInfo writerInfo;
 
-    @NotBlank
-    @Column(name = "writer_name")
-    private String writerName;
+    @Embedded
+    private ModifiedInfo modifiedInfo;
 
-    @NotBlank
-    @Column(name = "writer_profile")
-    private String writerProfile;
-
-    @NotNull
-    @Column(name = "user_id")
-    private Long userId;
-
-    @NotNull
-    @Column(name = "modified")
-    private boolean modified;
-
-    @Column(name = "created_at")
-    private String createdAt;
-
-    @Column(name = "modified_at")
-    private String modifiedAt;
+    @Embedded
+    private CreationTime creationTime;
 
     @Builder
     public Board(Channel channel, List<Image> images,
-                 String title, String content, String writerName, Long userId, String writerProfile) {
+                 String title, String content, String writerName, Long writerId, String writerProfile) {
         this.channel = channel;
         this.images = images;
-        this.title = title;
-        this.content = content;
-        this.writerName = writerName;
-        this.userId = userId;
-        this.modified = false;
-        this.createdAt = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        this.modifiedAt = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        this.writerProfile = writerProfile;
+        this.content = makeContent(title, content);
+        this.modifiedInfo = new ModifiedInfo();
+        this.creationTime = new CreationTime();
+        this.writerInfo = makeWriterInfo(writerName, writerId, writerProfile);
+    }
+
+    private Content makeContent(String title, String content) {
+        return Content.make(title, content);
+    }
+
+    private WriterInfo makeWriterInfo(String writerName, Long writerId, String writerProfile) {
+        return WriterInfo.make(writerName, writerId, writerProfile);
     }
 
     public int countComments() {
         return comments.size();
     }
 
-    public void verifyWriter(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new IllegalStateException();
-        }
+    public void verifyWriter(Long writerId) {
+        writerInfo.verifyWriter(writerId);
     }
 
     public void modifyTitleAndContent(String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.modified = true;
-        this.modifiedAt = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.content = this.content.modify(title, content);
+        this.modifiedInfo = modifiedInfo.modify();
     }
 
     public SearchImagesResponse makeSearchImagesResponse() {

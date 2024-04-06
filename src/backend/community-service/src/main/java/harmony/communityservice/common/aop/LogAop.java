@@ -39,7 +39,6 @@ public class LogAop {
         } finally {
             Signature signature = joinPoint.getSignature();
             String className = joinPoint.getTarget().getClass().getSimpleName();
-            ;
             log.info(className + "-" + signature.getName());
         }
     }

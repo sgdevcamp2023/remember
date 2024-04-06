@@ -6,16 +6,16 @@ import harmony.communityservice.community.query.dto.SearchBoardDetailResponse;
 public class ToSearchBoardResponseMapper {
     public static SearchBoardDetailResponse convert(Board board) {
         return SearchBoardDetailResponse.builder()
-                .title(board.getTitle())
-                .content(board.getContent())
+                .title(board.getContent().getTitle())
+                .content(board.getContent().getContent())
                 .searchCommentsResponse(board.makeSearchCommentsResponse())
                 .searchEmojisResponse(board.makeSearchEmojisResponse())
                 .boardId(board.getBoardId())
                 .searchImagesResponse(board.makeSearchImagesResponse())
-                .modified(board.isModified())
-                .createdAt(board.getCreatedAt())
-                .userId(board.getUserId())
-                .writerName(board.getWriterName())
+                .modified(board.getModifiedInfo().isModified())
+                .createdAt(board.getCreationTime().getCreatedAt())
+                .userId(board.getWriterInfo().getWriterId())
+                .writerName(board.getWriterInfo().getWriterName())
                 .build();
     }
 }

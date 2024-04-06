@@ -12,7 +12,7 @@ public class ToBoardMapper {
                 .title(registerBoardRequest.title())
                 .content(registerBoardRequest.content())
                 .channel(channel)
-                .userId(userRead.getUserId())
+                .writerId(userRead.getUserId())
                 .writerName(userRead.getNickname())
                 .writerProfile(userRead.getProfile())
                 .build();
