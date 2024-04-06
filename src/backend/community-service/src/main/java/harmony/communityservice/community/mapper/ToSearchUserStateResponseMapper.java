@@ -9,9 +9,9 @@ public class ToSearchUserStateResponseMapper {
     public static SearchUserStateResponse convert(User user, String status) {
         return SearchUserStateResponse.builder()
                 .userId(user.getUserId())
-                .profile(user.getProfile())
+                .profile(user.getUserInfo().getProfile())
                 .state(status)
-                .userName(user.getNickname())
+                .userName(user.getUserInfo().getNickname())
                 .build();
     }
 

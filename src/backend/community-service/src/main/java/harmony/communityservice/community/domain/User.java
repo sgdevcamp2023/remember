@@ -4,12 +4,12 @@ import harmony.communityservice.community.mapper.ToRoomResponseDtoMapper;
 import harmony.communityservice.community.query.dto.SearchRoomResponse;
 import harmony.communityservice.community.query.dto.SearchRoomsResponse;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,14 +28,8 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @NotBlank
-    private String email;
-
-    @NotBlank
-    private String nickname;
-
-    @NotBlank
-    private String profile;
+    @Embedded
+    private UserInfo userInfo;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<GuildUser> guildUsers = new ArrayList<>();
@@ -46,17 +40,19 @@ public class User {
     @Builder
     public User(Long userId, String email, String nickname, String profile) {
         this.userId = userId;
-        this.email = email;
-        this.nickname = nickname;
-        this.profile = profile;
+        this.userInfo = makeUserInfo(email, nickname, profile);
+    }
+
+    private UserInfo makeUserInfo(String email, String nickname, String profile) {
+        return UserInfo.make(email, nickname, profile);
     }
 
     public void modifyProfile(String profile) {
-        this.profile = profile;
+        this.userInfo = this.userInfo.modifyProfile(profile);
     }
 
     public void modifyNickname(String nickname) {
-        this.nickname = nickname;
+        this.userInfo = this.userInfo.modifyNickname(nickname);
     }
 
     public List<Long> getRoomIds() {

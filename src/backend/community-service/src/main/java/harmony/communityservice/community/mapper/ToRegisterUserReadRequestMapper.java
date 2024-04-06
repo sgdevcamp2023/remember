@@ -10,8 +10,8 @@ public class ToRegisterUserReadRequestMapper {
         return RegisterUserReadRequest.builder()
                 .guildId(guild.getGuildId())
                 .userId(user.getUserId())
-                .nickname(user.getNickname())
-                .profile(user.getProfile())
+                .nickname(user.getUserInfo().getNickname())
+                .profile(user.getUserInfo().getProfile())
                 .build();
     }
 }
