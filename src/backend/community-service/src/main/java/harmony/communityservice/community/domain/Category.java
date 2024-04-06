@@ -2,6 +2,7 @@ package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -11,8 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,32 +29,29 @@ public class Category {
     private Long categoryId;
 
     @ManyToOne
-    @JoinColumn(name = "guild_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "guild_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Guild guild;
 
     @NotBlank
     private String name;
 
-    @Column(name = "created_at")
-    private String createdAt;
+    @Embedded
+    private CreationTime creationTime;
 
-    @Column(name = "modified_at")
-    private String modifiedAt;
+    @Embedded
+    private ModifiedInfo modifiedInfo;
 
     @Builder
     public Category(Guild guild, String name) {
         this.guild = guild;
         this.name = name;
-        this.createdAt = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        this.modifiedAt = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.creationTime = new CreationTime();
+        this.modifiedInfo = new ModifiedInfo();
     }
 
     public void modifyName(String name) {
         this.name = name;
-        this.modifiedAt = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.modifiedInfo = modifiedInfo.modify();
     }
 
 }
