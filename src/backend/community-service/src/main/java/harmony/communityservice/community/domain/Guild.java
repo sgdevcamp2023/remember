@@ -1,7 +1,7 @@
 package harmony.communityservice.community.domain;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,9 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -31,14 +28,11 @@ public class Guild {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guildId;
 
-    @NotBlank
-    private String name;
+    @Embedded
+    private GuildInfo guildInfo;
 
-    @Nullable
-    private String profile;
-
-    @Column(name = "created_at")
-    private String createdAt;
+    @Embedded
+    private CreationTime creationTime;
 
     @NotBlank
     @Column(name = "invite_code")
@@ -47,10 +41,10 @@ public class Guild {
     @Column(name = "manager_id")
     private Long managerId;
 
-    @OneToMany(mappedBy = "guild", fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToMany(mappedBy = "guild", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<GuildUser> guildUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "guild",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "guild", fetch = FetchType.LAZY)
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "guild", fetch = FetchType.LAZY)
@@ -59,11 +53,13 @@ public class Guild {
     @Builder
     public Guild(String name, String profile, String inviteCode,
                  Long managerId) {
-        this.name = name;
-        this.profile = profile;
-        this.createdAt = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.guildInfo = makeGuildInfo(name, profile);
+        this.creationTime = new CreationTime();
         this.inviteCode = inviteCode;
         this.managerId = managerId;
+    }
+
+    private GuildInfo makeGuildInfo(String name, String profile) {
+        return GuildInfo.make(name, profile);
     }
 }

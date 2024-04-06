@@ -9,8 +9,8 @@ public class ToSearchGuildReadRequestMapper {
         return RegisterGuildReadRequest.builder()
                 .userId(userId)
                 .guildId(guild.getGuildId())
-                .profile(guild.getProfile())
-                .name(guild.getName())
+                .profile(guild.getGuildInfo().getProfile())
+                .name(guild.getGuildInfo().getName())
                 .build();
     }
 }
