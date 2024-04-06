@@ -7,8 +7,8 @@ public class ToRoomResponseDtoMapper {
 
     public static SearchRoomResponse convert(Room room) {
         return SearchRoomResponse.builder()
-                .profile(room.getProfile())
-                .name(room.getName())
+                .profile(room.getRoomInfo().getProfile())
+                .name(room.getRoomInfo().getName())
                 .roomId(room.getRoomId())
                 .build();
     }

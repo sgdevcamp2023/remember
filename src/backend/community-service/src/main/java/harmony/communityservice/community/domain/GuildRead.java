@@ -30,7 +30,7 @@ public class GuildRead {
     private Long userId;
 
     @Embedded
-    private GuildInfo guildInfo;
+    private ProfileInfo guildInfo;
 
     @Builder
     public GuildRead(Long guildId, Long userId, String name, String profile) {
@@ -39,7 +39,7 @@ public class GuildRead {
         this.guildInfo = makeGuildInfo(name, profile);
     }
 
-    private GuildInfo makeGuildInfo(String name, String profile) {
-        return GuildInfo.make(name, profile);
+    private ProfileInfo makeGuildInfo(String name, String profile) {
+        return ProfileInfo.make(name, profile);
     }
 }

@@ -29,7 +29,7 @@ public class Guild {
     private Long guildId;
 
     @Embedded
-    private GuildInfo guildInfo;
+    private ProfileInfo guildInfo;
 
     @Embedded
     private CreationTime creationTime;
@@ -59,7 +59,7 @@ public class Guild {
         this.managerId = managerId;
     }
 
-    private GuildInfo makeGuildInfo(String name, String profile) {
-        return GuildInfo.make(name, profile);
+    private ProfileInfo makeGuildInfo(String name, String profile) {
+        return ProfileInfo.make(name, profile);
     }
 }

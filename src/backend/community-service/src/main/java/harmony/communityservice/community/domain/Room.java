@@ -1,6 +1,7 @@
 package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,25 +30,23 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
 
-    @NotBlank
-    @Column(name = "name")
-    private String name;
+    @Embedded
+    private ProfileInfo roomInfo;
 
-    @NotBlank
-    private String profile;
-
-    @Column(name = "created_at")
-    private String createdAt;
+    @Embedded
+    private CreationTime creationTime;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<RoomUser> roomUsers = new ArrayList<>();
 
     @Builder
     public Room(String name, String profile) {
-        this.name = name;
-        this.profile = profile;
-        this.createdAt = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.roomInfo = makeRoomInfo(name, profile);
+        this.creationTime = new CreationTime();
+    }
+
+    private ProfileInfo makeRoomInfo(String name, String profile) {
+        return ProfileInfo.make(name, profile);
     }
 
     public List<User> makeUsers() {
