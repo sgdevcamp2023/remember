@@ -1,5 +1,6 @@
 package harmony.communityservice.community.mapper;
 
+import harmony.communityservice.community.domain.CommonUserInfo;
 import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.query.dto.SearchUserStateResponse;
@@ -7,18 +8,19 @@ import harmony.communityservice.community.query.dto.SearchUserStateResponse;
 public class ToSearchUserStateResponseMapper {
 
     public static SearchUserStateResponse convert(User user, String status) {
+        CommonUserInfo commonUserInfo = user.getUserInfo().getCommonUserInfo();
         return SearchUserStateResponse.builder()
                 .userId(user.getUserId())
-                .profile(user.getUserInfo().getProfile())
+                .profile(commonUserInfo.getProfile())
                 .state(status)
-                .userName(user.getUserInfo().getNickname())
+                .userName(commonUserInfo.getNickname())
                 .build();
     }
 
     public static SearchUserStateResponse convert(UserRead userRead) {
         return SearchUserStateResponse.builder()
-                .userName(userRead.getNickname())
-                .profile(userRead.getProfile())
+                .userName(userRead.getUserInfo().getNickname())
+                .profile(userRead.getUserInfo().getProfile())
                 .userId(userRead.getUserId())
                 .build();
     }

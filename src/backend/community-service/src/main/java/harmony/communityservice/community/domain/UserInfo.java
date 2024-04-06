@@ -1,6 +1,7 @@
 package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,21 +17,21 @@ public class UserInfo {
     @NotBlank
     private String email;
 
-    @NotBlank
-    private String nickname;
-
-    @NotBlank
-    private String profile;
+    @Embedded
+    private CommonUserInfo commonUserInfo;
 
     public static UserInfo make(String email, String nickname, String profile) {
-        return new UserInfo(email, nickname, profile);
+        CommonUserInfo commonUserInfoVO = CommonUserInfo.make(nickname, profile);
+        return new UserInfo(email, commonUserInfoVO);
     }
 
     public UserInfo modifyProfile(String profile) {
-        return new UserInfo(this.email, this.nickname, profile);
+        CommonUserInfo newCommonUserInfo = commonUserInfo.modifyProfile(profile);
+        return new UserInfo(this.email, newCommonUserInfo);
     }
 
     public UserInfo modifyNickname(String nickname) {
-        return new UserInfo(this.email, nickname, this.profile);
+        CommonUserInfo newCommonUserInfo = commonUserInfo.modifyNickname(nickname);
+        return new UserInfo(this.email, newCommonUserInfo);
     }
 }

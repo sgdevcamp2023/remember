@@ -2,7 +2,7 @@ package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,21 +15,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WriterInfo {
 
-    @NotBlank
-    @Column(name = "writer_name")
-    private String writerName;
-
-    @NotBlank
-    @Column(name = "writer_profile")
-    private String writerProfile;
-
     @NotNull
     @Column(name = "writer_id")
     private Long writerId;
 
+    @Embedded
+    private CommonUserInfo commonUserInfo;
 
     public static WriterInfo make(String name, Long id, String profile) {
-        return new WriterInfo(name, profile, id);
+        CommonUserInfo newCommonUserInfo = CommonUserInfo.make(name, profile);
+        return new WriterInfo(id, newCommonUserInfo);
     }
 
     public void verifyWriter(Long writerId) {

@@ -11,7 +11,7 @@ public class ToSearchBoardsResponseMapper {
                 .title(targetBoard.getContent().getTitle())
                 .content(targetBoard.getContent().getContent())
                 .userId(targetBoard.getWriterInfo().getWriterId())
-                .writer(targetBoard.getWriterInfo().getWriterName())
+                .writer(targetBoard.getWriterInfo().getCommonUserInfo().getNickname())
                 .createdAt(targetBoard.getCreationTime().getCreatedAt())
                 .channelId(targetBoard.getChannel().getChannelId())
                 .modified(targetBoard.getModifiedInfo().isModified())

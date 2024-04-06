@@ -1,13 +1,12 @@
 package harmony.communityservice.community.domain;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,25 +31,25 @@ public class UserRead {
     @Column(name = "user_id")
     private Long userId;
 
-    @Nullable
-    private String profile;
-
-    @NotBlank
-    private String nickname;
+    @Embedded
+    private CommonUserInfo userInfo;
 
     @Builder
     public UserRead(Long guildId, Long userId, String profile, String nickname) {
         this.guildId = guildId;
         this.userId = userId;
-        this.profile = profile;
-        this.nickname = nickname;
+        this.userInfo = makeCommonUserInfo(profile, nickname);
+    }
+
+    private CommonUserInfo makeCommonUserInfo(String profile, String nickname) {
+        return CommonUserInfo.make(nickname, profile);
     }
 
     public void modifyNickname(String nickname) {
-        this.nickname = nickname;
+        this.userInfo = userInfo.modifyNickname(nickname);
     }
 
-    public void modifyProfile(String profile){
-        this.profile = profile;
+    public void modifyProfile(String profile) {
+        this.userInfo = userInfo.modifyProfile(profile);
     }
 }

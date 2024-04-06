@@ -15,7 +15,7 @@ public class ToSearchBoardResponseMapper {
                 .modified(board.getModifiedInfo().isModified())
                 .createdAt(board.getCreationTime().getCreatedAt())
                 .userId(board.getWriterInfo().getWriterId())
-                .writerName(board.getWriterInfo().getWriterName())
+                .writerName(board.getWriterInfo().getCommonUserInfo().getNickname())
                 .build();
     }
 }
