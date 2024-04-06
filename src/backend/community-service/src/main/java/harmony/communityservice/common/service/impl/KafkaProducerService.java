@@ -52,8 +52,8 @@ public class KafkaProducerService implements ProducerService {
                 .type("CREATE-GUILD")
                 .guildId(guildRead.getGuildId())
                 .guildReadId(guildRead.getGuildReadId())
-                .name(guildRead.getName())
-                .profile(guildRead.getProfile())
+                .name(guildRead.getGuildInfo().getName())
+                .profile(guildRead.getGuildInfo().getProfile())
                 .build();
         kafkaTemplateForCommunity.send(communityEvent, event);
     }

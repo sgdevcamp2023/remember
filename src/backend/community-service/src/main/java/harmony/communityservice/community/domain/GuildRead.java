@@ -1,23 +1,21 @@
 package harmony.communityservice.community.domain;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "guild_read", indexes = @Index(name = "idx__userId",columnList = "user_id"))
+@Table(name = "guild_read", indexes = @Index(name = "idx__userId", columnList = "user_id"))
 public class GuildRead {
 
     @Id
@@ -31,17 +29,17 @@ public class GuildRead {
     @Column(name = "user_id")
     private Long userId;
 
-    @NotBlank
-    private String name;
-
-    @Nullable
-    private String profile;
+    @Embedded
+    private GuildInfo guildInfo;
 
     @Builder
     public GuildRead(Long guildId, Long userId, String name, String profile) {
         this.guildId = guildId;
         this.userId = userId;
-        this.name = name;
-        this.profile = profile;
+        this.guildInfo = makeGuildInfo(name, profile);
+    }
+
+    private GuildInfo makeGuildInfo(String name, String profile) {
+        return GuildInfo.make(name, profile);
     }
 }
