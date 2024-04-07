@@ -1,5 +1,7 @@
 package harmony.communityservice.community.domain;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -9,9 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -31,6 +30,10 @@ public class Room {
     private Long roomId;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "name", column = @Column(name = "room_name")),
+            @AttributeOverride(name = "profile", column = @Column(name = "room_profile"))
+    })
     private ProfileInfo roomInfo;
 
     @Embedded

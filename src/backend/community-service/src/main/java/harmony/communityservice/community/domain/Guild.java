@@ -1,5 +1,7 @@
 package harmony.communityservice.community.domain;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -29,6 +31,10 @@ public class Guild {
     private Long guildId;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "name", column = @Column(name = "guild_name")),
+            @AttributeOverride(name = "profile", column = @Column(name = "guild_profile"))
+    })
     private ProfileInfo guildInfo;
 
     @Embedded
