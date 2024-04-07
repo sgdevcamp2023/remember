@@ -6,5 +6,5 @@ public interface RoomCommandRepository {
 
     void save(Room room);
 
-    void deleteByRoomId(long roomId);
+    void deleteRoomByUserIds(Long first, Long second);
 }

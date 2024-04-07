@@ -4,10 +4,11 @@ import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.feign.UserStatusClient;
 import harmony.communityservice.community.domain.Room;
-import harmony.communityservice.community.domain.RoomUser;
 import harmony.communityservice.community.domain.User;
+import harmony.communityservice.community.mapper.ToRoomResponseDtoMapper;
 import harmony.communityservice.community.mapper.ToSearchUserStateResponseMapper;
 import harmony.communityservice.community.mapper.ToUserIdsMapper;
+import harmony.communityservice.community.query.dto.SearchRoomResponse;
 import harmony.communityservice.community.query.dto.SearchRoomsResponse;
 import harmony.communityservice.community.query.dto.SearchUserStateResponse;
 import harmony.communityservice.community.query.dto.SearchUserStatusInDmRoomRequest;
@@ -17,6 +18,8 @@ import harmony.communityservice.community.query.service.UserQueryService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -29,14 +32,26 @@ public class RoomQueryServiceImpl implements RoomQueryService {
 
     @Override
     public SearchRoomsResponse searchList(long userId) {
-        User targetUser = userQueryService.searchByUserId(userId);
-        return targetUser.makeSearchRoomsResponse();
+        List<Room> rooms = roomQueryRepository.findRoomsByUserIdsContains(userId);
+        List<SearchRoomResponse> searchRoomResponses = rooms.stream()
+                .map(ToRoomResponseDtoMapper::convert).toList();
+        return new SearchRoomsResponse(searchRoomResponses);
+    }
+
+    @Override
+    public List<Long> searchRoomIdsByUserId(long userId) {
+        List<Room> rooms = roomQueryRepository.findRoomsByUserIdsContains(userId);
+        return rooms.stream()
+                .map(Room::getRoomId).toList();
     }
 
     @Override
     public Map<Long, ?> searchUserStatesInRoom(long roomId) {
         Room targetRoom = roomQueryRepository.findByRoomId(roomId).orElseThrow(NotFoundDataException::new);
-        List<User> users = targetRoom.makeUsers();
+        Set<Long> userIds = targetRoom.getUserIds();
+        List<User> users = userIds.stream()
+                .map(userQueryService::searchByUserId)
+                .collect(Collectors.toList());
         return makeCurrentUserStates(users);
     }
 

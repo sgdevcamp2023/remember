@@ -34,9 +34,6 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<GuildUser> guildUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<RoomUser> roomUsers = new ArrayList<>();
-
     @Builder
     public User(Long userId, String email, String nickname, String profile) {
         this.userId = userId;
@@ -55,19 +52,4 @@ public class User {
         this.userInfo = this.userInfo.modifyNickname(nickname);
     }
 
-    public List<Long> getRoomIds() {
-        return roomUsers
-                .stream()
-                .map(user -> user.getRoom().getRoomId())
-                .toList();
-    }
-
-    public SearchRoomsResponse makeSearchRoomsResponse() {
-        List<SearchRoomResponse> searchRoomResponses = roomUsers
-                .stream()
-                .map(RoomUser::getRoom)
-                .map(ToRoomResponseDtoMapper::convert)
-                .collect(Collectors.toList());
-        return new SearchRoomsResponse(searchRoomResponses);
-    }
 }

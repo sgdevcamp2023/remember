@@ -16,7 +16,8 @@ public class RoomCommandRepositoryImpl implements RoomCommandRepository {
     }
 
     @Override
-    public void deleteByRoomId(long roomId) {
-        jpaRoomCommandRepository.deleteRoomByRoomId(roomId);
+    public void deleteRoomByUserIds(Long first, Long second) {
+        jpaRoomCommandRepository.deleteRoomByUserIdsContainingAndUserIdsContaining(first, second);
     }
+
 }

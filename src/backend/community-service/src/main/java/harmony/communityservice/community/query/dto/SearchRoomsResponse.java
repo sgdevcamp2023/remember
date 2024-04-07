@@ -8,7 +8,7 @@ import lombok.Getter;
 public class SearchRoomsResponse {
     private List<SearchRoomResponse> searchRoomResponses = new ArrayList<>();
 
-    public SearchRoomsResponse(List<SearchRoomResponse> roomResponseDtos) {
-        this.searchRoomResponses = roomResponseDtos;
+    public SearchRoomsResponse(List<SearchRoomResponse> searchRoomResponses) {
+        this.searchRoomResponses = searchRoomResponses;
     }
 }
