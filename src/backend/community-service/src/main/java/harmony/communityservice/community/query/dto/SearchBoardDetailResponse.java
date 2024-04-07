@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.dto;
 
+import harmony.communityservice.community.domain.ModifiedType;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
@@ -9,7 +10,7 @@ public record SearchBoardDetailResponse(
         String content,
         String writerName,
         Long userId,
-        boolean modified,
+        ModifiedType modified,
         String createdAt,
         SearchCommentsResponse searchCommentsResponse,
         SearchImagesResponse searchImagesResponse,

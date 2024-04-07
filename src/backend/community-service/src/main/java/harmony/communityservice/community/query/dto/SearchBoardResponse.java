@@ -1,5 +1,6 @@
 package harmony.communityservice.community.query.dto;
 
+import harmony.communityservice.community.domain.ModifiedType;
 import java.util.List;
 import lombok.Builder;
 
@@ -11,7 +12,7 @@ public record SearchBoardResponse(
         String content,
         String writer,
         Long userId,
-        boolean modified,
+        ModifiedType modified,
         String createdAt,
         List<SearchEmojiResponse> searchEmojiResponses,
         int commentCount

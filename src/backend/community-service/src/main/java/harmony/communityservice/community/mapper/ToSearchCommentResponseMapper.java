@@ -12,7 +12,7 @@ public class ToSearchCommentResponseMapper {
                 .writerName(comment.getWriterInfo().getCommonUserInfo().getNickname())
                 .userId(comment.getWriterInfo().getWriterId())
                 .writerProfile(comment.getWriterInfo().getCommonUserInfo().getProfile())
-                .modified(comment.getModifiedInfo().isModified())
+                .modified(comment.getModifiedInfo().getModifiedType())
                 .boardId(boardId)
                 .createdAt(comment.getCreationTime().getCreatedAt())
                 .build();

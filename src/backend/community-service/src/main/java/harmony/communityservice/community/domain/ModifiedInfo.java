@@ -2,8 +2,9 @@ package harmony.communityservice.community.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Getter;
@@ -12,9 +13,10 @@ import lombok.Getter;
 @Embeddable
 public class ModifiedInfo {
 
-    @NotNull
-    @Column(name = "modified")
-    private boolean modified;
+
+    @Column(name = "modified_type")
+    @Enumerated(value = EnumType.STRING)
+    private ModifiedType modifiedType;
 
     @NotBlank
     @Column(name = "modified_at")
@@ -22,18 +24,18 @@ public class ModifiedInfo {
 
 
     public ModifiedInfo() {
-        this.modified = false;
+        this.modifiedType = ModifiedType.NOT_YET;
         this.modifiedAt = LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    private ModifiedInfo(boolean modified) {
-        this.modified = modified;
+    private ModifiedInfo(ModifiedType type) {
+        this.modifiedType = type;
         this.modifiedAt = LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public ModifiedInfo modify() {
-        return new ModifiedInfo(true);
+        return new ModifiedInfo(ModifiedType.MODIFY);
     }
 }
