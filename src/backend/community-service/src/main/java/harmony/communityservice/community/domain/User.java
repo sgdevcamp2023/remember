@@ -31,9 +31,6 @@ public class User {
     @Embedded
     private UserInfo userInfo;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<GuildUser> guildUsers = new ArrayList<>();
-
     @Builder
     public User(Long userId, String email, String nickname, String profile) {
         this.userId = userId;

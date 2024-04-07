@@ -2,18 +2,23 @@ package harmony.communityservice.community.domain;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,8 +52,10 @@ public class Guild {
     @Column(name = "manager_id")
     private Long managerId;
 
-    @OneToMany(mappedBy = "guild", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<GuildUser> guildUsers = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "guild_user",
+            joinColumns = @JoinColumn(name = "guild_id"))
+    private Set<Long> userIds = new HashSet<>();
 
     @OneToMany(mappedBy = "guild", fetch = FetchType.LAZY)
     private List<Category> categories = new ArrayList<>();
@@ -58,11 +65,19 @@ public class Guild {
 
     @Builder
     public Guild(String name, String profile, String inviteCode,
-                 Long managerId) {
+                 Long managerId, Set<Long> userIds) {
         this.guildInfo = makeGuildInfo(name, profile);
         this.creationTime = new CreationTime();
         this.inviteCode = inviteCode;
         this.managerId = managerId;
+        this.userIds = userIds;
+    }
+
+    public void updateUserIds(long userId) {
+        this.userIds = this.userIds == null ? new HashSet<>() : this.userIds;
+        Set<Long> newUserIds = new HashSet<>(this.userIds);
+        newUserIds.add(userId);
+        this.userIds = newUserIds;
     }
 
     private ProfileInfo makeGuildInfo(String name, String profile) {
