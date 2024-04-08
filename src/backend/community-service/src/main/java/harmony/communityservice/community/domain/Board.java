@@ -2,7 +2,9 @@ package harmony.communityservice.community.domain;
 
 import harmony.communityservice.community.query.dto.SearchImageResponse;
 import harmony.communityservice.community.query.dto.SearchImagesResponse;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,10 +12,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -48,9 +50,10 @@ public class Board {
     @Embedded
     private CreationTime creationTime;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
-
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "images", joinColumns = @JoinColumn(name = "board_id"))
+    @OrderColumn(name = "image_idx")
+    private List<Image> images;
 
     @Builder
     public Board(Long channelId, List<Image> images,
@@ -83,7 +86,7 @@ public class Board {
     public SearchImagesResponse makeSearchImagesResponse() {
         return new SearchImagesResponse(
                 this.images.stream()
-                        .map(image -> new SearchImageResponse(image.getImageAddr()))
+                        .map(image -> new SearchImageResponse(image.getImageUrl()))
                         .collect(Collectors.toList())
         );
     }

@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
 public interface BoardCommandService {
-    void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images);
+    void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> files);
 
     void modify(ModifyBoardRequest modifyBoardRequest);
 

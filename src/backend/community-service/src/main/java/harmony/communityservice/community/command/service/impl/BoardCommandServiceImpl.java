@@ -8,13 +8,14 @@ import harmony.communityservice.community.command.dto.ModifyBoardRequest;
 import harmony.communityservice.community.command.dto.RegisterBoardRequest;
 import harmony.communityservice.community.command.repository.BoardCommandRepository;
 import harmony.communityservice.community.command.service.BoardCommandService;
-import harmony.communityservice.community.command.service.ImageCommandService;
 import harmony.communityservice.community.domain.Board;
+import harmony.communityservice.community.domain.Image;
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.mapper.ToBoardMapper;
 import harmony.communityservice.community.query.service.BoardQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,29 +24,30 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     private final ContentService contentService;
     private final UserReadQueryService userReadQueryService;
-    private final ImageCommandService imageCommandService;
     private final BoardCommandRepository boardCommandRepository;
     private final BoardQueryService boardQueryService;
 
     @Override
-    public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> images) {
+    public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> files) {
         userReadQueryService.existsByUserIdAndGuildId(
                 new VerifyGuildMemberRequest(registerBoardRequest.userId(), registerBoardRequest.guildId()));
-        Board board = createBoard(registerBoardRequest);
+        List<Image> images = createImages(files);
+        Board board = createBoard(registerBoardRequest, images);
         boardCommandRepository.save(board);
-        createImages(images, board);
+
     }
 
-    private void createImages(List<MultipartFile> images, Board board) {
-        List<String> uploadedImageUrls = images.stream()
-                .map(contentService::convertFileToUrl).toList();
-        imageCommandService.registerImagesInBoard(uploadedImageUrls, board);
+    private List<Image> createImages(List<MultipartFile> images) {
+        return images.stream()
+                .map(contentService::convertFileToUrl)
+                .map(Image::make)
+                .collect(Collectors.toList());
     }
 
-    private Board createBoard(RegisterBoardRequest registerBoardRequest) {
+    private Board createBoard(RegisterBoardRequest registerBoardRequest, List<Image> images) {
         UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(
                 new SearchUserReadRequest(registerBoardRequest.userId(), registerBoardRequest.guildId()));
-        return ToBoardMapper.convert(registerBoardRequest, boardWriter);
+        return ToBoardMapper.convert(registerBoardRequest, boardWriter, images);
     }
 
     @Override
