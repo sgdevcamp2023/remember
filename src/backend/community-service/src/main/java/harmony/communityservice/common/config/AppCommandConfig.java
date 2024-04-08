@@ -4,7 +4,6 @@ import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.community.command.repository.BoardCommandRepository;
 import harmony.communityservice.community.command.repository.CategoryCommandRepository;
-import harmony.communityservice.community.command.repository.CategoryReadCommandRepository;
 import harmony.communityservice.community.command.repository.ChannelCommandRepository;
 import harmony.communityservice.community.command.repository.ChannelReadCommandRepository;
 import harmony.communityservice.community.command.repository.CommentCommandRepository;
@@ -17,7 +16,6 @@ import harmony.communityservice.community.command.repository.UserCommandReposito
 import harmony.communityservice.community.command.repository.UserReadCommandRepository;
 import harmony.communityservice.community.command.repository.impl.BoardCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.CategoryCommandRepositoryImpl;
-import harmony.communityservice.community.command.repository.impl.CategoryReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.ChannelCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.ChannelReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.CommentCommandRepositoryImpl;
@@ -30,7 +28,6 @@ import harmony.communityservice.community.command.repository.impl.UserCommandRep
 import harmony.communityservice.community.command.repository.impl.UserReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.jpa.JpaBoardCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaCategoryCommandRepository;
-import harmony.communityservice.community.command.repository.jpa.JpaCategoryReadCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaChannelCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaChannelReadCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaCommentCommandRepository;
@@ -43,7 +40,6 @@ import harmony.communityservice.community.command.repository.jpa.JpaUserCommandR
 import harmony.communityservice.community.command.repository.jpa.JpaUserReadCommandRepository;
 import harmony.communityservice.community.command.service.BoardCommandService;
 import harmony.communityservice.community.command.service.CategoryCommandService;
-import harmony.communityservice.community.command.service.CategoryReadCommandService;
 import harmony.communityservice.community.command.service.ChannelCommandService;
 import harmony.communityservice.community.command.service.ChannelReadCommandService;
 import harmony.communityservice.community.command.service.CommentCommandService;
@@ -56,7 +52,6 @@ import harmony.communityservice.community.command.service.UserCommandService;
 import harmony.communityservice.community.command.service.UserReadCommandService;
 import harmony.communityservice.community.command.service.impl.BoardCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.CategoryCommandServiceImpl;
-import harmony.communityservice.community.command.service.impl.CategoryReadCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.ChannelCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.ChannelReadCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.CommentCommandServiceImpl;
@@ -69,8 +64,6 @@ import harmony.communityservice.community.command.service.impl.UserCommandServic
 import harmony.communityservice.community.command.service.impl.UserReadCommandServiceImpl;
 import harmony.communityservice.community.query.service.BoardQueryService;
 import harmony.communityservice.community.query.service.CategoryQueryService;
-import harmony.communityservice.community.query.service.CategoryReadQueryService;
-import harmony.communityservice.community.query.service.ChannelQueryService;
 import harmony.communityservice.community.query.service.CommentQueryService;
 import harmony.communityservice.community.query.service.EmojiQueryService;
 import harmony.communityservice.community.query.service.GuildQueryService;
@@ -89,7 +82,6 @@ public class AppCommandConfig {
     private final JpaGuildReadCommandRepository jpaGuildReadCommandRepository;
     private final JpaGuildCommandRepository jpaGuildCommandRepository;
     private final JpaCategoryCommandRepository categoryCommandRepository;
-    private final JpaCategoryReadCommandRepository jpaCategoryReadCommandRepository;
     private final JpaChannelCommandRepository jpaChannelCommandRepository;
     private final JpaChannelReadCommandRepository jpaChannelReadCommandRepository;
     private final JpaImageCommandRepository jpaImageCommandRepository;
@@ -102,8 +94,6 @@ public class AppCommandConfig {
     private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
     private final CategoryQueryService categoryQueryService;
-    private final CategoryReadQueryService categoryReadQueryService;
-    private final ChannelQueryService channelQueryService;
     private final BoardQueryService boardQueryService;
     private final CommentQueryService commentQueryService;
     private final EmojiQueryService emojiQueryService;
@@ -158,19 +148,10 @@ public class AppCommandConfig {
 
     @Bean
     public CategoryCommandService categoryCommandService() {
-        return new CategoryCommandServiceImpl(guildQueryService, userReadQueryService, categoryCommandRepository(),
-                categoryReadCommandService(), categoryReadQueryService, categoryQueryService);
+        return new CategoryCommandServiceImpl(userReadQueryService, categoryCommandRepository(),
+                categoryQueryService);
     }
 
-    @Bean
-    public CategoryReadCommandRepository categoryReadCommandRepository() {
-        return new CategoryReadCommandRepositoryImpl(jpaCategoryReadCommandRepository);
-    }
-
-    @Bean
-    public CategoryReadCommandService categoryReadCommandService() {
-        return new CategoryReadCommandServiceImpl(categoryReadCommandRepository());
-    }
 
     @Bean
     public ChannelCommandRepository channelCommandRepository() {

@@ -3,7 +3,6 @@ package harmony.communityservice.common.config;
 import harmony.communityservice.common.feign.UserStatusClient;
 import harmony.communityservice.community.query.repository.BoardQueryRepository;
 import harmony.communityservice.community.query.repository.CategoryQueryRepository;
-import harmony.communityservice.community.query.repository.CategoryReadQueryRepository;
 import harmony.communityservice.community.query.repository.ChannelQueryRepository;
 import harmony.communityservice.community.query.repository.ChannelReadQueryRepository;
 import harmony.communityservice.community.query.repository.CommentQueryRepository;
@@ -15,7 +14,6 @@ import harmony.communityservice.community.query.repository.UserQueryRepository;
 import harmony.communityservice.community.query.repository.UserReadQueryRepository;
 import harmony.communityservice.community.query.repository.impl.BoardQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.CategoryQueryRepositoryImpl;
-import harmony.communityservice.community.query.repository.impl.CategoryReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.ChannelQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.ChannelReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.impl.CommentQueryRepositoryImpl;
@@ -27,7 +25,6 @@ import harmony.communityservice.community.query.repository.impl.UserQueryReposit
 import harmony.communityservice.community.query.repository.impl.UserReadQueryRepositoryImpl;
 import harmony.communityservice.community.query.repository.jpa.JpaBoardQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaCategoryQueryRepository;
-import harmony.communityservice.community.query.repository.jpa.JpaCategoryReadQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaChannelQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaChannelReadQueryRepository;
 import harmony.communityservice.community.query.repository.jpa.JpaCommentQueryRepository;
@@ -39,7 +36,6 @@ import harmony.communityservice.community.query.repository.jpa.JpaUserQueryRepos
 import harmony.communityservice.community.query.repository.jpa.JpaUserReadQueryRepository;
 import harmony.communityservice.community.query.service.BoardQueryService;
 import harmony.communityservice.community.query.service.CategoryQueryService;
-import harmony.communityservice.community.query.service.CategoryReadQueryService;
 import harmony.communityservice.community.query.service.ChannelQueryService;
 import harmony.communityservice.community.query.service.ChannelReadQueryService;
 import harmony.communityservice.community.query.service.CommentQueryService;
@@ -51,7 +47,6 @@ import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import harmony.communityservice.community.query.service.impl.BoardQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.CategoryQueryServiceImpl;
-import harmony.communityservice.community.query.service.impl.CategoryReadQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.ChannelQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.ChannelReadQueryServiceImpl;
 import harmony.communityservice.community.query.service.impl.CommentQueryServiceImpl;
@@ -73,7 +68,6 @@ public class AppQueryConfig {
     private final JpaUserReadQueryRepository jpaUserReadQueryRepository;
     private final JpaGuildQueryRepository jpaGuildQueryRepository;
     private final JpaGuildReadQueryRepository jpaGuildReadQueryRepository;
-    private final JpaCategoryReadQueryRepository jpaCategoryReadQueryRepository;
     private final JpaCategoryQueryRepository jpaCategoryQueryRepository;
     private final JpaChannelReadQueryRepository jpaChannelReadQueryRepository;
     private final JpaChannelQueryRepository jpaChannelQueryRepository;
@@ -124,23 +118,13 @@ public class AppQueryConfig {
     }
 
     @Bean
-    public CategoryReadQueryRepository categoryReadQueryRepository() {
-        return new CategoryReadQueryRepositoryImpl(jpaCategoryReadQueryRepository);
-    }
-
-    @Bean
-    public CategoryReadQueryService categoryReadQueryService() {
-        return new CategoryReadQueryServiceImpl(userReadQueryService(), categoryReadQueryRepository());
-    }
-
-    @Bean
     public CategoryQueryRepository categoryQueryRepository() {
         return new CategoryQueryRepositoryImpl(jpaCategoryQueryRepository);
     }
 
     @Bean
     public CategoryQueryService categoryQueryService() {
-        return new CategoryQueryServiceImpl(categoryQueryRepository());
+        return new CategoryQueryServiceImpl(categoryQueryRepository(), userReadQueryService());
     }
 
     @Bean

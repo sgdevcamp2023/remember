@@ -1,8 +1,8 @@
 package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.domain.CategoryRead;
-import harmony.communityservice.community.query.service.CategoryReadQueryService;
+import harmony.communityservice.community.query.dto.SearchCategoryResponse;
+import harmony.communityservice.community.query.service.CategoryQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/community")
 public class CategoryQueryController {
 
-    private final CategoryReadQueryService categoryReadQueryService;
+    private final CategoryQueryService categoryQueryService;
 
     @GetMapping("/search/category/{guildId}/{userId}")
     public BaseResponse<?> searchInGuild(@PathVariable Long guildId, @PathVariable Long userId) {
-        List<CategoryRead> categoryReads = categoryReadQueryService.searchListByGuildId(guildId,
+        List<SearchCategoryResponse> searchCategoryResponses = categoryQueryService.searchListByGuildId(guildId,
                 userId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", categoryReads);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchCategoryResponses);
     }
 }
