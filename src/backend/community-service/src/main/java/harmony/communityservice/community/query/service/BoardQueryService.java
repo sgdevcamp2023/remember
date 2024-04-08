@@ -13,5 +13,4 @@ public interface BoardQueryService {
 
     Board searchByBoardId(Long boardId);
 
-    SearchBoardDetailResponse searchBoardDetail(long boardId);
 }

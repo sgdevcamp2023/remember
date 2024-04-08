@@ -1,7 +1,8 @@
 package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.community.query.dto.SearchBoardDetailResponse;
+import harmony.communityservice.community.domain.Board;
+import harmony.communityservice.community.mapper.ToSearchBoardResponseMapper;
 import harmony.communityservice.community.query.dto.SearchBoardResponse;
 import harmony.communityservice.community.query.service.BoardQueryService;
 import java.util.List;
@@ -27,8 +28,8 @@ public class BoardQueryController {
     }
 
     @GetMapping("/search/board/{boardId}")
-    private BaseResponse<?> search(@PathVariable Long boardId) {
-        SearchBoardDetailResponse searchBoardDetailResponse = boardQueryService.searchBoardDetail(boardId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchBoardDetailResponse);
+    public BaseResponse<?> search(@PathVariable Long boardId) {
+        Board targetBoard = boardQueryService.searchByBoardId(boardId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", ToSearchBoardResponseMapper.convert(targetBoard));
     }
 }

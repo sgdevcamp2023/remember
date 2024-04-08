@@ -9,7 +9,6 @@ import harmony.communityservice.community.command.repository.ChannelCommandRepos
 import harmony.communityservice.community.command.repository.ChannelReadCommandRepository;
 import harmony.communityservice.community.command.repository.CommentCommandRepository;
 import harmony.communityservice.community.command.repository.EmojiCommandRepository;
-import harmony.communityservice.community.command.repository.EmojiUserCommandRepository;
 import harmony.communityservice.community.command.repository.GuildCommandRepository;
 import harmony.communityservice.community.command.repository.GuildReadCommandRepository;
 import harmony.communityservice.community.command.repository.ImageCommandRepository;
@@ -23,7 +22,6 @@ import harmony.communityservice.community.command.repository.impl.ChannelCommand
 import harmony.communityservice.community.command.repository.impl.ChannelReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.CommentCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.EmojiCommandRepositoryImpl;
-import harmony.communityservice.community.command.repository.impl.EmojiUserCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.GuildCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.GuildReadCommandRepositoryImpl;
 import harmony.communityservice.community.command.repository.impl.ImageCommandRepositoryImpl;
@@ -37,7 +35,6 @@ import harmony.communityservice.community.command.repository.jpa.JpaChannelComma
 import harmony.communityservice.community.command.repository.jpa.JpaChannelReadCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaCommentCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaEmojiCommandRepository;
-import harmony.communityservice.community.command.repository.jpa.JpaEmojiUserCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaGuildCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaGuildReadCommandRepository;
 import harmony.communityservice.community.command.repository.jpa.JpaImageCommandRepository;
@@ -51,7 +48,6 @@ import harmony.communityservice.community.command.service.ChannelCommandService;
 import harmony.communityservice.community.command.service.ChannelReadCommandService;
 import harmony.communityservice.community.command.service.CommentCommandService;
 import harmony.communityservice.community.command.service.EmojiCommandService;
-import harmony.communityservice.community.command.service.EmojiUserCommandService;
 import harmony.communityservice.community.command.service.GuildCommandService;
 import harmony.communityservice.community.command.service.GuildReadCommandService;
 import harmony.communityservice.community.command.service.ImageCommandService;
@@ -65,7 +61,6 @@ import harmony.communityservice.community.command.service.impl.ChannelCommandSer
 import harmony.communityservice.community.command.service.impl.ChannelReadCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.CommentCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.EmojiCommandServiceImpl;
-import harmony.communityservice.community.command.service.impl.EmojiUserCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.GuildCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.GuildReadCommandServiceImpl;
 import harmony.communityservice.community.command.service.impl.ImageCommandServiceImpl;
@@ -101,7 +96,6 @@ public class AppCommandConfig {
     private final JpaBoardCommandRepository jpaBoardCommandRepository;
     private final JpaCommentCommandRepository jpaCommentCommandRepository;
     private final JpaEmojiCommandRepository jpaEmojiCommandRepository;
-    private final JpaEmojiUserCommandRepository jpaEmojiUserCommandRepository;
     private final JpaRoomCommandRepository jpaRoomCommandRepository;
     private final UserQueryService userQueryService;
     private final GuildQueryService guildQueryService;
@@ -235,20 +229,10 @@ public class AppCommandConfig {
         return new EmojiCommandRepositoryImpl(jpaEmojiCommandRepository);
     }
 
-    @Bean
-    public EmojiUserCommandRepository emojiUserCommandRepository() {
-        return new EmojiUserCommandRepositoryImpl(jpaEmojiUserCommandRepository);
-    }
-
-    @Bean
-    public EmojiUserCommandService emojiUserCommandService() {
-        return new EmojiUserCommandServiceImpl(emojiUserCommandRepository());
-    }
 
     @Bean
     public EmojiCommandService emojiCommandService() {
-        return new EmojiCommandServiceImpl(boardQueryService, emojiCommandRepository(), emojiUserCommandService(),
-                emojiQueryService);
+        return new EmojiCommandServiceImpl(boardQueryService, emojiCommandRepository(), emojiQueryService);
     }
 
     @Bean

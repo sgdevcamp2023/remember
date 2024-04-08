@@ -200,6 +200,6 @@ public class AppQueryConfig {
 
     @Bean
     public RoomQueryService roomQueryService() {
-        return new RoomQueryServiceImpl(userQueryService(), roomQueryRepository(),userStatusClient);
+        return new RoomQueryServiceImpl(userQueryService(), roomQueryRepository(), userStatusClient);
     }
 }

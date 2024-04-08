@@ -1,9 +1,10 @@
 package harmony.communityservice.community.domain;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,12 +12,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,19 +40,37 @@ public class Emoji {
     @Column(name = "emoji_type")
     private Long emojiType;
 
-    @OneToMany(mappedBy = "emoji", fetch = FetchType.LAZY)
-    private List<EmojiUser> emojiUsers = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "emoji_user",
+            joinColumns = @JoinColumn(name = "emoji_id"))
+    private Set<Long> userIds = new HashSet<>();
 
     @Builder
-    public Emoji(Board board, Long emojiType) {
+    public Emoji(Board board, Long emojiType, Long userId) {
         this.board = board;
         this.emojiType = emojiType;
+        updateUserIds(userId);
     }
 
-    public Optional<EmojiUser> exist(long userId) {
-        return emojiUsers
+    public void updateUserIds(long userId) {
+        this.userIds = this.userIds == null ? new HashSet<>() : this.userIds;
+        Set<Long> newUserIds = new HashSet<>(this.userIds);
+        newUserIds.add(userId);
+        this.userIds = newUserIds;
+    }
+
+    public Optional<Long> exist(long userId) {
+        return userIds
                 .stream()
-                .filter(user -> Objects.equals(user.getUserId(), userId))
+                .filter(id -> Objects.equals(id, userId))
                 .findAny();
+    }
+
+    public void deleteUserId(long userId) {
+        exist(userId)
+                .ifPresent(id -> {
+                    this.userIds.remove(id);
+                    this.userIds = new HashSet<>(this.userIds);
+                });
     }
 }

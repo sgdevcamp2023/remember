@@ -27,6 +27,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     private static final int MAX_PAGE_COUNT = 50;
     private final BoardQueryRepository boardQueryRepository;
 
+
     @Override
     public List<SearchBoardResponse> searchList(long channelId, long lastBoardId) {
         PageRequest pageRequest = PageRequest.of(0, MAX_PAGE_COUNT);
@@ -40,11 +41,4 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     public Board searchByBoardId(Long boardId) {
         return boardQueryRepository.findByBoardId(boardId).orElseThrow(NotFoundDataException::new);
     }
-
-    @Override
-    public SearchBoardDetailResponse searchBoardDetail(long boardId) {
-        Board targetBoard = searchByBoardId(boardId);
-        return ToSearchBoardResponseMapper.convert(targetBoard);
-    }
-
 }
