@@ -11,7 +11,7 @@ public class ToSearchEmojiResponseMapper {
                 .emojiId(emoji.getEmojiId())
                 .emojiUsers(emoji.getUserIds().stream().toList())
                 .emojiType(emoji.getEmojiType())
-                .boardId(emoji.getBoard().getBoardId())
+                .boardId(emoji.getBoardId())
                 .build();
     }
 }

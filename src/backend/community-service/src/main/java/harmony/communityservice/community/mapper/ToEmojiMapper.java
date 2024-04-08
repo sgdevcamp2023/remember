@@ -5,9 +5,9 @@ import harmony.communityservice.community.domain.Emoji;
 
 public class ToEmojiMapper {
 
-    public static Emoji convert(Board board, long emojiType, long userId) {
+    public static Emoji convert(Long boardId, long emojiType, long userId) {
         return Emoji.builder()
-                .board(board)
+                .boardId(boardId)
                 .emojiType(emojiType)
                 .userId(userId)
                 .build();

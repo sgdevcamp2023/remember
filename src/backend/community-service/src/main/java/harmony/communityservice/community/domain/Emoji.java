@@ -2,17 +2,15 @@ package harmony.communityservice.community.domain;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "emoji", indexes = @Index(name = "idx__boardId", columnList = "board_id"))
+@Table(name = "emoji", indexes = @Index(name = "idx__boardId__emojiType", columnList = "board_id, emoji_type"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Emoji {
 
@@ -33,9 +31,9 @@ public class Emoji {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long emojiId;
 
-    @ManyToOne
-    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Board board;
+    @NotNull
+    @Column(name = "board_id")
+    private Long boardId;
 
     @Column(name = "emoji_type")
     private Long emojiType;
@@ -46,8 +44,8 @@ public class Emoji {
     private Set<Long> userIds = new HashSet<>();
 
     @Builder
-    public Emoji(Board board, Long emojiType, Long userId) {
-        this.board = board;
+    public Emoji(Long boardId, Long emojiType, Long userId) {
+        this.boardId = boardId;
         this.emojiType = emojiType;
         updateUserIds(userId);
     }

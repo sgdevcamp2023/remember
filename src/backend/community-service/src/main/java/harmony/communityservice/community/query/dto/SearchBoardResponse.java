@@ -14,7 +14,7 @@ public record SearchBoardResponse(
         Long userId,
         ModifiedType modified,
         String createdAt,
-        List<SearchEmojiResponse> searchEmojiResponses,
+        SearchEmojisResponse searchEmojiResponses,
         Long commentCount
 ) {
 }

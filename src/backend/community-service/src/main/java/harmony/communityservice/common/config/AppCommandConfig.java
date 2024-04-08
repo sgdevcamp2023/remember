@@ -197,7 +197,7 @@ public class AppCommandConfig {
 
     @Bean
     public EmojiCommandService emojiCommandService() {
-        return new EmojiCommandServiceImpl(boardQueryService, emojiCommandRepository(), emojiQueryService);
+        return new EmojiCommandServiceImpl(emojiCommandRepository(), emojiQueryService);
     }
 
     @Bean

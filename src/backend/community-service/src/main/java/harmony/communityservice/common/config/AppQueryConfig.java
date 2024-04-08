@@ -138,7 +138,7 @@ public class AppQueryConfig {
 
     @Bean
     public BoardQueryService boardQueryService() {
-        return new BoardQueryServiceImpl(boardQueryRepository(),commentQueryService());
+        return new BoardQueryServiceImpl(boardQueryRepository(), commentQueryService(), emojiQueryService());
     }
 
     @Bean

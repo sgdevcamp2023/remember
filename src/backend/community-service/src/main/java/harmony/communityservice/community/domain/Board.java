@@ -1,10 +1,5 @@
 package harmony.communityservice.community.domain;
 
-import harmony.communityservice.community.mapper.ToSearchCommentResponseMapper;
-import harmony.communityservice.community.mapper.ToSearchEmojiResponseMapper;
-import harmony.communityservice.community.query.dto.SearchCommentResponse;
-import harmony.communityservice.community.query.dto.SearchCommentsResponse;
-import harmony.communityservice.community.query.dto.SearchEmojisResponse;
 import harmony.communityservice.community.query.dto.SearchImageResponse;
 import harmony.communityservice.community.query.dto.SearchImagesResponse;
 import jakarta.persistence.Column;
@@ -14,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +23,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "board")
+@Table(name = "board", indexes = @Index(name = "idx__channelId", columnList = "channel_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
 
@@ -54,9 +50,6 @@ public class Board {
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
-
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Emoji> emojis = new ArrayList<>();
 
 
     @Builder
@@ -95,11 +88,4 @@ public class Board {
         );
     }
 
-    public SearchEmojisResponse makeSearchEmojisResponse() {
-        return new SearchEmojisResponse(
-                this.emojis.stream()
-                        .map(ToSearchEmojiResponseMapper::convert)
-                        .collect(Collectors.toList())
-        );
-    }
 }

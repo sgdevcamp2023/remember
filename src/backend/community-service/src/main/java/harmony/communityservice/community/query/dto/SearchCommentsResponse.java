@@ -10,7 +10,7 @@ public class SearchCommentsResponse {
     private List<SearchCommentResponse> searchCommentResponses = new ArrayList<>();
 
     @Builder
-    public SearchCommentsResponse(List<SearchCommentResponse> commentResponseDto) {
-        this.searchCommentResponses = commentResponseDto;
+    public SearchCommentsResponse(List<SearchCommentResponse> searchCommentResponses) {
+        this.searchCommentResponses = searchCommentResponses;
     }
 }

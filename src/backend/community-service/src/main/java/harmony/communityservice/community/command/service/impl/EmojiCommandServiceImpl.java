@@ -5,27 +5,23 @@ import harmony.communityservice.community.command.dto.DeleteEmojiRequest;
 import harmony.communityservice.community.command.dto.RegisterEmojiRequest;
 import harmony.communityservice.community.command.repository.EmojiCommandRepository;
 import harmony.communityservice.community.command.service.EmojiCommandService;
-import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.domain.Emoji;
 import harmony.communityservice.community.mapper.ToEmojiMapper;
-import harmony.communityservice.community.query.service.BoardQueryService;
 import harmony.communityservice.community.query.service.EmojiQueryService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class EmojiCommandServiceImpl implements EmojiCommandService {
 
-    private final BoardQueryService boardQueryService;
     private final EmojiCommandRepository emojiCommandRepository;
     private final EmojiQueryService emojiQueryService;
 
     @Override
     public void register(RegisterEmojiRequest registerEmojiRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(registerEmojiRequest.boardId());
-        Emoji targetEmoji = emojiQueryService.searchByBoardAndEmojiType(targetBoard,
+        Emoji targetEmoji = emojiQueryService.searchByBoardIdAndEmojiType(registerEmojiRequest.boardId(),
                 registerEmojiRequest.emojiType());
         if (targetEmoji == null) {
-            notExistsEmoji(registerEmojiRequest, targetBoard);
+            notExistsEmoji(registerEmojiRequest);
         } else {
             existsEmoji(registerEmojiRequest, targetEmoji);
         }
@@ -40,8 +36,8 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
         targetEmoji.updateUserIds(registerEmojiRequest.userId());
     }
 
-    private void notExistsEmoji(RegisterEmojiRequest registerEmojiRequest, Board targetBoard) {
-        Emoji emoji = ToEmojiMapper.convert(targetBoard, registerEmojiRequest.emojiType(),
+    private void notExistsEmoji(RegisterEmojiRequest registerEmojiRequest) {
+        Emoji emoji = ToEmojiMapper.convert(registerEmojiRequest.boardId(), registerEmojiRequest.emojiType(),
                 registerEmojiRequest.userId());
         emojiCommandRepository.save(emoji);
     }

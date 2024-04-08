@@ -3,14 +3,16 @@ package harmony.communityservice.community.mapper;
 import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.query.dto.SearchBoardDetailResponse;
 import harmony.communityservice.community.query.dto.SearchCommentsResponse;
+import harmony.communityservice.community.query.dto.SearchEmojisResponse;
 
 public class ToSearchBoardResponseMapper {
-    public static SearchBoardDetailResponse convert(Board board, SearchCommentsResponse searchCommentsResponse) {
+    public static SearchBoardDetailResponse convert(Board board, SearchCommentsResponse searchCommentsResponse,
+                                                    SearchEmojisResponse searchEmojisResponse) {
         return SearchBoardDetailResponse.builder()
                 .title(board.getContent().getTitle())
                 .content(board.getContent().getContent())
                 .searchCommentsResponse(searchCommentsResponse)
-                .searchEmojisResponse(board.makeSearchEmojisResponse())
+                .searchEmojisResponse(searchEmojisResponse)
                 .boardId(board.getBoardId())
                 .searchImagesResponse(board.makeSearchImagesResponse())
                 .modified(board.getModifiedInfo().getModifiedType())
