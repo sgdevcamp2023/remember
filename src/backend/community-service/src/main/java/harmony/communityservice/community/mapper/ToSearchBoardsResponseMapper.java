@@ -13,7 +13,7 @@ public class ToSearchBoardsResponseMapper {
                 .userId(targetBoard.getWriterInfo().getWriterId())
                 .writer(targetBoard.getWriterInfo().getCommonUserInfo().getNickname())
                 .createdAt(targetBoard.getCreationTime().getCreatedAt())
-                .channelId(targetBoard.getChannel().getChannelId())
+                .channelId(targetBoard.getChannelId())
                 .modified(targetBoard.getModifiedInfo().getModifiedType())
                 .searchEmojiResponses(targetBoard.makeSearchEmojisResponse().getSearchEmojiResponses())
                 .build();

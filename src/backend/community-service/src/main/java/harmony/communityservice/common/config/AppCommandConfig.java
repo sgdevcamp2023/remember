@@ -210,7 +210,7 @@ public class AppCommandConfig {
 
     @Bean
     public BoardCommandService boardCommandService() {
-        return new BoardCommandServiceImpl(contentService, userReadQueryService, channelQueryService,
+        return new BoardCommandServiceImpl(contentService, userReadQueryService,
                 imageCommandService(), boardCommandRepository(), boardQueryService);
     }
 

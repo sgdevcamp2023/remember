@@ -8,18 +8,15 @@ import harmony.communityservice.community.query.dto.SearchEmojisResponse;
 import harmony.communityservice.community.query.dto.SearchImageResponse;
 import harmony.communityservice.community.query.dto.SearchImagesResponse;
 import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,18 +36,9 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    @ManyToOne
-    @JoinColumn(name = "channel_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Channel channel;
-
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
-
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Emoji> emojis = new ArrayList<>();
+    @NotNull
+    @Column(name = "channel_id")
+    private Long channelId;
 
     @Embedded
     private Content content;
@@ -64,10 +52,20 @@ public class Board {
     @Embedded
     private CreationTime creationTime;
 
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Emoji> emojis = new ArrayList<>();
+
+
     @Builder
-    public Board(Channel channel, List<Image> images,
+    public Board(Long channelId, List<Image> images,
                  String title, String content, String writerName, Long writerId, String writerProfile) {
-        this.channel = channel;
+        this.channelId = channelId;
         this.images = images;
         this.content = makeContent(title, content);
         this.modifiedInfo = new ModifiedInfo();
