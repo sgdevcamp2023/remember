@@ -16,13 +16,10 @@ import harmony.communityservice.community.command.service.GuildReadCommandServic
 import harmony.communityservice.community.command.service.UserReadCommandService;
 import harmony.communityservice.community.domain.Guild;
 import harmony.communityservice.community.domain.GuildRead;
-import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.mapper.ToGuildMapper;
-import harmony.communityservice.community.mapper.ToRegisterUserReadRequestMapper;
 import harmony.communityservice.community.mapper.ToSearchGuildReadRequestMapper;
 import harmony.communityservice.community.query.service.GuildQueryService;
-import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +32,6 @@ public class GuildCommandServiceImpl implements GuildCommandService {
 
     private final GuildCommandRepository guildCommandRepository;
     private final GuildReadCommandService guildReadCommandService;
-    private final UserQueryService userQueryService;
     private final UserReadCommandService userReadCommandService;
     private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
@@ -46,8 +42,8 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     public GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
         Guild guild = createGuild(registerGuildRequest, profile);
         guildCommandRepository.save(guild);
-        registerUserRead(registerGuildRequest.managerId(), guild);
-        registerChannel(registerGuildRequest, guild);
+        registerUserRead(registerGuildRequest.managerId(), guild.getGuildId());
+        registerChannel(registerGuildRequest.managerId(), guild.getGuildId());
         return registerGuildRead(registerGuildRequest.managerId(), guild);
     }
 
@@ -57,33 +53,30 @@ public class GuildCommandServiceImpl implements GuildCommandService {
                 registerUserUsingInvitationCodeRequest.invitationCode().split("\\."));
         Guild targetGuild = guildQueryService.searchByInvitationCode(parsedInvitationCodes.get(0));
         registerGuildRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild);
-        registerUserRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild);
+        registerUserRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild.getGuildId());
     }
 
-    private void registerChannel(RegisterGuildRequest registerGuildRequest, Guild guild) {
+    private Guild createGuild(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
+        String uploadedImageUrl = contentService.convertFileToUrl(profile);
+        return ToGuildMapper.convert(registerGuildRequest, uploadedImageUrl, registerGuildRequest.managerId());
+    }
+
+    private void registerUserRead(Long userId, Long guildId) {
+        userReadCommandService.register(new RegisterUserReadRequest(userId, guildId));
+    }
+
+    private void registerChannel(Long userId, Long guildId) {
         RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
-                guild.getGuildId(), "기본채널", registerGuildRequest.managerId(), 0L, "TEXT");
+                guildId, "기본채널", userId, 0L, "TEXT");
         channelCommandService.register(registerChannelRequest);
     }
 
-    private void registerUserRead(Long userId, Guild guild) {
-        guild.updateUserIds(userId);
-        User targetUser = userQueryService.searchByUserId(userId);
-        RegisterUserReadRequest registerUserReadRequest = ToRegisterUserReadRequestMapper.convert(guild, targetUser);
-        userReadCommandService.register(registerUserReadRequest);
-    }
 
     private GuildRead registerGuildRead(Long userId, Guild guild) {
         RegisterGuildReadRequest registerGuildReadRequest = ToSearchGuildReadRequestMapper.convert(guild,
                 userId);
         return guildReadCommandService.register(registerGuildReadRequest);
     }
-
-    private Guild createGuild(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
-        String uploadedImageUrl = contentService.convertFileToUrl(profile);
-        return ToGuildMapper.convert(registerGuildRequest, uploadedImageUrl);
-    }
-
 
     @Override
     public void delete(DeleteGuildRequest deleteGuildRequest) {

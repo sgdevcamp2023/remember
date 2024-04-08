@@ -1,5 +1,6 @@
 package harmony.communityservice.community.domain;
 
+import harmony.communityservice.community.command.dto.ModifyCommentRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
@@ -64,8 +65,9 @@ public class Comment {
         writerInfo.verifyWriter(writerId);
     }
 
-    public void modify(String comment) {
-        this.comment = comment;
+    public void modify(ModifyCommentRequest modifyCommentRequest) {
+        verifyWriter(modifyCommentRequest.userId());
+        this.comment = modifyCommentRequest.comment();
         this.modifiedInfo = this.modifiedInfo.modify();
     }
 }

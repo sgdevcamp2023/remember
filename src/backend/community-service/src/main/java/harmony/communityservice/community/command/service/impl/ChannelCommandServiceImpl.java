@@ -23,13 +23,9 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
     @Override
     @AuthorizeGuildMember
     public Long register(RegisterChannelRequest registerChannelRequest) {
-        Channel channel = createChannel(registerChannelRequest);
+        Channel channel = ToChannelMapper.convert(registerChannelRequest);
         channelCommandRepository.save(channel);
         return channel.getChannelId();
-    }
-
-    private Channel createChannel(RegisterChannelRequest registerChannelRequest) {
-        return ToChannelMapper.convert(registerChannelRequest);
     }
 
     @Override

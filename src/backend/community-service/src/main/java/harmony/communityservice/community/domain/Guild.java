@@ -7,17 +7,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -59,19 +55,19 @@ public class Guild {
 
     @Builder
     public Guild(String name, String profile, String inviteCode,
-                 Long managerId, Set<Long> userIds) {
+                 Long managerId, Long userId) {
         this.guildInfo = makeGuildInfo(name, profile);
         this.creationTime = new CreationTime();
         this.inviteCode = inviteCode;
         this.managerId = managerId;
-        this.userIds = userIds;
+        this.userIds = updateUserIds(userId);
     }
 
-    public void updateUserIds(long userId) {
+    public Set<Long> updateUserIds(long userId) {
         this.userIds = this.userIds == null ? new HashSet<>() : this.userIds;
         Set<Long> newUserIds = new HashSet<>(this.userIds);
         newUserIds.add(userId);
-        this.userIds = newUserIds;
+        return newUserIds;
     }
 
     private ProfileInfo makeGuildInfo(String name, String profile) {

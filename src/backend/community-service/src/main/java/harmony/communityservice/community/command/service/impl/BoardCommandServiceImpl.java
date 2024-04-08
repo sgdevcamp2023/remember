@@ -55,8 +55,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     @Override
     public void modify(ModifyBoardRequest modifyBoardRequest) {
         Board targetBoard = boardQueryService.searchByBoardId(modifyBoardRequest.boardId());
-        targetBoard.verifyWriter(modifyBoardRequest.userId());
-        targetBoard.modifyTitleAndContent(modifyBoardRequest.title(), modifyBoardRequest.content());
+        targetBoard.modifyTitleAndContent(modifyBoardRequest);
     }
 
     @Override

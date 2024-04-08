@@ -33,8 +33,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     @Override
     public void modify(ModifyCommentRequest modifyCommentRequest) {
         Comment targetComment = commentQueryService.searchById(modifyCommentRequest.commentId());
-        targetComment.verifyWriter(modifyCommentRequest.userId());
-        targetComment.modify(modifyCommentRequest.comment());
+        targetComment.modify(modifyCommentRequest);
     }
 
     @Override

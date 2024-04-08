@@ -1,6 +1,5 @@
 package harmony.communityservice.community.command.service.impl;
 
-import harmony.communityservice.common.exception.DuplicatedEmojiException;
 import harmony.communityservice.community.command.dto.DeleteEmojiRequest;
 import harmony.communityservice.community.command.dto.RegisterEmojiRequest;
 import harmony.communityservice.community.command.repository.EmojiCommandRepository;
@@ -22,20 +21,9 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
     public void register(RegisterEmojiRequest registerEmojiRequest) {
         Emoji targetEmoji = emojiQueryService.searchByBoardIdAndEmojiType(registerEmojiRequest.boardId(),
                 registerEmojiRequest.emojiType());
-        if (targetEmoji == null) {
+        if (!targetEmoji.exists(registerEmojiRequest.userId())) {
             notExistsEmoji(registerEmojiRequest);
-        } else {
-            existsEmoji(registerEmojiRequest, targetEmoji);
         }
-    }
-
-    private void existsEmoji(RegisterEmojiRequest registerEmojiRequest, Emoji targetEmoji) {
-        targetEmoji
-                .exist(registerEmojiRequest.userId())
-                .ifPresent(e -> {
-                    throw new DuplicatedEmojiException();
-                });
-        targetEmoji.updateUserIds(registerEmojiRequest.userId());
     }
 
     private void notExistsEmoji(RegisterEmojiRequest registerEmojiRequest) {

@@ -8,8 +8,6 @@ import lombok.Getter;
 @Builder(toBuilder = true)
 public record RegisterUserReadRequest(
         @NotNull long userId,
-        @NotNull long guildId,
-        @NotBlank String profile,
-        @NotBlank String nickname
+        @NotNull long guildId
 ) {
 }

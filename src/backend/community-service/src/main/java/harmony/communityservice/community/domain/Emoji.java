@@ -1,5 +1,6 @@
 package harmony.communityservice.community.domain;
 
+import harmony.communityservice.common.exception.DuplicatedEmojiException;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -57,18 +58,27 @@ public class Emoji {
         this.userIds = newUserIds;
     }
 
-    public Optional<Long> exist(long userId) {
-        return userIds
-                .stream()
-                .filter(id -> Objects.equals(id, userId))
-                .findAny();
-    }
-
     public void deleteUserId(long userId) {
         exist(userId)
                 .ifPresent(id -> {
                     this.userIds.remove(id);
                     this.userIds = new HashSet<>(this.userIds);
                 });
+    }
+
+    public boolean exists(Long userId) {
+        exist(userId)
+                .ifPresent(e -> {
+                    throw new DuplicatedEmojiException();
+                });
+        updateUserIds(userId);
+        return true;
+    }
+
+    private Optional<Long> exist(long userId) {
+        return userIds
+                .stream()
+                .filter(id -> Objects.equals(id, userId))
+                .findAny();
     }
 }

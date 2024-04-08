@@ -1,5 +1,6 @@
 package harmony.communityservice.community.domain;
 
+import harmony.communityservice.community.command.dto.ModifyBoardRequest;
 import harmony.communityservice.community.query.dto.SearchImageResponse;
 import harmony.communityservice.community.query.dto.SearchImagesResponse;
 import jakarta.persistence.CollectionTable;
@@ -78,8 +79,9 @@ public class Board {
         writerInfo.verifyWriter(writerId);
     }
 
-    public void modifyTitleAndContent(String title, String content) {
-        this.content = this.content.modify(title, content);
+    public void modifyTitleAndContent(ModifyBoardRequest modifyBoardRequest) {
+        verifyWriter(modifyBoardRequest.userId());
+        this.content = this.content.modify(modifyBoardRequest.title(), modifyBoardRequest.content());
         this.modifiedInfo = modifiedInfo.modify();
     }
 

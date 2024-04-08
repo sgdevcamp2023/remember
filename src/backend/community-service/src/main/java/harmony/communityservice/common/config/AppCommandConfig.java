@@ -104,7 +104,7 @@ public class AppCommandConfig {
 
     @Bean
     public UserReadCommandService userReadCommandService() {
-        return new UserReadCommandServiceImpl(userReadCommandRepository());
+        return new UserReadCommandServiceImpl(userReadCommandRepository(), userQueryService);
     }
 
     @Bean
@@ -124,7 +124,7 @@ public class AppCommandConfig {
 
     @Bean
     public GuildCommandService guildCommandService() {
-        return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userQueryService,
+        return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(),
                 userReadCommandService(), guildQueryService, userReadQueryService,
                 contentService, channelCommandService());
     }
