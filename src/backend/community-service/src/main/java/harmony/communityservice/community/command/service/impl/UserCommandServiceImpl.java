@@ -10,7 +10,9 @@ import harmony.communityservice.community.mapper.ToUserMapper;
 import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class UserCommandServiceImpl implements UserCommandService {
 

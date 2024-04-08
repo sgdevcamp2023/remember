@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BoardQueryServiceImpl implements BoardQueryService {
     private static final int MAX_PAGE_COUNT = 50;
     private final BoardQueryRepository boardQueryRepository;

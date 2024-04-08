@@ -5,8 +5,10 @@ import harmony.communityservice.community.domain.User;
 import harmony.communityservice.community.query.repository.UserQueryRepository;
 import harmony.communityservice.community.query.service.UserQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserQueryServiceImpl implements UserQueryService {
 
     private final UserQueryRepository userQueryRepository;

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 public interface RoomQueryService {
 
     SearchRoomsResponse searchList(long userId);

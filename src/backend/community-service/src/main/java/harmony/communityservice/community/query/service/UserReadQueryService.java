@@ -7,7 +7,6 @@ import harmony.communityservice.community.query.dto.SearchUserStatesInGuildRespo
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 public interface UserReadQueryService {
 
     void existsByUserIdAndGuildId(VerifyGuildMemberRequest verifyGuildMemberRequest);

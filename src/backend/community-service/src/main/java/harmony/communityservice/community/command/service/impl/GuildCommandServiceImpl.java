@@ -26,8 +26,10 @@ import harmony.communityservice.community.query.service.UserQueryService;
 import harmony.communityservice.community.query.service.UserReadQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Transactional
 @RequiredArgsConstructor
 public class GuildCommandServiceImpl implements GuildCommandService {
 

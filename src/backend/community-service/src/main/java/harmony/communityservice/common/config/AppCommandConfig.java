@@ -136,7 +136,7 @@ public class AppCommandConfig {
 
     @Bean
     public CategoryCommandService categoryCommandService() {
-        return new CategoryCommandServiceImpl(userReadQueryService, categoryCommandRepository(),
+        return new CategoryCommandServiceImpl(categoryCommandRepository(),
                 categoryQueryService);
     }
 
@@ -149,7 +149,7 @@ public class AppCommandConfig {
 
     @Bean
     public ChannelCommandService channelCommandService() {
-        return new ChannelCommandServiceImpl(channelCommandRepository(), userReadQueryService);
+        return new ChannelCommandServiceImpl(channelCommandRepository());
     }
 
 

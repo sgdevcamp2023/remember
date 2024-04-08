@@ -11,7 +11,9 @@ import harmony.communityservice.community.mapper.ToCommentMapper;
 import harmony.communityservice.community.query.service.BoardQueryService;
 import harmony.communityservice.community.query.service.CommentQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class CommentCommandServiceImpl implements CommentCommandService {
 

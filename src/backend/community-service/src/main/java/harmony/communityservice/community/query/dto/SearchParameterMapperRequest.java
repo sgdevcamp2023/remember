@@ -3,8 +3,7 @@ package harmony.communityservice.community.query.dto;
 import harmony.communityservice.common.dto.CommonRequest;
 import jakarta.validation.constraints.NotNull;
 
-public record SearchGuildInvitationCodeRequest(@NotNull Long userId,
-                                               @NotNull Long guildId) implements CommonRequest {
+public record SearchParameterMapperRequest(@NotNull Long guildId, @NotNull Long userId) implements CommonRequest {
     @Override
     public Long getGuildId() {
         return guildId;

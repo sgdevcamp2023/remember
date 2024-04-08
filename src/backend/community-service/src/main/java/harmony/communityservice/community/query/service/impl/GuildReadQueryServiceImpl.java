@@ -6,8 +6,10 @@ import harmony.communityservice.community.query.service.GuildReadQueryService;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GuildReadQueryServiceImpl implements GuildReadQueryService {
 
     private final GuildReadQueryRepository guildReadQueryRepository;

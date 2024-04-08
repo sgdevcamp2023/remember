@@ -2,6 +2,7 @@ package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.community.query.dto.SearchChannelResponse;
+import harmony.communityservice.community.query.dto.SearchParameterMapperRequest;
 import harmony.communityservice.community.query.service.ChannelQueryService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class ChannelQueryController {
 
     @GetMapping("/search/channel/list/{guildId}/{userId}")
     public BaseResponse<?> searchList(@PathVariable Long guildId, @PathVariable Long userId) {
-        Map<Long, SearchChannelResponse> searchChannelResponseMap = channelQueryService.searchMapByGuildId(guildId,
-                userId);
+        Map<Long, SearchChannelResponse> searchChannelResponseMap = channelQueryService.searchMapByGuildId(
+                new SearchParameterMapperRequest(guildId, userId));
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchChannelResponseMap);
     }
 }

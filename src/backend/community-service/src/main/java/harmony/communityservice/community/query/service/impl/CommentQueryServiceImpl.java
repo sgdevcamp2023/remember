@@ -9,8 +9,10 @@ import harmony.communityservice.community.query.repository.CommentQueryRepositor
 import harmony.communityservice.community.query.service.CommentQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentQueryServiceImpl implements CommentQueryService {
 
     private final CommentQueryRepository commentQueryRepository;

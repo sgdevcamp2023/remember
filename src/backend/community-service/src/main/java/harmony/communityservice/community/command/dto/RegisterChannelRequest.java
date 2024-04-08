@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.dto;
 
+import harmony.communityservice.common.dto.CommonRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -8,11 +9,21 @@ public record RegisterChannelRequest(
         @NotBlank String name,
         @NotNull Long userId,
         @NotNull Long categoryId,
-        @NotBlank String type) {
+        @NotBlank String type) implements CommonRequest {
 
     public RegisterChannelRequest {
         if (categoryId == null) {
             categoryId = 0L;
         }
+    }
+
+    @Override
+    public Long getGuildId() {
+        return guildId;
+    }
+
+    @Override
+    public Long getUserId() {
+        return userId;
     }
 }

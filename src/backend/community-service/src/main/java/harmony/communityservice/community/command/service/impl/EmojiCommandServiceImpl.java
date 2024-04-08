@@ -9,7 +9,9 @@ import harmony.communityservice.community.domain.Emoji;
 import harmony.communityservice.community.mapper.ToEmojiMapper;
 import harmony.communityservice.community.query.service.EmojiQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class EmojiCommandServiceImpl implements EmojiCommandService {
 

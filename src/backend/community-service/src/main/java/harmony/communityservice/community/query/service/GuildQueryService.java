@@ -4,7 +4,6 @@ import harmony.communityservice.community.query.dto.SearchGuildInvitationCodeReq
 import harmony.communityservice.community.domain.Guild;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 public interface GuildQueryService {
 
 

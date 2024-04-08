@@ -118,7 +118,7 @@ public class AppQueryConfig {
 
     @Bean
     public CategoryQueryService categoryQueryService() {
-        return new CategoryQueryServiceImpl(categoryQueryRepository(), userReadQueryService());
+        return new CategoryQueryServiceImpl(categoryQueryRepository());
     }
 
     @Bean
@@ -128,7 +128,7 @@ public class AppQueryConfig {
 
     @Bean
     public ChannelQueryService channelQueryService() {
-        return new ChannelQueryServiceImpl(channelQueryRepository(), userReadQueryService());
+        return new ChannelQueryServiceImpl(channelQueryRepository());
     }
 
     @Bean

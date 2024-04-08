@@ -9,7 +9,9 @@ import harmony.communityservice.community.mapper.ToRoomMapper;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class RoomCommandServiceImpl implements RoomCommandService {
 

@@ -9,8 +9,10 @@ import harmony.communityservice.community.query.repository.EmojiQueryRepository;
 import harmony.communityservice.community.query.service.EmojiQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class EmojiQueryServiceImpl implements EmojiQueryService {
 
     private final EmojiQueryRepository emojiQueryRepository;

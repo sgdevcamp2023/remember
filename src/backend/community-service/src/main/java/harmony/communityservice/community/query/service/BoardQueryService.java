@@ -6,7 +6,6 @@ import harmony.communityservice.community.query.dto.SearchBoardResponse;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 public interface BoardQueryService {
 
     List<SearchBoardResponse> searchList(long channelId, long lastBoardId);

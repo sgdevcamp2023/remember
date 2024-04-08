@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Transactional
 public interface BoardCommandService {
     void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> files);
 

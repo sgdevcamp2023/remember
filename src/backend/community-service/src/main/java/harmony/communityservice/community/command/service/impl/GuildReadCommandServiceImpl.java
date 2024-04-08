@@ -7,7 +7,9 @@ import harmony.communityservice.community.command.service.GuildReadCommandServic
 import harmony.communityservice.community.domain.GuildRead;
 import harmony.communityservice.community.mapper.ToGuildReadMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class GuildReadCommandServiceImpl implements GuildReadCommandService {
 

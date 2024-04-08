@@ -8,7 +8,6 @@ import harmony.communityservice.community.domain.GuildRead;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Transactional
 public interface GuildCommandService {
 
     GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile);

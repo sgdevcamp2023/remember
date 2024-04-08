@@ -18,8 +18,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserReadQueryServiceImpl implements UserReadQueryService {
 
     private final UserStatusClient userStatusClient;

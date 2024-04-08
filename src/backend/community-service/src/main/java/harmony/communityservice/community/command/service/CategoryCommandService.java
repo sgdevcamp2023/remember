@@ -5,7 +5,6 @@ import harmony.communityservice.community.command.dto.RegisterCategoryRequest;
 import harmony.communityservice.community.command.dto.ModifyCategoryRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 public interface CategoryCommandService {
 
     void register(RegisterCategoryRequest registerCategoryRequest);

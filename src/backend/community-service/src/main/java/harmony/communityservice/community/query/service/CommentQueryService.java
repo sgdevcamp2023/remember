@@ -4,7 +4,6 @@ import harmony.communityservice.community.domain.Comment;
 import harmony.communityservice.community.query.dto.SearchCommentsResponse;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 public interface CommentQueryService {
 
     Comment searchById(Long commentId);

@@ -1,6 +1,7 @@
 package harmony.communityservice.community.query.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
+import harmony.communityservice.community.query.dto.SearchParameterMapperRequest;
 import harmony.communityservice.community.query.dto.SearchCategoryResponse;
 import harmony.communityservice.community.query.service.CategoryQueryService;
 import java.util.List;
@@ -20,8 +21,8 @@ public class CategoryQueryController {
 
     @GetMapping("/search/category/{guildId}/{userId}")
     public BaseResponse<?> searchInGuild(@PathVariable Long guildId, @PathVariable Long userId) {
-        List<SearchCategoryResponse> searchCategoryResponses = categoryQueryService.searchListByGuildId(guildId,
-                userId);
+        List<SearchCategoryResponse> searchCategoryResponses = categoryQueryService.searchListByGuildId(
+                new SearchParameterMapperRequest(guildId, userId));
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchCategoryResponses);
     }
 }

@@ -1,5 +1,6 @@
 package harmony.communityservice.community.command.service.impl;
 
+import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.common.dto.SearchUserReadRequest;
 import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.common.service.ContentService;
@@ -17,8 +18,10 @@ import harmony.communityservice.community.query.service.UserReadQueryService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Transactional
 @RequiredArgsConstructor
 public class BoardCommandServiceImpl implements BoardCommandService {
 
@@ -28,9 +31,8 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     private final BoardQueryService boardQueryService;
 
     @Override
+    @AuthorizeGuildMember
     public void register(RegisterBoardRequest registerBoardRequest, List<MultipartFile> files) {
-        userReadQueryService.existsByUserIdAndGuildId(
-                new VerifyGuildMemberRequest(registerBoardRequest.userId(), registerBoardRequest.guildId()));
         List<Image> images = createImages(files);
         Board board = createBoard(registerBoardRequest, images);
         boardCommandRepository.save(board);

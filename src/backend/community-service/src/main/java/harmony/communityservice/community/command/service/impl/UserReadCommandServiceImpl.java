@@ -6,7 +6,9 @@ import harmony.communityservice.community.command.service.UserReadCommandService
 import harmony.communityservice.community.domain.UserRead;
 import harmony.communityservice.community.mapper.ToUserReadMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class UserReadCommandServiceImpl implements UserReadCommandService {
 
