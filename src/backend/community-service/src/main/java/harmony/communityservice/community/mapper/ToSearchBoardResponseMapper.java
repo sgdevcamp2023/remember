@@ -2,13 +2,14 @@ package harmony.communityservice.community.mapper;
 
 import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.query.dto.SearchBoardDetailResponse;
+import harmony.communityservice.community.query.dto.SearchCommentsResponse;
 
 public class ToSearchBoardResponseMapper {
-    public static SearchBoardDetailResponse convert(Board board) {
+    public static SearchBoardDetailResponse convert(Board board, SearchCommentsResponse searchCommentsResponse) {
         return SearchBoardDetailResponse.builder()
                 .title(board.getContent().getTitle())
                 .content(board.getContent().getContent())
-                .searchCommentsResponse(board.makeSearchCommentsResponse())
+                .searchCommentsResponse(searchCommentsResponse)
                 .searchEmojisResponse(board.makeSearchEmojisResponse())
                 .boardId(board.getBoardId())
                 .searchImagesResponse(board.makeSearchImagesResponse())

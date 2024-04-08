@@ -4,10 +4,10 @@ import harmony.communityservice.community.domain.Board;
 import harmony.communityservice.community.query.dto.SearchBoardResponse;
 
 public class ToSearchBoardsResponseMapper {
-    public static SearchBoardResponse convert(Board targetBoard) {
+    public static SearchBoardResponse convert(Board targetBoard,Long commentCount) {
         return SearchBoardResponse.builder()
                 .boardId(targetBoard.getBoardId())
-                .commentCount(targetBoard.countComments())
+                .commentCount(commentCount)
                 .title(targetBoard.getContent().getTitle())
                 .content(targetBoard.getContent().getContent())
                 .userId(targetBoard.getWriterInfo().getWriterId())

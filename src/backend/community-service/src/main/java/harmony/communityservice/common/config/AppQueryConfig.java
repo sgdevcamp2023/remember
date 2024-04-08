@@ -138,7 +138,7 @@ public class AppQueryConfig {
 
     @Bean
     public BoardQueryService boardQueryService() {
-        return new BoardQueryServiceImpl(boardQueryRepository());
+        return new BoardQueryServiceImpl(boardQueryRepository(),commentQueryService());
     }
 
     @Bean

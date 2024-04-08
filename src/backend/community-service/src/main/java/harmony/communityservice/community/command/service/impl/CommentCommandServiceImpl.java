@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 public class CommentCommandServiceImpl implements CommentCommandService {
 
     private final CommentCommandRepository commentCommandRepository;
-    private final BoardQueryService boardQueryService;
     private final CommentQueryService commentQueryService;
 
     @Override
@@ -26,8 +25,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     }
 
     private Comment createComment(RegisterCommentRequest registerCommentRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(registerCommentRequest.boardId());
-        return ToCommentMapper.convert(registerCommentRequest, targetBoard);
+        return ToCommentMapper.convert(registerCommentRequest);
     }
 
     @Override

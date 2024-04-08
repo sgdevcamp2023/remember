@@ -186,7 +186,7 @@ public class AppCommandConfig {
 
     @Bean
     public CommentCommandService commentCommandService() {
-        return new CommentCommandServiceImpl(commentCommandRepository(), boardQueryService, commentQueryService);
+        return new CommentCommandServiceImpl(commentCommandRepository(), commentQueryService);
     }
 
     @Bean

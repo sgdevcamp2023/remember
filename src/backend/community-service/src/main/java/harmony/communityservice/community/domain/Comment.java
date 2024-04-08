@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,9 +30,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    @ManyToOne
-    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Board board;
+    @NotNull
+    @Column(name = "board_id")
+    private Long boardId;
 
     @NotBlank
     @Column(name = "content")
@@ -47,8 +48,8 @@ public class Comment {
     private ModifiedInfo modifiedInfo;
 
     @Builder
-    public Comment(Board board, String comment, Long writerId, String writerName, String writerProfile) {
-        this.board = board;
+    public Comment(Long boardId, String comment, Long writerId, String writerName, String writerProfile) {
+        this.boardId = boardId;
         this.comment = comment;
         this.writerInfo = makeWriterInfo(writerId, writerName, writerProfile);
         this.modifiedInfo = new ModifiedInfo();

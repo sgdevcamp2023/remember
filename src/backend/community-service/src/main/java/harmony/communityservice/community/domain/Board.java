@@ -53,9 +53,6 @@ public class Board {
     private CreationTime creationTime;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true)
@@ -81,10 +78,6 @@ public class Board {
         return WriterInfo.make(writerName, writerId, writerProfile);
     }
 
-    public int countComments() {
-        return comments.size();
-    }
-
     public void verifyWriter(Long writerId) {
         writerInfo.verifyWriter(writerId);
     }
@@ -108,12 +101,5 @@ public class Board {
                         .map(ToSearchEmojiResponseMapper::convert)
                         .collect(Collectors.toList())
         );
-    }
-
-    public SearchCommentsResponse makeSearchCommentsResponse() {
-        List<SearchCommentResponse> searchCommentResponses = this.comments.stream()
-                .map(comment -> ToSearchCommentResponseMapper.convert(comment, boardId))
-                .collect(Collectors.toList());
-        return new SearchCommentsResponse(searchCommentResponses);
     }
 }
