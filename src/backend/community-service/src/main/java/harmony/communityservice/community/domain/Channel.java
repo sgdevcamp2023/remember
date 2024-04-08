@@ -2,19 +2,16 @@ package harmony.communityservice.community.domain;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,9 +28,9 @@ public class Channel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long channelId;
 
-    @ManyToOne
-    @JoinColumn(name = "guild_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Guild guild;
+    @NotNull
+    @Column(name = "guild_id")
+    private Long guildId;
 
     @Nullable
     @Column(name = "category_id")
@@ -50,9 +47,9 @@ public class Channel {
     private CreationTime creationTime;
 
     @Builder
-    public Channel(Guild guild, Long categoryId, String name,
+    public Channel(Long guildId, Long categoryId, String name,
                    String type) {
-        this.guild = guild;
+        this.guildId = guildId;
         this.categoryId = categoryId;
         this.name = name;
         this.creationTime = new CreationTime();

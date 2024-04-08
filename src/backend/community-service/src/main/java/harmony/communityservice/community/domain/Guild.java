@@ -57,10 +57,6 @@ public class Guild {
             joinColumns = @JoinColumn(name = "guild_id"))
     private Set<Long> userIds = new HashSet<>();
 
-
-    @OneToMany(mappedBy = "guild", fetch = FetchType.LAZY)
-    private List<Channel> channels = new ArrayList<>();
-
     @Builder
     public Guild(String name, String profile, String inviteCode,
                  Long managerId, Set<Long> userIds) {
