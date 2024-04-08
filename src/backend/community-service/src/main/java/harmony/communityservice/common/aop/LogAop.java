@@ -15,20 +15,20 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LogAop {
 
-    @Pointcut("execution(* harmony.communityservice.community.command.service.impl..*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.board.board.service.command.impl..*.*(..))")
     public void commandService() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.community.command.repository.impl..*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.board.board.repository.command.impl..*.*(..))")
     public void commandRepository() {
     }
 
 
-    @Pointcut("execution(* harmony.communityservice.community.query.service.impl..*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.board.board.service.query.impl..*.*(..))")
     public void queryService() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.community.query.repository.impl..*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.board.board.repository.query.impl..*.*(..))")
     public void queryRepository() {
     }
 

@@ -2,7 +2,7 @@ package harmony.communityservice.common.aop;
 
 import harmony.communityservice.common.dto.CommonRequest;
 import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
-import harmony.communityservice.community.query.service.UserReadQueryService;
+import harmony.communityservice.user.service.query.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

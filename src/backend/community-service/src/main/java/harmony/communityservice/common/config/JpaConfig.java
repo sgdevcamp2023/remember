@@ -24,11 +24,11 @@ public class JpaConfig {
                 = new LocalContainerEntityManagerFactoryBean();
 
         entityManagerFactory.setDataSource(dataSource);
-        entityManagerFactory.setPackagesToScan("harmony.communityservice.community");
+        entityManagerFactory.setPackagesToScan("harmony.communityservice");
         entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
         entityManagerFactory.setPersistenceUnitName("entityManager");
         HashMap<String, Object> prop = new HashMap<>();
-        prop.put("hibernate.hbm2ddl.auto", "create");
+        prop.put("hibernate.hbm2ddl.auto", "none");
         entityManagerFactory.setJpaPropertyMap(prop);
         return entityManagerFactory;
     }
