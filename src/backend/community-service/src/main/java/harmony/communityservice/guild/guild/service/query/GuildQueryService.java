@@ -16,4 +16,6 @@ public interface GuildQueryService {
     boolean existsByGuildIdAndManagerId(Long guildId, Long managerId);
 
     SearchUserStatesInGuildResponse searchUserStatesInGuild(SearchParameterMapperRequest searchParameterMapperRequest);
+
+    Guild searchById(Long guildId);
 }

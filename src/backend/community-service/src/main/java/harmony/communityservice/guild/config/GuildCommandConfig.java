@@ -2,12 +2,8 @@ package harmony.communityservice.guild.config;
 
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.common.service.ProducerService;
-import harmony.communityservice.guild.category.repository.command.CategoryCommandRepository;
-import harmony.communityservice.guild.category.repository.command.impl.CategoryCommandRepositoryImpl;
-import harmony.communityservice.guild.category.repository.command.jpa.JpaCategoryCommandRepository;
 import harmony.communityservice.guild.category.service.command.CategoryCommandService;
 import harmony.communityservice.guild.category.service.command.impl.CategoryCommandServiceImpl;
-import harmony.communityservice.guild.category.service.query.CategoryQueryService;
 import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
 import harmony.communityservice.guild.channel.repository.command.impl.ChannelCommandRepositoryImpl;
 import harmony.communityservice.guild.channel.repository.command.jpa.JpaChannelCommandRepository;
@@ -34,8 +30,6 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class GuildCommandConfig {
 
-    private final JpaCategoryCommandRepository jpaCategoryCommandRepository;
-    private final CategoryQueryService categoryQueryService;
     private final JpaChannelCommandRepository jpaChannelCommandRepository;
     private final JpaGuildCommandRepository jpaGuildCommandRepository;
     private final JpaGuildReadCommandRepository jpaGuildReadCommandRepository;
@@ -45,14 +39,10 @@ public class GuildCommandConfig {
     private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
 
-    @Bean
-    public CategoryCommandRepository categoryCommandRepository() {
-        return new CategoryCommandRepositoryImpl(jpaCategoryCommandRepository);
-    }
 
     @Bean
     public CategoryCommandService categoryCommandService() {
-        return new CategoryCommandServiceImpl(categoryCommandRepository(), categoryQueryService);
+        return new CategoryCommandServiceImpl(guildQueryService);
     }
 
     @Bean

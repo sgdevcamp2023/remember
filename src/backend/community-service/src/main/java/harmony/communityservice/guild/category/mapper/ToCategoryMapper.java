@@ -8,7 +8,6 @@ public class ToCategoryMapper {
     public static Category convert(RegisterCategoryRequest registerCategoryRequest) {
         return Category.builder()
                 .name(registerCategoryRequest.name())
-                .guildId(registerCategoryRequest.guildId())
                 .build();
     }
 }

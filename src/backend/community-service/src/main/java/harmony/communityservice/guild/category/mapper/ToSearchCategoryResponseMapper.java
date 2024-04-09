@@ -5,11 +5,11 @@ import harmony.communityservice.guild.category.dto.SearchCategoryResponse;
 
 public class ToSearchCategoryResponseMapper {
 
-    public static SearchCategoryResponse convert(Category category) {
+    public static SearchCategoryResponse convert(Category category, Long guildId, int categoryId) {
         return SearchCategoryResponse.builder()
                 .categoryName(category.getName())
-                .guildId(category.getGuildId())
-                .categoryId(category.getCategoryId())
+                .guildId(guildId)
+                .categoryId(categoryId)
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package harmony.communityservice.guild.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,19 +17,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
+@Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "category", indexes = @Index(name = "idx__guildId", columnList = "guild_id"))
 public class Category {
-
-    @Id
-    @Column(name = "category_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
-
-    @NotNull
-    @Column(name = "guild_id")
-    private Long guildId;
 
     @NotBlank
     @Column(name = "category_name")
@@ -41,8 +32,7 @@ public class Category {
     private ModifiedInfo modifiedInfo;
 
     @Builder
-    public Category(Long guildId, String name) {
-        this.guildId = guildId;
+    public Category(String name) {
         this.name = name;
         this.creationTime = new CreationTime();
         this.modifiedInfo = new ModifiedInfo();

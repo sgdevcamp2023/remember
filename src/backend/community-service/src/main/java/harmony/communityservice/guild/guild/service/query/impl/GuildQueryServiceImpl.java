@@ -67,6 +67,11 @@ public class GuildQueryServiceImpl implements GuildQueryService {
         return new SearchUserStatesInGuildResponse(guildStates, voiceChannelStates);
     }
 
+    @Override
+    public Guild searchById(Long guildId) {
+        return guildQueryRepository.findById(guildId).orElseThrow(NotFoundDataException::new);
+    }
+
     private List<SearchUserStateResponse> makeSearchUserStateResponses(long guildId) {
         List<UserRead> targetUserReads = userReadQueryService.searchListByGuildId(guildId);
         return targetUserReads

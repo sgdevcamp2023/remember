@@ -1,9 +1,6 @@
 package harmony.communityservice.guild.config;
 
 import harmony.communityservice.common.client.UserStatusClient;
-import harmony.communityservice.guild.category.repository.query.CategoryQueryRepository;
-import harmony.communityservice.guild.category.repository.query.impl.CategoryQueryRepositoryImpl;
-import harmony.communityservice.guild.category.repository.query.jpa.JpaCategoryQueryRepository;
 import harmony.communityservice.guild.category.service.query.CategoryQueryService;
 import harmony.communityservice.guild.category.service.query.impl.CategoryQueryServiceImpl;
 import harmony.communityservice.guild.channel.repository.query.ChannelQueryRepository;
@@ -29,22 +26,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class GuildQueryConfig {
-
-    private final JpaCategoryQueryRepository jpaCategoryQueryRepository;
     private final JpaChannelQueryRepository jpaChannelQueryRepository;
     private final JpaGuildQueryRepository jpaGuildQueryRepository;
     private final JpaGuildReadQueryRepository jpaGuildReadQueryRepository;
     private final UserReadQueryService userReadQueryService;
     private final UserStatusClient userStatusClient;
 
-    @Bean
-    public CategoryQueryRepository categoryQueryRepository() {
-        return new CategoryQueryRepositoryImpl(jpaCategoryQueryRepository);
-    }
 
     @Bean
     public CategoryQueryService categoryQueryService() {
-        return new CategoryQueryServiceImpl(categoryQueryRepository());
+        return new CategoryQueryServiceImpl(guildQueryService());
     }
 
     @Bean

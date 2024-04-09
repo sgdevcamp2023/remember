@@ -4,7 +4,7 @@ import harmony.communityservice.common.dto.CommonRequest;
 import jakarta.validation.constraints.NotNull;
 
 public record DeleteCategoryRequest(@NotNull Long guildId,
-                                    @NotNull Long categoryId,
+                                    @NotNull Integer categoryId,
                                     @NotNull Long userId) implements CommonRequest {
     @Override
     public Long getGuildId() {

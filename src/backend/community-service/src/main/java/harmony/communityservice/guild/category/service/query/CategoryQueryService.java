@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface CategoryQueryService {
 
-    Category searchByCategoryId(Long categoryId);
-
-    void existsByCategoryIdAndGuildId(Long categoryId, long guildId);
-
     List<SearchCategoryResponse> searchListByGuildId(SearchParameterMapperRequest searchCategoryListRequest);
 }
