@@ -67,7 +67,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
 
     private void registerChannel(Long userId, Long guildId) {
         RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
-                guildId, "기본채널", userId, 0L, "TEXT");
+                guildId, "기본채널", userId, 0, "TEXT");
         channelCommandService.register(registerChannelRequest);
     }
 

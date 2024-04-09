@@ -21,7 +21,7 @@ public class ChannelQueryController {
 
     @GetMapping("/search/channel/list/{guildId}/{userId}")
     public BaseResponse<?> searchList(@PathVariable Long guildId, @PathVariable Long userId) {
-        Map<Long, SearchChannelResponse> searchChannelResponseMap = channelQueryService.searchMapByGuildId(
+        Map<Integer, SearchChannelResponse> searchChannelResponseMap = channelQueryService.searchMapByGuildId(
                 new SearchParameterMapperRequest(guildId, userId));
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchChannelResponseMap);
     }

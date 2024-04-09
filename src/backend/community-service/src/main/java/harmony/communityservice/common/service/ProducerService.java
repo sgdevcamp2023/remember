@@ -6,9 +6,9 @@ import harmony.communityservice.guild.domain.GuildRead;
 public interface ProducerService {
     void publishGuildDeletionEvent(Long guildId);
 
-    void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Long channelId);
+    void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Integer channelId);
 
-    void publishChannelDeletionEvent(Long channelId);
+    void publishChannelDeletionEvent(Integer channelId);
 
     void publishGuildCreationEvent(GuildRead guildRead);
 }

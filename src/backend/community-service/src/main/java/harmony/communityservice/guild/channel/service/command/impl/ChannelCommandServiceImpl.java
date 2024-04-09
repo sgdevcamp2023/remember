@@ -4,9 +4,10 @@ import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.guild.channel.dto.DeleteChannelRequest;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.mapper.ToChannelMapper;
-import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
 import harmony.communityservice.guild.domain.Channel;
+import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.guild.service.query.GuildQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,19 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ChannelCommandServiceImpl implements ChannelCommandService {
 
-    private final ChannelCommandRepository channelCommandRepository;
+    private final GuildQueryService guildQueryService;
 
     @Override
     @AuthorizeGuildMember
-    public Long register(RegisterChannelRequest registerChannelRequest) {
+    public Integer register(RegisterChannelRequest registerChannelRequest) {
         Channel channel = ToChannelMapper.convert(registerChannelRequest);
-        channelCommandRepository.save(channel);
-        return channel.getChannelId();
+        Guild targetGuild = guildQueryService.searchById(registerChannelRequest.guildId());
+        return targetGuild.registerChannel(channel);
     }
 
     @Override
     @AuthorizeGuildMember
     public void delete(DeleteChannelRequest deleteChannelRequest) {
-        channelCommandRepository.deleteByChannelId(deleteChannelRequest.channelId());
+        Guild targetGuild = guildQueryService.searchById(deleteChannelRequest.guildId());
+        targetGuild.deleteChannel(deleteChannelRequest.channelId());
     }
 }

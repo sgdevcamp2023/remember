@@ -25,23 +25,23 @@ public class KafkaProducerService implements ProducerService {
     }
 
     @Override
-    public void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Long channelId) {
+    public void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Integer channelId) {
         CommunityEvent event = CommunityEvent.builder()
                 .type("CREATE-CHANNEL")
                 .guildId(registerChannelRequest.guildId())
                 .channelType(registerChannelRequest.type())
                 .channelName(registerChannelRequest.name())
-                .channelReadId(channelId)
+                .channelId(channelId)
                 .categoryId(registerChannelRequest.categoryId())
                 .build();
         kafkaTemplateForCommunity.send(communityEvent, event);
     }
 
     @Override
-    public void publishChannelDeletionEvent(Long channelId) {
+    public void publishChannelDeletionEvent(Integer channelId) {
         CommunityEvent event = CommunityEvent.builder()
                 .type("DELETE-CHANNEL")
-                .channelReadId(channelId)
+                .channelId(channelId)
                 .build();
         kafkaTemplateForCommunity.send(communityEvent, event);
     }

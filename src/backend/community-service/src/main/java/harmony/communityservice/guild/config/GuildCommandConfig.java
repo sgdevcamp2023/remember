@@ -4,9 +4,6 @@ import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.guild.category.service.command.CategoryCommandService;
 import harmony.communityservice.guild.category.service.command.impl.CategoryCommandServiceImpl;
-import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
-import harmony.communityservice.guild.channel.repository.command.impl.ChannelCommandRepositoryImpl;
-import harmony.communityservice.guild.channel.repository.command.jpa.JpaChannelCommandRepository;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
 import harmony.communityservice.guild.channel.service.command.impl.ChannelCommandServiceImpl;
 import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
@@ -29,8 +26,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class GuildCommandConfig {
-
-    private final JpaChannelCommandRepository jpaChannelCommandRepository;
     private final JpaGuildCommandRepository jpaGuildCommandRepository;
     private final JpaGuildReadCommandRepository jpaGuildReadCommandRepository;
     private final ProducerService producerService;
@@ -45,14 +40,10 @@ public class GuildCommandConfig {
         return new CategoryCommandServiceImpl(guildQueryService);
     }
 
-    @Bean
-    public ChannelCommandRepository channelCommandRepository() {
-        return new ChannelCommandRepositoryImpl(jpaChannelCommandRepository);
-    }
 
     @Bean
     public ChannelCommandService channelCommandService() {
-        return new ChannelCommandServiceImpl(channelCommandRepository());
+        return new ChannelCommandServiceImpl(guildQueryService);
     }
 
     @Bean

@@ -51,6 +51,11 @@ public class Guild {
     @CollectionTable(name = "categories", joinColumns = @JoinColumn(name = "guild_id"))
     private List<Category> categories;
 
+    @OrderColumn(name = "channel_id")
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "channels", joinColumns = @JoinColumn(name = "guild_id"))
+    private List<Channel> channels;
+
     @NotBlank
     @Column(name = "invite_code")
     private String inviteCode;
@@ -72,6 +77,7 @@ public class Guild {
         this.managerId = managerId;
         this.userIds = updateUserIds(userId);
         this.categories = new ArrayList<>();
+        this.channels = new ArrayList<>();
     }
 
     public Set<Long> updateUserIds(long userId) {
@@ -85,11 +91,23 @@ public class Guild {
         return ProfileInfo.make(name, profile);
     }
 
+    public int registerChannel(Channel channel) {
+        this.channels = this.channels == null ? new ArrayList<>() : this.channels;
+        this.channels.add(channel);
+        this.channels = new ArrayList<>(this.channels);
+        return this.channels.size() - 1;
+    }
+
+    public void deleteChannel(int channelId) {
+        verifyExistChannel(channelId);
+        this.channels.remove(channelId);
+        this.channels = new ArrayList<>(this.channels);
+    }
+
     public void registerCategory(Category category) {
         this.categories = this.categories == null ? new ArrayList<>() : this.categories;
-        ArrayList<Category> newCategories = new ArrayList<>(this.categories);
-        newCategories.add(category);
-        this.categories = newCategories;
+        this.categories.add(category);
+        this.categories = new ArrayList<>(this.categories);
     }
 
     public void deleteCategory(int categoryId) {
@@ -108,6 +126,12 @@ public class Guild {
     private void verifyExistCategory(int categoryId) {
         if (this.categories.get(categoryId) == null) {
             throw new NotFoundDataException("카테고리가 존재하지 않습니다");
+        }
+    }
+
+    private void verifyExistChannel(int channelId) {
+        if (this.channels.get(channelId) == null) {
+            throw new NotFoundDataException("채널이 존재하지 않습니다");
         }
     }
 }

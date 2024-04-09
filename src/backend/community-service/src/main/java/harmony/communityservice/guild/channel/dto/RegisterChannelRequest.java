@@ -8,12 +8,12 @@ public record RegisterChannelRequest(
         @NotNull Long guildId,
         @NotBlank String name,
         @NotNull Long userId,
-        @NotNull Long categoryId,
+        @NotNull Integer categoryId,
         @NotBlank String type) implements CommonRequest {
 
     public RegisterChannelRequest {
         if (categoryId == null) {
-            categoryId = 0L;
+            categoryId = 0;
         }
     }
 

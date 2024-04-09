@@ -5,13 +5,13 @@ import harmony.communityservice.guild.channel.dto.SearchChannelResponse;
 
 public class ToSearchChannelResponseMapper {
 
-    public static SearchChannelResponse convert(Channel channel) {
+    public static SearchChannelResponse convert(Channel channel, Integer channelId, Long guildId) {
         return SearchChannelResponse.builder()
-                .channelId(channel.getChannelId())
+                .channelId(channelId)
                 .channelName(channel.getName())
                 .channelType(channel.getType())
                 .categoryId(channel.getCategoryId())
-                .guildId(channel.getGuildId())
+                .guildId(guildId)
                 .build();
     }
 }
