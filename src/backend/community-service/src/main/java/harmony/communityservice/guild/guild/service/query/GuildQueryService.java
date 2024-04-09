@@ -13,7 +13,7 @@ public interface GuildQueryService {
     Guild searchByInvitationCode(String code);
 
 
-    boolean existsByGuildIdAndManagerId(Long guildId, Long managerId);
+    void existsByGuildIdAndManagerId(Long guildId, Long managerId);
 
     SearchUserStatesInGuildResponse searchUserStatesInGuild(SearchParameterMapperRequest searchParameterMapperRequest);
 

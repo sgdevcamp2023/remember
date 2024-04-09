@@ -54,7 +54,7 @@ public class GuildCommandConfig {
     @Bean
     public GuildCommandService guildCommandService() {
         return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userReadCommandService,
-                guildQueryService, userReadQueryService, contentService, channelCommandService());
+                guildQueryService, userReadQueryService, contentService);
     }
 
     @Bean

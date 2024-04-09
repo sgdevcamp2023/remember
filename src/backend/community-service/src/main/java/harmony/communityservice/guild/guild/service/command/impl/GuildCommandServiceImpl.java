@@ -1,24 +1,26 @@
 package harmony.communityservice.guild.guild.service.command.impl;
 
+import harmony.communityservice.common.annotation.AuthorizeGuildManager;
+import harmony.communityservice.common.dto.SearchUserReadRequest;
+import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
+import harmony.communityservice.guild.channel.mapper.ToChannelMapper;
+import harmony.communityservice.guild.domain.Channel;
+import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.dto.DeleteGuildRequest;
 import harmony.communityservice.guild.guild.dto.ModifyUserNicknameInGuildRequest;
-import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
 import harmony.communityservice.guild.guild.dto.RegisterGuildRequest;
+import harmony.communityservice.guild.guild.dto.RegisterUserUsingInvitationCodeRequest;
+import harmony.communityservice.guild.guild.dto.ToSearchGuildReadRequestMapper;
+import harmony.communityservice.guild.guild.mapper.ToGuildMapper;
 import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
-import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
 import harmony.communityservice.guild.guild.service.command.GuildCommandService;
 import harmony.communityservice.guild.guild.service.command.GuildReadCommandService;
 import harmony.communityservice.guild.guild.service.query.GuildQueryService;
-import harmony.communityservice.common.dto.SearchUserReadRequest;
-import harmony.communityservice.common.service.ContentService;
-import harmony.communityservice.user.dto.RegisterUserReadRequest;
-import harmony.communityservice.guild.guild.dto.RegisterUserUsingInvitationCodeRequest;
-import harmony.communityservice.guild.domain.Guild;
-import harmony.communityservice.guild.domain.GuildRead;
 import harmony.communityservice.user.domain.UserRead;
-import harmony.communityservice.guild.guild.mapper.ToGuildMapper;
-import harmony.communityservice.guild.guild.dto.ToSearchGuildReadRequestMapper;
+import harmony.communityservice.user.dto.RegisterUserReadRequest;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import harmony.communityservice.user.service.query.UserReadQueryService;
 import java.util.List;
@@ -36,14 +38,13 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
-    private final ChannelCommandService channelCommandService;
 
     @Override
     public GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
         Guild guild = createGuild(registerGuildRequest, profile);
         guildCommandRepository.save(guild);
         registerUserRead(registerGuildRequest.managerId(), guild.getGuildId());
-        registerChannel(registerGuildRequest.managerId(), guild.getGuildId());
+        registerChannel(registerGuildRequest.managerId(), guild);
         return registerGuildRead(registerGuildRequest.managerId(), guild);
     }
 
@@ -65,10 +66,11 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         userReadCommandService.register(new RegisterUserReadRequest(userId, guildId));
     }
 
-    private void registerChannel(Long userId, Long guildId) {
+    private void registerChannel(Long userId, Guild targetGuild) {
         RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
-                guildId, "기본채널", userId, 0, "TEXT");
-        channelCommandService.register(registerChannelRequest);
+                targetGuild.getGuildId(), "기본채널", userId, 0, "TEXT");
+        Channel channel = ToChannelMapper.convert(registerChannelRequest);
+        targetGuild.registerChannel(channel);
     }
 
 
@@ -79,9 +81,8 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     }
 
     @Override
+    @AuthorizeGuildManager
     public void delete(DeleteGuildRequest deleteGuildRequest) {
-        guildQueryService.existsByGuildIdAndManagerId(deleteGuildRequest.guildId(),
-                deleteGuildRequest.managerId());
         guildCommandRepository.delete(deleteGuildRequest.guildId());
         guildReadCommandService.delete(deleteGuildRequest.guildId());
     }

@@ -48,8 +48,10 @@ public class GuildQueryServiceImpl implements GuildQueryService {
     }
 
     @Override
-    public boolean existsByGuildIdAndManagerId(Long guildId, Long managerId) {
-        return guildQueryRepository.existsByGuildIdAndManagerId(guildId, managerId);
+    public void existsByGuildIdAndManagerId(Long guildId, Long managerId) {
+        if (!guildQueryRepository.existsByGuildIdAndManagerId(guildId, managerId)) {
+            throw new NotFoundDataException("관리자만 가능합니다");
+        }
     }
 
     @Override
