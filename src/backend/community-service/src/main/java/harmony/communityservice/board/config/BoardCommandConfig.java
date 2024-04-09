@@ -6,9 +6,6 @@ import harmony.communityservice.board.board.repository.command.jpa.JpaBoardComma
 import harmony.communityservice.board.board.service.command.BoardCommandService;
 import harmony.communityservice.board.board.service.command.impl.BoardCommandServiceImpl;
 import harmony.communityservice.board.board.service.query.BoardQueryService;
-import harmony.communityservice.board.comment.repository.command.CommentCommandRepository;
-import harmony.communityservice.board.comment.repository.command.impl.CommentCommandRepositoryImpl;
-import harmony.communityservice.board.comment.repository.command.jpa.JpaCommentCommandRepository;
 import harmony.communityservice.board.comment.service.command.CommentCommandService;
 import harmony.communityservice.board.comment.service.command.impl.CommentCommandServiceImpl;
 import harmony.communityservice.board.comment.service.query.CommentQueryService;
@@ -28,7 +25,6 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class BoardCommandConfig {
 
-    private final JpaCommentCommandRepository jpaCommentCommandRepository;
     private final CommentQueryService commentQueryService;
     private final JpaEmojiCommandRepository jpaEmojiCommandRepository;
     private final EmojiQueryService emojiQueryService;
@@ -37,14 +33,10 @@ public class BoardCommandConfig {
     private final UserReadQueryService userReadQueryService;
     private final BoardQueryService boardQueryService;
 
-    @Bean
-    public CommentCommandRepository commentCommandRepository() {
-        return new CommentCommandRepositoryImpl(jpaCommentCommandRepository);
-    }
 
     @Bean
     public CommentCommandService commentCommandService() {
-        return new CommentCommandServiceImpl(commentCommandRepository(), commentQueryService);
+        return new CommentCommandServiceImpl(boardQueryService);
     }
 
     @Bean

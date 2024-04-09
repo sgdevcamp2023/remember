@@ -1,17 +1,19 @@
 package harmony.communityservice.board.board.service.query.impl;
 
-import harmony.communityservice.board.board.repository.query.BoardQueryRepository;
-import harmony.communityservice.board.board.service.query.BoardQueryService;
-import harmony.communityservice.board.comment.service.query.CommentQueryService;
-import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
-import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.board.domain.Board;
-import harmony.communityservice.board.board.mapper.ToSearchBoardResponseMapper;
-import harmony.communityservice.board.board.mapper.ToSearchBoardsResponseMapper;
 import harmony.communityservice.board.board.dto.SearchBoardDetailResponse;
 import harmony.communityservice.board.board.dto.SearchBoardResponse;
+import harmony.communityservice.board.board.mapper.ToSearchBoardResponseMapper;
+import harmony.communityservice.board.board.mapper.ToSearchBoardsResponseMapper;
+import harmony.communityservice.board.board.repository.query.BoardQueryRepository;
+import harmony.communityservice.board.board.service.query.BoardQueryService;
+import harmony.communityservice.board.comment.dto.SearchCommentResponse;
 import harmony.communityservice.board.comment.dto.SearchCommentsResponse;
+import harmony.communityservice.board.comment.mapper.ToSearchCommentResponseMapper;
+import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.domain.Comment;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
+import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
+import harmony.communityservice.common.exception.NotFoundDataException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardQueryServiceImpl implements BoardQueryService {
     private static final int MAX_PAGE_COUNT = 50;
     private final BoardQueryRepository boardQueryRepository;
-    private final CommentQueryService commentQueryService;
     private final EmojiQueryService emojiQueryService;
 
 
@@ -33,9 +34,9 @@ public class BoardQueryServiceImpl implements BoardQueryService {
         return boardQueryRepository.findByChannelOrderByBoardId(channelId, lastBoardId, pageRequest)
                 .stream()
                 .map(b -> {
-                    Long commentCount = commentQueryService.countingByBoardId(b.getBoardId());
+                    Long commentCount = b.countingComments();
                     SearchEmojisResponse searchEmojisResponse = emojiQueryService.searchListByBoardId(b.getBoardId());
-                    return ToSearchBoardsResponseMapper.convert(b, commentCount,searchEmojisResponse);
+                    return ToSearchBoardsResponseMapper.convert(b, commentCount, searchEmojisResponse);
                 })
                 .collect(Collectors.toList());
     }
@@ -48,9 +49,18 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     @Override
     public SearchBoardDetailResponse searchDetail(Long boardId) {
         Board targetBoard = searchByBoardId(boardId);
-        SearchCommentsResponse searchCommentsResponse = commentQueryService.searchListByBoardId(boardId);
+        SearchCommentsResponse searchCommentsResponse = createSearchCommentsResponse(targetBoard);
         SearchEmojisResponse searchEmojisResponse = emojiQueryService.searchListByBoardId(boardId);
-        return ToSearchBoardResponseMapper.convert(targetBoard, searchCommentsResponse,searchEmojisResponse);
-
+        return ToSearchBoardResponseMapper.convert(targetBoard, searchCommentsResponse, searchEmojisResponse);
     }
+
+    private SearchCommentsResponse createSearchCommentsResponse(Board targetBoard) {
+        List<Comment> comments = targetBoard.getComments();
+        List<SearchCommentResponse> searchCommentResponses = comments.stream()
+                .map(c -> ToSearchCommentResponseMapper.convert(c, targetBoard.getBoardId(), comments.indexOf(c)))
+                .toList();
+        return new SearchCommentsResponse(searchCommentResponses);
+    }
+
+
 }

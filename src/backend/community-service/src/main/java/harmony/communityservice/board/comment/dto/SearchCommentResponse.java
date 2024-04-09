@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder(toBuilder = true)
 public record SearchCommentResponse(
-        Long commentId,
+        int commentId,
         Long boardId,
         String writerName,
         String comment,

@@ -1,12 +1,12 @@
 package harmony.communityservice.board.comment.service.query.impl;
 
-import harmony.communityservice.board.comment.repository.query.CommentQueryRepository;
-import harmony.communityservice.board.comment.service.query.CommentQueryService;
-import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.board.domain.Comment;
-import harmony.communityservice.board.comment.mapper.ToSearchCommentResponseMapper;
+import harmony.communityservice.board.board.service.query.BoardQueryService;
 import harmony.communityservice.board.comment.dto.SearchCommentResponse;
 import harmony.communityservice.board.comment.dto.SearchCommentsResponse;
+import harmony.communityservice.board.comment.mapper.ToSearchCommentResponseMapper;
+import harmony.communityservice.board.comment.service.query.CommentQueryService;
+import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.domain.Comment;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,23 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CommentQueryServiceImpl implements CommentQueryService {
 
-    private final CommentQueryRepository commentQueryRepository;
-
-    @Override
-    public Comment searchById(Long commentId) {
-        return commentQueryRepository.findCommentById(commentId).orElseThrow(NotFoundDataException::new);
-    }
+    private final BoardQueryService boardQueryService;
 
     @Override
     public Long countingByBoardId(Long boardId) {
-        return commentQueryRepository.countCommentsByBoardId(boardId);
+        return boardQueryService.searchByBoardId(boardId).countingComments();
     }
 
     @Override
     public SearchCommentsResponse searchListByBoardId(Long boardId) {
-        List<SearchCommentResponse> searchCommentResponses = commentQueryRepository.findCommentsByBoardId(boardId)
-                .stream()
-                .map(c -> ToSearchCommentResponseMapper.convert(c, boardId)).toList();
+        Board targetBoard = boardQueryService.searchByBoardId(boardId);
+        List<Comment> comments = targetBoard.getComments();
+        List<SearchCommentResponse> searchCommentResponses = comments.stream()
+                .map(c -> ToSearchCommentResponseMapper.convert(c, boardId, comments.indexOf(c))).toList();
         return new SearchCommentsResponse(searchCommentResponses);
     }
 }

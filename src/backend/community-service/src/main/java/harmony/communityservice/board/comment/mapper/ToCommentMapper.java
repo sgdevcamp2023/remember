@@ -8,7 +8,6 @@ public class ToCommentMapper {
     public static Comment convert(RegisterCommentRequest registerCommentRequest) {
         return Comment.builder()
                 .comment(registerCommentRequest.comment())
-                .boardId(registerCommentRequest.boardId())
                 .writerId(registerCommentRequest.userId())
                 .writerName(registerCommentRequest.writerName())
                 .writerProfile(registerCommentRequest.writerProfile())

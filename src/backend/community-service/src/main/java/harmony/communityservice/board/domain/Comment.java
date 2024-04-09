@@ -2,34 +2,18 @@ package harmony.communityservice.board.domain;
 
 import harmony.communityservice.board.comment.dto.ModifyCommentRequest;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
-@Table(name = "comment", indexes = @Index(name = "idx__boardId", columnList = "board_id"))
+@Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
-
-    @Id
-    @Column(name = "comment_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
-
-    @NotNull
-    @Column(name = "board_id")
-    private Long boardId;
 
     @NotBlank
     @Column(name = "content")
@@ -45,8 +29,7 @@ public class Comment {
     private ModifiedInfo modifiedInfo;
 
     @Builder
-    public Comment(Long boardId, String comment, Long writerId, String writerName, String writerProfile) {
-        this.boardId = boardId;
+    public Comment(String comment, Long writerId, String writerName, String writerProfile) {
         this.comment = comment;
         this.writerInfo = makeWriterInfo(writerId, writerName, writerProfile);
         this.modifiedInfo = new ModifiedInfo();
