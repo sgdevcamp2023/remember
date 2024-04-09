@@ -2,7 +2,7 @@ package harmony.communityservice.common.config;
 
 import harmony.communityservice.common.dto.CommunityEvent;
 import harmony.communityservice.common.service.ProducerService;
-import harmony.communityservice.common.service.impl.ProducerServiceImpl;
+import harmony.communityservice.common.service.impl.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +16,6 @@ public class KafkaConfig {
 
     @Bean
     public ProducerService producerService() {
-        return new ProducerServiceImpl(kafkaEventTemplate);
+        return new KafkaProducerService(kafkaEventTemplate);
     }
 }

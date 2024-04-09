@@ -15,13 +15,13 @@ public class CommunityEvent {
     private String profile;
     private String channelName;
     private String channelType;
-    private Long categoryId;
-    private Long channelReadId;
+    private Integer categoryId;
+    private Integer channelId;
 
 
     @Builder
     public CommunityEvent(String type, Long guildId, Long guildReadId, Long userId, String name, String profile,
-                          String channelName, String channelType, Long categoryId, Long channelReadId) {
+                          String channelName, String channelType, Integer categoryId, Integer channelId) {
         this.type = type;
         this.guildId = guildId;
         this.guildReadId = guildReadId;
@@ -31,6 +31,6 @@ public class CommunityEvent {
         this.channelName = channelName;
         this.channelType = channelType;
         this.categoryId = categoryId;
-        this.channelReadId = channelReadId;
+        this.channelId = channelId;
     }
 }
