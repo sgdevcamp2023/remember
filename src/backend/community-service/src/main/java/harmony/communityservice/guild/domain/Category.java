@@ -15,11 +15,18 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@Embeddable
+@Entity
+@Table(name = "category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
+
+    @Id
+    @Column(name = "category_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long categoryId;
 
     @NotBlank
     @Column(name = "category_name")

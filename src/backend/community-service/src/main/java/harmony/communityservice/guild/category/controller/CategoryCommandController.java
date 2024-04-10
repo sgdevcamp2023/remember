@@ -1,9 +1,9 @@
 package harmony.communityservice.guild.category.controller;
 
+import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.guild.category.dto.DeleteCategoryRequest;
 import harmony.communityservice.guild.category.dto.ModifyCategoryRequest;
 import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
-import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.guild.category.service.command.CategoryCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class CategoryCommandController {
 
     @PostMapping("/register/category")
     public BaseResponse<?> register(@RequestBody @Validated RegisterCategoryRequest registerCategoryRequest) {
-        categoryCommandService.register(registerCategoryRequest);
+        categoryCommandService.registerCategory(registerCategoryRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 

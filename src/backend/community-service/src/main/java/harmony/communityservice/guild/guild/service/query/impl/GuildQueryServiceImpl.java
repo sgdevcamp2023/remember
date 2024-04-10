@@ -43,11 +43,6 @@ public class GuildQueryServiceImpl implements GuildQueryService {
     }
 
     @Override
-    public Guild searchByInvitationCode(String code) {
-        return guildQueryRepository.findByInvitationCode(code).orElseThrow(NotFoundDataException::new);
-    }
-
-    @Override
     public void existsByGuildIdAndManagerId(Long guildId, Long managerId) {
         if (!guildQueryRepository.existsByGuildIdAndManagerId(guildId, managerId)) {
             throw new NotFoundDataException("관리자만 가능합니다");
@@ -67,11 +62,6 @@ public class GuildQueryServiceImpl implements GuildQueryService {
                 searchUserStateResponses, userState);
         Map<Long, Map<Long, ?>> voiceChannelStates = getUserStatesInVoiceChannel(guildId, userState);
         return new SearchUserStatesInGuildResponse(guildStates, voiceChannelStates);
-    }
-
-    @Override
-    public Guild searchById(Long guildId) {
-        return guildQueryRepository.findById(guildId).orElseThrow(NotFoundDataException::new);
     }
 
     private List<SearchUserStateResponse> makeSearchUserStateResponses(long guildId) {

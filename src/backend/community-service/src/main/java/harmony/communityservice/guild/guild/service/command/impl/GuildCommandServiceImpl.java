@@ -1,10 +1,15 @@
 package harmony.communityservice.guild.guild.service.command.impl;
 
 import harmony.communityservice.common.annotation.AuthorizeGuildManager;
+import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.common.dto.SearchUserReadRequest;
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
+import harmony.communityservice.guild.category.mapper.ToCategoryMapper;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.mapper.ToChannelMapper;
+import harmony.communityservice.guild.domain.Category;
 import harmony.communityservice.guild.domain.Channel;
 import harmony.communityservice.guild.domain.Guild;
 import harmony.communityservice.guild.domain.GuildRead;
@@ -35,13 +40,13 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     private final GuildCommandRepository guildCommandRepository;
     private final GuildReadCommandService guildReadCommandService;
     private final UserReadCommandService userReadCommandService;
-    private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
 
     @Override
     public GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
         Guild guild = createGuild(registerGuildRequest, profile);
+        guild.updateUserIds(registerGuildRequest.managerId());
         guildCommandRepository.save(guild);
         registerUserRead(registerGuildRequest.managerId(), guild.getGuildId());
         registerChannel(registerGuildRequest.managerId(), guild);
@@ -52,14 +57,17 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     public void joinByInvitationCode(RegisterUserUsingInvitationCodeRequest registerUserUsingInvitationCodeRequest) {
         List<String> parsedInvitationCodes = List.of(
                 registerUserUsingInvitationCodeRequest.invitationCode().split("\\."));
-        Guild targetGuild = guildQueryService.searchByInvitationCode(parsedInvitationCodes.get(0));
+        Guild targetGuild = guildCommandRepository.findByInvitationCode(parsedInvitationCodes.get(0))
+                .orElseThrow(NotFoundDataException::new);
+        targetGuild.updateUserIds(registerUserUsingInvitationCodeRequest.userId());
+        guildCommandRepository.save(targetGuild);
         registerGuildRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild);
         registerUserRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild.getGuildId());
     }
 
     private Guild createGuild(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
         String uploadedImageUrl = contentService.convertFileToUrl(profile);
-        return ToGuildMapper.convert(registerGuildRequest, uploadedImageUrl, registerGuildRequest.managerId());
+        return ToGuildMapper.convert(registerGuildRequest, uploadedImageUrl);
     }
 
     private void registerUserRead(Long userId, Long guildId) {
@@ -68,9 +76,10 @@ public class GuildCommandServiceImpl implements GuildCommandService {
 
     private void registerChannel(Long userId, Guild targetGuild) {
         RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
-                targetGuild.getGuildId(), "기본채널", userId, 0, "TEXT");
+                targetGuild.getGuildId(), "기본채널", userId, 0L, "TEXT");
         Channel channel = ToChannelMapper.convert(registerChannelRequest);
         targetGuild.registerChannel(channel);
+        guildCommandRepository.save(targetGuild);
     }
 
 

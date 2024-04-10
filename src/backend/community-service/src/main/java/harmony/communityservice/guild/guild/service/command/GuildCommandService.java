@@ -1,5 +1,7 @@
 package harmony.communityservice.guild.guild.service.command;
 
+import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
+import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.guild.dto.DeleteGuildRequest;
 import harmony.communityservice.guild.guild.dto.ModifyUserNicknameInGuildRequest;
 import harmony.communityservice.guild.guild.dto.RegisterGuildRequest;

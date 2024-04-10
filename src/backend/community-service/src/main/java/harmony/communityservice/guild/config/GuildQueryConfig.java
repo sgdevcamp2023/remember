@@ -31,12 +31,12 @@ public class GuildQueryConfig {
 
     @Bean
     public CategoryQueryService categoryQueryService() {
-        return new CategoryQueryServiceImpl(guildQueryService());
+        return new CategoryQueryServiceImpl(guildQueryRepository());
     }
 
     @Bean
     public ChannelQueryService channelQueryService() {
-        return new ChannelQueryServiceImpl(guildQueryService());
+        return new ChannelQueryServiceImpl(guildQueryRepository());
     }
 
     @Bean

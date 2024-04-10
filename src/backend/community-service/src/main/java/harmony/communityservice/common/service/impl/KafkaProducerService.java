@@ -25,7 +25,7 @@ public class KafkaProducerService implements ProducerService {
     }
 
     @Override
-    public void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Integer channelId) {
+    public void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Long channelId) {
         CommunityEvent event = CommunityEvent.builder()
                 .type("CREATE-CHANNEL")
                 .guildId(registerChannelRequest.guildId())
@@ -38,7 +38,7 @@ public class KafkaProducerService implements ProducerService {
     }
 
     @Override
-    public void publishChannelDeletionEvent(Integer channelId) {
+    public void publishChannelDeletionEvent(Long channelId) {
         CommunityEvent event = CommunityEvent.builder()
                 .type("DELETE-CHANNEL")
                 .channelId(channelId)

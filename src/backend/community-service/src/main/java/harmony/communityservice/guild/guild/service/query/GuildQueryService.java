@@ -10,12 +10,10 @@ public interface GuildQueryService {
 
     String searchInvitationCode(SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest);
 
-    Guild searchByInvitationCode(String code);
 
 
     void existsByGuildIdAndManagerId(Long guildId, Long managerId);
 
     SearchUserStatesInGuildResponse searchUserStatesInGuild(SearchParameterMapperRequest searchParameterMapperRequest);
 
-    Guild searchById(Long guildId);
 }

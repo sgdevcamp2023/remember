@@ -1,5 +1,6 @@
 package harmony.communityservice.board.comment.service.command.impl;
 
+import harmony.communityservice.board.board.repository.command.BoardCommandRepository;
 import harmony.communityservice.board.board.service.query.BoardQueryService;
 import harmony.communityservice.board.comment.dto.DeleteCommentRequest;
 import harmony.communityservice.board.comment.dto.ModifyCommentRequest;
@@ -16,23 +17,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentCommandServiceImpl implements CommentCommandService {
 
     private final BoardQueryService boardQueryService;
+    private final BoardCommandRepository boardCommandRepository;
 
     @Override
     public void register(RegisterCommentRequest registerCommentRequest) {
         Board targetBoard = boardQueryService.searchByBoardId(registerCommentRequest.boardId());
         Comment comment = ToCommentMapper.convert(registerCommentRequest);
         targetBoard.registerComment(comment);
+        boardCommandRepository.save(targetBoard);
     }
 
     @Override
     public void modify(ModifyCommentRequest modifyCommentRequest) {
         Board targetBoard = boardQueryService.searchByBoardId(modifyCommentRequest.boardId());
         targetBoard.modifyComment(modifyCommentRequest);
+        boardCommandRepository.save(targetBoard);
     }
 
     @Override
     public void delete(DeleteCommentRequest deleteCommentRequest) {
         Board targetBoard = boardQueryService.searchByBoardId(deleteCommentRequest.boardId());
         targetBoard.deleteComment(deleteCommentRequest.commentId(), deleteCommentRequest.userId());
+        boardCommandRepository.save(targetBoard);
     }
 }

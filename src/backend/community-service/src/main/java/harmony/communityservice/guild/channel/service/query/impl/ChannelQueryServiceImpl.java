@@ -2,11 +2,13 @@ package harmony.communityservice.guild.channel.service.query.impl;
 
 import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.common.dto.SearchParameterMapperRequest;
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.guild.channel.dto.SearchChannelResponse;
 import harmony.communityservice.guild.channel.mapper.ToSearchChannelResponseMapper;
 import harmony.communityservice.guild.channel.service.query.ChannelQueryService;
 import harmony.communityservice.guild.domain.Channel;
 import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.guild.repository.query.GuildQueryRepository;
 import harmony.communityservice.guild.guild.service.query.GuildQueryService;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ChannelQueryServiceImpl implements ChannelQueryService {
 
-    private final GuildQueryService guildQueryService;
+    private final GuildQueryRepository guildQueryRepository;
 
     @Override
     @AuthorizeGuildMember
@@ -27,12 +29,12 @@ public class ChannelQueryServiceImpl implements ChannelQueryService {
     }
 
     private Map<Integer, SearchChannelResponse> findChannels(Long guildId) {
-        Guild targetGuild = guildQueryService.searchById(guildId);
+        Guild targetGuild = guildQueryRepository.findById(guildId).orElseThrow(NotFoundDataException::new);
         Map<Integer, SearchChannelResponse> channelReads = new HashMap<>();
         List<Channel> channels = targetGuild.getChannels();
         channels.forEach(channel -> {
             SearchChannelResponse searchChannelResponse = ToSearchChannelResponseMapper.convert(channel,
-                    channels.indexOf(channel), guildId);
+                    channel.getChannelId(), guildId);
             channelReads.put(channels.indexOf(channel), searchChannelResponse);
         });
         return channelReads;

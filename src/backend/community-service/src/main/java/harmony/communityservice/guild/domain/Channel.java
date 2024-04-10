@@ -4,22 +4,32 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Embeddable
+@Entity
+@Table(name = "channel")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel {
 
+    @Id
+    @Column(name = "channel_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long channelId;
+
     @Nullable
     @Column(name = "category_id")
-    private Integer categoryId;
+    private Long categoryId;
 
     @Column(name = "channel_name")
     private String name;
@@ -32,7 +42,7 @@ public class Channel {
     private CreationTime creationTime;
 
     @Builder
-    public Channel(Integer categoryId, String name,
+    public Channel(Long categoryId, String name,
                    String type) {
         this.categoryId = categoryId;
         this.name = name;

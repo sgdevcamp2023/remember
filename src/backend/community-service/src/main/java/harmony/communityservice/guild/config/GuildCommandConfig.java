@@ -16,7 +16,6 @@ import harmony.communityservice.guild.guild.service.command.GuildCommandService;
 import harmony.communityservice.guild.guild.service.command.GuildReadCommandService;
 import harmony.communityservice.guild.guild.service.command.impl.GuildCommandServiceImpl;
 import harmony.communityservice.guild.guild.service.command.impl.GuildReadCommandServiceImpl;
-import harmony.communityservice.guild.guild.service.query.GuildQueryService;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import harmony.communityservice.user.service.query.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
@@ -30,20 +29,19 @@ public class GuildCommandConfig {
     private final JpaGuildReadCommandRepository jpaGuildReadCommandRepository;
     private final ProducerService producerService;
     private final UserReadCommandService userReadCommandService;
-    private final GuildQueryService guildQueryService;
     private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
 
 
     @Bean
     public CategoryCommandService categoryCommandService() {
-        return new CategoryCommandServiceImpl(guildQueryService);
+        return new CategoryCommandServiceImpl(guildCommandRepository());
     }
 
 
     @Bean
     public ChannelCommandService channelCommandService() {
-        return new ChannelCommandServiceImpl(guildQueryService);
+        return new ChannelCommandServiceImpl(guildCommandRepository());
     }
 
     @Bean
@@ -54,7 +52,7 @@ public class GuildCommandConfig {
     @Bean
     public GuildCommandService guildCommandService() {
         return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userReadCommandService,
-                guildQueryService, userReadQueryService, contentService);
+                userReadQueryService, contentService);
     }
 
     @Bean

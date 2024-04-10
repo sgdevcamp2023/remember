@@ -6,7 +6,7 @@ import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
 
 public interface CategoryCommandService {
 
-    void register(RegisterCategoryRequest registerCategoryRequest);
+    void registerCategory(RegisterCategoryRequest registerCategoryRequest);
 
     void delete(DeleteCategoryRequest deleteCategoryRequest);
 

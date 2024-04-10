@@ -3,17 +3,21 @@ package harmony.communityservice.guild.domain;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OrderColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -24,10 +28,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Entity
-@Table(name = "guild")
+@Table(name = "guild", indexes = @Index(name = "idx__invite_code", columnList = "invite_code"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Guild {
 
@@ -46,15 +51,13 @@ public class Guild {
     @Embedded
     private CreationTime creationTime;
 
-    @OrderColumn(name = "category_id")
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "categories", joinColumns = @JoinColumn(name = "guild_id"))
-    private List<Category> categories;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @JoinColumn(name = "guild_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private List<Category> categories = new ArrayList<>();
 
-    @OrderColumn(name = "channel_id")
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "channels", joinColumns = @JoinColumn(name = "guild_id"))
-    private List<Channel> channels;
+    @OneToMany(fetch = FetchType.LAZY,cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @JoinColumn(name = "guild_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private List<Channel> channels = new ArrayList<>();
 
     @NotBlank
     @Column(name = "invite_code")
@@ -64,74 +67,69 @@ public class Guild {
     private Long managerId;
 
     @ElementCollection
-    @CollectionTable(name = "guild_user",
-            joinColumns = @JoinColumn(name = "guild_id"))
+    @CollectionTable(name = "guild_user", joinColumns = @JoinColumn(name = "guild_id"))
     private Set<Long> userIds = new HashSet<>();
 
     @Builder
     public Guild(String name, String profile, String inviteCode,
-                 Long managerId, Long userId) {
+                 Long managerId) {
         this.guildInfo = makeGuildInfo(name, profile);
         this.creationTime = new CreationTime();
         this.inviteCode = inviteCode;
         this.managerId = managerId;
-        this.userIds = updateUserIds(userId);
         this.categories = new ArrayList<>();
         this.channels = new ArrayList<>();
     }
 
-    public Set<Long> updateUserIds(long userId) {
+    public void updateUserIds(long userId) {
         this.userIds = this.userIds == null ? new HashSet<>() : this.userIds;
-        Set<Long> newUserIds = new HashSet<>(this.userIds);
-        newUserIds.add(userId);
-        return newUserIds;
+        this.userIds.add(userId);
+        this.userIds = new HashSet<>(this.userIds);
     }
 
     private ProfileInfo makeGuildInfo(String name, String profile) {
         return ProfileInfo.make(name, profile);
     }
 
-    public int registerChannel(Channel channel) {
-        this.channels = this.channels == null ? new ArrayList<>() : this.channels;
+    public void registerChannel(Channel channel) {
         this.channels.add(channel);
-        this.channels = new ArrayList<>(this.channels);
-        return this.channels.size() - 1;
-    }
-
-    public void deleteChannel(int channelId) {
-        verifyExistChannel(channelId);
-        this.channels.remove(channelId);
-        this.channels = new ArrayList<>(this.channels);
     }
 
     public void registerCategory(Category category) {
-        this.categories = this.categories == null ? new ArrayList<>() : this.categories;
         this.categories.add(category);
-        this.categories = new ArrayList<>(this.categories);
     }
 
-    public void deleteCategory(int categoryId) {
-        verifyExistCategory(categoryId);
-        this.categories.remove(categoryId);
-        this.categories = new ArrayList<>(this.categories);
+    public void deleteChannel(Long channelId) {
+        Channel channel = verifyExistChannel(channelId);
+        this.channels.remove(channel);
     }
 
-    public void modifyCategoryName(int categoryId, String newName) {
-        verifyExistCategory(categoryId);
-        Category category = this.categories.get(categoryId);
+
+    public void deleteCategory(Long categoryId) {
+        Category category = verifyExistCategory(categoryId);
+        this.categories.remove(category);
+    }
+
+    public void modifyCategoryName(Long categoryId, String newName) {
+        Category category = verifyExistCategory(categoryId);
         category.modifyName(newName);
-        this.categories = new ArrayList<>(this.categories);
     }
 
-    private void verifyExistCategory(int categoryId) {
-        if (this.categories.get(categoryId) == null) {
-            throw new NotFoundDataException("카테고리가 존재하지 않습니다");
+    private Category verifyExistCategory(Long categoryId) {
+        for (Category category : this.categories) {
+            if (category.getCategoryId().equals(categoryId)) {
+                return category;
+            }
         }
+        throw new NotFoundDataException("카테고리가 존재하지 않습니다");
     }
 
-    private void verifyExistChannel(int channelId) {
-        if (this.channels.get(channelId) == null) {
-            throw new NotFoundDataException("채널이 존재하지 않습니다");
+    private Channel verifyExistChannel(Long channelId) {
+        for (Channel channel : this.channels) {
+            if (channel.getChannelId().equals(channelId)) {
+                return channel;
+            }
         }
+        throw new NotFoundDataException("채널이 존재하지 않습니다");
     }
 }

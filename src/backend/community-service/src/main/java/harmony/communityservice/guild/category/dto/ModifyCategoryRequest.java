@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record ModifyCategoryRequest(@NotNull Long guildId,
                                     @NotNull Long userId,
-                                    @NotNull int categoryId,
+                                    @NotNull Long categoryId,
                                     @NotBlank String name) implements CommonRequest {
 
     @Override

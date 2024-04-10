@@ -8,7 +8,6 @@ import harmony.communityservice.board.board.service.command.impl.BoardCommandSer
 import harmony.communityservice.board.board.service.query.BoardQueryService;
 import harmony.communityservice.board.comment.service.command.CommentCommandService;
 import harmony.communityservice.board.comment.service.command.impl.CommentCommandServiceImpl;
-import harmony.communityservice.board.comment.service.query.CommentQueryService;
 import harmony.communityservice.board.emoji.repository.command.EmojiCommandRepository;
 import harmony.communityservice.board.emoji.repository.command.impl.EmojiCommandRepositoryImpl;
 import harmony.communityservice.board.emoji.repository.command.jpa.JpaEmojiCommandRepository;
@@ -25,7 +24,6 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class BoardCommandConfig {
 
-    private final CommentQueryService commentQueryService;
     private final JpaEmojiCommandRepository jpaEmojiCommandRepository;
     private final EmojiQueryService emojiQueryService;
     private final JpaBoardCommandRepository jpaBoardCommandRepository;
@@ -36,7 +34,7 @@ public class BoardCommandConfig {
 
     @Bean
     public CommentCommandService commentCommandService() {
-        return new CommentCommandServiceImpl(boardQueryService);
+        return new CommentCommandServiceImpl(boardQueryService, boardCommandRepository());
     }
 
     @Bean
