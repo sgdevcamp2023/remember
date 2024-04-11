@@ -21,11 +21,11 @@ public class LogAop {
     public void board() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.board.comment.*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.board.comment..*.*(..))")
     public void comment() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.board.emoji.*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.board.emoji..*.*(..))")
     public void emoji() {
     }
 
@@ -33,23 +33,23 @@ public class LogAop {
     public void common() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.guild.category.*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.guild.category..*.*(..))")
     public void category() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.guild.channel.*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.guild.channel..*.*(..))")
     public void channel() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.guild.guild.*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.guild.guild..*.*(..))")
     public void guild() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.room.*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.room..*.*(..))")
     public void room() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.user.*.*(..))")
+    @Pointcut("execution(* harmony.communityservice.user..*.*(..))")
     public void user() {
     }
 
