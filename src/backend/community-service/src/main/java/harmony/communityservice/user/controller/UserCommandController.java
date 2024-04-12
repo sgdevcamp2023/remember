@@ -1,10 +1,12 @@
 package harmony.communityservice.user.controller;
 
 import harmony.communityservice.common.dto.BaseResponse;
+import harmony.communityservice.guild.guild.dto.ModifyUserNicknameInGuildRequest;
 import harmony.communityservice.user.dto.ModifyUserNicknameRequest;
 import harmony.communityservice.user.dto.ModifyUserProfileRequest;
 import harmony.communityservice.user.dto.RegisterUserRequest;
 import harmony.communityservice.user.service.command.UserCommandService;
+import harmony.communityservice.user.service.command.UserReadCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserCommandController {
 
     private final UserCommandService userCommandService;
+    private final UserReadCommandService userReadCommandService;
 
     @PostMapping("/register/user")
     public BaseResponse<?> register(@RequestBody @Validated RegisterUserRequest registerUserRequest) {
@@ -36,6 +39,13 @@ public class UserCommandController {
     @PatchMapping("/modify/user/nickname")
     public BaseResponse<?> modifyNickname(@RequestBody @Validated ModifyUserNicknameRequest modifyUserNicknameRequest) {
         userCommandService.modifyNickname(modifyUserNicknameRequest);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK");
+    }
+
+    @PatchMapping("/modify/guild/username")
+    public BaseResponse<?> modifyNicknameInGuild(
+            @RequestBody @Validated ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest) {
+        userReadCommandService.modifyUserNicknameInGuild(modifyUserNicknameInGuildRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

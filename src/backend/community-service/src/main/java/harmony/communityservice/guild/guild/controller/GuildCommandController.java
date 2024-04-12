@@ -48,11 +48,4 @@ public class GuildCommandController {
         producerService.publishGuildDeletionEvent(deleteGuildRequest.guildId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
-
-    @PatchMapping("/modify/guild/username")
-    public BaseResponse<?> modifyNicknameInGuild(
-            @RequestBody @Validated ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest) {
-        guildCommandService.modifyUserNicknameInGuild(modifyUserNicknameInGuildRequest);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK");
-    }
 }

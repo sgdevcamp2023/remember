@@ -17,4 +17,13 @@ public class RegisterLogInfoInterceptor implements HandlerInterceptor {
         MDC.put("User-Id", request.getHeader("user-id"));
         return true;
     }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
+        MDC.remove("Trace-Id");
+        MDC.remove("Api-Addr");
+        MDC.remove("Http-Method");
+        MDC.remove("User-Id");
+    }
 }

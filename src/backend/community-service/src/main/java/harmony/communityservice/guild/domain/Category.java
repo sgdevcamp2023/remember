@@ -19,7 +19,7 @@ import lombok.ToString;
 
 @Getter
 @Entity
-@Table(name = "category")
+@Table(name = "category",indexes = @Index(name = "idx__guild_id", columnList = "guild_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 
@@ -27,6 +27,9 @@ public class Category {
     @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
+
+    @Column(name = "guild_id")
+    private Long guildId;
 
     @NotBlank
     @Column(name = "category_name")
@@ -39,8 +42,9 @@ public class Category {
     private ModifiedInfo modifiedInfo;
 
     @Builder
-    public Category(String name) {
+    public Category(String name, Long guildId) {
         this.name = name;
+        this.guildId = guildId;
         this.creationTime = new CreationTime();
         this.modifiedInfo = new ModifiedInfo();
     }

@@ -24,7 +24,7 @@ public class CategoryCommandController {
 
     @PostMapping("/register/category")
     public BaseResponse<?> register(@RequestBody @Validated RegisterCategoryRequest registerCategoryRequest) {
-        categoryCommandService.registerCategory(registerCategoryRequest);
+        categoryCommandService.register(registerCategoryRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 

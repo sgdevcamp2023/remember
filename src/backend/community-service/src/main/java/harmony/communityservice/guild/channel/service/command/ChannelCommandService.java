@@ -5,7 +5,9 @@ import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 
 public interface ChannelCommandService {
 
-    Long registerChannel(RegisterChannelRequest registerChannelRequest);
+    Long register(RegisterChannelRequest registerChannelRequest);
 
     void delete(DeleteChannelRequest deleteChannelRequest);
+
+    void deleteByGuildId(Long guildId);
 }

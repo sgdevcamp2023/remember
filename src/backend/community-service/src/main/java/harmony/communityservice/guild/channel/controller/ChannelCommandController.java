@@ -5,7 +5,6 @@ import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.guild.channel.dto.DeleteChannelRequest;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
-import harmony.communityservice.guild.guild.service.command.GuildCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -27,14 +26,14 @@ public class ChannelCommandController {
     public BaseResponse<?> registerChannelInCategory(
             @RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
         producerService.publishChannelCreationEvent(registerChannelRequest,
-                channelCommandService.registerChannel(registerChannelRequest));
+                channelCommandService.register(registerChannelRequest));
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
     @PostMapping("/register/guild/channel")
     public BaseResponse<?> registerChannelInGuild(
             @RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
-        channelCommandService.registerChannel(registerChannelRequest);
+        channelCommandService.register(registerChannelRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 

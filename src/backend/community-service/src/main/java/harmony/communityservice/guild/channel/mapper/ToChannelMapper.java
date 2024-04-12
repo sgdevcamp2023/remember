@@ -10,6 +10,7 @@ public class ToChannelMapper {
                 .name(registerChannelRequest.name())
                 .type(registerChannelRequest.type())
                 .categoryId(registerChannelRequest.categoryId())
+                .guildId(registerChannelRequest.guildId())
                 .build();
     }
 }

@@ -10,8 +10,6 @@ import harmony.communityservice.user.service.command.UserCommandService;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import harmony.communityservice.user.service.command.impl.UserCommandServiceImpl;
 import harmony.communityservice.user.service.command.impl.UserReadCommandServiceImpl;
-import harmony.communityservice.user.service.query.UserQueryService;
-import harmony.communityservice.user.service.query.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +20,6 @@ public class UserCommandConfig {
 
     private final JpaUserCommandRepository jpaUserCommandRepository;
     private final JpaUserReadCommandRepository jpaUserReadCommandRepository;
-    private final UserQueryService userQueryService;
-    private final UserReadQueryService userReadQueryService;
-
     @Bean
     public UserCommandRepository userCommandRepository() {
         return new UserCommandRepositoryImpl(jpaUserCommandRepository);
@@ -38,11 +33,11 @@ public class UserCommandConfig {
 
     @Bean
     public UserCommandService userCommandService() {
-        return new UserCommandServiceImpl(userCommandRepository(), userQueryService, userReadQueryService);
+        return new UserCommandServiceImpl(userCommandRepository(), userReadCommandRepository());
     }
 
     @Bean
     public UserReadCommandService userReadCommandService() {
-        return new UserReadCommandServiceImpl(userQueryService, userReadCommandRepository());
+        return new UserReadCommandServiceImpl(userCommandRepository(), userReadCommandRepository());
     }
 }

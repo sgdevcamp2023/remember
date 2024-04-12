@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface GuildCommandRepository {
     void save(Guild guild);
 
-    void delete(Long guildId);
+    void deleteById(Long guildId);
 
     Optional<Guild> findById(Long guildId);
 

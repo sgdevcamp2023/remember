@@ -2,8 +2,14 @@ package harmony.communityservice.guild.config;
 
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.common.service.ProducerService;
+import harmony.communityservice.guild.category.repository.command.CategoryCommandRepository;
+import harmony.communityservice.guild.category.repository.command.impl.CategoryCommandRepositoryImpl;
+import harmony.communityservice.guild.category.repository.command.jpa.JpaCategoryCommandRepository;
 import harmony.communityservice.guild.category.service.command.CategoryCommandService;
 import harmony.communityservice.guild.category.service.command.impl.CategoryCommandServiceImpl;
+import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
+import harmony.communityservice.guild.channel.repository.command.impl.ChannelCommandRepositoryImpl;
+import harmony.communityservice.guild.channel.repository.command.jpa.JpaChannelCommandRepository;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
 import harmony.communityservice.guild.channel.service.command.impl.ChannelCommandServiceImpl;
 import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
@@ -17,7 +23,6 @@ import harmony.communityservice.guild.guild.service.command.GuildReadCommandServ
 import harmony.communityservice.guild.guild.service.command.impl.GuildCommandServiceImpl;
 import harmony.communityservice.guild.guild.service.command.impl.GuildReadCommandServiceImpl;
 import harmony.communityservice.user.service.command.UserReadCommandService;
-import harmony.communityservice.user.service.query.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,21 +32,32 @@ import org.springframework.context.annotation.Configuration;
 public class GuildCommandConfig {
     private final JpaGuildCommandRepository jpaGuildCommandRepository;
     private final JpaGuildReadCommandRepository jpaGuildReadCommandRepository;
-    private final ProducerService producerService;
+    private final JpaChannelCommandRepository jpaChannelCommandRepository;
+    private final JpaCategoryCommandRepository jpaCategoryCommandRepository;
     private final UserReadCommandService userReadCommandService;
-    private final UserReadQueryService userReadQueryService;
     private final ContentService contentService;
+    private final ProducerService producerService;
 
 
     @Bean
+    public ChannelCommandRepository channelCommandRepository() {
+        return new ChannelCommandRepositoryImpl(jpaChannelCommandRepository);
+    }
+
+    @Bean
+    public CategoryCommandRepository categoryCommandRepository() {
+        return new CategoryCommandRepositoryImpl(jpaCategoryCommandRepository);
+    }
+
+    @Bean
     public CategoryCommandService categoryCommandService() {
-        return new CategoryCommandServiceImpl(guildCommandRepository());
+        return new CategoryCommandServiceImpl(categoryCommandRepository());
     }
 
 
     @Bean
     public ChannelCommandService channelCommandService() {
-        return new ChannelCommandServiceImpl(guildCommandRepository());
+        return new ChannelCommandServiceImpl(channelCommandRepository());
     }
 
     @Bean
@@ -52,7 +68,7 @@ public class GuildCommandConfig {
     @Bean
     public GuildCommandService guildCommandService() {
         return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userReadCommandService,
-                userReadQueryService, contentService);
+                categoryCommandService(), channelCommandService(), contentService);
     }
 
     @Bean

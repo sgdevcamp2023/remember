@@ -1,8 +1,14 @@
 package harmony.communityservice.guild.config;
 
 import harmony.communityservice.common.client.UserStatusClient;
+import harmony.communityservice.guild.category.repository.query.CategoryQueryRepository;
+import harmony.communityservice.guild.category.repository.query.impl.CategoryQueryRepositoryImpl;
+import harmony.communityservice.guild.category.repository.query.jpa.JpaCategoryQueryRepository;
 import harmony.communityservice.guild.category.service.query.CategoryQueryService;
 import harmony.communityservice.guild.category.service.query.impl.CategoryQueryServiceImpl;
+import harmony.communityservice.guild.channel.repository.query.ChannelQueryRepository;
+import harmony.communityservice.guild.channel.repository.query.impl.ChannelQueryRepositoryImpl;
+import harmony.communityservice.guild.channel.repository.query.jpa.JpaChannelQueryRepository;
 import harmony.communityservice.guild.channel.service.query.ChannelQueryService;
 import harmony.communityservice.guild.channel.service.query.impl.ChannelQueryServiceImpl;
 import harmony.communityservice.guild.guild.repository.query.GuildQueryRepository;
@@ -25,18 +31,30 @@ import org.springframework.context.annotation.Configuration;
 public class GuildQueryConfig {
     private final JpaGuildQueryRepository jpaGuildQueryRepository;
     private final JpaGuildReadQueryRepository jpaGuildReadQueryRepository;
+    private final JpaChannelQueryRepository jpaChannelQueryRepository;
+    private final JpaCategoryQueryRepository jpaCategoryQueryRepository;
     private final UserReadQueryService userReadQueryService;
     private final UserStatusClient userStatusClient;
 
 
     @Bean
+    public CategoryQueryRepository categoryQueryRepository() {
+        return new CategoryQueryRepositoryImpl(jpaCategoryQueryRepository);
+    }
+
+    @Bean
     public CategoryQueryService categoryQueryService() {
-        return new CategoryQueryServiceImpl(guildQueryRepository());
+        return new CategoryQueryServiceImpl(categoryQueryRepository());
+    }
+
+    @Bean
+    public ChannelQueryRepository channelQueryRepository() {
+        return new ChannelQueryRepositoryImpl(jpaChannelQueryRepository);
     }
 
     @Bean
     public ChannelQueryService channelQueryService() {
-        return new ChannelQueryServiceImpl(guildQueryRepository());
+        return new ChannelQueryServiceImpl(channelQueryRepository());
     }
 
     @Bean

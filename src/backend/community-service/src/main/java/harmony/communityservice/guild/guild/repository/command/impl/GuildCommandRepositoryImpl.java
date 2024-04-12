@@ -1,7 +1,7 @@
 package harmony.communityservice.guild.guild.repository.command.impl;
 
-import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
 import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
 import harmony.communityservice.guild.guild.repository.command.jpa.JpaGuildCommandRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class GuildCommandRepositoryImpl implements GuildCommandRepository {
     }
 
     @Override
-    public void delete(Long guildId) {
+    public void deleteById(Long guildId) {
         repository.deleteById(guildId);
     }
 

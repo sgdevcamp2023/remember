@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.guild.service.command;
 
+import harmony.communityservice.guild.category.dto.DeleteCategoryRequest;
 import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.guild.dto.DeleteGuildRequest;
@@ -17,5 +18,4 @@ public interface GuildCommandService {
 
     void delete(DeleteGuildRequest deleteGuildRequest);
 
-    void modifyUserNicknameInGuild(ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest);
 }

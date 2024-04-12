@@ -15,6 +15,7 @@ import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
 import harmony.communityservice.board.emoji.service.command.impl.EmojiCommandServiceImpl;
 import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
 import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.user.service.command.UserReadCommandService;
 import harmony.communityservice.user.service.query.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +29,7 @@ public class BoardCommandConfig {
     private final EmojiQueryService emojiQueryService;
     private final JpaBoardCommandRepository jpaBoardCommandRepository;
     private final ContentService contentService;
-    private final UserReadQueryService userReadQueryService;
+    private final UserReadCommandService userReadCommandService;
     private final BoardQueryService boardQueryService;
 
 
@@ -54,7 +55,7 @@ public class BoardCommandConfig {
 
     @Bean
     public BoardCommandService boardCommandService() {
-        return new BoardCommandServiceImpl(contentService, userReadQueryService, boardCommandRepository(),
+        return new BoardCommandServiceImpl(contentService, userReadCommandService, boardCommandRepository(),
                 boardQueryService);
     }
 }

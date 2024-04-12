@@ -6,45 +6,42 @@ import harmony.communityservice.guild.category.dto.DeleteCategoryRequest;
 import harmony.communityservice.guild.category.dto.ModifyCategoryRequest;
 import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
 import harmony.communityservice.guild.category.mapper.ToCategoryMapper;
+import harmony.communityservice.guild.category.repository.command.CategoryCommandRepository;
 import harmony.communityservice.guild.category.service.command.CategoryCommandService;
 import harmony.communityservice.guild.domain.Category;
-import harmony.communityservice.guild.domain.Guild;
-import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @RequiredArgsConstructor
 public class CategoryCommandServiceImpl implements CategoryCommandService {
-    private final GuildCommandRepository guildCommandRepository;
+
+    private final CategoryCommandRepository categoryCommandRepository;
 
 
     @Override
     @AuthorizeGuildMember
-    public void registerCategory(RegisterCategoryRequest registerCategoryRequest) {
+    public Long register(RegisterCategoryRequest registerCategoryRequest) {
         Category category = ToCategoryMapper.convert(registerCategoryRequest);
-        Guild targetGuild = guildCommandRepository.findById(registerCategoryRequest.guildId())
-                .orElseThrow(NotFoundDataException::new);
-        targetGuild.registerCategory(category);
-        guildCommandRepository.save(targetGuild);
+        return categoryCommandRepository.save(category);
     }
 
     @Override
     @AuthorizeGuildMember
     public void delete(DeleteCategoryRequest deleteCategoryRequest) {
-        Guild targetGuild = guildCommandRepository.findById(deleteCategoryRequest.guildId())
-                .orElseThrow(NotFoundDataException::new);
-        targetGuild.deleteCategory(deleteCategoryRequest.categoryId());
-        guildCommandRepository.save(targetGuild);
-
+        categoryCommandRepository.deleteById(deleteCategoryRequest.categoryId());
     }
 
     @Override
     @AuthorizeGuildMember
     public void modify(ModifyCategoryRequest modifyCategoryRequest) {
-        Guild targetGuild = guildCommandRepository.findById(modifyCategoryRequest.guildId())
+        Category targetCategory = categoryCommandRepository.findById(modifyCategoryRequest.categoryId())
                 .orElseThrow(NotFoundDataException::new);
-        targetGuild.modifyCategoryName(modifyCategoryRequest.categoryId(), modifyCategoryRequest.name());
-        guildCommandRepository.save(targetGuild);
+        targetCategory.modifyName(modifyCategoryRequest.name());
+    }
+
+    @Override
+    public void deleteByGuildId(Long guildId) {
+        categoryCommandRepository.deleteByGuildId(guildId);
     }
 }

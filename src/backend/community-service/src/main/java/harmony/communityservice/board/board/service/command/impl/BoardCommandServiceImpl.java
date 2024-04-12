@@ -1,19 +1,18 @@
 package harmony.communityservice.board.board.service.command.impl;
 
-import harmony.communityservice.board.board.service.command.BoardCommandService;
-import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.board.board.dto.DeleteBoardRequest;
 import harmony.communityservice.board.board.dto.ModifyBoardRequest;
 import harmony.communityservice.board.board.dto.RegisterBoardRequest;
-import harmony.communityservice.board.board.repository.command.BoardCommandRepository;
-import harmony.communityservice.board.domain.Image;
-import harmony.communityservice.board.board.service.query.BoardQueryService;
-import harmony.communityservice.common.dto.SearchUserReadRequest;
-import harmony.communityservice.common.service.ContentService;
-import harmony.communityservice.board.domain.Board;
-import harmony.communityservice.user.domain.UserRead;
 import harmony.communityservice.board.board.mapper.ToBoardMapper;
-import harmony.communityservice.user.service.query.UserReadQueryService;
+import harmony.communityservice.board.board.repository.command.BoardCommandRepository;
+import harmony.communityservice.board.board.service.command.BoardCommandService;
+import harmony.communityservice.board.board.service.query.BoardQueryService;
+import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.domain.Image;
+import harmony.communityservice.common.annotation.AuthorizeGuildMember;
+import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.user.domain.UserRead;
+import harmony.communityservice.user.service.command.UserReadCommandService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoardCommandServiceImpl implements BoardCommandService {
 
     private final ContentService contentService;
-    private final UserReadQueryService userReadQueryService;
+    private final UserReadCommandService userReadCommandService;
     private final BoardCommandRepository boardCommandRepository;
     private final BoardQueryService boardQueryService;
 
@@ -46,8 +45,8 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     }
 
     private Board createBoard(RegisterBoardRequest registerBoardRequest, List<Image> images) {
-        UserRead boardWriter = userReadQueryService.searchByUserIdAndGuildId(
-                new SearchUserReadRequest(registerBoardRequest.userId(), registerBoardRequest.guildId()));
+        UserRead boardWriter = userReadCommandService.searchByUserIdAndGuildId(
+                registerBoardRequest.userId(), registerBoardRequest.guildId());
         return ToBoardMapper.convert(registerBoardRequest, boardWriter, images);
     }
 

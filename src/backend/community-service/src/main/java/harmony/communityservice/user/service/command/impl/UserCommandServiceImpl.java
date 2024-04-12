@@ -1,14 +1,14 @@
 package harmony.communityservice.user.service.command.impl;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.user.domain.User;
 import harmony.communityservice.user.dto.ModifyUserNicknameRequest;
 import harmony.communityservice.user.dto.ModifyUserProfileRequest;
 import harmony.communityservice.user.dto.RegisterUserRequest;
 import harmony.communityservice.user.mapper.ToUserMapper;
 import harmony.communityservice.user.repository.command.UserCommandRepository;
+import harmony.communityservice.user.repository.command.UserReadCommandRepository;
 import harmony.communityservice.user.service.command.UserCommandService;
-import harmony.communityservice.user.service.query.UserQueryService;
-import harmony.communityservice.user.service.query.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserCommandServiceImpl implements UserCommandService {
 
     private final UserCommandRepository userCommandRepository;
-    private final UserQueryService userQueryService;
-    private final UserReadQueryService userReadQueryService;
+    private final UserReadCommandRepository userReadCommandRepository;
 
     @Override
     public void register(RegisterUserRequest registerUserRequest) {
@@ -37,9 +36,9 @@ public class UserCommandServiceImpl implements UserCommandService {
     }
 
     private void modifyUserInfo(Long userId, String userInfo) {
-        User targetUser = userQueryService.searchByUserId(userId);
+        User targetUser = userCommandRepository.findById(userId).orElseThrow(NotFoundDataException::new);
         targetUser.modifyProfile(userInfo);
-        userReadQueryService.searchListByUserId(userId)
+        userReadCommandRepository.findListByUserId(userId)
                 .forEach(target -> target.modifyProfile(userInfo));
     }
 }
