@@ -1,8 +1,9 @@
 package harmony.communityservice.board.emoji.repository.command.impl;
 
+import harmony.communityservice.board.domain.Emoji;
 import harmony.communityservice.board.emoji.repository.command.EmojiCommandRepository;
 import harmony.communityservice.board.emoji.repository.command.jpa.JpaEmojiCommandRepository;
-import harmony.communityservice.board.domain.Emoji;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -13,5 +14,20 @@ public class EmojiCommandRepositoryImpl implements EmojiCommandRepository {
     @Override
     public void save(Emoji emoji) {
         jpaEmojiCommandRepository.save(emoji);
+    }
+
+    @Override
+    public Optional<Emoji> findByBoardIdAndEmojiType(Long boardId, Long emojiType) {
+        return jpaEmojiCommandRepository.findByBoardIdAndEmojiType(boardId, emojiType);
+    }
+
+    @Override
+    public void deleteById(Long emojiId) {
+        jpaEmojiCommandRepository.deleteById(emojiId);
+    }
+
+    @Override
+    public void deleteListByBoardId(Long boardId) {
+        jpaEmojiCommandRepository.deleteEmojisByBoardId(boardId);
     }
 }

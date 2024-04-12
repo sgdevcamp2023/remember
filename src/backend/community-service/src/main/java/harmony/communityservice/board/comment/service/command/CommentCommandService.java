@@ -11,4 +11,6 @@ public interface CommentCommandService {
     void modify(ModifyCommentRequest modifyCommentRequest);
 
     void delete(DeleteCommentRequest deleteCommentRequest);
+
+    void deleteListByBoardId(Long boardId);
 }

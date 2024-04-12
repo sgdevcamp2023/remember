@@ -6,6 +6,9 @@ import harmony.communityservice.board.board.repository.query.impl.BoardQueryRepo
 import harmony.communityservice.board.board.repository.query.jpa.JpaBoardQueryRepository;
 import harmony.communityservice.board.board.service.query.BoardQueryService;
 import harmony.communityservice.board.board.service.query.impl.BoardQueryServiceImpl;
+import harmony.communityservice.board.comment.repository.query.CommentQueryRepository;
+import harmony.communityservice.board.comment.repository.query.impl.CommentQueryRepositoryImpl;
+import harmony.communityservice.board.comment.repository.query.jpa.JpaCommentQueryRepository;
 import harmony.communityservice.board.comment.service.query.CommentQueryService;
 import harmony.communityservice.board.comment.service.query.impl.CommentQueryServiceImpl;
 import harmony.communityservice.board.emoji.repository.query.EmojiQueryRepository;
@@ -23,10 +26,16 @@ public class BoardQueryConfig {
 
     private final JpaEmojiQueryRepository jpaEmojiQueryRepository;
     private final JpaBoardQueryRepository jpaBoardQueryRepository;
+    private final JpaCommentQueryRepository jpaCommentQueryRepository;
+
+    @Bean
+    public CommentQueryRepository commentQueryRepository() {
+        return new CommentQueryRepositoryImpl(jpaCommentQueryRepository);
+    }
 
     @Bean
     public CommentQueryService commentQueryService() {
-        return new CommentQueryServiceImpl(boardQueryService());
+        return new CommentQueryServiceImpl(commentQueryRepository());
     }
 
     @Bean
@@ -46,6 +55,6 @@ public class BoardQueryConfig {
 
     @Bean
     public BoardQueryService boardQueryService() {
-        return new BoardQueryServiceImpl(boardQueryRepository(), emojiQueryService());
+        return new BoardQueryServiceImpl(boardQueryRepository(), emojiQueryService(), commentQueryService());
     }
 }

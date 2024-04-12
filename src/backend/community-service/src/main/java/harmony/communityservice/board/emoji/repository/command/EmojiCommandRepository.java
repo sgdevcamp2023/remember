@@ -1,7 +1,14 @@
 package harmony.communityservice.board.emoji.repository.command;
 
 import harmony.communityservice.board.domain.Emoji;
+import java.util.Optional;
 
 public interface EmojiCommandRepository {
     void save(Emoji emoji);
+
+    Optional<Emoji> findByBoardIdAndEmojiType(Long boardId, Long emojiType);
+
+    void deleteById(Long emojiId);
+
+    void deleteListByBoardId(Long boardId);
 }

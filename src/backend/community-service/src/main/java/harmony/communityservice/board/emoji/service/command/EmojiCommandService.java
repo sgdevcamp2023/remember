@@ -8,4 +8,6 @@ public interface EmojiCommandService {
     void register(RegisterEmojiRequest registerEmojiRequest);
 
     void delete(DeleteEmojiRequest deleteEmojiRequest);
+
+    void deleteListByBoardId(Long boardId);
 }

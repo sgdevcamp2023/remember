@@ -5,7 +5,9 @@ import harmony.communityservice.board.board.repository.command.impl.BoardCommand
 import harmony.communityservice.board.board.repository.command.jpa.JpaBoardCommandRepository;
 import harmony.communityservice.board.board.service.command.BoardCommandService;
 import harmony.communityservice.board.board.service.command.impl.BoardCommandServiceImpl;
-import harmony.communityservice.board.board.service.query.BoardQueryService;
+import harmony.communityservice.board.comment.repository.command.CommentCommandRepository;
+import harmony.communityservice.board.comment.repository.command.impl.CommentCommandRepositoryImpl;
+import harmony.communityservice.board.comment.repository.command.jpa.JpaCommentCommandRepository;
 import harmony.communityservice.board.comment.service.command.CommentCommandService;
 import harmony.communityservice.board.comment.service.command.impl.CommentCommandServiceImpl;
 import harmony.communityservice.board.emoji.repository.command.EmojiCommandRepository;
@@ -13,10 +15,8 @@ import harmony.communityservice.board.emoji.repository.command.impl.EmojiCommand
 import harmony.communityservice.board.emoji.repository.command.jpa.JpaEmojiCommandRepository;
 import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
 import harmony.communityservice.board.emoji.service.command.impl.EmojiCommandServiceImpl;
-import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.user.service.command.UserReadCommandService;
-import harmony.communityservice.user.service.query.UserReadQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,16 +26,20 @@ import org.springframework.context.annotation.Configuration;
 public class BoardCommandConfig {
 
     private final JpaEmojiCommandRepository jpaEmojiCommandRepository;
-    private final EmojiQueryService emojiQueryService;
     private final JpaBoardCommandRepository jpaBoardCommandRepository;
     private final ContentService contentService;
     private final UserReadCommandService userReadCommandService;
-    private final BoardQueryService boardQueryService;
+    private final JpaCommentCommandRepository jpaCommentCommandRepository;
 
 
     @Bean
+    public CommentCommandRepository commentCommandRepository() {
+        return new CommentCommandRepositoryImpl(jpaCommentCommandRepository);
+    }
+
+    @Bean
     public CommentCommandService commentCommandService() {
-        return new CommentCommandServiceImpl(boardQueryService, boardCommandRepository());
+        return new CommentCommandServiceImpl(commentCommandRepository());
     }
 
     @Bean
@@ -45,7 +49,7 @@ public class BoardCommandConfig {
 
     @Bean
     public EmojiCommandService emojiCommandService() {
-        return new EmojiCommandServiceImpl(emojiCommandRepository(), emojiQueryService);
+        return new EmojiCommandServiceImpl(emojiCommandRepository());
     }
 
     @Bean
@@ -55,7 +59,7 @@ public class BoardCommandConfig {
 
     @Bean
     public BoardCommandService boardCommandService() {
-        return new BoardCommandServiceImpl(contentService, userReadCommandService, boardCommandRepository(),
-                boardQueryService);
+        return new BoardCommandServiceImpl(contentService, userReadCommandService, commentCommandService(),
+                emojiCommandService(), boardCommandRepository());
     }
 }

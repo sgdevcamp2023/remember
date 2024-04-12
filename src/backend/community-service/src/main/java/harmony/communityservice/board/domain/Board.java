@@ -3,8 +3,6 @@ package harmony.communityservice.board.domain;
 import harmony.communityservice.board.board.dto.ModifyBoardRequest;
 import harmony.communityservice.board.board.dto.SearchImageResponse;
 import harmony.communityservice.board.board.dto.SearchImagesResponse;
-import harmony.communityservice.board.comment.dto.ModifyCommentRequest;
-import harmony.communityservice.common.exception.NotFoundDataException;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -19,7 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -59,10 +56,6 @@ public class Board {
     @CollectionTable(name = "images", joinColumns = @JoinColumn(name = "board_id"))
     private List<Image> images;
 
-    @OrderColumn(name = "comment_id")
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "comments", joinColumns = @JoinColumn(name = "board_id"))
-    private List<Comment> comments;
 
     @Builder
     public Board(Long channelId, List<Image> images,
@@ -73,41 +66,6 @@ public class Board {
         this.modifiedInfo = new ModifiedInfo();
         this.creationTime = new CreationTime();
         this.writerInfo = makeWriterInfo(writerName, writerId, writerProfile);
-    }
-
-    public Long countingComments() {
-        return (long) comments.size();
-    }
-
-    public void registerComment(Comment comment) {
-        this.comments = this.comments == null ? new ArrayList<>() : this.comments;
-        this.comments.add(comment);
-        this.comments = new ArrayList<>(this.comments);
-    }
-
-    public void modifyComment(ModifyCommentRequest modifyCommentRequest) {
-        verifyExistComment(modifyCommentRequest.commentId());
-        Comment targetComment = this.comments.get(modifyCommentRequest.commentId());
-        targetComment.modify(modifyCommentRequest);
-        this.comments = new ArrayList<>(this.comments);
-    }
-
-    public void deleteComment(int commentId, Long writerId) {
-        verifyExistComment(commentId);
-        verifyWriter(commentId, writerId);
-        this.comments.remove(commentId);
-        this.comments = new ArrayList<>(this.comments);
-    }
-
-    private void verifyWriter(int commentId, Long writerId) {
-        Comment targetComment = this.comments.get(commentId);
-        targetComment.verifyWriter(writerId);
-    }
-
-    private void verifyExistComment(int commentId) {
-        if (this.comments.get(commentId) == null) {
-            throw new NotFoundDataException("댓글이 존재하지 않습니다");
-        }
     }
 
     public void verifyWriter(Long writerId) {

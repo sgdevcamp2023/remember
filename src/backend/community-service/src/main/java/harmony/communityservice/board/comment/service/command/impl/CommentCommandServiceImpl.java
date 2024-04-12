@@ -1,14 +1,13 @@
 package harmony.communityservice.board.comment.service.command.impl;
 
-import harmony.communityservice.board.board.repository.command.BoardCommandRepository;
-import harmony.communityservice.board.board.service.query.BoardQueryService;
 import harmony.communityservice.board.comment.dto.DeleteCommentRequest;
 import harmony.communityservice.board.comment.dto.ModifyCommentRequest;
 import harmony.communityservice.board.comment.dto.RegisterCommentRequest;
 import harmony.communityservice.board.comment.mapper.ToCommentMapper;
+import harmony.communityservice.board.comment.repository.command.CommentCommandRepository;
 import harmony.communityservice.board.comment.service.command.CommentCommandService;
-import harmony.communityservice.board.domain.Board;
 import harmony.communityservice.board.domain.Comment;
+import harmony.communityservice.common.exception.NotFoundDataException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,28 +15,28 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentCommandServiceImpl implements CommentCommandService {
 
-    private final BoardQueryService boardQueryService;
-    private final BoardCommandRepository boardCommandRepository;
+    private final CommentCommandRepository commentCommandRepository;
 
     @Override
     public void register(RegisterCommentRequest registerCommentRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(registerCommentRequest.boardId());
         Comment comment = ToCommentMapper.convert(registerCommentRequest);
-        targetBoard.registerComment(comment);
-        boardCommandRepository.save(targetBoard);
+        commentCommandRepository.save(comment);
     }
 
     @Override
     public void modify(ModifyCommentRequest modifyCommentRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(modifyCommentRequest.boardId());
-        targetBoard.modifyComment(modifyCommentRequest);
-        boardCommandRepository.save(targetBoard);
+        Comment targetComment = commentCommandRepository.findById(modifyCommentRequest.commentId())
+                .orElseThrow(NotFoundDataException::new);
+        targetComment.modify(modifyCommentRequest.userId(), modifyCommentRequest.comment());
     }
 
     @Override
     public void delete(DeleteCommentRequest deleteCommentRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(deleteCommentRequest.boardId());
-        targetBoard.deleteComment(deleteCommentRequest.commentId(), deleteCommentRequest.userId());
-        boardCommandRepository.save(targetBoard);
+        commentCommandRepository.deleteById(deleteCommentRequest.commentId());
+    }
+
+    @Override
+    public void deleteListByBoardId(Long boardId) {
+        commentCommandRepository.deleteListByBoardId(boardId);
     }
 }

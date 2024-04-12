@@ -6,10 +6,12 @@ import harmony.communityservice.board.board.dto.RegisterBoardRequest;
 import harmony.communityservice.board.board.mapper.ToBoardMapper;
 import harmony.communityservice.board.board.repository.command.BoardCommandRepository;
 import harmony.communityservice.board.board.service.command.BoardCommandService;
-import harmony.communityservice.board.board.service.query.BoardQueryService;
+import harmony.communityservice.board.comment.service.command.CommentCommandService;
 import harmony.communityservice.board.domain.Board;
 import harmony.communityservice.board.domain.Image;
+import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
 import harmony.communityservice.common.annotation.AuthorizeGuildMember;
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.user.domain.UserRead;
 import harmony.communityservice.user.service.command.UserReadCommandService;
@@ -25,8 +27,9 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     private final ContentService contentService;
     private final UserReadCommandService userReadCommandService;
+    private final CommentCommandService commentCommandService;
+    private final EmojiCommandService emojiCommandService;
     private final BoardCommandRepository boardCommandRepository;
-    private final BoardQueryService boardQueryService;
 
     @Override
     @AuthorizeGuildMember
@@ -52,14 +55,18 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     @Override
     public void modify(ModifyBoardRequest modifyBoardRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(modifyBoardRequest.boardId());
+        Board targetBoard = boardCommandRepository.findById(modifyBoardRequest.boardId())
+                .orElseThrow(NotFoundDataException::new);
         targetBoard.modifyTitleAndContent(modifyBoardRequest);
     }
 
     @Override
     public void delete(DeleteBoardRequest deleteBoardRequest) {
-        Board targetBoard = boardQueryService.searchByBoardId(deleteBoardRequest.boardId());
+        Board targetBoard = boardCommandRepository.findById(deleteBoardRequest.boardId())
+                .orElseThrow(NotFoundDataException::new);
         targetBoard.verifyWriter(deleteBoardRequest.userId());
         boardCommandRepository.delete(targetBoard);
+        commentCommandService.deleteListByBoardId(deleteBoardRequest.boardId());
+        emojiCommandService.deleteListByBoardId(deleteBoardRequest.boardId());
     }
 }

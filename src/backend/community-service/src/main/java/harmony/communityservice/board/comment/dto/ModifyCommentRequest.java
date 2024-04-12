@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record ModifyCommentRequest(@NotNull Long userId,
                                    @NotNull Long boardId,
-                                   @NotNull Integer commentId,
+                                   @NotNull Long commentId,
                                    @NotBlank String comment) {
 }
