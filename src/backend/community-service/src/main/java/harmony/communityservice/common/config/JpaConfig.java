@@ -28,7 +28,7 @@ public class JpaConfig {
         entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
         entityManagerFactory.setPersistenceUnitName("entityManager");
         HashMap<String, Object> prop = new HashMap<>();
-        prop.put("hibernate.hbm2ddl.auto", "none");
+        prop.put("hibernate.hbm2ddl.auto", "create");
         entityManagerFactory.setJpaPropertyMap(prop);
         return entityManagerFactory;
     }

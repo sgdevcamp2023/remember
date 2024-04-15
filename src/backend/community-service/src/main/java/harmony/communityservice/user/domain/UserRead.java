@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,9 @@ public class UserRead {
     @NotNull
     @Column(name = "user_id")
     private Long userId;
+
+    @Version
+    private Long version;
 
     @Embedded
     private CommonUserInfo userInfo;

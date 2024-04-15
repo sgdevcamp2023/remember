@@ -5,10 +5,12 @@ import harmony.communityservice.board.board.dto.SearchImageResponse;
 import harmony.communityservice.board.board.dto.SearchImagesResponse;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +18,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +29,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "board", indexes = @Index(name = "idx__channelId", columnList = "channel_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "board", indexes = @Index(name = "idx__channelId", columnList = "channel_id"))
 public class Board {
 
     @Id
@@ -51,9 +54,13 @@ public class Board {
     @Embedded
     private CreationTime creationTime;
 
+    @Version
+    private Long version;
+
     @OrderColumn(name = "image_idx")
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "images", joinColumns = @JoinColumn(name = "board_id"))
+    @CollectionTable(name = "images",
+            joinColumns = @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT)))
     private List<Image> images;
 
 

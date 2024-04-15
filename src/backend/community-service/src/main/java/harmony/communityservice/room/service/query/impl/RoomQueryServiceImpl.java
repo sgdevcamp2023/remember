@@ -4,7 +4,7 @@ import harmony.communityservice.common.client.UserStatusClient;
 import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.room.mapper.ToSearchRoomResponseMapper;
-import harmony.communityservice.room.dto.ToUserIdsMapper;
+import harmony.communityservice.room.mapper.ToUserIdsMapper;
 import harmony.communityservice.room.domain.Room;
 import harmony.communityservice.room.dto.SearchRoomResponse;
 import harmony.communityservice.room.dto.SearchRoomsResponse;

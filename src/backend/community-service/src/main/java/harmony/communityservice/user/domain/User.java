@@ -5,6 +5,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,9 @@ public class User {
 
     @Embedded
     private UserInfo userInfo;
+
+    @Version
+    private Long version;
 
     @Builder
     public User(Long userId, String email, String nickname, String profile) {

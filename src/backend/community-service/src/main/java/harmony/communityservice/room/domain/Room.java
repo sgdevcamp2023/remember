@@ -1,5 +1,6 @@
 package harmony.communityservice.room.domain;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CollectionTable;
@@ -12,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -44,6 +46,9 @@ public class Room {
     @CollectionTable(name = "room_user",
             joinColumns = @JoinColumn(name = "room_id"))
     private Set<Long> userIds = new HashSet<>();
+
+    @Version
+    private Long version;
 
     @Builder
     public Room(String name, String profile, Set<Long> userIds) {

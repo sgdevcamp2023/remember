@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -42,6 +43,9 @@ public class Comment {
 
     @Embedded
     private ModifiedInfo modifiedInfo;
+
+    @Version
+    private Long version;
 
     @Builder
     public Comment(String comment, Long writerId, String writerName, String writerProfile, Long boardId) {

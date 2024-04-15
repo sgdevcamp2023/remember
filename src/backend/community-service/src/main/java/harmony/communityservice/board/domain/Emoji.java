@@ -58,21 +58,12 @@ public class Emoji {
         this.userIds = newUserIds;
     }
 
-    public void deleteUserId(long userId) {
-        exist(userId)
-                .ifPresent(id -> {
-                    this.userIds.remove(id);
-                    this.userIds = new HashSet<>(this.userIds);
-                });
-    }
-
-    public boolean exists(Long userId) {
+    public void exists(Long userId) {
         exist(userId)
                 .ifPresent(e -> {
                     throw new DuplicatedEmojiException();
                 });
         updateUserIds(userId);
-        return true;
     }
 
     private Optional<Long> exist(long userId) {

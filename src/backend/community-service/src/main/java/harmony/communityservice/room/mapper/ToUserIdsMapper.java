@@ -1,4 +1,4 @@
-package harmony.communityservice.room.dto;
+package harmony.communityservice.room.mapper;
 
 import harmony.communityservice.user.domain.User;
 
