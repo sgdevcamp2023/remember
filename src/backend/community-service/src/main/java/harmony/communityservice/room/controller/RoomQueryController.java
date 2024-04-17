@@ -1,5 +1,6 @@
 package harmony.communityservice.room.controller;
 
+import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.room.dto.SearchRoomsResponse;
 import harmony.communityservice.room.service.query.RoomQueryService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@AuthorizeUser
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
@@ -25,7 +27,7 @@ public class RoomQueryController {
     }
 
     @GetMapping("/search/user/status/dm/{dmId}/{userId}")
-    public BaseResponse<?> searchDmRoom(@PathVariable Long dmId, @PathVariable Long userId) {
+    public BaseResponse<?> searchDmRoom(@PathVariable Long userId, @PathVariable Long dmId) {
         Map<Long, ?> userStates = roomQueryService.searchUserStatesInRoom(dmId);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", userStates);
     }

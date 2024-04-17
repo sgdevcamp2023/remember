@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.channel.controller;
 
+import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.guild.channel.dto.DeleteChannelRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@AuthorizeUser
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")

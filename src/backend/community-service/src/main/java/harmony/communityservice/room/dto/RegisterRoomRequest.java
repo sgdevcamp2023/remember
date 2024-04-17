@@ -1,10 +1,13 @@
 package harmony.communityservice.room.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record RegisterRoomRequest(
-        String name,
+        @NotBlank String name,
         List<Long> members,
-        String profile
+        @NotBlank String profile,
+        @NotNull Long userId
 ) {
 }

@@ -3,6 +3,7 @@ package harmony.communityservice.board.emoji.controller;
 import harmony.communityservice.board.emoji.dto.DeleteEmojiRequest;
 import harmony.communityservice.board.emoji.dto.RegisterEmojiRequest;
 import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
+import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@AuthorizeUser
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")

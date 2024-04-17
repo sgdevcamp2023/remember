@@ -3,6 +3,7 @@ package harmony.communityservice.board.comment.controller;
 import harmony.communityservice.board.comment.dto.DeleteCommentRequest;
 import harmony.communityservice.board.comment.dto.ModifyCommentRequest;
 import harmony.communityservice.board.comment.dto.RegisterCommentRequest;
+import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.board.comment.service.command.CommentCommandService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@AuthorizeUser
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")

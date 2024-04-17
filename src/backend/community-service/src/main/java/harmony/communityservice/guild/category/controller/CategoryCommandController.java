@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.category.controller;
 
+import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.guild.category.dto.DeleteCategoryRequest;
 import harmony.communityservice.guild.category.dto.ModifyCategoryRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@AuthorizeUser
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")

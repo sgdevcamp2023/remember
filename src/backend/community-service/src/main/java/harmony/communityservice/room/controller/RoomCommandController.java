@@ -1,5 +1,6 @@
 package harmony.communityservice.room.controller;
 
+import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.room.dto.DeleteRoomRequest;
 import harmony.communityservice.room.dto.RegisterRoomRequest;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@AuthorizeUser
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")

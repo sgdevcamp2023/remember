@@ -3,6 +3,7 @@ package harmony.communityservice.board.board.controller;
 import harmony.communityservice.board.board.dto.DeleteBoardRequest;
 import harmony.communityservice.board.board.dto.ModifyBoardRequest;
 import harmony.communityservice.board.board.dto.RegisterBoardRequest;
+import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.board.board.service.command.BoardCommandService;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@AuthorizeUser
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
