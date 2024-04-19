@@ -1,6 +1,10 @@
 package harmony.communityservice.common.service.impl;
 
 import harmony.communityservice.common.dto.CommunityEvent;
+import harmony.communityservice.common.event.dto.ChannelCreatedEvent;
+import harmony.communityservice.common.event.dto.ChannelDeletedEvent;
+import harmony.communityservice.common.event.dto.GuildCreatedEvent;
+import harmony.communityservice.common.event.dto.GuildDeletedEvent;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.domain.GuildRead;
@@ -11,50 +15,31 @@ import org.springframework.kafka.core.KafkaTemplate;
 @RequiredArgsConstructor
 public class KafkaProducerService implements ProducerService {
 
-    private final KafkaTemplate<String, CommunityEvent> kafkaTemplateForCommunity;
+    private final KafkaTemplate<String, GuildCreatedEvent> guildCreatedEventKafkaTemplate;
+    private final KafkaTemplate<String, GuildDeletedEvent> guildDeletedEventKafkaTemplate;
+    private final KafkaTemplate<String, ChannelCreatedEvent> channelCreatedEventKafkaTemplate;
+    private final KafkaTemplate<String, ChannelDeletedEvent> channelDeletedEventKafkaTemplate;
     @Value("${spring.kafka.producer.community-event-topic}")
     private String communityEvent;
 
     @Override
-    public void publishGuildDeletionEvent(Long guildId) {
-        CommunityEvent event = CommunityEvent.builder()
-                .type("DELETE-GUILD")
-                .guildId(guildId)
-                .build();
-        kafkaTemplateForCommunity.send(communityEvent, event);
+    public void publishGuildDeletionEvent(GuildDeletedEvent event) {
+        guildDeletedEventKafkaTemplate.send(communityEvent, event);
     }
 
     @Override
-    public void publishChannelCreationEvent(RegisterChannelRequest registerChannelRequest, Long channelId) {
-        CommunityEvent event = CommunityEvent.builder()
-                .type("CREATE-CHANNEL")
-                .guildId(registerChannelRequest.guildId())
-                .channelType(registerChannelRequest.type())
-                .channelName(registerChannelRequest.name())
-                .channelId(channelId)
-                .categoryId(registerChannelRequest.categoryId())
-                .build();
-        kafkaTemplateForCommunity.send(communityEvent, event);
+    public void publishChannelCreationEvent(ChannelCreatedEvent event) {
+        channelCreatedEventKafkaTemplate.send(communityEvent, event);
     }
 
     @Override
-    public void publishChannelDeletionEvent(Long channelId) {
-        CommunityEvent event = CommunityEvent.builder()
-                .type("DELETE-CHANNEL")
-                .channelId(channelId)
-                .build();
-        kafkaTemplateForCommunity.send(communityEvent, event);
+    public void publishChannelDeletionEvent(ChannelDeletedEvent event) {
+
+        channelDeletedEventKafkaTemplate.send(communityEvent, event);
     }
 
     @Override
-    public void publishGuildCreationEvent(GuildRead guildRead) {
-        CommunityEvent event = CommunityEvent.builder()
-                .type("CREATE-GUILD")
-                .guildId(guildRead.getGuildId())
-                .guildReadId(guildRead.getGuildReadId())
-                .name(guildRead.getGuildInfo().getName())
-                .profile(guildRead.getGuildInfo().getProfile())
-                .build();
-        kafkaTemplateForCommunity.send(communityEvent, event);
+    public void publishGuildCreationEvent(GuildCreatedEvent event) {
+        guildCreatedEventKafkaTemplate.send(communityEvent, event);
     }
 }

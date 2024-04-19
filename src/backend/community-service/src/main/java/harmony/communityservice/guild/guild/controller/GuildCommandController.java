@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/community")
 public class GuildCommandController {
     private final GuildCommandService guildCommandService;
-    private final ProducerService producerService;
 
     @PostMapping("/register/guild")
     public BaseResponse<?> register(
@@ -45,7 +44,6 @@ public class GuildCommandController {
     @DeleteMapping("/delete/guild")
     public BaseResponse<?> delete(@RequestBody @Validated DeleteGuildRequest deleteGuildRequest) {
         guildCommandService.delete(deleteGuildRequest);
-        producerService.publishGuildDeletionEvent(deleteGuildRequest.guildId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }

@@ -1,6 +1,9 @@
 package harmony.communityservice.guild.guild.service.command.impl;
 
 import harmony.communityservice.common.annotation.AuthorizeGuildManager;
+import harmony.communityservice.common.event.Events;
+import harmony.communityservice.common.event.dto.GuildDeletedEvent;
+import harmony.communityservice.common.event.mapper.ToGuildDeletedEventMapper;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.guild.category.service.command.CategoryCommandService;
@@ -87,5 +90,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
         guildReadCommandService.delete(deleteGuildRequest.guildId());
         categoryCommandService.deleteByGuildId(deleteGuildRequest.guildId());
         channelCommandService.deleteByGuildId(deleteGuildRequest.guildId());
+        GuildDeletedEvent event = ToGuildDeletedEventMapper.convert(deleteGuildRequest.guildId());
+        Events.send(event);
     }
 }

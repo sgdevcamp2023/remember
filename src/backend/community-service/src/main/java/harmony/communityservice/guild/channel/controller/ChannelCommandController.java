@@ -2,7 +2,6 @@ package harmony.communityservice.guild.channel.controller;
 
 import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.guild.channel.dto.DeleteChannelRequest;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
@@ -22,13 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChannelCommandController {
 
     private final ChannelCommandService channelCommandService;
-    private final ProducerService producerService;
 
     @PostMapping("/register/category/channel")
     public BaseResponse<?> registerChannelInCategory(
             @RequestBody @Validated RegisterChannelRequest registerChannelRequest) {
-        producerService.publishChannelCreationEvent(registerChannelRequest,
-                channelCommandService.register(registerChannelRequest));
+        channelCommandService.register(registerChannelRequest);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 
@@ -42,7 +39,6 @@ public class ChannelCommandController {
     @DeleteMapping("/delete/channel")
     public BaseResponse<?> delete(@RequestBody @Validated DeleteChannelRequest deleteChannelRequest) {
         channelCommandService.delete(deleteChannelRequest);
-        producerService.publishChannelDeletionEvent(deleteChannelRequest.channelId());
         return new BaseResponse<>(HttpStatus.OK.value(), "OK");
     }
 }
