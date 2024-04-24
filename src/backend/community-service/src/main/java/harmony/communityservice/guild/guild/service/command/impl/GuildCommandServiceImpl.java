@@ -2,26 +2,23 @@ package harmony.communityservice.guild.guild.service.command.impl;
 
 import harmony.communityservice.common.annotation.AuthorizeGuildManager;
 import harmony.communityservice.common.event.Events;
-import harmony.communityservice.common.event.dto.GuildDeletedEvent;
-import harmony.communityservice.common.event.mapper.ToGuildDeletedEventMapper;
+import harmony.communityservice.common.event.dto.inner.DeleteCategoryEvent;
+import harmony.communityservice.common.event.dto.inner.DeleteChannelEvent;
+import harmony.communityservice.common.event.dto.inner.DeleteGuildReadEvent;
+import harmony.communityservice.common.event.dto.inner.RegisterChannelEvent;
+import harmony.communityservice.common.event.dto.inner.RegisterGuildReadEvent;
+import harmony.communityservice.common.event.dto.inner.RegisterUserReadEvent;
+import harmony.communityservice.common.event.mapper.ToRegisterGuildReadEventMapper;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.ContentService;
-import harmony.communityservice.guild.category.service.command.CategoryCommandService;
-import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
-import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
 import harmony.communityservice.guild.guild.domain.Guild;
-import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.dto.DeleteGuildRequest;
-import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
 import harmony.communityservice.guild.guild.dto.RegisterGuildRequest;
 import harmony.communityservice.guild.guild.dto.RegisterUserUsingInvitationCodeRequest;
-import harmony.communityservice.guild.guild.dto.ToSearchGuildReadRequestMapper;
 import harmony.communityservice.guild.guild.mapper.ToGuildMapper;
 import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
 import harmony.communityservice.guild.guild.service.command.GuildCommandService;
 import harmony.communityservice.guild.guild.service.command.GuildReadCommandService;
-import harmony.communityservice.user.dto.RegisterUserReadRequest;
-import harmony.communityservice.user.service.command.UserReadCommandService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,20 +29,17 @@ import org.springframework.web.multipart.MultipartFile;
 public class GuildCommandServiceImpl implements GuildCommandService {
 
     private final GuildCommandRepository guildCommandRepository;
-    private final GuildReadCommandService guildReadCommandService;
-    private final UserReadCommandService userReadCommandService;
-    private final CategoryCommandService categoryCommandService;
-    private final ChannelCommandService channelCommandService;
     private final ContentService contentService;
 
     @Override
-    public GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
+    public Long register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
         Guild guild = createGuild(registerGuildRequest, profile);
         guild.updateUserIds(registerGuildRequest.managerId());
         guildCommandRepository.save(guild);
         registerUserRead(registerGuildRequest.managerId(), guild.getGuildId());
-        registerFirstChannel(registerGuildRequest.managerId(), guild);
-        return registerGuildRead(registerGuildRequest.managerId(), guild);
+        Events.send(new RegisterChannelEvent(
+                guild.getGuildId(), "기본채널", registerGuildRequest.getUserId(), 0L, "TEXT"));
+        return guild.getGuildId();
     }
 
     @Override
@@ -66,31 +60,19 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     }
 
     private void registerUserRead(Long userId, Long guildId) {
-        userReadCommandService.register(new RegisterUserReadRequest(userId, guildId));
+        Events.send(new RegisterUserReadEvent(guildId, userId));
     }
 
-    private void registerFirstChannel(Long userId, Guild targetGuild) {
-        RegisterChannelRequest registerChannelRequest = new RegisterChannelRequest(
-                targetGuild.getGuildId(), "기본채널", userId, 0L, "TEXT");
-        channelCommandService.register(registerChannelRequest);
-        guildCommandRepository.save(targetGuild);
-    }
-
-
-    private GuildRead registerGuildRead(Long userId, Guild guild) {
-        RegisterGuildReadRequest registerGuildReadRequest = ToSearchGuildReadRequestMapper.convert(guild,
-                userId);
-        return guildReadCommandService.register(registerGuildReadRequest);
+    private void registerGuildRead(Long userId, Guild guild) {
+        Events.send(ToRegisterGuildReadEventMapper.convert(guild, userId));
     }
 
     @Override
     @AuthorizeGuildManager
     public void delete(DeleteGuildRequest deleteGuildRequest) {
         guildCommandRepository.deleteById(deleteGuildRequest.guildId());
-        guildReadCommandService.delete(deleteGuildRequest.guildId());
-        categoryCommandService.deleteByGuildId(deleteGuildRequest.guildId());
-        channelCommandService.deleteByGuildId(deleteGuildRequest.guildId());
-        GuildDeletedEvent event = ToGuildDeletedEventMapper.convert(deleteGuildRequest.guildId());
-        Events.send(event);
+        Events.send(new DeleteGuildReadEvent(deleteGuildRequest.guildId()));
+        Events.send(new DeleteCategoryEvent(deleteGuildRequest.guildId()));
+        Events.send(new DeleteChannelEvent(deleteGuildRequest.guildId()));
     }
 }

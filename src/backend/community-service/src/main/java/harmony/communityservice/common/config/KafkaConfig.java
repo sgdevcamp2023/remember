@@ -1,9 +1,9 @@
 package harmony.communityservice.common.config;
 
-import harmony.communityservice.common.event.dto.ChannelCreatedEvent;
-import harmony.communityservice.common.event.dto.ChannelDeletedEvent;
-import harmony.communityservice.common.event.dto.GuildCreatedEvent;
-import harmony.communityservice.common.event.dto.GuildDeletedEvent;
+import harmony.communityservice.common.event.dto.produce.ChannelCreatedEvent;
+import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
+import harmony.communityservice.common.event.dto.produce.GuildCreatedEvent;
+import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.common.service.impl.KafkaProducerService;
 import lombok.RequiredArgsConstructor;

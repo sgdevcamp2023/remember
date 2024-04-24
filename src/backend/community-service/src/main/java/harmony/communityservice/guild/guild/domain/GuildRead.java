@@ -1,6 +1,5 @@
 package harmony.communityservice.guild.guild.domain;
 
-import harmony.communityservice.board.domain.ProfileInfo;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;

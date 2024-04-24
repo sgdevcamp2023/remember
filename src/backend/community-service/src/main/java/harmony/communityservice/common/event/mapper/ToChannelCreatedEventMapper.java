@@ -1,6 +1,6 @@
 package harmony.communityservice.common.event.mapper;
 
-import harmony.communityservice.common.event.dto.ChannelCreatedEvent;
+import harmony.communityservice.common.event.dto.produce.ChannelCreatedEvent;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 
 public class ToChannelCreatedEventMapper {

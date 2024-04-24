@@ -2,8 +2,8 @@ package harmony.communityservice.guild.channel.service.command.impl;
 
 import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.common.event.Events;
-import harmony.communityservice.common.event.dto.ChannelCreatedEvent;
-import harmony.communityservice.common.event.dto.ChannelDeletedEvent;
+import harmony.communityservice.common.event.dto.produce.ChannelCreatedEvent;
+import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
 import harmony.communityservice.common.event.mapper.ToChannelCreatedEventMapper;
 import harmony.communityservice.common.event.mapper.ToChannelDeletedEventMapper;
 import harmony.communityservice.guild.channel.dto.DeleteChannelRequest;
@@ -26,8 +26,6 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
     public Long register(RegisterChannelRequest registerChannelRequest) {
         Channel channel = ToChannelMapper.convert(registerChannelRequest);
         channelCommandRepository.save(channel);
-        ChannelCreatedEvent event = ToChannelCreatedEventMapper.convert(registerChannelRequest, channel.getChannelId());
-        Events.send(event);
         return channel.getChannelId();
     }
 

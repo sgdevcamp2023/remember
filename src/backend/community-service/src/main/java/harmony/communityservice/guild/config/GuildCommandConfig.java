@@ -1,9 +1,6 @@
 package harmony.communityservice.guild.config;
 
-import harmony.communityservice.common.event.handler.GuildCreatedEventHandler;
-import harmony.communityservice.common.event.handler.GuildDeletedEventHandler;
 import harmony.communityservice.common.service.ContentService;
-import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.guild.category.repository.command.CategoryCommandRepository;
 import harmony.communityservice.guild.category.repository.command.impl.CategoryCommandRepositoryImpl;
 import harmony.communityservice.guild.category.repository.command.jpa.JpaCategoryCommandRepository;
@@ -36,7 +33,6 @@ public class GuildCommandConfig {
     private final JpaGuildReadCommandRepository jpaGuildReadCommandRepository;
     private final JpaChannelCommandRepository jpaChannelCommandRepository;
     private final JpaCategoryCommandRepository jpaCategoryCommandRepository;
-    private final UserReadCommandService userReadCommandService;
     private final ContentService contentService;
 
 
@@ -68,8 +64,7 @@ public class GuildCommandConfig {
 
     @Bean
     public GuildCommandService guildCommandService() {
-        return new GuildCommandServiceImpl(guildCommandRepository(), guildReadCommandService(), userReadCommandService,
-                categoryCommandService(), channelCommandService(), contentService);
+        return new GuildCommandServiceImpl(guildCommandRepository(), contentService);
     }
 
     @Bean

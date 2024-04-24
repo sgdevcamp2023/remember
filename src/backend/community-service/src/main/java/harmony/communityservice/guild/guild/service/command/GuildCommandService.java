@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface GuildCommandService {
 
-    GuildRead register(RegisterGuildRequest registerGuildRequest, MultipartFile profile);
+    Long register(RegisterGuildRequest registerGuildRequest, MultipartFile profile);
 
     void joinByInvitationCode(RegisterUserUsingInvitationCodeRequest registerUserUsingInvitationCodeRequest);
 

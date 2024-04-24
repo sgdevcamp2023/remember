@@ -1,6 +1,6 @@
 package harmony.communityservice.common.event.mapper;
 
-import harmony.communityservice.common.event.dto.GuildDeletedEvent;
+import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
 
 public class ToGuildDeletedEventMapper {
 

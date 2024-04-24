@@ -1,8 +1,5 @@
 package harmony.communityservice.guild.guild.service.command.impl;
 
-import harmony.communityservice.common.event.Events;
-import harmony.communityservice.common.event.dto.GuildCreatedEvent;
-import harmony.communityservice.common.event.mapper.ToGuildCreatedEventMapper;
 import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
 import harmony.communityservice.guild.guild.mapper.ToGuildReadMapper;
@@ -18,12 +15,9 @@ public class GuildReadCommandServiceImpl implements GuildReadCommandService {
     private final GuildReadCommandRepository repository;
 
     @Override
-    public GuildRead register(RegisterGuildReadRequest registerGuildReadRequest) {
+    public void register(RegisterGuildReadRequest registerGuildReadRequest) {
         GuildRead guildRead = ToGuildReadMapper.convert(registerGuildReadRequest);
         repository.save(guildRead);
-        GuildCreatedEvent event = ToGuildCreatedEventMapper.convert(guildRead);
-        Events.send(event);
-        return guildRead;
     }
 
     @Override
