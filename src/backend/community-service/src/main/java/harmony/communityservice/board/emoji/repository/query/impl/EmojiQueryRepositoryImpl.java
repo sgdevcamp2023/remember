@@ -2,7 +2,7 @@ package harmony.communityservice.board.emoji.repository.query.impl;
 
 import harmony.communityservice.board.emoji.repository.query.EmojiQueryRepository;
 import harmony.communityservice.board.emoji.repository.query.jpa.JpaEmojiQueryRepository;
-import harmony.communityservice.board.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.Emoji;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

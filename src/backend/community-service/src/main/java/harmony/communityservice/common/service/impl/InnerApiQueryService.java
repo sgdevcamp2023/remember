@@ -1,7 +1,7 @@
 package harmony.communityservice.common.service.impl;
 
 import harmony.communityservice.guild.guild.service.query.GuildReadQueryService;
-import harmony.communityservice.guild.domain.GuildRead;
+import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.common.dto.SearchRoomsAndGuildsResponse;
 import harmony.communityservice.room.service.query.RoomQueryService;
 import java.util.ArrayList;

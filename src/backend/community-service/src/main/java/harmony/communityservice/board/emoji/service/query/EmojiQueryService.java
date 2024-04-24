@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.service.query;
 
-import harmony.communityservice.board.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
 
 public interface EmojiQueryService {

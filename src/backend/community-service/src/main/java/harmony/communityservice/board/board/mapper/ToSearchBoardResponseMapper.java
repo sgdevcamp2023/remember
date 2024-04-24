@@ -1,6 +1,6 @@
 package harmony.communityservice.board.board.mapper;
 
-import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.board.domain.Board;
 import harmony.communityservice.board.board.dto.SearchBoardDetailResponse;
 import harmony.communityservice.board.comment.dto.SearchCommentsResponse;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;

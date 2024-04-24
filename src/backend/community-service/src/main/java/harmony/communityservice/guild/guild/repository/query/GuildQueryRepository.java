@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.guild.repository.query;
 
-import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.guild.domain.Guild;
 import java.util.Optional;
 
 public interface GuildQueryRepository {

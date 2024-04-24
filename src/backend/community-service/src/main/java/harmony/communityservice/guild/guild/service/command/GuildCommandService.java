@@ -1,13 +1,9 @@
 package harmony.communityservice.guild.guild.service.command;
 
-import harmony.communityservice.guild.category.dto.DeleteCategoryRequest;
-import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
-import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.guild.dto.DeleteGuildRequest;
-import harmony.communityservice.guild.guild.dto.ModifyUserNicknameInGuildRequest;
 import harmony.communityservice.guild.guild.dto.RegisterGuildRequest;
 import harmony.communityservice.guild.guild.dto.RegisterUserUsingInvitationCodeRequest;
-import harmony.communityservice.guild.domain.GuildRead;
+import harmony.communityservice.guild.guild.domain.GuildRead;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface GuildCommandService {

@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.guild.repository.command.impl;
 
-import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.guild.domain.Guild;
 import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
 import harmony.communityservice.guild.guild.repository.command.jpa.JpaGuildCommandRepository;
 import java.util.Optional;

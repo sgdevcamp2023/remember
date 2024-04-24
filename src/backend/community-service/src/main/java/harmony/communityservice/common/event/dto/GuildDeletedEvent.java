@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class GuildDeletedEvent extends Event {
+public class GuildDeletedEvent extends KafkaEvent {
 
     @Builder
     public GuildDeletedEvent(Long guildId, String type) {

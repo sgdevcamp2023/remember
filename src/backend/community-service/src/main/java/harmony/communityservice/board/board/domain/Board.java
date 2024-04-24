@@ -1,4 +1,4 @@
-package harmony.communityservice.board.domain;
+package harmony.communityservice.board.board.domain;
 
 import harmony.communityservice.board.board.dto.ModifyBoardRequest;
 import harmony.communityservice.board.board.dto.SearchImageResponse;

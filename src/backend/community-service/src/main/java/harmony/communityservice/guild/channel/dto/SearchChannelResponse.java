@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.channel.dto;
 
-import harmony.communityservice.guild.domain.ChannelType;
+import harmony.communityservice.guild.channel.domain.ChannelType;
 import lombok.Builder;
 
 @Builder(toBuilder = true)

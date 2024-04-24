@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ChannelDeletedEvent extends Event{
+public class ChannelDeletedEvent extends KafkaEvent {
 
     private Long channelId;
 

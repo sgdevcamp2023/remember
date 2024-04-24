@@ -3,7 +3,7 @@ package harmony.communityservice.guild.guild.service.command.impl;
 import harmony.communityservice.common.event.Events;
 import harmony.communityservice.common.event.dto.GuildCreatedEvent;
 import harmony.communityservice.common.event.mapper.ToGuildCreatedEventMapper;
-import harmony.communityservice.guild.domain.GuildRead;
+import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
 import harmony.communityservice.guild.guild.mapper.ToGuildReadMapper;
 import harmony.communityservice.guild.guild.repository.command.GuildReadCommandRepository;

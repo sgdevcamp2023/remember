@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.channel.repository.query.jpa;
 
-import harmony.communityservice.guild.domain.Channel;
+import harmony.communityservice.guild.channel.domain.Channel;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

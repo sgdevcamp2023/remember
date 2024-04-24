@@ -2,7 +2,7 @@ package harmony.communityservice.board.board.repository.query.impl;
 
 import harmony.communityservice.board.board.repository.query.BoardQueryRepository;
 import harmony.communityservice.board.board.repository.query.jpa.JpaBoardQueryRepository;
-import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.board.domain.Board;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

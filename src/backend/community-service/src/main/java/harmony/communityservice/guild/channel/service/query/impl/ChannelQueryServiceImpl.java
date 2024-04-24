@@ -2,15 +2,11 @@ package harmony.communityservice.guild.channel.service.query.impl;
 
 import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.common.dto.SearchParameterMapperRequest;
-import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.guild.channel.dto.SearchChannelResponse;
 import harmony.communityservice.guild.channel.mapper.ToSearchChannelResponseMapper;
 import harmony.communityservice.guild.channel.repository.query.ChannelQueryRepository;
 import harmony.communityservice.guild.channel.service.query.ChannelQueryService;
-import harmony.communityservice.guild.domain.Channel;
-import harmony.communityservice.guild.domain.Guild;
-import harmony.communityservice.guild.guild.repository.query.GuildQueryRepository;
-import harmony.communityservice.guild.guild.service.query.GuildQueryService;
+import harmony.communityservice.guild.channel.domain.Channel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

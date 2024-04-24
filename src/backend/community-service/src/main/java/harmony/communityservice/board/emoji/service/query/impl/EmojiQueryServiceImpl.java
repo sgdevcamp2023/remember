@@ -3,7 +3,7 @@ package harmony.communityservice.board.emoji.service.query.impl;
 import harmony.communityservice.board.emoji.repository.query.EmojiQueryRepository;
 import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
 import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.board.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.mapper.ToSearchEmojiResponseMapper;
 import harmony.communityservice.board.emoji.dto.SearchEmojiResponse;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;

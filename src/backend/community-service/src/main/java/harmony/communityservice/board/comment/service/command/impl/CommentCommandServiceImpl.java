@@ -6,7 +6,7 @@ import harmony.communityservice.board.comment.dto.RegisterCommentRequest;
 import harmony.communityservice.board.comment.mapper.ToCommentMapper;
 import harmony.communityservice.board.comment.repository.command.CommentCommandRepository;
 import harmony.communityservice.board.comment.service.command.CommentCommandService;
-import harmony.communityservice.board.domain.Comment;
+import harmony.communityservice.board.comment.domain.Comment;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;

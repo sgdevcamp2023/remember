@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.channel.mapper;
 
-import harmony.communityservice.guild.domain.Channel;
+import harmony.communityservice.guild.channel.domain.Channel;
 import harmony.communityservice.guild.channel.dto.SearchChannelResponse;
 
 public class ToSearchChannelResponseMapper {

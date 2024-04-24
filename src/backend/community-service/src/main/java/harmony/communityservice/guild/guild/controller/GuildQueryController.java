@@ -3,7 +3,7 @@ package harmony.communityservice.guild.guild.controller;
 import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.common.dto.SearchParameterMapperRequest;
-import harmony.communityservice.guild.domain.GuildRead;
+import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.dto.SearchGuildInvitationCodeRequest;
 import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildResponse;
 import harmony.communityservice.guild.guild.service.query.GuildQueryService;

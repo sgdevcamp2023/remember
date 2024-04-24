@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.guild.dto;
 
-import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.guild.domain.Guild;
 
 public class ToSearchGuildReadRequestMapper {
 

@@ -1,4 +1,4 @@
-package harmony.communityservice.board.domain;
+package harmony.communityservice.board.comment.domain;
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;

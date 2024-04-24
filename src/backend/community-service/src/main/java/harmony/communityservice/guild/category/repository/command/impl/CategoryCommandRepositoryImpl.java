@@ -2,7 +2,7 @@ package harmony.communityservice.guild.category.repository.command.impl;
 
 import harmony.communityservice.guild.category.repository.command.CategoryCommandRepository;
 import harmony.communityservice.guild.category.repository.command.jpa.JpaCategoryCommandRepository;
-import harmony.communityservice.guild.domain.Category;
+import harmony.communityservice.guild.category.domain.Category;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 

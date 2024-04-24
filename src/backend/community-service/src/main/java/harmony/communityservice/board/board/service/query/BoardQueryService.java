@@ -1,6 +1,6 @@
 package harmony.communityservice.board.board.service.query;
 
-import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.board.domain.Board;
 import harmony.communityservice.board.board.dto.SearchBoardDetailResponse;
 import harmony.communityservice.board.board.dto.SearchBoardResponse;
 import java.util.List;

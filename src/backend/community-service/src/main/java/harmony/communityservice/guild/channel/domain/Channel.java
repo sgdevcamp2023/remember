@@ -1,8 +1,7 @@
-package harmony.communityservice.guild.domain;
+package harmony.communityservice.guild.channel.domain;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

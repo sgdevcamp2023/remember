@@ -6,7 +6,7 @@ import harmony.communityservice.guild.category.dto.SearchCategoryResponse;
 import harmony.communityservice.guild.category.mapper.ToSearchCategoryResponseMapper;
 import harmony.communityservice.guild.category.repository.query.CategoryQueryRepository;
 import harmony.communityservice.guild.category.service.query.CategoryQueryService;
-import harmony.communityservice.guild.domain.Category;
+import harmony.communityservice.guild.category.domain.Category;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

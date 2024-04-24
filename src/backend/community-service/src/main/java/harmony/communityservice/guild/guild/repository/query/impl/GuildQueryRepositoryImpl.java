@@ -2,7 +2,7 @@ package harmony.communityservice.guild.guild.repository.query.impl;
 
 import harmony.communityservice.guild.guild.repository.query.GuildQueryRepository;
 import harmony.communityservice.guild.guild.repository.query.jpa.JpaGuildQueryRepository;
-import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.guild.domain.Guild;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;

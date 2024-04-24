@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.category.mapper;
 
-import harmony.communityservice.guild.domain.Category;
+import harmony.communityservice.guild.category.domain.Category;
 import harmony.communityservice.guild.category.dto.SearchCategoryResponse;
 
 public class ToSearchCategoryResponseMapper {

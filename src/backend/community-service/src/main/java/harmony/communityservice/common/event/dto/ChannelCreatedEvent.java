@@ -2,10 +2,9 @@ package harmony.communityservice.common.event.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-public class ChannelCreatedEvent extends Event {
+public class ChannelCreatedEvent extends KafkaEvent {
 
     private String channelType;
     private String channelName;

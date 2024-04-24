@@ -2,7 +2,7 @@ package harmony.communityservice.guild.guild.repository.command.impl;
 
 import harmony.communityservice.guild.guild.repository.command.GuildReadCommandRepository;
 import harmony.communityservice.guild.guild.repository.command.jpa.JpaGuildReadCommandRepository;
-import harmony.communityservice.guild.domain.GuildRead;
+import harmony.communityservice.guild.guild.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

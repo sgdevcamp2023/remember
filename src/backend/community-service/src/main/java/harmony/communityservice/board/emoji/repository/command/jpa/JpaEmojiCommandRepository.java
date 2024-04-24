@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.repository.command.jpa;
 
-import harmony.communityservice.board.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.Emoji;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,7 +1,7 @@
 package harmony.communityservice.common.event.mapper;
 
 import harmony.communityservice.common.event.dto.GuildCreatedEvent;
-import harmony.communityservice.guild.domain.GuildRead;
+import harmony.communityservice.guild.guild.domain.GuildRead;
 
 public class ToGuildCreatedEventMapper {
 

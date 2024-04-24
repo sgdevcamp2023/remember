@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.guild.repository.command;
 
-import harmony.communityservice.guild.domain.GuildRead;
+import harmony.communityservice.guild.guild.domain.GuildRead;
 
 public interface GuildReadCommandRepository {
 

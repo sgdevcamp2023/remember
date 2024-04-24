@@ -1,6 +1,5 @@
 package harmony.communityservice.common.event.handler;
 
-import harmony.communityservice.common.event.dto.GuildCreatedEvent;
 import harmony.communityservice.common.event.dto.GuildDeletedEvent;
 import harmony.communityservice.common.service.ProducerService;
 import lombok.RequiredArgsConstructor;

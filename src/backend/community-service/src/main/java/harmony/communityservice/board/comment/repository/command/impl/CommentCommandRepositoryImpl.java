@@ -2,7 +2,7 @@ package harmony.communityservice.board.comment.repository.command.impl;
 
 import harmony.communityservice.board.comment.repository.command.CommentCommandRepository;
 import harmony.communityservice.board.comment.repository.command.jpa.JpaCommentCommandRepository;
-import harmony.communityservice.board.domain.Comment;
+import harmony.communityservice.board.comment.domain.Comment;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 

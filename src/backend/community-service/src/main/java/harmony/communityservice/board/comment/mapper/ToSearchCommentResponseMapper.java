@@ -1,7 +1,7 @@
 package harmony.communityservice.board.comment.mapper;
 
 import harmony.communityservice.board.comment.dto.SearchCommentResponse;
-import harmony.communityservice.board.domain.Comment;
+import harmony.communityservice.board.comment.domain.Comment;
 
 public class ToSearchCommentResponseMapper {
 

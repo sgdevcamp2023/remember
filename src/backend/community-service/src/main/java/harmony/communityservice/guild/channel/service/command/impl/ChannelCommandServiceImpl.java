@@ -11,7 +11,7 @@ import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.mapper.ToChannelMapper;
 import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
-import harmony.communityservice.guild.domain.Channel;
+import harmony.communityservice.guild.channel.domain.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

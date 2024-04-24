@@ -1,6 +1,6 @@
 package harmony.communityservice.board.comment.repository.query.jpa;
 
-import harmony.communityservice.board.domain.Comment;
+import harmony.communityservice.board.comment.domain.Comment;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

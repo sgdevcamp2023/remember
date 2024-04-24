@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.service.command.impl;
 
-import harmony.communityservice.board.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.dto.DeleteEmojiRequest;
 import harmony.communityservice.board.emoji.dto.RegisterEmojiRequest;
 import harmony.communityservice.board.emoji.mapper.ToEmojiMapper;

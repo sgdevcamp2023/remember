@@ -1,4 +1,4 @@
-package harmony.communityservice.guild.domain;
+package harmony.communityservice.guild.guild.domain;
 
 import harmony.communityservice.board.domain.ProfileInfo;
 import jakarta.persistence.AttributeOverride;

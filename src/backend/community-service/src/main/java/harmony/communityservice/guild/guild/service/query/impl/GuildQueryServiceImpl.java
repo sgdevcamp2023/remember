@@ -6,7 +6,7 @@ import harmony.communityservice.common.dto.SearchParameterMapperRequest;
 import harmony.communityservice.common.dto.SearchUserReadRequest;
 import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
 import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.guild.domain.Guild;
+import harmony.communityservice.guild.guild.domain.Guild;
 import harmony.communityservice.guild.guild.dto.SearchGuildInvitationCodeRequest;
 import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildResponse;
 import harmony.communityservice.guild.guild.mapper.ToInvitationCodeMapper;

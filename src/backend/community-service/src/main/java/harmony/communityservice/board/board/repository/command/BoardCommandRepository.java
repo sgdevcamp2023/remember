@@ -1,6 +1,6 @@
 package harmony.communityservice.board.board.repository.command;
 
-import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.board.domain.Board;
 import java.util.Optional;
 
 public interface BoardCommandRepository {

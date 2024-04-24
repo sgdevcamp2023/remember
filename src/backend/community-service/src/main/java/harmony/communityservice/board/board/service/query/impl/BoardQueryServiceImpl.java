@@ -8,7 +8,7 @@ import harmony.communityservice.board.board.repository.query.BoardQueryRepositor
 import harmony.communityservice.board.board.service.query.BoardQueryService;
 import harmony.communityservice.board.comment.dto.SearchCommentsResponse;
 import harmony.communityservice.board.comment.service.query.CommentQueryService;
-import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.board.domain.Board;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
 import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
 import harmony.communityservice.common.exception.NotFoundDataException;

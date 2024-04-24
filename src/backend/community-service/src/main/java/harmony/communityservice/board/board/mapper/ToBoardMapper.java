@@ -1,8 +1,8 @@
 package harmony.communityservice.board.board.mapper;
 
 import harmony.communityservice.board.board.dto.RegisterBoardRequest;
-import harmony.communityservice.board.domain.Board;
-import harmony.communityservice.board.domain.Image;
+import harmony.communityservice.board.board.domain.Board;
+import harmony.communityservice.board.board.domain.Image;
 import harmony.communityservice.user.domain.UserRead;
 import java.util.List;
 

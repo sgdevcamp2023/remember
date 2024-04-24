@@ -1,7 +1,7 @@
 package harmony.communityservice.board.board.repository.query.jpa;
 
 import feign.Param;
-import harmony.communityservice.board.domain.Board;
+import harmony.communityservice.board.board.domain.Board;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

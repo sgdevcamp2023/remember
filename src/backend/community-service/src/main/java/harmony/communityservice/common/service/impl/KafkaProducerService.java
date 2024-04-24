@@ -1,13 +1,10 @@
 package harmony.communityservice.common.service.impl;
 
-import harmony.communityservice.common.dto.CommunityEvent;
 import harmony.communityservice.common.event.dto.ChannelCreatedEvent;
 import harmony.communityservice.common.event.dto.ChannelDeletedEvent;
 import harmony.communityservice.common.event.dto.GuildCreatedEvent;
 import harmony.communityservice.common.event.dto.GuildDeletedEvent;
 import harmony.communityservice.common.service.ProducerService;
-import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
-import harmony.communityservice.guild.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;

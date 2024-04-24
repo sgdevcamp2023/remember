@@ -2,7 +2,7 @@ package harmony.communityservice.guild.channel.repository.command.impl;
 
 import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
 import harmony.communityservice.guild.channel.repository.command.jpa.JpaChannelCommandRepository;
-import harmony.communityservice.guild.domain.Channel;
+import harmony.communityservice.guild.channel.domain.Channel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

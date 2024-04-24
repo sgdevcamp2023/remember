@@ -1,4 +1,4 @@
-package harmony.communityservice.board.domain;
+package harmony.communityservice.board.emoji.domain;
 
 import harmony.communityservice.common.exception.DuplicatedEmojiException;
 import jakarta.persistence.CollectionTable;

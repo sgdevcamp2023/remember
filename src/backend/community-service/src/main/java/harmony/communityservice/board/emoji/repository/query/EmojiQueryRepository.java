@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.repository.query;
 
-import harmony.communityservice.board.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.Emoji;
 import java.util.List;
 import java.util.Optional;
 

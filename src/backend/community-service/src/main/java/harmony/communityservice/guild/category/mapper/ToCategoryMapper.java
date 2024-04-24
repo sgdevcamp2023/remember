@@ -2,7 +2,7 @@ package harmony.communityservice.guild.category.mapper;
 
 
 import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
-import harmony.communityservice.guild.domain.Category;
+import harmony.communityservice.guild.category.domain.Category;
 
 public class ToCategoryMapper {
 

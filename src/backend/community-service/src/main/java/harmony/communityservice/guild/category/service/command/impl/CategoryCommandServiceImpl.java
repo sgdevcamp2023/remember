@@ -8,7 +8,7 @@ import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
 import harmony.communityservice.guild.category.mapper.ToCategoryMapper;
 import harmony.communityservice.guild.category.repository.command.CategoryCommandRepository;
 import harmony.communityservice.guild.category.service.command.CategoryCommandService;
-import harmony.communityservice.guild.domain.Category;
+import harmony.communityservice.guild.category.domain.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

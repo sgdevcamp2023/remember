@@ -1,4 +1,4 @@
-package harmony.communityservice.board.domain;
+package harmony.communityservice.guild.channel.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

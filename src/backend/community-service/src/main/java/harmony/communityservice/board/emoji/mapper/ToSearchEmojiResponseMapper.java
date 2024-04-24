@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.mapper;
 
-import harmony.communityservice.board.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.dto.SearchEmojiResponse;
 
 public class ToSearchEmojiResponseMapper {
