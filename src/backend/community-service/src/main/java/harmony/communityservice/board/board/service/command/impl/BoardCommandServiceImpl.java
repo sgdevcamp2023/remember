@@ -1,16 +1,19 @@
 package harmony.communityservice.board.board.service.command.impl;
 
+import harmony.communityservice.board.board.domain.Board;
+import harmony.communityservice.board.board.domain.Image;
 import harmony.communityservice.board.board.dto.DeleteBoardRequest;
 import harmony.communityservice.board.board.dto.ModifyBoardRequest;
 import harmony.communityservice.board.board.dto.RegisterBoardRequest;
 import harmony.communityservice.board.board.mapper.ToBoardMapper;
 import harmony.communityservice.board.board.repository.command.BoardCommandRepository;
 import harmony.communityservice.board.board.service.command.BoardCommandService;
-import harmony.communityservice.board.comment.service.command.CommentCommandService;
-import harmony.communityservice.board.board.domain.Board;
-import harmony.communityservice.board.board.domain.Image;
-import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
 import harmony.communityservice.common.annotation.AuthorizeGuildMember;
+import harmony.communityservice.common.event.Events;
+import harmony.communityservice.common.event.dto.inner.DeleteCommentEvent;
+import harmony.communityservice.common.event.dto.inner.DeleteCommentsEvent;
+import harmony.communityservice.common.event.dto.inner.DeleteEmojiEvent;
+import harmony.communityservice.common.event.dto.inner.DeleteEmojisEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.user.domain.UserRead;
@@ -27,8 +30,6 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     private final ContentService contentService;
     private final UserReadCommandService userReadCommandService;
-    private final CommentCommandService commentCommandService;
-    private final EmojiCommandService emojiCommandService;
     private final BoardCommandRepository boardCommandRepository;
 
     @Override
@@ -66,7 +67,23 @@ public class BoardCommandServiceImpl implements BoardCommandService {
                 .orElseThrow(NotFoundDataException::new);
         targetBoard.verifyWriter(deleteBoardRequest.userId());
         boardCommandRepository.delete(targetBoard);
-        commentCommandService.deleteListByBoardId(deleteBoardRequest.boardId());
-        emojiCommandService.deleteListByBoardId(deleteBoardRequest.boardId());
+        Events.send(new DeleteCommentEvent(deleteBoardRequest.boardId()));
+        Events.send(new DeleteEmojiEvent(deleteBoardRequest.boardId()));
+    }
+
+    @Override
+    public void deleteAllInChannelId(Long channelId) {
+        List<Long> boardIds = boardCommandRepository.findBoardIdsByChannelId(channelId);
+        boardCommandRepository.deleteByChannelId(channelId);
+        Events.send(new DeleteCommentsEvent(boardIds));
+        Events.send(new DeleteEmojisEvent(boardIds));
+    }
+
+    @Override
+    public void deleteAllInChannelIds(List<Long> channelIds) {
+        List<Long> boardIds = boardCommandRepository.findAllByChannelIds(channelIds);
+        boardCommandRepository.deleteAllByChannelIds(channelIds);
+        Events.send(new DeleteCommentsEvent(boardIds));
+        Events.send(new DeleteEmojisEvent(boardIds));
     }
 }

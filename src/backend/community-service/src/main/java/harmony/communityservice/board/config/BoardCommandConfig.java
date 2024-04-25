@@ -59,7 +59,6 @@ public class BoardCommandConfig {
 
     @Bean
     public BoardCommandService boardCommandService() {
-        return new BoardCommandServiceImpl(contentService, userReadCommandService, commentCommandService(),
-                emojiCommandService(), boardCommandRepository());
+        return new BoardCommandServiceImpl(contentService, userReadCommandService, boardCommandRepository());
     }
 }

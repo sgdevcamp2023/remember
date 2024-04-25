@@ -6,6 +6,7 @@ import harmony.communityservice.board.emoji.dto.RegisterEmojiRequest;
 import harmony.communityservice.board.emoji.mapper.ToEmojiMapper;
 import harmony.communityservice.board.emoji.repository.command.EmojiCommandRepository;
 import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +42,10 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
     @Override
     public void deleteListByBoardId(Long boardId) {
         emojiCommandRepository.deleteListByBoardId(boardId);
+    }
+
+    @Override
+    public void deleteListByBoardIds(List<Long> boardIds) {
+        emojiCommandRepository.deleteListByBoardIds(boardIds);
     }
 }

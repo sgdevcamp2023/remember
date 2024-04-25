@@ -56,7 +56,7 @@ public class LogAop {
 
 
 
-    @Around("board()||comment()||common()||category()||channel()||guild()||room()||user()")
+    @Around("board()||comment()||emoji()||common()||category()||channel()||guild()||room()||user()")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             return joinPoint.proceed();

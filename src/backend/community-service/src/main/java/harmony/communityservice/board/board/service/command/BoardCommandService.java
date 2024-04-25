@@ -12,4 +12,8 @@ public interface BoardCommandService {
     void modify(ModifyBoardRequest modifyBoardRequest);
 
     void delete(DeleteBoardRequest deleteBoardRequest);
+
+    void deleteAllInChannelId(Long channelId);
+
+    void deleteAllInChannelIds(List<Long> channelIds);
 }
