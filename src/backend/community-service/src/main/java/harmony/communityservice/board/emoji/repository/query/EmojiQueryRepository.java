@@ -1,13 +1,15 @@
 package harmony.communityservice.board.emoji.repository.query;
 
+import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.emoji.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.EmojiId;
 import java.util.List;
 import java.util.Optional;
 
 public interface EmojiQueryRepository {
-    Optional<Emoji> findByBoardAndEmojiType(Long boardId, Long emojiType);
+    Optional<Emoji> findByBoardAndEmojiType(BoardId boardId, Long emojiType);
 
-    Optional<Emoji> findByEmojiId(Long emojiId);
+    Optional<Emoji> findByEmojiId(EmojiId emojiId);
 
-    List<Emoji> findEmojisByBoardId(Long boardId);
+    List<Emoji> findEmojisByBoardId(BoardId boardId);
 }

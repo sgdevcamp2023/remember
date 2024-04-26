@@ -1,7 +1,9 @@
 package harmony.communityservice.guild.channel.mapper;
 
+import harmony.communityservice.guild.category.domain.CategoryId;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.domain.Channel;
+import harmony.communityservice.guild.guild.domain.GuildId;
 
 public class ToChannelMapper {
 
@@ -9,8 +11,8 @@ public class ToChannelMapper {
         return Channel.builder()
                 .name(registerChannelRequest.name())
                 .type(registerChannelRequest.type())
-                .categoryId(registerChannelRequest.categoryId())
-                .guildId(registerChannelRequest.guildId())
+                .categoryId(CategoryId.make(registerChannelRequest.categoryId()))
+                .guildId(GuildId.make(registerChannelRequest.guildId()))
                 .build();
     }
 }

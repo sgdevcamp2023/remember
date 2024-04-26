@@ -1,5 +1,6 @@
 package harmony.communityservice.board.comment.service.query.impl;
 
+import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.comment.dto.SearchCommentResponse;
 import harmony.communityservice.board.comment.dto.SearchCommentsResponse;
 import harmony.communityservice.board.comment.mapper.ToSearchCommentResponseMapper;
@@ -18,12 +19,12 @@ public class CommentQueryServiceImpl implements CommentQueryService {
 
     @Override
     public Long countingByBoardId(Long boardId) {
-        return commentQueryRepository.countListByBoardId(boardId);
+        return commentQueryRepository.countListByBoardId(BoardId.make(boardId));
     }
 
     @Override
     public SearchCommentsResponse searchListByBoardId(Long boardId) {
-        List<Comment> comments = commentQueryRepository.findListByBoardId(boardId);
+        List<Comment> comments = commentQueryRepository.findListByBoardId(BoardId.make(boardId));
         List<SearchCommentResponse> searchCommentResponses = comments.stream()
                 .map(c -> ToSearchCommentResponseMapper.convert(c, boardId, comments.indexOf(c))).toList();
         return new SearchCommentsResponse(searchCommentResponses);

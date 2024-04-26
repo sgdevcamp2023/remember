@@ -1,11 +1,14 @@
 package harmony.communityservice.board.emoji.service.command.impl;
 
+import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.emoji.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.EmojiId;
 import harmony.communityservice.board.emoji.dto.DeleteEmojiRequest;
 import harmony.communityservice.board.emoji.dto.RegisterEmojiRequest;
 import harmony.communityservice.board.emoji.mapper.ToEmojiMapper;
 import harmony.communityservice.board.emoji.repository.command.EmojiCommandRepository;
 import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
+import harmony.communityservice.user.domain.UserId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +21,14 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
 
     @Override
     public void register(RegisterEmojiRequest registerEmojiRequest) {
-        Emoji targetEmoji = emojiCommandRepository.findByBoardIdAndEmojiType(registerEmojiRequest.boardId(),
+        Emoji targetEmoji = emojiCommandRepository.findByBoardIdAndEmojiType(
+                BoardId.make(registerEmojiRequest.boardId()),
                 registerEmojiRequest.emojiType()).orElse(null);
 
         if (targetEmoji == null) {
             notExistsEmoji(registerEmojiRequest);
         } else {
-            targetEmoji.exists(registerEmojiRequest.userId());
+            targetEmoji.exists(UserId.make(registerEmojiRequest.userId()));
         }
     }
 
@@ -36,16 +40,16 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
 
     @Override
     public void delete(DeleteEmojiRequest deleteEmojiRequest) {
-        emojiCommandRepository.deleteById(deleteEmojiRequest.emojiId());
+        emojiCommandRepository.deleteById(EmojiId.make(deleteEmojiRequest.emojiId()));
     }
 
     @Override
-    public void deleteListByBoardId(Long boardId) {
+    public void deleteListByBoardId(BoardId boardId) {
         emojiCommandRepository.deleteListByBoardId(boardId);
     }
 
     @Override
-    public void deleteListByBoardIds(List<Long> boardIds) {
+    public void deleteListByBoardIds(List<BoardId> boardIds) {
         emojiCommandRepository.deleteListByBoardIds(boardIds);
     }
 }

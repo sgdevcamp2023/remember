@@ -1,8 +1,9 @@
 package harmony.communityservice.guild.guild.repository.query;
 
 import harmony.communityservice.guild.guild.domain.GuildRead;
+import harmony.communityservice.user.domain.UserId;
 import java.util.List;
 
 public interface GuildReadQueryRepository {
-    List<GuildRead> findGuildsByUserId(Long userId);
+    List<GuildRead> findGuildsByUserId(UserId userId);
 }

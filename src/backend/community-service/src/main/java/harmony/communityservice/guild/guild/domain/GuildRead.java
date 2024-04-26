@@ -1,5 +1,8 @@
 package harmony.communityservice.guild.guild.domain;
 
+import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
+import harmony.communityservice.guild.guild.domain.GuildReadId.GuildReadIdJavaType;
+import harmony.communityservice.user.domain.UserId;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
@@ -13,6 +16,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JavaType;
 
 @Entity
 @Getter
@@ -22,14 +26,17 @@ public class GuildRead {
 
     @Id
     @Column(name = "guild_read_id")
+    @JavaType(GuildReadIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long guildReadId;
+    private GuildReadId guildReadId;
 
     @Column(name = "guild_id")
-    private Long guildId;
+    @JavaType(GuildIdJavaType.class)
+    private GuildId guildId;
 
+    @Embedded
     @Column(name = "user_id")
-    private Long userId;
+    private UserId userId;
 
     @Embedded
     @AttributeOverrides({
@@ -39,7 +46,7 @@ public class GuildRead {
     private ProfileInfo guildInfo;
 
     @Builder
-    public GuildRead(Long guildId, Long userId, String name, String profile) {
+    public GuildRead(GuildId guildId, UserId userId, String name, String profile) {
         this.guildId = guildId;
         this.userId = userId;
         this.guildInfo = makeGuildInfo(name, profile);

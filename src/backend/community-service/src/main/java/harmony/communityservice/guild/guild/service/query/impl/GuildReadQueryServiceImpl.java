@@ -1,8 +1,9 @@
 package harmony.communityservice.guild.guild.service.query.impl;
 
+import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.repository.query.GuildReadQueryRepository;
 import harmony.communityservice.guild.guild.service.query.GuildReadQueryService;
-import harmony.communityservice.guild.guild.domain.GuildRead;
+import harmony.communityservice.user.domain.UserId;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class GuildReadQueryServiceImpl implements GuildReadQueryService {
     @Override
     public Map<Long, GuildRead> searchMapByUserId(long userId) {
         Map<Long, GuildRead> guildReads = new HashMap<>();
-        for (GuildRead guildRead : guildReadQueryRepository.findGuildsByUserId(userId)) {
-            guildReads.put(guildRead.getGuildId(), guildRead);
+        for (GuildRead guildRead : guildReadQueryRepository.findGuildsByUserId(UserId.make(userId))) {
+            guildReads.put(guildRead.getGuildId().getId(), guildRead);
         }
         return guildReads;
     }

@@ -10,7 +10,7 @@ public class ToSearchChannelResponseMapper {
                 .channelId(channelId)
                 .channelName(channel.getName())
                 .channelType(channel.getType())
-                .categoryId(channel.getCategoryId())
+                .categoryId(channel.getCategoryId().getId())
                 .guildId(guildId)
                 .build();
     }

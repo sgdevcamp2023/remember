@@ -1,5 +1,9 @@
 package harmony.communityservice.guild.category.domain;
 
+import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.guild.category.domain.CategoryId.CategoryIdJavaType;
+import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,20 +17,23 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
-@Table(name = "category",indexes = @Index(name = "idx__guild_id", columnList = "guild_id"))
+@Table(name = "category", indexes = @Index(name = "idx__guild_id", columnList = "guild_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Category extends AggregateRoot<Category, CategoryId> {
 
     @Id
     @Column(name = "category_id")
+    @JavaType(CategoryIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private CategoryId categoryId;
 
     @Column(name = "guild_id")
-    private Long guildId;
+    @JavaType(GuildIdJavaType.class)
+    private GuildId guildId;
 
     @NotBlank
     @Column(name = "category_name")
@@ -39,7 +46,7 @@ public class Category {
     private ModifiedInfo modifiedInfo;
 
     @Builder
-    public Category(String name, Long guildId) {
+    public Category(String name, GuildId guildId) {
         this.name = name;
         this.guildId = guildId;
         this.creationTime = new CreationTime();
@@ -51,4 +58,8 @@ public class Category {
         this.modifiedInfo = modifiedInfo.modify();
     }
 
+    @Override
+    public CategoryId getId() {
+        return categoryId;
+    }
 }

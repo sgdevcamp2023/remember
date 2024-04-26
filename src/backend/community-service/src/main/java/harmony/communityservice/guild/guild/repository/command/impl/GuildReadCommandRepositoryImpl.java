@@ -1,8 +1,9 @@
 package harmony.communityservice.guild.guild.repository.command.impl;
 
+import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.repository.command.GuildReadCommandRepository;
 import harmony.communityservice.guild.guild.repository.command.jpa.JpaGuildReadCommandRepository;
-import harmony.communityservice.guild.guild.domain.GuildRead;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -16,7 +17,7 @@ public class GuildReadCommandRepositoryImpl implements GuildReadCommandRepositor
     }
 
     @Override
-    public void delete(long guildId) {
+    public void delete(GuildId guildId) {
         repository.deleteGuildReadsByGuildId(guildId);
     }
 }

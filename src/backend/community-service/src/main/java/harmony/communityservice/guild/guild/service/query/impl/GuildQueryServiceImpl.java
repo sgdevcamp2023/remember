@@ -7,15 +7,17 @@ import harmony.communityservice.common.dto.SearchUserReadRequest;
 import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.guild.guild.domain.Guild;
+import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.dto.SearchGuildInvitationCodeRequest;
+import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildRequest;
 import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildResponse;
 import harmony.communityservice.guild.guild.mapper.ToInvitationCodeMapper;
 import harmony.communityservice.guild.guild.repository.query.GuildQueryRepository;
 import harmony.communityservice.guild.guild.service.query.GuildQueryService;
 import harmony.communityservice.room.dto.SearchUserStateResponse;
 import harmony.communityservice.room.mapper.ToSearchUserStateResponseMapper;
+import harmony.communityservice.user.domain.UserId;
 import harmony.communityservice.user.domain.UserRead;
-import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildRequest;
 import harmony.communityservice.user.service.query.UserReadQueryService;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +38,7 @@ public class GuildQueryServiceImpl implements GuildQueryService {
     @Override
     @AuthorizeGuildMember
     public String searchInvitationCode(SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest) {
-        Guild guild = guildQueryRepository.findById(searchGuildInvitationCodeRequest.guildId())
+        Guild guild = guildQueryRepository.findById(GuildId.make(searchGuildInvitationCodeRequest.guildId()))
                 .orElseThrow(NotFoundDataException::new);
         return ToInvitationCodeMapper.convert(guild.getInviteCode(), searchGuildInvitationCodeRequest.userId(),
                 searchGuildInvitationCodeRequest.guildId());
@@ -44,7 +46,7 @@ public class GuildQueryServiceImpl implements GuildQueryService {
 
     @Override
     public void existsByGuildIdAndManagerId(Long guildId, Long managerId) {
-        if (!guildQueryRepository.existsByGuildIdAndManagerId(guildId, managerId)) {
+        if (!guildQueryRepository.existsByGuildIdAndManagerId(GuildId.make(guildId), UserId.make(managerId))) {
             throw new NotFoundDataException("관리자만 가능합니다");
         }
     }
@@ -105,7 +107,7 @@ public class GuildQueryServiceImpl implements GuildQueryService {
         for (Long voiceUserId : voiceUserIds) {
             UserRead findUserRead = userReadQueryService.searchByUserIdAndGuildId(
                     new SearchUserReadRequest(voiceUserId, guildId));
-            userReads.put(findUserRead.getUserId(), findUserRead);
+            userReads.put(findUserRead.getUserId().getId(), findUserRead);
         }
         return userReads;
     }

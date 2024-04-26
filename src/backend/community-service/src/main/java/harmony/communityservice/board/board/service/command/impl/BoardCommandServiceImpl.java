@@ -1,6 +1,7 @@
 package harmony.communityservice.board.board.service.command.impl;
 
 import harmony.communityservice.board.board.domain.Board;
+import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.board.domain.Image;
 import harmony.communityservice.board.board.dto.DeleteBoardRequest;
 import harmony.communityservice.board.board.dto.ModifyBoardRequest;
@@ -16,6 +17,7 @@ import harmony.communityservice.common.event.dto.inner.DeleteEmojiEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojisEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.guild.channel.domain.ChannelId;
 import harmony.communityservice.user.domain.UserRead;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import java.util.List;
@@ -56,32 +58,32 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     @Override
     public void modify(ModifyBoardRequest modifyBoardRequest) {
-        Board targetBoard = boardCommandRepository.findById(modifyBoardRequest.boardId())
+        Board targetBoard = boardCommandRepository.findById(BoardId.make(modifyBoardRequest.boardId()))
                 .orElseThrow(NotFoundDataException::new);
         targetBoard.modifyTitleAndContent(modifyBoardRequest);
     }
 
     @Override
     public void delete(DeleteBoardRequest deleteBoardRequest) {
-        Board targetBoard = boardCommandRepository.findById(deleteBoardRequest.boardId())
+        Board targetBoard = boardCommandRepository.findById(BoardId.make(deleteBoardRequest.boardId()))
                 .orElseThrow(NotFoundDataException::new);
         targetBoard.verifyWriter(deleteBoardRequest.userId());
         boardCommandRepository.delete(targetBoard);
-        Events.send(new DeleteCommentEvent(deleteBoardRequest.boardId()));
-        Events.send(new DeleteEmojiEvent(deleteBoardRequest.boardId()));
+        Events.send(new DeleteCommentEvent(BoardId.make(deleteBoardRequest.boardId())));
+        Events.send(new DeleteEmojiEvent(BoardId.make(deleteBoardRequest.boardId())));
     }
 
     @Override
     public void deleteAllInChannelId(Long channelId) {
-        List<Long> boardIds = boardCommandRepository.findBoardIdsByChannelId(channelId);
-        boardCommandRepository.deleteByChannelId(channelId);
+        List<BoardId> boardIds = boardCommandRepository.findBoardIdsByChannelId(ChannelId.make(channelId));
+        boardCommandRepository.deleteByChannelId(ChannelId.make(channelId));
         Events.send(new DeleteCommentsEvent(boardIds));
         Events.send(new DeleteEmojisEvent(boardIds));
     }
 
     @Override
-    public void deleteAllInChannelIds(List<Long> channelIds) {
-        List<Long> boardIds = boardCommandRepository.findAllByChannelIds(channelIds);
+    public void deleteAllInChannelIds(List<ChannelId> channelIds) {
+        List<BoardId> boardIds = boardCommandRepository.findAllByChannelIds(channelIds);
         boardCommandRepository.deleteAllByChannelIds(channelIds);
         Events.send(new DeleteCommentsEvent(boardIds));
         Events.send(new DeleteEmojisEvent(boardIds));

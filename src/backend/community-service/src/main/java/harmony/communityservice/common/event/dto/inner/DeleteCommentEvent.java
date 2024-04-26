@@ -1,4 +1,6 @@
 package harmony.communityservice.common.event.dto.inner;
 
-public record DeleteCommentEvent(Long boardId) {
+import harmony.communityservice.board.board.domain.BoardId;
+
+public record DeleteCommentEvent(BoardId boardId) {
 }

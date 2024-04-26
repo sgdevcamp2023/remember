@@ -1,12 +1,15 @@
 package harmony.communityservice.board.board.domain;
 
+import harmony.communityservice.board.board.domain.BoardId.BoardIdJavaType;
 import harmony.communityservice.board.board.dto.ModifyBoardRequest;
 import harmony.communityservice.board.board.dto.SearchImageResponse;
 import harmony.communityservice.board.board.dto.SearchImagesResponse;
-import jakarta.persistence.CollectionTable;
+import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.guild.channel.domain.ChannelId;
+import harmony.communityservice.guild.channel.domain.ChannelId.ChannelIdJavaType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,31 +19,33 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OrderColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "board", indexes = @Index(name = "idx__channelId", columnList = "channel_id"))
-public class Board {
+public class Board extends AggregateRoot<Board, BoardId> {
 
     @Id
     @Column(name = "board_id")
+    @JavaType(BoardIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+    private BoardId boardId;
 
-    @NotNull
     @Column(name = "channel_id")
-    private Long channelId;
+    @JavaType(ChannelIdJavaType.class)
+    private ChannelId channelId;
 
     @Embedded
     private Content content;
@@ -57,18 +62,16 @@ public class Board {
     @Version
     private Long version;
 
-    @OrderColumn(name = "image_idx")
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "images",
-            joinColumns = @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT)))
-    private List<Image> images;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private final List<Image> images = new ArrayList<>();
 
 
     @Builder
-    public Board(Long channelId, List<Image> images,
+    public Board(ChannelId channelId, List<Image> images,
                  String title, String content, String writerName, Long writerId, String writerProfile) {
         this.channelId = channelId;
-        this.images = images;
+        this.images.addAll(images);
         this.content = makeContent(title, content);
         this.modifiedInfo = new ModifiedInfo();
         this.creationTime = new CreationTime();
@@ -101,4 +104,8 @@ public class Board {
         return WriterInfo.make(writerName, writerId, writerProfile);
     }
 
+    @Override
+    public BoardId getId() {
+        return boardId;
+    }
 }

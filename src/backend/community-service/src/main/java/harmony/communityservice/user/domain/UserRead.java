@@ -1,5 +1,9 @@
 package harmony.communityservice.user.domain;
 
+import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
+import harmony.communityservice.user.domain.UserReadId.UserReadIdJavaType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,25 +17,27 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "user_read",indexes = @Index(name = "idx__guild_id__user_id", columnList = "guild_id, user_id"))
-public class UserRead {
+@Table(name = "user_read", indexes = @Index(name = "idx__guild_id__user_id", columnList = "guild_id, user_id"))
+public class UserRead extends AggregateRoot<UserRead, UserReadId> {
 
     @Id
     @Column(name = "user_read_id")
+    @JavaType(UserReadIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userReadId;
+    private UserReadId userReadId;
 
-    @NotNull
     @Column(name = "guild_id")
-    private Long guildId;
+    @JavaType(GuildIdJavaType.class)
+    private GuildId guildId;
 
-    @NotNull
+    @Embedded
     @Column(name = "user_id")
-    private Long userId;
+    private UserId userId;
 
     @Version
     private Long version;
@@ -40,7 +46,7 @@ public class UserRead {
     private CommonUserInfo userInfo;
 
     @Builder
-    public UserRead(Long guildId, Long userId, String profile, String nickname) {
+    public UserRead(GuildId guildId, UserId userId, String profile, String nickname) {
         this.guildId = guildId;
         this.userId = userId;
         this.userInfo = makeCommonUserInfo(profile, nickname);
@@ -56,5 +62,10 @@ public class UserRead {
 
     public void modifyProfile(String profile) {
         this.userInfo = userInfo.modifyProfile(profile);
+    }
+
+    @Override
+    public UserReadId getId() {
+        return userReadId;
     }
 }

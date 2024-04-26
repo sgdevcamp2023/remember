@@ -1,16 +1,23 @@
 package harmony.communityservice.user.repository.query.jpa;
 
+import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.user.domain.UserId;
 import harmony.communityservice.user.domain.UserRead;
+import harmony.communityservice.user.domain.UserReadId;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-public interface JpaUserReadQueryRepository extends JpaRepository<UserRead, Long> {
-    boolean existsByGuildIdAndUserId(Long guildId, Long userId);
+public interface JpaUserReadQueryRepository extends JpaRepository<UserRead, UserReadId> {
+    boolean existsByGuildIdAndUserId(GuildId guildId, UserId userId);
 
-    Optional<UserRead> findByUserIdAndGuildId(Long userId, Long guildId);
+    Optional<UserRead> findByUserIdAndGuildId(UserId userId, GuildId guildId);
 
-    List<UserRead> findUserReadByUserId(Long userId);
+    @Query("select ur from UserRead ur where ur.userId = :userId")
+    List<UserRead> findUserReadByUserId(@Param("userId") UserId userId);
 
-    List<UserRead> findUserReadsByGuildId(Long guildId);
+    @Query("select ur from UserRead ur where ur.guildId = :guildId")
+    List<UserRead> findUserReadsByGuildId(@Param("guildId") GuildId guildId);
 }

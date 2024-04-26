@@ -1,8 +1,10 @@
 package harmony.communityservice.guild.guild.repository.query.impl;
 
+import harmony.communityservice.guild.guild.domain.Guild;
+import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.repository.query.GuildQueryRepository;
 import harmony.communityservice.guild.guild.repository.query.jpa.JpaGuildQueryRepository;
-import harmony.communityservice.guild.guild.domain.Guild;
+import harmony.communityservice.user.domain.UserId;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,7 +16,7 @@ public class GuildQueryRepositoryImpl implements GuildQueryRepository {
 
     @Override
     @Cacheable(value = "guild", key = "#guildId")
-    public Optional<Guild> findById(Long guildId) {
+    public Optional<Guild> findById(GuildId guildId) {
         return jpaGuildQueryRepository.findById(guildId);
     }
 
@@ -24,7 +26,7 @@ public class GuildQueryRepositoryImpl implements GuildQueryRepository {
     }
 
     @Override
-    public boolean existsByGuildIdAndManagerId(Long guildId, Long managerId) {
+    public boolean existsByGuildIdAndManagerId(GuildId guildId, UserId managerId) {
         return jpaGuildQueryRepository.existsByGuildIdAndManagerId(guildId, managerId);
     }
 }

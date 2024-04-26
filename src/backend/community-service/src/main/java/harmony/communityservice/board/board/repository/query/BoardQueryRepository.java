@@ -1,13 +1,15 @@
 package harmony.communityservice.board.board.repository.query;
 
 import harmony.communityservice.board.board.domain.Board;
+import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.guild.channel.domain.ChannelId;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
 public interface BoardQueryRepository {
 
-    List<Board> findByChannelOrderByBoardId(Long channelId, Long lastBoardId, Pageable pageable);
+    List<Board> findByChannelOrderByBoardId(ChannelId channelId, BoardId lastBoardId, Pageable pageable);
 
-    Optional<Board> findByBoardId(Long boardId);
+    Optional<Board> findByBoardId(BoardId boardId);
 }

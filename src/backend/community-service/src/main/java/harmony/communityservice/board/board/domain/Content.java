@@ -1,5 +1,6 @@
 package harmony.communityservice.board.board.domain;
 
+import harmony.communityservice.common.domain.ValueObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Content {
+public class Content extends ValueObject<Content> {
 
     @NotBlank
     @Column(name = "title")
@@ -28,5 +29,10 @@ public class Content {
 
     public Content modify(String title, String content) {
         return new Content(title, content);
+    }
+
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{title, content};
     }
 }

@@ -1,5 +1,7 @@
 package harmony.communityservice.user.domain;
 
+import harmony.communityservice.common.domain.ValueObject;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -11,12 +13,14 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommonUserInfo {
+public class CommonUserInfo extends ValueObject<CommonUserInfo> {
 
     @NotBlank
+    @Column(name = "nickname")
     private String nickname;
 
     @NotBlank
+    @Column(name = "profile")
     private String profile;
 
     public static CommonUserInfo make(String nickname, String profile) {
@@ -29,5 +33,10 @@ public class CommonUserInfo {
 
     public CommonUserInfo modifyNickname(String nickname) {
         return new CommonUserInfo(nickname, this.profile);
+    }
+
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{nickname, profile};
     }
 }

@@ -1,6 +1,8 @@
 package harmony.communityservice.board.comment.service.command.impl;
 
+import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.comment.domain.Comment;
+import harmony.communityservice.board.comment.domain.CommentId;
 import harmony.communityservice.board.comment.dto.DeleteCommentRequest;
 import harmony.communityservice.board.comment.dto.ModifyCommentRequest;
 import harmony.communityservice.board.comment.dto.RegisterCommentRequest;
@@ -26,23 +28,23 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
     @Override
     public void modify(ModifyCommentRequest modifyCommentRequest) {
-        Comment targetComment = commentCommandRepository.findById(modifyCommentRequest.commentId())
+        Comment targetComment = commentCommandRepository.findById(CommentId.make(modifyCommentRequest.commentId()))
                 .orElseThrow(NotFoundDataException::new);
         targetComment.modify(modifyCommentRequest.userId(), modifyCommentRequest.comment());
     }
 
     @Override
     public void delete(DeleteCommentRequest deleteCommentRequest) {
-        commentCommandRepository.deleteById(deleteCommentRequest.commentId());
+        commentCommandRepository.deleteById(CommentId.make(deleteCommentRequest.commentId()));
     }
 
     @Override
-    public void deleteListByBoardId(Long boardId) {
+    public void deleteListByBoardId(BoardId boardId) {
         commentCommandRepository.deleteListByBoardId(boardId);
     }
 
     @Override
-    public void deleteListByBoardIds(List<Long> boardIds) {
+    public void deleteListByBoardIds(List<BoardId> boardIds) {
         commentCommandRepository.deleteListByBoardIds(boardIds);
     }
 }

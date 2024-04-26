@@ -1,9 +1,10 @@
 package harmony.communityservice.user.domain;
 
+import harmony.communityservice.common.domain.AggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.AccessLevel;
@@ -15,11 +16,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends AggregateRoot<User, UserId> {
 
-    @Id
+    @EmbeddedId
     @Column(name = "user_id")
-    private Long userId;
+    private UserId userId;
 
     @Embedded
     private UserInfo userInfo;
@@ -28,7 +29,7 @@ public class User {
     private Long version;
 
     @Builder
-    public User(Long userId, String email, String nickname, String profile) {
+    public User(UserId userId, String email, String nickname, String profile) {
         this.userId = userId;
         this.userInfo = makeUserInfo(email, nickname, profile);
     }
@@ -45,4 +46,8 @@ public class User {
         this.userInfo = this.userInfo.modifyNickname(nickname);
     }
 
+    @Override
+    public UserId getId() {
+        return userId;
+    }
 }

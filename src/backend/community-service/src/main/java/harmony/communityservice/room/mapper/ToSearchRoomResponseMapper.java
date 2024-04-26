@@ -9,7 +9,7 @@ public class ToSearchRoomResponseMapper {
         return SearchRoomResponse.builder()
                 .profile(room.getRoomInfo().getProfile())
                 .name(room.getRoomInfo().getName())
-                .roomId(room.getRoomId())
+                .roomId(room.getRoomId().getId())
                 .build();
     }
 }

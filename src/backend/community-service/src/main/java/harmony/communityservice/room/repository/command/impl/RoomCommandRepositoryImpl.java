@@ -1,8 +1,11 @@
 package harmony.communityservice.room.repository.command.impl;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.room.domain.Room;
+import harmony.communityservice.room.domain.RoomId;
 import harmony.communityservice.room.repository.command.RoomCommandRepository;
 import harmony.communityservice.room.repository.command.jpa.JpaRoomCommandRepository;
+import harmony.communityservice.user.domain.UserId;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
@@ -17,12 +20,12 @@ public class RoomCommandRepositoryImpl implements RoomCommandRepository {
     }
 
     @Override
-    public void deleteRoomByUserIds(Long first, Long second) {
-        jpaRoomCommandRepository.deleteRoomByUserIdsContainingAndUserIdsContaining(first, second);
+    public void deleteRoomByUserIds(UserId first, UserId second) {
+        jpaRoomCommandRepository.deleteRoomByUserIds(first, second);
     }
 
     @Override
-    public Optional<Room> findById(Long roomId) {
+    public Optional<Room> findById(RoomId roomId) {
         return jpaRoomCommandRepository.findById(roomId);
     }
 

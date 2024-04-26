@@ -1,6 +1,7 @@
 package harmony.communityservice.user.repository.command.impl;
 
 import harmony.communityservice.user.domain.User;
+import harmony.communityservice.user.domain.UserId;
 import harmony.communityservice.user.repository.command.UserCommandRepository;
 import harmony.communityservice.user.repository.command.jpa.JpaUserCommandRepository;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class UserCommandRepositoryImpl implements UserCommandRepository {
     }
 
     @Override
-    public Optional<User> findById(Long userId) {
+    public Optional<User> findById(UserId userId) {
         return repository.findById(userId);
     }
 }

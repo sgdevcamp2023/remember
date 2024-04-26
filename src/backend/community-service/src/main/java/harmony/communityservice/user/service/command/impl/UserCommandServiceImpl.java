@@ -2,6 +2,7 @@ package harmony.communityservice.user.service.command.impl;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.user.domain.User;
+import harmony.communityservice.user.domain.UserId;
 import harmony.communityservice.user.dto.ModifyUserNicknameRequest;
 import harmony.communityservice.user.dto.ModifyUserProfileRequest;
 import harmony.communityservice.user.dto.RegisterUserRequest;
@@ -36,9 +37,10 @@ public class UserCommandServiceImpl implements UserCommandService {
     }
 
     private void modifyUserInfo(Long userId, String userInfo) {
-        User targetUser = userCommandRepository.findById(userId).orElseThrow(NotFoundDataException::new);
+        UserId userIdVO = UserId.make(userId);
+        User targetUser = userCommandRepository.findById(userIdVO).orElseThrow(NotFoundDataException::new);
         targetUser.modifyProfile(userInfo);
-        userReadCommandRepository.findListByUserId(userId)
+        userReadCommandRepository.findListByUserId(userIdVO)
                 .forEach(target -> target.modifyProfile(userInfo));
     }
 }

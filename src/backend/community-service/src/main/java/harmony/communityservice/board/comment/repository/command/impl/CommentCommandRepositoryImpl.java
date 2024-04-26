@@ -1,6 +1,8 @@
 package harmony.communityservice.board.comment.repository.command.impl;
 
+import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.comment.domain.Comment;
+import harmony.communityservice.board.comment.domain.CommentId;
 import harmony.communityservice.board.comment.repository.command.CommentCommandRepository;
 import harmony.communityservice.board.comment.repository.command.jpa.JpaCommentCommandRepository;
 import java.util.List;
@@ -19,22 +21,22 @@ public class CommentCommandRepositoryImpl implements CommentCommandRepository {
     }
 
     @Override
-    public void deleteById(Long commentId) {
+    public void deleteById(CommentId commentId) {
         jpaCommentCommandRepository.deleteById(commentId);
     }
 
     @Override
-    public Optional<Comment> findById(Long commentId) {
+    public Optional<Comment> findById(CommentId commentId) {
         return jpaCommentCommandRepository.findById(commentId);
     }
 
     @Override
-    public void deleteListByBoardId(Long boardId) {
+    public void deleteListByBoardId(BoardId boardId) {
         jpaCommentCommandRepository.deleteCommentsByBoardId(boardId);
     }
 
     @Override
-    public void deleteListByBoardIds(List<Long> boardIds) {
+    public void deleteListByBoardIds(List<BoardId> boardIds) {
         jpaCommentCommandRepository.deleteAllByBoardIds(boardIds);
     }
 }

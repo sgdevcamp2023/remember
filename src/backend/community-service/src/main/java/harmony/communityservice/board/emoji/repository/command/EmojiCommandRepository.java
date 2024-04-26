@@ -1,17 +1,19 @@
 package harmony.communityservice.board.emoji.repository.command;
 
+import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.emoji.domain.Emoji;
+import harmony.communityservice.board.emoji.domain.EmojiId;
 import java.util.List;
 import java.util.Optional;
 
 public interface EmojiCommandRepository {
     void save(Emoji emoji);
 
-    Optional<Emoji> findByBoardIdAndEmojiType(Long boardId, Long emojiType);
+    Optional<Emoji> findByBoardIdAndEmojiType(BoardId boardId, Long emojiType);
 
-    void deleteById(Long emojiId);
+    void deleteById(EmojiId emojiId);
 
-    void deleteListByBoardId(Long boardId);
+    void deleteListByBoardId(BoardId boardId);
 
-    void deleteListByBoardIds(List<Long> boardIds);
+    void deleteListByBoardIds(List<BoardId> boardIds);
 }

@@ -1,5 +1,6 @@
 package harmony.communityservice.board.board.domain;
 
+import harmony.communityservice.common.domain.ValueObject;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WriterInfo {
+public class WriterInfo extends ValueObject<WriterInfo> {
 
     @NotNull
     @Column(name = "writer_id")
@@ -39,4 +40,8 @@ public class WriterInfo {
         }
     }
 
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{writerId, commonUserInfo};
+    }
 }

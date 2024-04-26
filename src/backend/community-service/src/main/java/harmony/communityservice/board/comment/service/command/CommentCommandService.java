@@ -1,5 +1,6 @@
 package harmony.communityservice.board.comment.service.command;
 
+import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.comment.dto.DeleteCommentRequest;
 import harmony.communityservice.board.comment.dto.ModifyCommentRequest;
 import harmony.communityservice.board.comment.dto.RegisterCommentRequest;
@@ -13,7 +14,7 @@ public interface CommentCommandService {
 
     void delete(DeleteCommentRequest deleteCommentRequest);
 
-    void deleteListByBoardId(Long boardId);
+    void deleteListByBoardId(BoardId boardId);
 
-    void deleteListByBoardIds(List<Long> boardIds);
+    void deleteListByBoardIds(List<BoardId> boardIds);
 }

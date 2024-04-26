@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.guild.service.command.impl;
 
+import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
 import harmony.communityservice.guild.guild.mapper.ToGuildReadMapper;
@@ -22,6 +23,6 @@ public class GuildReadCommandServiceImpl implements GuildReadCommandService {
 
     @Override
     public void delete(long guildId) {
-        repository.delete(guildId);
+        repository.delete(GuildId.make(guildId));
     }
 }

@@ -2,6 +2,7 @@ package harmony.communityservice.guild.guild.mapper;
 
 import harmony.communityservice.guild.guild.dto.RegisterGuildRequest;
 import harmony.communityservice.guild.guild.domain.Guild;
+import harmony.communityservice.user.domain.UserId;
 import java.util.UUID;
 
 public class ToGuildMapper {
@@ -10,7 +11,7 @@ public class ToGuildMapper {
         return Guild.builder()
                 .name(registerGuildRequest.name())
                 .profile(profile)
-                .managerId(registerGuildRequest.managerId())
+                .managerId(UserId.make(registerGuildRequest.managerId()))
                 .inviteCode(UUID.randomUUID().toString().replace("-", ""))
                 .build();
     }

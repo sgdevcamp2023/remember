@@ -1,15 +1,17 @@
 package harmony.communityservice.user.repository.query;
 
+import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.user.domain.UserId;
 import harmony.communityservice.user.domain.UserRead;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserReadQueryRepository {
-    boolean existByUserIdAndGuildId(Long userid, Long guildId);
+    boolean existByUserIdAndGuildId(UserId userid, GuildId guildId);
 
-    Optional<UserRead> findByUserIdAndGuildId(Long userId, Long guildId);
+    Optional<UserRead> findByUserIdAndGuildId(UserId userId, GuildId guildId);
 
-    List<UserRead> findUserReadsByUserId(Long userId);
+    List<UserRead> findUserReadsByUserId(UserId userId);
 
-    List<UserRead> findUserReadsByGuildId(Long guildId);
+    List<UserRead> findUserReadsByGuildId(GuildId guildId);
 }

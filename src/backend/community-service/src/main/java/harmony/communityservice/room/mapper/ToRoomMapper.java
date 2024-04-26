@@ -1,18 +1,25 @@
 package harmony.communityservice.room.mapper;
 
-import harmony.communityservice.room.dto.RegisterRoomRequest;
 import harmony.communityservice.room.domain.Room;
-import java.util.HashSet;
+import harmony.communityservice.room.domain.RoomUser;
+import harmony.communityservice.room.dto.RegisterRoomRequest;
+import harmony.communityservice.user.domain.UserId;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ToRoomMapper {
 
     public static Room convert(RegisterRoomRequest registerRoomRequest) {
-        Set<Long> userIds = new HashSet<>(registerRoomRequest.members());
+        List<RoomUser> roomUsers = registerRoomRequest.members()
+                .stream()
+                .map(UserId::make)
+                .map(RoomUser::make)
+                .collect(Collectors.toList());
         return Room.builder()
                 .name(registerRoomRequest.name())
                 .profile(registerRoomRequest.profile())
-                .userIds(userIds)
+                .roomUsers(roomUsers)
                 .build();
     }
 }

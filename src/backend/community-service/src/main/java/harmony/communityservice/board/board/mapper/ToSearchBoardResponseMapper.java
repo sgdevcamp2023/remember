@@ -13,7 +13,7 @@ public class ToSearchBoardResponseMapper {
                 .content(board.getContent().getContent())
                 .searchCommentsResponse(searchCommentsResponse)
                 .searchEmojisResponse(searchEmojisResponse)
-                .boardId(board.getBoardId())
+                .boardId(board.getBoardId().getId())
                 .searchImagesResponse(board.makeSearchImagesResponse())
                 .modified(board.getModifiedInfo().getModifiedType())
                 .createdAt(board.getCreationTime().getCreatedAt())

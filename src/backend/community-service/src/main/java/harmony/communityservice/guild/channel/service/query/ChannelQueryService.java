@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface ChannelQueryService {
 
-    Map<Integer, SearchChannelResponse> searchMapByGuildId(SearchParameterMapperRequest searchParameterMapperRequest);
+    Map<Long, SearchChannelResponse> searchMapByGuildId(SearchParameterMapperRequest searchParameterMapperRequest);
 }

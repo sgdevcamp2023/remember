@@ -1,5 +1,7 @@
 package harmony.communityservice.board.emoji.service.query.impl;
 
+import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.emoji.domain.EmojiId;
 import harmony.communityservice.board.emoji.repository.query.EmojiQueryRepository;
 import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
 import harmony.communityservice.common.exception.NotFoundDataException;
@@ -19,17 +21,17 @@ public class EmojiQueryServiceImpl implements EmojiQueryService {
 
     @Override
     public Emoji searchByBoardIdAndEmojiType(Long boardId, Long emojiType) {
-        return emojiQueryRepository.findByBoardAndEmojiType(boardId, emojiType).orElse(null);
+        return emojiQueryRepository.findByBoardAndEmojiType(BoardId.make(boardId), emojiType).orElse(null);
     }
 
     @Override
     public Emoji searchByEmojiId(Long emojiId) {
-        return emojiQueryRepository.findByEmojiId(emojiId).orElseThrow(NotFoundDataException::new);
+        return emojiQueryRepository.findByEmojiId(EmojiId.make(emojiId)).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
     public SearchEmojisResponse searchListByBoardId(Long boardId) {
-        List<Emoji> emojis = emojiQueryRepository.findEmojisByBoardId(boardId);
+        List<Emoji> emojis = emojiQueryRepository.findEmojisByBoardId(BoardId.make(boardId));
         List<SearchEmojiResponse> searchEmojiResponses = emojis.stream()
                 .map(ToSearchEmojiResponseMapper::convert).toList();
         return new SearchEmojisResponse(searchEmojiResponses);

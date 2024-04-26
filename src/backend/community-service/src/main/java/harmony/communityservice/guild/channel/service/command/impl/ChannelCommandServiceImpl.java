@@ -7,12 +7,14 @@ import harmony.communityservice.common.event.dto.inner.DeleteBoardsInGuildEvent;
 import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
 import harmony.communityservice.common.event.mapper.ToChannelDeletedEventMapper;
 import harmony.communityservice.guild.channel.domain.Channel;
+import harmony.communityservice.guild.channel.domain.ChannelId;
 import harmony.communityservice.guild.channel.domain.ChannelType;
 import harmony.communityservice.guild.channel.dto.DeleteChannelRequest;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.mapper.ToChannelMapper;
 import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
+import harmony.communityservice.guild.guild.domain.GuildId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,13 +30,13 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
     public Long register(RegisterChannelRequest registerChannelRequest) {
         Channel channel = ToChannelMapper.convert(registerChannelRequest);
         channelCommandRepository.save(channel);
-        return channel.getChannelId();
+        return channel.getChannelId().getId();
     }
 
     @Override
     @AuthorizeGuildMember
     public void delete(DeleteChannelRequest deleteChannelRequest) {
-        channelCommandRepository.deleteById(deleteChannelRequest.channelId());
+        channelCommandRepository.deleteById(ChannelId.make(deleteChannelRequest.channelId()));
         ChannelDeletedEvent event = ToChannelDeletedEventMapper.convert(deleteChannelRequest);
         Events.send(event);
         if (deleteChannelRequest.type().equals("FORUM")) {
@@ -44,8 +46,8 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
 
     @Override
     public void deleteByGuildId(Long guildId) {
-        List<Long> channelIds = channelCommandRepository.findIdsByGuildIdAndType(guildId, ChannelType.FORUM);
+        List<ChannelId> channelIds = channelCommandRepository.findIdsByGuildIdAndType(GuildId.make(guildId), ChannelType.FORUM);
         Events.send(new DeleteBoardsInGuildEvent(channelIds));
-        channelCommandRepository.deleteByGuildId(guildId);
+        channelCommandRepository.deleteByGuildId(GuildId.make(guildId));
     }
 }

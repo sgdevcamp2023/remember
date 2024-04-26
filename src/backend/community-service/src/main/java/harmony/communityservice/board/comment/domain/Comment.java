@@ -1,5 +1,9 @@
 package harmony.communityservice.board.comment.domain;
 
+import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.domain.BoardId.BoardIdJavaType;
+import harmony.communityservice.board.comment.domain.CommentId.CommentIdJavaType;
+import harmony.communityservice.common.domain.AggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -10,30 +14,31 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment", indexes = @Index(name = "idx__boardId", columnList = "board_id"))
-public class Comment {
+public class Comment extends AggregateRoot<Comment, CommentId> {
 
     @Id
     @Column(name = "comment_id")
+    @JavaType(CommentIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private CommentId commentId;
 
     @NotBlank
     @Column(name = "content")
     private String comment;
 
-    @NotNull
     @Column(name = "board_id")
-    private Long boardId;
+    @JavaType(BoardIdJavaType.class)
+    private BoardId boardId;
 
     @Embedded
     private WriterInfo writerInfo;
@@ -48,7 +53,7 @@ public class Comment {
     private Long version;
 
     @Builder
-    public Comment(String comment, Long writerId, String writerName, String writerProfile, Long boardId) {
+    public Comment(String comment, Long writerId, String writerName, String writerProfile, BoardId boardId) {
         this.comment = comment;
         this.boardId = boardId;
         this.writerInfo = makeWriterInfo(writerId, writerName, writerProfile);
@@ -68,5 +73,10 @@ public class Comment {
         verifyWriter(userId);
         this.comment = comment;
         this.modifiedInfo = this.modifiedInfo.modify();
+    }
+
+    @Override
+    public CommentId getId() {
+        return commentId;
     }
 }

@@ -1,6 +1,10 @@
 package harmony.communityservice.guild.channel.domain;
 
-import jakarta.annotation.Nullable;
+import harmony.communityservice.guild.category.domain.CategoryId;
+import harmony.communityservice.guild.category.domain.CategoryId.CategoryIdJavaType;
+import harmony.communityservice.guild.channel.domain.ChannelId.ChannelIdJavaType;
+import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -15,24 +19,28 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
-@Table(name = "channel", indexes = @Index(name = "idx__guild_id", columnList = "guild_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "channel", indexes = @Index(name = "idx__guild_id", columnList = "guild_id"))
 public class Channel {
 
     @Id
     @Column(name = "channel_id")
+    @JavaType(ChannelIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long channelId;
+    private ChannelId channelId;
+
 
     @Column(name = "guild_id")
-    private Long guildId;
+    @JavaType(GuildIdJavaType.class)
+    private GuildId guildId;
 
-    @Nullable
     @Column(name = "category_id")
-    private Long categoryId;
+    @JavaType(CategoryIdJavaType.class)
+    private CategoryId categoryId;
 
     @Column(name = "channel_name")
     private String name;
@@ -45,7 +53,7 @@ public class Channel {
     private CreationTime creationTime;
 
     @Builder
-    public Channel(Long categoryId, String name, Long guildId,
+    public Channel(CategoryId categoryId, String name, GuildId guildId,
                    String type) {
         this.categoryId = categoryId;
         this.name = name;

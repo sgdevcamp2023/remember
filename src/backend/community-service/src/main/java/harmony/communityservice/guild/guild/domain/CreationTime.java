@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.guild.domain;
 
+import harmony.communityservice.common.domain.ValueObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 @Embeddable
-public class CreationTime {
+public class CreationTime extends ValueObject<CreationTime> {
 
     @NotBlank
     @Column(name = "created_at")
@@ -18,5 +19,10 @@ public class CreationTime {
     public CreationTime() {
         this.createdAt = LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{createdAt};
     }
 }

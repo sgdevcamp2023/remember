@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.category.domain;
 
+import harmony.communityservice.common.domain.ValueObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
@@ -11,7 +12,7 @@ import lombok.Getter;
 
 @Getter
 @Embeddable
-public class ModifiedInfo {
+public class ModifiedInfo extends ValueObject<ModifiedInfo> {
 
 
     @Column(name = "modified_type")
@@ -37,5 +38,10 @@ public class ModifiedInfo {
 
     public ModifiedInfo modify() {
         return new ModifiedInfo(ModifiedType.MODIFY);
+    }
+
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{modifiedType, modifiedAt};
     }
 }

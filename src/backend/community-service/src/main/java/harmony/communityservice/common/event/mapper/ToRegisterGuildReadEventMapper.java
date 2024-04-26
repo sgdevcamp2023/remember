@@ -8,7 +8,7 @@ public class ToRegisterGuildReadEventMapper {
     public static RegisterGuildReadEvent convert(Guild guild, Long userId) {
         return RegisterGuildReadEvent.builder()
                 .userId(userId)
-                .guildId(guild.getGuildId())
+                .guildId(guild.getGuildId().getId())
                 .profile(guild.getGuildInfo().getProfile())
                 .name(guild.getGuildInfo().getName())
                 .build();
