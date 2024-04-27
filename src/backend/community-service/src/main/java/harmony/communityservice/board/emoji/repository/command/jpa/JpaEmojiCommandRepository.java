@@ -18,10 +18,11 @@ public interface JpaEmojiCommandRepository extends JpaRepository<Emoji, EmojiId>
     Optional<Emoji> findByBoardIdAndEmojiType(BoardId boardId, Long emojiType);
 
     @Modifying
-    @Query("delete from Emoji e where e.boardId = :boardId")
+    @Query("delete from Emoji e where e.boardId  = :boardId")
     void deleteEmojisByBoardId(@Param("boardId") BoardId boardId);
 
     @Modifying
     @Query("delete from Emoji e where e.boardId in :boardIds")
-    void deleteAllByBoardIds(@Param("boardIds") List<BoardId> boardIds);
+    void deleteEmojisByBoardIds(@Param("boardIds") List<BoardId> boardIds);
+
 }

@@ -1,6 +1,8 @@
 package harmony.communityservice.guild.category.domain;
 
 import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.generic.CreationTime;
+import harmony.communityservice.generic.ModifiedInfo;
 import harmony.communityservice.guild.category.domain.CategoryId.CategoryIdJavaType;
 import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;

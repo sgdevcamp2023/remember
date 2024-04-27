@@ -1,6 +1,8 @@
 package harmony.communityservice.guild.guild.domain;
 
 import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.generic.CreationTime;
+import harmony.communityservice.generic.ProfileInfo;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import harmony.communityservice.user.domain.UserId;
 import jakarta.persistence.AttributeOverride;
@@ -22,7 +24,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,6 +1,8 @@
 package harmony.communityservice.room.domain;
 
 import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.generic.CreationTime;
+import harmony.communityservice.generic.ProfileInfo;
 import harmony.communityservice.room.domain.RoomId.RoomIdJavaType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;

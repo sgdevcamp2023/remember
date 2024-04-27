@@ -1,6 +1,6 @@
 package harmony.communityservice.board.comment.dto;
 
-import harmony.communityservice.board.comment.domain.ModifiedType;
+import harmony.communityservice.generic.ModifiedType;
 import lombok.Builder;
 
 @Builder(toBuilder = true)

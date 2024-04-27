@@ -1,6 +1,6 @@
 package harmony.communityservice.board.board.dto;
 
-import harmony.communityservice.board.board.domain.ModifiedType;
+import harmony.communityservice.generic.ModifiedType;
 import harmony.communityservice.board.comment.dto.SearchCommentsResponse;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
 import lombok.Builder;

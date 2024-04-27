@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.guild.domain;
 
+import harmony.communityservice.generic.ProfileInfo;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import harmony.communityservice.guild.guild.domain.GuildReadId.GuildReadIdJavaType;
 import harmony.communityservice.user.domain.UserId;

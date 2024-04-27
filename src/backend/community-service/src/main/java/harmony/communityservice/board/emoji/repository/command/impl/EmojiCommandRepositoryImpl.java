@@ -36,6 +36,6 @@ public class EmojiCommandRepositoryImpl implements EmojiCommandRepository {
 
     @Override
     public void deleteListByBoardIds(List<BoardId> boardIds) {
-        jpaEmojiCommandRepository.deleteAllByBoardIds(boardIds);
+        jpaEmojiCommandRepository.deleteEmojisByBoardIds(boardIds);
     }
 }

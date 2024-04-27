@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.channel.domain;
 
+import harmony.communityservice.generic.CreationTime;
 import harmony.communityservice.guild.category.domain.CategoryId;
 import harmony.communityservice.guild.category.domain.CategoryId.CategoryIdJavaType;
 import harmony.communityservice.guild.channel.domain.ChannelId.ChannelIdJavaType;

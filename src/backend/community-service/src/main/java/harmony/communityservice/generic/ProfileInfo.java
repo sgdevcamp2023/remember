@@ -1,4 +1,4 @@
-package harmony.communityservice.room.domain;
+package harmony.communityservice.generic;
 
 import harmony.communityservice.common.domain.ValueObject;
 import jakarta.persistence.Column;

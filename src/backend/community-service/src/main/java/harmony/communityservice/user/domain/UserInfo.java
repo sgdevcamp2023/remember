@@ -1,6 +1,7 @@
 package harmony.communityservice.user.domain;
 
 import harmony.communityservice.common.domain.ValueObject;
+import harmony.communityservice.generic.CommonUserInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;

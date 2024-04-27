@@ -1,7 +1,7 @@
 package harmony.communityservice.room.mapper;
 
+import harmony.communityservice.generic.CommonUserInfo;
 import harmony.communityservice.room.dto.SearchUserStateResponse;
-import harmony.communityservice.user.domain.CommonUserInfo;
 import harmony.communityservice.user.domain.User;
 import harmony.communityservice.user.domain.UserRead;
 

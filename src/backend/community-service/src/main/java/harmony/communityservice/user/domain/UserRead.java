@@ -1,6 +1,7 @@
 package harmony.communityservice.user.domain;
 
 import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.generic.CommonUserInfo;
 import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import harmony.communityservice.user.domain.UserReadId.UserReadIdJavaType;
