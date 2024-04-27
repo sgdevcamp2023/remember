@@ -16,7 +16,7 @@ public abstract class AggregateRoot<T extends DomainEntity<T, TID>, TID> extends
     @Transient
     private final transient List<Object> domainEvents = new ArrayList();
 
-    protected void registerEvent(T event) {
+    protected void registerEvent(Object event) {
         Assert.notNull(event, "Domain event must not be null");
         this.domainEvents.add(event);
     }

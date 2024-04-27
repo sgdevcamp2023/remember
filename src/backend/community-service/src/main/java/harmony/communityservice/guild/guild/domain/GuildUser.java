@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -18,7 +19,7 @@ import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
-@Table(name = "guild_user")
+@Table(name = "guild_user", indexes = @Index(name = "idx__user_id", columnList = "user_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuildUser extends DomainEntity<GuildUser, GuildUserId> {
 
@@ -34,17 +35,17 @@ public class GuildUser extends DomainEntity<GuildUser, GuildUserId> {
     @Column(name = "user_id")
     private UserId userId;
 
-    @Override
-    public GuildUserId getId() {
-        return guildUserId;
-    }
-
     private GuildUser(UserId userId) {
         this.userId = userId;
     }
 
     public static GuildUser make(UserId userId) {
         return new GuildUser(userId);
+    }
+
+    @Override
+    public GuildUserId getId() {
+        return guildUserId;
     }
 
 }

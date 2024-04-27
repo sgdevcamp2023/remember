@@ -24,10 +24,10 @@ public class AuthorizeGuildMemberAop {
     @Around("AuthorizeGuildMember()")
     public Object Authorize(ProceedingJoinPoint joinPoint) throws Throwable {
         Object firstArg = joinPoint.getArgs()[0];
-//        if (firstArg instanceof CommonRequest request) {
-//            userReadQueryService.existsByUserIdAndGuildId(
-//                    new VerifyGuildMemberRequest(request.getUserId(), request.getGuildId()));
-//        }
+        if (firstArg instanceof CommonRequest request) {
+            userReadQueryService.existsByUserIdAndGuildId(
+                    new VerifyGuildMemberRequest(request.getUserId(), request.getGuildId()));
+        }
         return joinPoint.proceed();
     }
 }
