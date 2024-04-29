@@ -6,7 +6,7 @@ import harmony.communityservice.common.event.mapper.ToGuildCreatedEventMapper;
 import harmony.communityservice.common.event.mapper.ToGuildDeletedEventMapper;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
-import harmony.communityservice.guild.guild.dto.ToRegisterGuildReadRequestMapper;
+import harmony.communityservice.guild.guild.mapper.ToRegisterGuildReadRequestMapper;
 import harmony.communityservice.guild.guild.service.command.GuildReadCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;

@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.guild.repository.query.impl;
 
+import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.repository.query.GuildReadQueryRepository;
 import harmony.communityservice.guild.guild.repository.query.jpa.JpaGuildReadQueryRepository;
 import harmony.communityservice.guild.guild.domain.GuildRead;
@@ -15,5 +16,10 @@ public class GuildReadQueryRepositoryImpl implements GuildReadQueryRepository {
     @Override
     public List<GuildRead> findGuildsByUserId(UserId userId) {
         return jpaGuildReadQueryRepository.findGuildReadsByUserId(userId);
+    }
+
+    @Override
+    public List<GuildId> findGuildIdsByUserId(UserId userId) {
+        return jpaGuildReadQueryRepository.findGuildIdsByUserId(userId);
     }
 }

@@ -3,8 +3,8 @@ package harmony.communityservice.guild.guild.controller;
 import harmony.communityservice.common.annotation.AuthorizeUser;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.common.dto.SearchParameterMapperRequest;
-import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.dto.SearchGuildInvitationCodeRequest;
+import harmony.communityservice.guild.guild.dto.SearchGuildReadResponse;
 import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildResponse;
 import harmony.communityservice.guild.guild.service.query.GuildQueryService;
 import harmony.communityservice.guild.guild.service.query.GuildReadQueryService;
@@ -37,7 +37,7 @@ public class GuildQueryController {
 
     @GetMapping("/search/guild/{userId}")
     public BaseResponse<?> searchBelongToUser(@PathVariable Long userId) {
-        Map<Long, GuildRead> guildReads = guildReadQueryService.searchMapByUserId(userId);
+        Map<Long, SearchGuildReadResponse> guildReads = guildReadQueryService.searchMapByUserId(userId);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", guildReads);
     }
 

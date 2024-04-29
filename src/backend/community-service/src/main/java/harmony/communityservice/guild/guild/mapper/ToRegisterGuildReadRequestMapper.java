@@ -1,6 +1,7 @@
-package harmony.communityservice.guild.guild.dto;
+package harmony.communityservice.guild.guild.mapper;
 
 import harmony.communityservice.common.event.dto.inner.RegisterGuildReadEvent;
+import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
 
 public class ToRegisterGuildReadRequestMapper {
 
