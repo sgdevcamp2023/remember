@@ -19,8 +19,8 @@ import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
-@Table(name = "guild_user", indexes = @Index(name = "idx__user_id", columnList = "user_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "guild_user", indexes = @Index(name = "idx__user_id", columnList = "user_id"))
 public class GuildUser extends DomainEntity<GuildUser, GuildUserId> {
 
     @Id

@@ -3,6 +3,7 @@ package harmony.communityservice.board.board.mapper;
 import harmony.communityservice.board.board.domain.Board;
 import harmony.communityservice.board.board.dto.SearchBoardResponse;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
+import java.time.ZoneId;
 
 public class ToSearchBoardsResponseMapper {
     public static SearchBoardResponse convert(Board targetBoard, Long commentCount,
@@ -14,9 +15,9 @@ public class ToSearchBoardsResponseMapper {
                 .content(targetBoard.getContent().getContent())
                 .userId(targetBoard.getWriterInfo().getWriterId())
                 .writer(targetBoard.getWriterInfo().getCommonUserInfo().getNickname())
-                .createdAt(targetBoard.getCreationTime().getCreatedAt())
+                .createdAt(targetBoard.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .channelId(targetBoard.getChannelId().getId())
-                .modified(targetBoard.getModifiedInfo().getModifiedType())
+                .modified(targetBoard.getType())
                 .searchEmojiResponses(searchEmojisResponse)
                 .build();
     }

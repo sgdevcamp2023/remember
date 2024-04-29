@@ -1,7 +1,6 @@
 package harmony.communityservice.guild.guild.domain;
 
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.CreationTime;
 import harmony.communityservice.generic.ProfileInfo;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import harmony.communityservice.user.domain.UserId;
@@ -33,8 +32,8 @@ import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
-@Table(name = "guild", indexes = @Index(name = "idx__invite_code", columnList = "invite_code"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "guild", indexes = @Index(name = "idx__invite_code", columnList = "invite_code"))
 public class Guild extends AggregateRoot<Guild, GuildId> {
 
     @Id
@@ -49,9 +48,6 @@ public class Guild extends AggregateRoot<Guild, GuildId> {
             @AttributeOverride(name = "profile", column = @Column(name = "guild_profile"))
     })
     private ProfileInfo guildInfo;
-
-    @Embedded
-    private CreationTime creationTime;
 
     @NotBlank
     @Column(name = "invite_code")
@@ -70,7 +66,6 @@ public class Guild extends AggregateRoot<Guild, GuildId> {
     public Guild(String name, String profile, String inviteCode,
                  UserId managerId) {
         this.guildInfo = makeGuildInfo(name, profile);
-        this.creationTime = new CreationTime();
         this.inviteCode = inviteCode;
         this.managerId = managerId;
         this.guildUsers = new ArrayList<>();
@@ -78,6 +73,7 @@ public class Guild extends AggregateRoot<Guild, GuildId> {
 
     public void updateUserIds(GuildUser guildUser) {
         this.guildUsers.add(guildUser);
+        super.updateType();
     }
 
     private ProfileInfo makeGuildInfo(String name, String profile) {

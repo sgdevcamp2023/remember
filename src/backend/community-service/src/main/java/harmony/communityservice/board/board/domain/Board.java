@@ -5,8 +5,6 @@ import harmony.communityservice.board.board.dto.ModifyBoardRequest;
 import harmony.communityservice.board.board.dto.SearchImageResponse;
 import harmony.communityservice.board.board.dto.SearchImagesResponse;
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.CreationTime;
-import harmony.communityservice.generic.ModifiedInfo;
 import harmony.communityservice.generic.WriterInfo;
 import harmony.communityservice.guild.channel.domain.ChannelId;
 import harmony.communityservice.guild.channel.domain.ChannelId.ChannelIdJavaType;
@@ -40,34 +38,23 @@ import org.hibernate.annotations.JavaType;
 @Table(name = "board", indexes = @Index(name = "idx__channelId", columnList = "channel_id"))
 public class Board extends AggregateRoot<Board, BoardId> {
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private final List<Image> images = new ArrayList<>();
     @Id
     @Column(name = "board_id")
     @JavaType(BoardIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BoardId boardId;
-
     @Column(name = "channel_id")
     @JavaType(ChannelIdJavaType.class)
     private ChannelId channelId;
-
     @Embedded
     private Content content;
-
     @Embedded
     private WriterInfo writerInfo;
-
-    @Embedded
-    private ModifiedInfo modifiedInfo;
-
-    @Embedded
-    private CreationTime creationTime;
-
     @Version
     private Long version;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private final List<Image> images = new ArrayList<>();
 
 
     @Builder
@@ -76,8 +63,6 @@ public class Board extends AggregateRoot<Board, BoardId> {
         this.channelId = channelId;
         this.images.addAll(images);
         this.content = makeContent(title, content);
-        this.modifiedInfo = new ModifiedInfo();
-        this.creationTime = new CreationTime();
         this.writerInfo = makeWriterInfo(writerName, writerId, writerProfile);
     }
 
@@ -88,7 +73,7 @@ public class Board extends AggregateRoot<Board, BoardId> {
     public void modifyTitleAndContent(ModifyBoardRequest modifyBoardRequest) {
         verifyWriter(modifyBoardRequest.userId());
         this.content = this.content.modify(modifyBoardRequest.title(), modifyBoardRequest.content());
-        this.modifiedInfo = modifiedInfo.modify();
+        super.updateType();
     }
 
     public SearchImagesResponse makeSearchImagesResponse() {

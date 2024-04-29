@@ -14,7 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user_read", indexes = @Index(name = "idx__guild_id__user_id", columnList = "guild_id, user_id"))
 public class UserRead extends AggregateRoot<UserRead, UserReadId> {
 
@@ -59,14 +59,17 @@ public class UserRead extends AggregateRoot<UserRead, UserReadId> {
 
     public void modifyNickname(String nickname) {
         this.userInfo = userInfo.modifyNickname(nickname);
+        super.updateType();
     }
 
     public void modifyProfile(String profile) {
         this.userInfo = userInfo.modifyProfile(profile);
+        super.updateType();
     }
 
     @Override
     public UserReadId getId() {
         return userReadId;
     }
+
 }

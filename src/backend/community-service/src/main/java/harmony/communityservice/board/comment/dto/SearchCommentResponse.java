@@ -1,6 +1,7 @@
 package harmony.communityservice.board.comment.dto;
 
-import harmony.communityservice.generic.ModifiedType;
+import harmony.communityservice.common.domain.ModifiedType;
+import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
@@ -12,7 +13,7 @@ public record SearchCommentResponse(
         Long userId,
         ModifiedType modified,
         String writerProfile,
-        String createdAt
+        Long createdAt
 ) {
 }
 

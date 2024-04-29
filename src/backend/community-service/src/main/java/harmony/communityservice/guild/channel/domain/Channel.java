@@ -1,13 +1,12 @@
 package harmony.communityservice.guild.channel.domain;
 
-import harmony.communityservice.generic.CreationTime;
+import harmony.communityservice.common.domain.AggregateRoot;
 import harmony.communityservice.guild.category.domain.CategoryId;
 import harmony.communityservice.guild.category.domain.CategoryId.CategoryIdJavaType;
 import harmony.communityservice.guild.channel.domain.ChannelId.ChannelIdJavaType;
 import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,7 +25,7 @@ import org.hibernate.annotations.JavaType;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "channel", indexes = @Index(name = "idx__guild_id", columnList = "guild_id"))
-public class Channel {
+public class Channel extends AggregateRoot<Channel, ChannelId> {
 
     @Id
     @Column(name = "channel_id")
@@ -50,8 +49,6 @@ public class Channel {
     @Column(name = "channel_type")
     private ChannelType type;
 
-    @Embedded
-    private CreationTime creationTime;
 
     @Builder
     public Channel(CategoryId categoryId, String name, GuildId guildId,
@@ -59,7 +56,11 @@ public class Channel {
         this.categoryId = categoryId;
         this.name = name;
         this.guildId = guildId;
-        this.creationTime = new CreationTime();
         this.type = ChannelType.valueOf(type);
+    }
+
+    @Override
+    public ChannelId getId() {
+        return channelId;
     }
 }

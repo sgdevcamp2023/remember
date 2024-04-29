@@ -1,8 +1,8 @@
 package harmony.communityservice.board.board.dto;
 
-import harmony.communityservice.generic.ModifiedType;
 import harmony.communityservice.board.comment.dto.SearchCommentsResponse;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
+import harmony.communityservice.common.domain.ModifiedType;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
@@ -13,7 +13,7 @@ public record SearchBoardDetailResponse(
         String writerName,
         Long userId,
         ModifiedType modified,
-        String createdAt,
+        Long createdAt,
         SearchCommentsResponse searchCommentsResponse,
         SearchImagesResponse searchImagesResponse,
         SearchEmojisResponse searchEmojisResponse

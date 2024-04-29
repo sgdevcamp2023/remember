@@ -1,7 +1,6 @@
 package harmony.communityservice.room.domain;
 
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.CreationTime;
 import harmony.communityservice.generic.ProfileInfo;
 import harmony.communityservice.room.domain.RoomId.RoomIdJavaType;
 import jakarta.persistence.AttributeOverride;
@@ -34,33 +33,26 @@ import org.hibernate.annotations.JavaType;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Room extends AggregateRoot<Room, RoomId> {
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "room_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private final List<RoomUser> roomUsers = new ArrayList<>();
     @Id
     @Column(name = "room_id")
     @JavaType(RoomIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private RoomId roomId;
-
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "name", column = @Column(name = "room_name")),
             @AttributeOverride(name = "profile", column = @Column(name = "room_profile"))
     })
     private ProfileInfo roomInfo;
-
-    @Embedded
-    private CreationTime creationTime;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "room_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private final List<RoomUser> roomUsers = new ArrayList<>();
-
     @Version
     private Long version;
 
     @Builder
     public Room(String name, String profile, List<RoomUser> roomUsers) {
         this.roomInfo = makeRoomInfo(name, profile);
-        this.creationTime = new CreationTime();
         this.roomUsers.addAll(roomUsers);
     }
 

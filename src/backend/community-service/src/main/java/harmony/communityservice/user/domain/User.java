@@ -40,10 +40,12 @@ public class User extends AggregateRoot<User, UserId> {
 
     public void modifyProfile(String profile) {
         this.userInfo = this.userInfo.modifyProfile(profile);
+        super.updateType();
     }
 
     public void modifyNickname(String nickname) {
         this.userInfo = this.userInfo.modifyNickname(nickname);
+        super.updateType();
     }
 
     @Override

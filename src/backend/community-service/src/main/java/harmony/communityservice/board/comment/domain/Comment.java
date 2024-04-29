@@ -4,8 +4,6 @@ import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.board.domain.BoardId.BoardIdJavaType;
 import harmony.communityservice.board.comment.domain.CommentId.CommentIdJavaType;
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.CreationTime;
-import harmony.communityservice.generic.ModifiedInfo;
 import harmony.communityservice.generic.WriterInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -46,12 +44,6 @@ public class Comment extends AggregateRoot<Comment, CommentId> {
     @Embedded
     private WriterInfo writerInfo;
 
-    @Embedded
-    private CreationTime creationTime;
-
-    @Embedded
-    private ModifiedInfo modifiedInfo;
-
     @Version
     private Long version;
 
@@ -60,8 +52,6 @@ public class Comment extends AggregateRoot<Comment, CommentId> {
         this.comment = comment;
         this.boardId = boardId;
         this.writerInfo = makeWriterInfo(writerId, writerName, writerProfile);
-        this.modifiedInfo = new ModifiedInfo();
-        this.creationTime = new CreationTime();
     }
 
     private WriterInfo makeWriterInfo(Long writerId, String writerName, String writerProfile) {
@@ -75,7 +65,7 @@ public class Comment extends AggregateRoot<Comment, CommentId> {
     public void modify(Long userId, String comment) {
         verifyWriter(userId);
         this.comment = comment;
-        this.modifiedInfo = this.modifiedInfo.modify();
+        super.updateType();
     }
 
     @Override

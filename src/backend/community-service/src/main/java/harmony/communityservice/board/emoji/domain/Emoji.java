@@ -32,8 +32,8 @@ import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
-@Table(name = "emoji", indexes = @Index(name = "idx__boardId__emojiType", columnList = "board_id, emoji_type"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "emoji", indexes = @Index(name = "idx__boardId__emojiType", columnList = "board_id, emoji_type"))
 public class Emoji extends AggregateRoot<Emoji, EmojiId> {
 
     @Id
@@ -64,6 +64,7 @@ public class Emoji extends AggregateRoot<Emoji, EmojiId> {
 
     public void updateEmojiUsers(EmojiUser emojiUser) {
         emojiUsers.add(emojiUser);
+        super.updateType();
     }
 
     public void exists(UserId userId) {

@@ -2,6 +2,7 @@ package harmony.communityservice.board.comment.mapper;
 
 import harmony.communityservice.board.comment.dto.SearchCommentResponse;
 import harmony.communityservice.board.comment.domain.Comment;
+import java.time.ZoneId;
 
 public class ToSearchCommentResponseMapper {
 
@@ -12,9 +13,9 @@ public class ToSearchCommentResponseMapper {
                 .writerName(comment.getWriterInfo().getCommonUserInfo().getNickname())
                 .userId(comment.getWriterInfo().getWriterId())
                 .writerProfile(comment.getWriterInfo().getCommonUserInfo().getProfile())
-                .modified(comment.getModifiedInfo().getModifiedType())
+                .modified(comment.getType())
                 .boardId(boardId)
-                .createdAt(comment.getCreationTime().getCreatedAt())
+                .createdAt(comment.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .build();
     }
 }

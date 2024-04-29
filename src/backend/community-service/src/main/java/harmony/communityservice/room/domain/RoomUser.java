@@ -18,8 +18,8 @@ import org.hibernate.annotations.JavaType;
 
 @Getter
 @Entity
-@Table(name = "room_user",indexes = @Index(name = "idx__user_id", columnList = "user_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "room_user",indexes = @Index(name = "idx__user_id", columnList = "user_id"))
 public class RoomUser extends DomainEntity<RoomUser, RoomUserId> {
 
     @Id
