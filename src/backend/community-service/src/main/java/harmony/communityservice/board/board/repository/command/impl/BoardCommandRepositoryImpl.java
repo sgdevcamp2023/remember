@@ -36,11 +36,13 @@ public class BoardCommandRepositoryImpl implements BoardCommandRepository {
 
     @Override
     public void deleteByChannelId(ChannelId channelId) {
+        jpaBoardCommandRepository.deleteImagesByChannelId(channelId.getId());
         jpaBoardCommandRepository.deleteBoardsByChannelId(channelId);
     }
 
     @Override
     public void deleteAllByChannelIds(List<ChannelId> channelIds) {
+        jpaBoardCommandRepository.deleteImagesByChannelIds(channelIds.stream().map(ChannelId::getId).toList());
         jpaBoardCommandRepository.deleteAllByChannelIds(channelIds);
     }
 

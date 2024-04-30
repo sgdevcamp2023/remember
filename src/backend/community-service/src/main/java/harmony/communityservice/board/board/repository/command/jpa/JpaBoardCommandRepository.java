@@ -16,8 +16,20 @@ public interface JpaBoardCommandRepository extends JpaRepository<Board, BoardId>
     List<BoardId> findIdsByChannelId(@Param("channelId") ChannelId channelId);
 
     @Modifying
+    @Query(value = "delete from image as i where i.board_id in "
+            + "(select b.board_id from board as b "
+            + "where b.channel_id = :channelId)",nativeQuery = true)
+    void deleteImagesByChannelId(Long channelId);
+
+    @Modifying
     @Query("delete from Board b where b.channelId = :channelId")
     void deleteBoardsByChannelId(ChannelId channelId);
+
+    @Modifying
+    @Query(value = "delete from image as i where i.board_id in "
+            + "(select b.board_id from board as b "
+            + "where b.channel_id in :channelIds)",nativeQuery = true)
+    void deleteImagesByChannelIds(List<Long> channelIds);
 
     @Modifying
     @Query("delete from Board b where b.channelId in :channelIds")

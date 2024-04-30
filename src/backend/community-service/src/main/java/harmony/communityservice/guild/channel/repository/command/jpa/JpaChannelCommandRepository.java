@@ -16,6 +16,6 @@ public interface JpaChannelCommandRepository extends JpaRepository<Channel, Chan
     @Query("delete from Channel c where c.guildId = :guildId")
     void deleteChannelsByGuildId(@Param("guildId") GuildId guildId);
 
-    @Query("select c.channelId from Channel c where c.guildId = :guildId and c.type = :type")
+    @Query("select c.channelId from Channel c where c.guildId = :guildId and c.channelType = :type")
     List<ChannelId> findChannelIdsByGuildIdAndType(@Param("guildId") GuildId guildId, @Param("type") ChannelType type);
 }
