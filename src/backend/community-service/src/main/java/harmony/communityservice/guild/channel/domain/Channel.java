@@ -47,7 +47,7 @@ public class Channel extends AggregateRoot<Channel, ChannelId> {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "channel_type")
-    private ChannelType type;
+    private ChannelType channelType;
 
 
     @Builder
@@ -56,7 +56,7 @@ public class Channel extends AggregateRoot<Channel, ChannelId> {
         this.categoryId = categoryId;
         this.name = name;
         this.guildId = guildId;
-        this.type = ChannelType.valueOf(type);
+        this.channelType = ChannelType.valueOf(type);
     }
 
     @Override

@@ -31,11 +31,13 @@ public class EmojiCommandRepositoryImpl implements EmojiCommandRepository {
 
     @Override
     public void deleteListByBoardId(BoardId boardId) {
+        jpaEmojiCommandRepository.deleteEmojiUsersByBoardId(boardId.getId());
         jpaEmojiCommandRepository.deleteEmojisByBoardId(boardId);
     }
 
     @Override
     public void deleteListByBoardIds(List<BoardId> boardIds) {
+        jpaEmojiCommandRepository.deleteEmojiUsersByBoardIds(boardIds.stream().map(BoardId::getId).toList());
         jpaEmojiCommandRepository.deleteEmojisByBoardIds(boardIds);
     }
 }

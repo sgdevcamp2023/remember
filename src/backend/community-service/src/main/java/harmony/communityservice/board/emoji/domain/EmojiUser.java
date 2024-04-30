@@ -34,17 +34,16 @@ public class EmojiUser extends DomainEntity<EmojiUser, EmojiUserId> {
     @Column(name = "user_id")
     private UserId userId;
 
-
-    @Override
-    public EmojiUserId getId() {
-        return emojiUserId;
-    }
-
     private EmojiUser(UserId userId) {
         this.userId = userId;
     }
 
     public static EmojiUser make(UserId userId) {
         return new EmojiUser(userId);
+    }
+
+    @Override
+    public EmojiUserId getId() {
+        return emojiUserId;
     }
 }
