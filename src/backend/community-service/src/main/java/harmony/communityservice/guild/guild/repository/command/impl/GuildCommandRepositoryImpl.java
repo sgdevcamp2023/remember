@@ -19,6 +19,7 @@ public class GuildCommandRepositoryImpl implements GuildCommandRepository {
 
     @Override
     public void deleteById(GuildId guildId) {
+        repository.deleteGuildUsersByGuildId(guildId.getId());
         repository.deleteById(guildId);
     }
 
