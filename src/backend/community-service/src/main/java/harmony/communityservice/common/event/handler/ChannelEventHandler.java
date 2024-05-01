@@ -34,7 +34,7 @@ public class ChannelEventHandler {
     public void handler(RegisterChannelEvent event) {
         RegisterChannelRequest registerChannelRequest = ToRegisterChannelRequestMapper.convert(event);
         Long channelId = channelCommandService.register(registerChannelRequest);
-        producerService.publishChannelCreationEvent(ToChannelCreatedEventMapper.convert(registerChannelRequest, channelId));
+//        producerService.publishChannelCreationEvent(ToChannelCreatedEventMapper.convert(registerChannelRequest, channelId));
     }
 
     @Async
@@ -49,6 +49,6 @@ public class ChannelEventHandler {
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = ChannelDeletedEvent.class, phase = TransactionPhase.AFTER_COMMIT)
     public void handler(ChannelDeletedEvent event) {
-        producerService.publishChannelDeletionEvent(event);
+//        producerService.publishChannelDeletionEvent(event);
     }
 }

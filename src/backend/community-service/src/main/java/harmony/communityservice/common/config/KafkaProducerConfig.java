@@ -1,9 +1,6 @@
 package harmony.communityservice.common.config;
 
-import harmony.communityservice.common.event.dto.produce.ChannelCreatedEvent;
-import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
-import harmony.communityservice.common.event.dto.produce.GuildCreatedEvent;
-import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
+import harmony.communityservice.common.event.dto.produce.ExternalEvent;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -33,40 +30,12 @@ public class KafkaProducerConfig {
         return config;
     }
 
-    public ProducerFactory<String, ChannelCreatedEvent> channelCreatedEventProducerFactory() {
+    public ProducerFactory<String, ExternalEvent> externalEventProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
     @Bean
-    public KafkaTemplate<String, ChannelCreatedEvent> channelCreatedEventKafkaTemplate() {
-        return new KafkaTemplate<>(channelCreatedEventProducerFactory());
+    public KafkaTemplate<String, ExternalEvent> externalEventKafkaTemplate() {
+        return new KafkaTemplate<>(externalEventProducerFactory());
     }
-
-    public ProducerFactory<String, ChannelDeletedEvent> channelDeletedEventProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfig());
-    }
-
-    @Bean
-    public KafkaTemplate<String, ChannelDeletedEvent> channelDeletedEventKafkaTemplate() {
-        return new KafkaTemplate<>(channelDeletedEventProducerFactory());
-    }
-
-    public ProducerFactory<String, GuildCreatedEvent> guildCreatedEventProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfig());
-    }
-
-    @Bean
-    public KafkaTemplate<String, GuildCreatedEvent> guildCreatedEventKafkaTemplate() {
-        return new KafkaTemplate<>(guildCreatedEventProducerFactory());
-    }
-
-    public ProducerFactory<String, GuildDeletedEvent> guildDeletedEventProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfig());
-    }
-
-    @Bean
-    public KafkaTemplate<String, GuildDeletedEvent> guildDeletedEventKafkaTemplate() {
-        return new KafkaTemplate<>(guildDeletedEventProducerFactory());
-    }
-
 }

@@ -1,16 +1,13 @@
 package harmony.communityservice.common.service;
 
-import harmony.communityservice.common.event.dto.produce.ChannelCreatedEvent;
-import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
-import harmony.communityservice.common.event.dto.produce.GuildCreatedEvent;
-import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
+import harmony.communityservice.common.event.dto.produce.ExternalEvent;
 
 public interface ProducerService {
-    void publishGuildDeletionEvent(GuildDeletedEvent event);
+    void publishGuildDeletionEvent(ExternalEvent event);
 
-    void publishChannelCreationEvent(ChannelCreatedEvent event);
+    void publishChannelCreationEvent(ExternalEvent event);
 
-    void publishChannelDeletionEvent(ChannelDeletedEvent event);
+    void publishChannelDeletionEvent(ExternalEvent event);
 
-    void publishGuildCreationEvent(GuildCreatedEvent event);
+    void publishGuildCreationEvent(ExternalEvent event);
 }

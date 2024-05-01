@@ -38,21 +38,26 @@ import org.hibernate.annotations.JavaType;
 @Table(name = "board", indexes = @Index(name = "idx__channelId", columnList = "channel_id"))
 public class Board extends AggregateRoot<Board, BoardId> {
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private final List<Image> images = new ArrayList<>();
     @Id
     @Column(name = "board_id")
     @JavaType(BoardIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BoardId boardId;
+
     @Column(name = "channel_id")
     @JavaType(ChannelIdJavaType.class)
     private ChannelId channelId;
+
     @Embedded
     private Content content;
+
     @Embedded
     private WriterInfo writerInfo;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private final List<Image> images = new ArrayList<>();
+
     @Version
     private Long version;
 

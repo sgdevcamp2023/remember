@@ -1,9 +1,6 @@
 package harmony.communityservice.common.config;
 
-import harmony.communityservice.common.event.dto.produce.ChannelCreatedEvent;
-import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
-import harmony.communityservice.common.event.dto.produce.GuildCreatedEvent;
-import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
+import harmony.communityservice.common.event.dto.produce.ExternalEvent;
 import harmony.communityservice.common.service.ProducerService;
 import harmony.communityservice.common.service.impl.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +12,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
-    private final KafkaTemplate<String, GuildCreatedEvent> guildCreatedEventKafkaTemplate;
-    private final KafkaTemplate<String, GuildDeletedEvent> guildDeletedEventKafkaTemplate;
-    private final KafkaTemplate<String, ChannelCreatedEvent> channelCreatedEventKafkaTemplate;
-    private final KafkaTemplate<String, ChannelDeletedEvent> channelDeletedEventKafkaTemplate;
+    private final KafkaTemplate<String, ExternalEvent> ExternalEventKafkaTemplate;
 
     @Bean
     public ProducerService producerService() {
-        return new KafkaProducerService(guildCreatedEventKafkaTemplate, guildDeletedEventKafkaTemplate,
-                channelCreatedEventKafkaTemplate, channelDeletedEventKafkaTemplate);
+        return new KafkaProducerService(ExternalEventKafkaTemplate);
     }
 }

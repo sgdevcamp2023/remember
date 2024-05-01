@@ -7,6 +7,9 @@ import harmony.communityservice.common.event.dto.inner.DeleteChannelEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteGuildReadEvent;
 import harmony.communityservice.common.event.dto.inner.RegisterChannelEvent;
 import harmony.communityservice.common.event.dto.inner.RegisterUserReadEvent;
+import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
+import harmony.communityservice.common.event.mapper.ToGuildCreatedEventMapper;
+import harmony.communityservice.common.event.mapper.ToGuildDeletedEventMapper;
 import harmony.communityservice.common.event.mapper.ToRegisterGuildReadEventMapper;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.ContentService;
@@ -67,12 +70,14 @@ public class GuildCommandServiceImpl implements GuildCommandService {
 
     private void registerGuildRead(Long userId, Guild guild) {
         Events.send(ToRegisterGuildReadEventMapper.convert(guild, userId));
+        Events.send(ToGuildCreatedEventMapper.convert(guild));
     }
 
     @Override
     @AuthorizeGuildManager
     public void delete(DeleteGuildRequest deleteGuildRequest) {
         guildCommandRepository.deleteById(GuildId.make(deleteGuildRequest.guildId()));
+        Events.send(ToGuildDeletedEventMapper.convert(deleteGuildRequest.guildId()));
         Events.send(new DeleteGuildReadEvent(deleteGuildRequest.guildId()));
         Events.send(new DeleteCategoryEvent(deleteGuildRequest.guildId()));
         Events.send(new DeleteChannelEvent(deleteGuildRequest.guildId()));

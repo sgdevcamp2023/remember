@@ -22,7 +22,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class GuildReadEventHandler {
 
-    private final ProducerService producerService;
     private final GuildReadCommandService guildReadCommandService;
 
     @Async
@@ -32,7 +31,6 @@ public class GuildReadEventHandler {
     public void handler(RegisterGuildReadEvent event) {
         RegisterGuildReadRequest registerGuildReadRequest = ToRegisterGuildReadRequestMapper.convert(event);
         guildReadCommandService.register(registerGuildReadRequest);
-        producerService.publishGuildCreationEvent(ToGuildCreatedEventMapper.convert(event));
     }
 
     @Async
@@ -41,6 +39,5 @@ public class GuildReadEventHandler {
     @TransactionalEventListener(classes = DeleteGuildReadEvent.class, phase = TransactionPhase.AFTER_COMMIT)
     public void handler(DeleteGuildReadEvent event) {
         guildReadCommandService.delete(event.guildId());
-        producerService.publishGuildDeletionEvent(ToGuildDeletedEventMapper.convert(event.guildId()));
     }
 }
