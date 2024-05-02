@@ -2,15 +2,24 @@ package harmony.communityservice.common.outbox;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import harmony.communityservice.common.event.dto.produce.ExternalEvent;
+import jakarta.persistence.Access;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @JsonInclude(Include.NON_NULL)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExternalEventRecord {
 
     @Id
@@ -55,5 +64,19 @@ public class ExternalEventRecord {
         this.profile = profile;
         this.sentType = sentType;
         this.type = type;
+    }
+
+    public ExternalEvent make() {
+        return ExternalEvent.builder()
+                .name(name)
+                .categoryId(categoryId)
+                .guildId(guildId)
+                .channelId(channelId)
+                .channelName(channelName)
+                .type(type.name())
+                .profile(profile)
+                .guildReadId(guildReadId)
+                .channelType(channelType)
+                .build();
     }
 }

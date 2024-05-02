@@ -4,7 +4,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Builder;
 
-@JsonInclude(Include.NON_NULL)
 @Builder(toBuilder = true)
-public record ExternalEvent() {
+@JsonInclude(Include.NON_NULL)
+public record ExternalEvent(String sentType,
+                            String type,
+                            Long guildId,
+                            String channelType,
+                            Long channelId,
+                            String channelName,
+                            Long categoryId,
+                            Long guildReadId,
+                            String name,
+                            String profile) {
 }
