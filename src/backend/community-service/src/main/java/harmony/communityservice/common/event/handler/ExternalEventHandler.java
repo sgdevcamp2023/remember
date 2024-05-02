@@ -1,5 +1,7 @@
 package harmony.communityservice.common.event.handler;
 
+import harmony.communityservice.common.event.dto.produce.ChannelCreatedEvent;
+import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
 import harmony.communityservice.common.event.dto.produce.GuildCreatedEvent;
 import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
@@ -9,6 +11,8 @@ import harmony.communityservice.common.outbox.OutBoxMapper;
 import harmony.communityservice.common.outbox.SentType;
 import harmony.communityservice.common.service.ProducerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -53,6 +57,37 @@ public class ExternalEventHandler {
         publishExternalEvent(record);
     }
 
+    @TransactionalEventListener(classes = ChannelCreatedEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void channelCreatedEventBeforeHandler(ChannelCreatedEvent event) {
+        ExternalEventRecord record = createChannelCreatedEvent(event);
+        outBoxMapper.insertExternalEventRecord(record);
+    }
+
+
+    @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionalEventListener(classes = ChannelCreatedEvent.class, phase = TransactionPhase.AFTER_COMMIT)
+    public void channelCreatedEventAfterHandler(ChannelCreatedEvent event) {
+        ExternalEventRecord record = createChannelCreatedEvent(event);
+        publishExternalEvent(record);
+    }
+
+    @TransactionalEventListener(classes = ChannelDeletedEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void channelDeletedEventBeforeHandler(ChannelDeletedEvent event) {
+        ExternalEventRecord record = createChannelDeletedEvent(event);
+        outBoxMapper.insertExternalEventRecord(record);
+    }
+
+
+
+    @Async
+    @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
+    @TransactionalEventListener(classes = ChannelDeletedEvent.class, phase = TransactionPhase.AFTER_COMMIT)
+    public void channelDeletedEventAfterHandler(ChannelDeletedEvent event) {
+        ExternalEventRecord record = createChannelDeletedEvent(event);
+        publishExternalEvent(record);
+    }
+
     private void publishExternalEvent(ExternalEventRecord record) {
         ExternalEventRecord externalEventRecord = outBoxMapper.findExternalEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
@@ -66,7 +101,7 @@ public class ExternalEventHandler {
 
     private ExternalEventRecord createGuildCreatedEvent(GuildCreatedEvent event) {
         return ExternalEventRecord.builder()
-                .type(EventType.CREATED_CHANNEL)
+                .type(EventType.CREATED_GUILD)
                 .guildId(event.getGuildId())
                 .name(event.getName())
                 .profile(event.getProfile())
@@ -79,6 +114,26 @@ public class ExternalEventHandler {
                 .type(EventType.DELETED_GUILD)
                 .guildId(event.getGuildId())
                 .sentType(SentType.INIT)
+                .build();
+    }
+
+    private ExternalEventRecord createChannelCreatedEvent(ChannelCreatedEvent event) {
+        return ExternalEventRecord.builder()
+                .type(EventType.CREATED_CHANNEL)
+                .sentType(SentType.INIT)
+                .guildId(event.getGuildId())
+                .channelId(event.getChannelId())
+                .categoryId(event.getCategoryId())
+                .channelName(event.getChannelName())
+                .channelType(event.getChannelType())
+                .build();
+    }
+
+    private ExternalEventRecord createChannelDeletedEvent(ChannelDeletedEvent event) {
+        return ExternalEventRecord.builder()
+                .type(EventType.DELETED_CHANNEL)
+                .guildId(event.getGuildId())
+                .channelId(event.getChannelId())
                 .build();
     }
 }

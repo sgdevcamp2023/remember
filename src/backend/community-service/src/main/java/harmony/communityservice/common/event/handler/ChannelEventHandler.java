@@ -24,7 +24,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class ChannelEventHandler {
 
-    private final ProducerService producerService;
     private final ChannelCommandService channelCommandService;
 
     @Async
@@ -33,8 +32,7 @@ public class ChannelEventHandler {
     @TransactionalEventListener(classes = RegisterChannelEvent.class, phase = TransactionPhase.AFTER_COMMIT)
     public void handler(RegisterChannelEvent event) {
         RegisterChannelRequest registerChannelRequest = ToRegisterChannelRequestMapper.convert(event);
-        Long channelId = channelCommandService.register(registerChannelRequest);
-//        producerService.publishChannelCreationEvent(ToChannelCreatedEventMapper.convert(registerChannelRequest, channelId));
+        channelCommandService.register(registerChannelRequest);
     }
 
     @Async
@@ -45,10 +43,4 @@ public class ChannelEventHandler {
         channelCommandService.deleteByGuildId(event.guildId());
     }
 
-    @Async
-    @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
-    @TransactionalEventListener(classes = ChannelDeletedEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(ChannelDeletedEvent event) {
-//        producerService.publishChannelDeletionEvent(event);
-    }
 }

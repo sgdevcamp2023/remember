@@ -3,7 +3,7 @@ package harmony.communityservice.common.outbox;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import harmony.communityservice.common.event.dto.produce.ExternalEvent;
-import jakarta.persistence.Access;
+import harmony.communityservice.guild.channel.domain.ChannelType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,7 +34,7 @@ public class ExternalEventRecord {
 
     private Long guildId;
 
-    private String channelType;
+    private ChannelType channelType;
 
     private Long channelId;
 
@@ -49,7 +49,7 @@ public class ExternalEventRecord {
     private String profile;
 
     @Builder
-    public ExternalEventRecord(Long categoryId, Long channelId, String channelName, String channelType,
+    public ExternalEventRecord(Long categoryId, Long channelId, String channelName, ChannelType channelType,
                                Long guildId, Long guildReadId, String name, String profile,
                                SentType sentType,
                                EventType type) {
@@ -73,7 +73,7 @@ public class ExternalEventRecord {
                 .guildId(guildId)
                 .channelId(channelId)
                 .channelName(channelName)
-                .type(type.name())
+                .type(type)
                 .profile(profile)
                 .guildReadId(guildReadId)
                 .channelType(channelType)
