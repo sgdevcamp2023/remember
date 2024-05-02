@@ -34,6 +34,26 @@ public class ExternalEventHandler {
     @TransactionalEventListener(classes = GuildCreatedEvent.class, phase = TransactionPhase.AFTER_COMMIT)
     public void guildCreatedEventAfterHandler(GuildCreatedEvent event) {
         ExternalEventRecord record = createGuildCreatedEvent(event);
+        publishExternalEvent(record);
+
+    }
+
+
+    @TransactionalEventListener(classes = GuildDeletedEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void guildDeletedEventBeforeHandler(GuildDeletedEvent event) {
+        ExternalEventRecord record = createGuildDeletedEvent(event);
+        outBoxMapper.insertExternalEventRecord(record);
+    }
+
+    @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionalEventListener(classes = GuildDeletedEvent.class, phase = TransactionPhase.AFTER_COMMIT)
+    public void guildDeletedEventAfterHandler(GuildDeletedEvent event) {
+        ExternalEventRecord record = createGuildDeletedEvent(event);
+        publishExternalEvent(record);
+    }
+
+    private void publishExternalEvent(ExternalEventRecord record) {
         ExternalEventRecord externalEventRecord = outBoxMapper.findExternalEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
@@ -42,7 +62,6 @@ public class ExternalEventHandler {
         } catch (Exception e) {
             outBoxMapper.updateExternalEventRecord(SentType.SEND_FAIL, externalEventRecord.getEventId());
         }
-
     }
 
     private ExternalEventRecord createGuildCreatedEvent(GuildCreatedEvent event) {
@@ -55,11 +74,11 @@ public class ExternalEventHandler {
                 .build();
     }
 
-
-    @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener(classes = GuildDeletedEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(GuildDeletedEvent event) {
-//        producerService.publishGuildDeletionEvent();
+    private ExternalEventRecord createGuildDeletedEvent(GuildDeletedEvent event) {
+        return ExternalEventRecord.builder()
+                .type(EventType.DELETED_GUILD)
+                .guildId(event.getGuildId())
+                .sentType(SentType.INIT)
+                .build();
     }
 }
