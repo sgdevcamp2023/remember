@@ -1,16 +1,16 @@
 package harmony.communityservice.guild.guild.mapper;
 
-import harmony.communityservice.common.event.dto.inner.RegisterGuildReadEvent;
+import harmony.communityservice.common.outbox.InnerEventRecord;
 import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
 
 public class ToRegisterGuildReadRequestMapper {
 
-    public static RegisterGuildReadRequest convert(RegisterGuildReadEvent event) {
+    public static RegisterGuildReadRequest convert(InnerEventRecord event) {
         return RegisterGuildReadRequest.builder()
-                .userId(event.userId())
-                .guildId(event.guildId())
-                .profile(event.profile())
-                .name(event.name())
+                .userId(event.getUserId())
+                .guildId(event.getGuildId())
+                .profile(event.getGuildProfile())
+                .name(event.getGuildName())
                 .build();
     }
 }

@@ -5,9 +5,9 @@ import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
 import harmony.communityservice.common.event.dto.produce.GuildCreatedEvent;
 import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.common.outbox.EventType;
+import harmony.communityservice.common.outbox.ExternalEventType;
 import harmony.communityservice.common.outbox.ExternalEventRecord;
-import harmony.communityservice.common.outbox.OutBoxMapper;
+import harmony.communityservice.common.outbox.ExternalEventOutBoxMapper;
 import harmony.communityservice.common.outbox.SentType;
 import harmony.communityservice.common.service.ProducerService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class ExternalEventHandler {
 
     private final ProducerService producerService;
-    private final OutBoxMapper outBoxMapper;
+    private final ExternalEventOutBoxMapper outBoxMapper;
 
     @TransactionalEventListener(classes = GuildCreatedEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void guildCreatedEventBeforeHandler(GuildCreatedEvent event) {
@@ -101,7 +101,7 @@ public class ExternalEventHandler {
 
     private ExternalEventRecord createGuildCreatedEvent(GuildCreatedEvent event) {
         return ExternalEventRecord.builder()
-                .type(EventType.CREATED_GUILD)
+                .type(ExternalEventType.CREATED_GUILD)
                 .guildId(event.getGuildId())
                 .name(event.getName())
                 .profile(event.getProfile())
@@ -111,7 +111,7 @@ public class ExternalEventHandler {
 
     private ExternalEventRecord createGuildDeletedEvent(GuildDeletedEvent event) {
         return ExternalEventRecord.builder()
-                .type(EventType.DELETED_GUILD)
+                .type(ExternalEventType.DELETED_GUILD)
                 .guildId(event.getGuildId())
                 .sentType(SentType.INIT)
                 .build();
@@ -119,7 +119,7 @@ public class ExternalEventHandler {
 
     private ExternalEventRecord createChannelCreatedEvent(ChannelCreatedEvent event) {
         return ExternalEventRecord.builder()
-                .type(EventType.CREATED_CHANNEL)
+                .type(ExternalEventType.CREATED_CHANNEL)
                 .sentType(SentType.INIT)
                 .guildId(event.getGuildId())
                 .channelId(event.getChannelId())
@@ -131,7 +131,7 @@ public class ExternalEventHandler {
 
     private ExternalEventRecord createChannelDeletedEvent(ChannelDeletedEvent event) {
         return ExternalEventRecord.builder()
-                .type(EventType.DELETED_CHANNEL)
+                .type(ExternalEventType.DELETED_CHANNEL)
                 .guildId(event.getGuildId())
                 .channelId(event.getChannelId())
                 .build();

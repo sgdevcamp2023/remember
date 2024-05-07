@@ -1,7 +1,7 @@
 package harmony.communityservice.common.outbox;
 
-public class EventTypeHandler extends EnumTypeHandler<EventType>{
+public class EventTypeHandler extends EnumTypeHandler<ExternalEventType>{
     public EventTypeHandler() {
-        super(EventType.class);
+        super(ExternalEventType.class);
     }
 }

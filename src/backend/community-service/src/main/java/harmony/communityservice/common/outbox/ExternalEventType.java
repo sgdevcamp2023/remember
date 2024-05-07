@@ -1,6 +1,6 @@
 package harmony.communityservice.common.outbox;
 
-public enum EventType {
+public enum ExternalEventType {
     DELETED_GUILD,
     DELETED_CHANNEL,
     CREATED_GUILD,

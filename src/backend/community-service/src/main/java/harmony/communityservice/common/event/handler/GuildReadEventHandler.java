@@ -2,9 +2,11 @@ package harmony.communityservice.common.event.handler;
 
 import harmony.communityservice.common.event.dto.inner.DeleteGuildReadEvent;
 import harmony.communityservice.common.event.dto.inner.RegisterGuildReadEvent;
-import harmony.communityservice.common.event.mapper.ToGuildCreatedEventMapper;
-import harmony.communityservice.common.event.mapper.ToGuildDeletedEventMapper;
-import harmony.communityservice.common.service.ProducerService;
+import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.outbox.InnerEventOutBoxMapper;
+import harmony.communityservice.common.outbox.InnerEventRecord;
+import harmony.communityservice.common.outbox.InnerEventType;
+import harmony.communityservice.common.outbox.SentType;
 import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
 import harmony.communityservice.guild.guild.mapper.ToRegisterGuildReadRequestMapper;
 import harmony.communityservice.guild.guild.service.command.GuildReadCommandService;
@@ -22,22 +24,71 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class GuildReadEventHandler {
 
+    private final InnerEventOutBoxMapper outBoxMapper;
     private final GuildReadCommandService guildReadCommandService;
+
+    private InnerEventRecord createGuildReadRegisterEvent(RegisterGuildReadEvent event) {
+        return InnerEventRecord.builder()
+                .guildId(event.guildId())
+                .userId(event.userId())
+                .guildName(event.name())
+                .guildProfile(event.profile())
+                .type(InnerEventType.CREATED_GUILD)
+                .sentType(SentType.INIT)
+                .build();
+    }
+
+    @TransactionalEventListener(classes = RegisterGuildReadEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void guildReadRegisterBeforeHandler(RegisterGuildReadEvent event) {
+        InnerEventRecord record = createGuildReadRegisterEvent(event);
+        outBoxMapper.insertInnerEventRecord(record);
+    }
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = RegisterGuildReadEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(RegisterGuildReadEvent event) {
-        RegisterGuildReadRequest registerGuildReadRequest = ToRegisterGuildReadRequestMapper.convert(event);
-        guildReadCommandService.register(registerGuildReadRequest);
+    public void guildReadRegisterAfterHandler(RegisterGuildReadEvent event) {
+        InnerEventRecord record = createGuildReadRegisterEvent(event);
+        InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
+                .orElseThrow(NotFoundDataException::new);
+        try {
+            RegisterGuildReadRequest registerGuildReadRequest = ToRegisterGuildReadRequestMapper.convert(
+                    innerEventRecord);
+            guildReadCommandService.register(registerGuildReadRequest);
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
+        } catch (Exception e) {
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
+        }
+    }
+
+    @TransactionalEventListener(classes = DeleteGuildReadEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void guildReadDeleteBeforeHandler(DeleteGuildReadEvent event) {
+        InnerEventRecord record = createGuildReadDeleteEvent(event);
+        outBoxMapper.insertInnerEventRecord(record);
+    }
+
+    private InnerEventRecord createGuildReadDeleteEvent(DeleteGuildReadEvent event) {
+        return InnerEventRecord.builder()
+                .guildId(event.guildId())
+                .type(InnerEventType.DELETED_GUILD)
+                .sentType(SentType.INIT)
+                .build();
     }
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = DeleteGuildReadEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(DeleteGuildReadEvent event) {
-        guildReadCommandService.delete(event.guildId());
+    public void guildReadDeleteAfterHandler(DeleteGuildReadEvent event) {
+        InnerEventRecord record = createGuildReadDeleteEvent(event);
+        InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
+                .orElseThrow(NotFoundDataException::new);
+        try {
+            guildReadCommandService.delete(innerEventRecord.getGuildId());
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
+        } catch (Exception e) {
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
+        }
     }
 }

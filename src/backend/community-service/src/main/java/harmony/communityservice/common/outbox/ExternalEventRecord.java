@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString
 @JsonInclude(Include.NON_NULL)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,7 +27,7 @@ public class ExternalEventRecord {
 
     private SentType sentType;
 
-    private EventType type;
+    private ExternalEventType type;
 
     private Instant createdAt;
 
@@ -52,7 +51,7 @@ public class ExternalEventRecord {
     public ExternalEventRecord(Long categoryId, Long channelId, String channelName, ChannelType channelType,
                                Long guildId, Long guildReadId, String name, String profile,
                                SentType sentType,
-                               EventType type) {
+                               ExternalEventType type) {
         this.categoryId = categoryId;
         this.channelId = channelId;
         this.channelName = channelName;
