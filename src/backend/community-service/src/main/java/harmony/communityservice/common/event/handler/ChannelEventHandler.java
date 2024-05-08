@@ -1,12 +1,12 @@
 package harmony.communityservice.common.event.handler;
 
-import harmony.communityservice.common.event.Events;
 import harmony.communityservice.common.event.dto.inner.DeleteChannelEvent;
 import harmony.communityservice.common.event.dto.inner.RegisterChannelEvent;
-import harmony.communityservice.common.event.dto.produce.ChannelCreatedEvent;
-import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
-import harmony.communityservice.common.event.mapper.ToChannelCreatedEventMapper;
-import harmony.communityservice.common.service.ProducerService;
+import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.outbox.InnerEventOutBoxMapper;
+import harmony.communityservice.common.outbox.InnerEventRecord;
+import harmony.communityservice.common.outbox.InnerEventType;
+import harmony.communityservice.common.outbox.SentType;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.mapper.ToRegisterChannelRequestMapper;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
@@ -24,23 +24,71 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class ChannelEventHandler {
 
+    private final InnerEventOutBoxMapper outBoxMapper;
     private final ChannelCommandService channelCommandService;
+
+    @TransactionalEventListener(classes = RegisterChannelEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void channelRegisterEventBeforeHandler(RegisterChannelEvent event) {
+        InnerEventRecord record = createChannelRegisterEvent(event);
+        outBoxMapper.insertInnerEventRecord(record);
+    }
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = RegisterChannelEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(RegisterChannelEvent event) {
-        RegisterChannelRequest registerChannelRequest = ToRegisterChannelRequestMapper.convert(event);
-        channelCommandService.register(registerChannelRequest);
+    public void channelRegisterEventAfterHandler(RegisterChannelEvent event) {
+        InnerEventRecord record = createChannelRegisterEvent(event);
+        InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
+                .orElseThrow(NotFoundDataException::new);
+        try {
+            RegisterChannelRequest registerChannelRequest = ToRegisterChannelRequestMapper.convert(innerEventRecord);
+            channelCommandService.register(registerChannelRequest);
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
+        } catch (Exception e) {
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
+        }
+    }
+
+    @TransactionalEventListener(classes = DeleteChannelEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void channelDeleteEventBeforeHandler(DeleteChannelEvent event) {
+        InnerEventRecord record = createChannelDeleteEvent(event);
+        outBoxMapper.insertInnerEventRecord(record);
     }
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = DeleteChannelEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(DeleteChannelEvent event) {
-        channelCommandService.deleteByGuildId(event.guildId());
+    public void channelDeleteEventAfterHandler(DeleteChannelEvent event) {
+        InnerEventRecord record = createChannelDeleteEvent(event);
+        InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
+                .orElseThrow(NotFoundDataException::new);
+        try {
+            channelCommandService.deleteByGuildId(innerEventRecord.getGuildId());
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
+        } catch (Exception e) {
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
+        }
     }
 
+    private InnerEventRecord createChannelRegisterEvent(RegisterChannelEvent event) {
+        return InnerEventRecord.builder()
+                .userId(event.userId())
+                .guildId(event.guildId())
+                .channelName(event.channelName())
+                .channelType(event.type())
+                .categoryId(event.categoryId())
+                .sentType(SentType.INIT)
+                .type(InnerEventType.CREATED_CHANNEL)
+                .build();
+    }
+
+    private InnerEventRecord createChannelDeleteEvent(DeleteChannelEvent event) {
+        return InnerEventRecord.builder()
+                .type(InnerEventType.DELETED_CHANNEL)
+                .sentType(SentType.INIT)
+                .guildId(event.guildId())
+                .build();
+    }
 }
