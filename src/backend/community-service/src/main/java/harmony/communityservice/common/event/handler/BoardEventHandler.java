@@ -3,6 +3,13 @@ package harmony.communityservice.common.event.handler;
 import harmony.communityservice.board.board.service.command.BoardCommandService;
 import harmony.communityservice.common.event.dto.inner.DeleteBoardsEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteBoardsInGuildEvent;
+import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.outbox.InnerEventOutBoxMapper;
+import harmony.communityservice.common.outbox.InnerEventRecord;
+import harmony.communityservice.common.outbox.InnerEventType;
+import harmony.communityservice.common.outbox.SentType;
+import harmony.communityservice.guild.channel.domain.ChannelId;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -17,21 +24,72 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class BoardEventHandler {
 
+    private final InnerEventOutBoxMapper outBoxMapper;
     private final BoardCommandService boardCommandService;
+
+    @TransactionalEventListener(classes = DeleteBoardsEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void boardsDeleteEventBeforeHandler(DeleteBoardsEvent event) {
+        InnerEventRecord record = createDeleteBoardsEvent(event);
+        outBoxMapper.insertInnerEventRecord(record);
+    }
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = DeleteBoardsEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(DeleteBoardsEvent event) {
-        boardCommandService.deleteAllInChannelId(event.channelId());
+    public void boardsDeleteEventAfterHandler(DeleteBoardsEvent event) {
+        InnerEventRecord record = createDeleteBoardsEvent(event);
+        InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
+                .orElseThrow(NotFoundDataException::new);
+        try {
+            boardCommandService.deleteAllInChannelId(innerEventRecord.getChannelId());
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
+        } catch (Exception e) {
+            outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
+        }
     }
+
+    @TransactionalEventListener(classes = DeleteBoardsInGuildEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
+    public void boardsDeleteInGuildEventBeforeHandler(DeleteBoardsInGuildEvent event) {
+        List<InnerEventRecord> records = createBoardsDeleteInGuildEvent(event);
+        outBoxMapper.insertInnerEventRecords(records);
+    }
+
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = DeleteBoardsInGuildEvent.class, phase = TransactionPhase.AFTER_COMMIT)
     public void handler(DeleteBoardsInGuildEvent event) {
-        boardCommandService.deleteAllInChannelIds(event.channelIds());
+        List<InnerEventRecord> records = createBoardsDeleteInGuildEvent(event);
+        List<InnerEventRecord> innerEventRecords = outBoxMapper.findInnerEventRecords(records);
+        try {
+            boardCommandService.deleteAllInChannelIds(event.channelIds());
+            outBoxMapper.updateInnerEventRecords(SentType.SEND_SUCCESS, innerEventRecords);
+        } catch (Exception e) {
+            outBoxMapper.updateInnerEventRecords(SentType.SEND_FAIL, innerEventRecords);
+        }
+    }
+
+    private InnerEventRecord createDeleteBoardsEvent(DeleteBoardsEvent event) {
+        return InnerEventRecord.builder()
+                .channelId(event.channelId())
+                .userId(event.userId())
+                .type(InnerEventType.DELETED_BOARD_IN_CHANNEL)
+                .sentType(SentType.INIT)
+                .build();
+    }
+
+    private List<InnerEventRecord> createBoardsDeleteInGuildEvent(DeleteBoardsInGuildEvent event) {
+        return event.channelIds().stream()
+                .map(ChannelId::getId)
+                .map(channelId ->
+                        InnerEventRecord.builder()
+                                .type(InnerEventType.DELETED_BOARD_IN_CHANNELS)
+                                .sentType(SentType.INIT)
+                                .channelId(channelId)
+                                .build()
+                )
+                .toList();
     }
 }
