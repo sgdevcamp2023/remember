@@ -29,6 +29,7 @@ public class JpaConfig {
         entityManagerFactory.setPersistenceUnitName("entityManager");
         HashMap<String, Object> prop = new HashMap<>();
         prop.put("hibernate.hbm2ddl.auto", "none");
+        prop.put("hibernate.default_batch_fetch_size", 100);
         entityManagerFactory.setJpaPropertyMap(prop);
         return entityManagerFactory;
     }

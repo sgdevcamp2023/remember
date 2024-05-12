@@ -11,7 +11,9 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface JpaBoardQueryRepository extends JpaRepository<Board, BoardId> {
 
-    @Query(value = "SELECT distinct b FROM Board b join fetch b.images i WHERE b.channelId = :channelId AND b.boardId < :lastBoardId ORDER BY b.boardId DESC")
+    @Query(value = "SELECT b FROM Board b "
+            + "WHERE b.channelId = :channelId AND b.boardId < :lastBoardId "
+            + "ORDER BY b.boardId DESC")
     List<Board> findBoardsByChannelOrderByBoardIdDesc(@Param("channelId") ChannelId channelId,
                                                       @Param("lastBoardId") BoardId lastBoardId,
                                                       Pageable pageable);
