@@ -12,6 +12,6 @@ import org.springframework.data.repository.query.Param;
 public interface JpaEmojiQueryRepository extends JpaRepository<Emoji, EmojiId> {
     Optional<Emoji> findEmojiByBoardIdAndEmojiType(BoardId boardId, Long emojiType);
 
-    @Query("select e from Emoji e join fetch e.emojiUsers eu where e.boardId = :boardId")
+    @Query("select distinct e from Emoji e join fetch e.emojiUsers eu where e.boardId = :boardId")
     List<Emoji> findEmojisByBoardId(@Param("boardId") BoardId boardId);
 }
