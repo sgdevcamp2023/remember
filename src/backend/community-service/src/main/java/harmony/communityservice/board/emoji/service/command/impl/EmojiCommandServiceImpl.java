@@ -8,7 +8,7 @@ import harmony.communityservice.board.emoji.dto.RegisterEmojiRequest;
 import harmony.communityservice.board.emoji.mapper.ToEmojiMapper;
 import harmony.communityservice.board.emoji.repository.command.EmojiCommandRepository;
 import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;

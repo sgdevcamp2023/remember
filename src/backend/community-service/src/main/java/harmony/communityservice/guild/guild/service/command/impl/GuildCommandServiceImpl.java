@@ -7,7 +7,6 @@ import harmony.communityservice.common.event.dto.inner.DeleteChannelEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteGuildReadEvent;
 import harmony.communityservice.common.event.dto.inner.RegisterChannelEvent;
 import harmony.communityservice.common.event.dto.inner.RegisterUserReadEvent;
-import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
 import harmony.communityservice.common.event.mapper.ToGuildCreatedEventMapper;
 import harmony.communityservice.common.event.mapper.ToGuildDeletedEventMapper;
 import harmony.communityservice.common.event.mapper.ToRegisterGuildReadEventMapper;
@@ -22,7 +21,8 @@ import harmony.communityservice.guild.guild.dto.RegisterUserUsingInvitationCodeR
 import harmony.communityservice.guild.guild.mapper.ToGuildMapper;
 import harmony.communityservice.guild.guild.repository.command.GuildCommandRepository;
 import harmony.communityservice.guild.guild.service.command.GuildCommandService;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
     @Override
     public Long register(RegisterGuildRequest registerGuildRequest, MultipartFile profile) {
         Guild guild = createGuild(registerGuildRequest, profile);
-        guild.updateUserIds(GuildUser.make(UserId.make(registerGuildRequest.managerId())));
+        guild.updateUserIds(GuildUser.make(UserIdJpaVO.make(registerGuildRequest.managerId())));
         guildCommandRepository.save(guild);
         registerUserRead(registerGuildRequest.managerId(), guild.getGuildId().getId());
         Events.send(new RegisterChannelEvent(
@@ -53,7 +53,7 @@ public class GuildCommandServiceImpl implements GuildCommandService {
                 registerUserUsingInvitationCodeRequest.invitationCode().split("\\."));
         Guild targetGuild = guildCommandRepository.findByInvitationCode(parsedInvitationCodes.get(0))
                 .orElseThrow(NotFoundDataException::new);
-        targetGuild.updateUserIds(GuildUser.make(UserId.make(registerUserUsingInvitationCodeRequest.userId())));
+        targetGuild.updateUserIds(GuildUser.make(UserIdJpaVO.make(registerUserUsingInvitationCodeRequest.userId())));
         guildCommandRepository.save(targetGuild);
         registerGuildRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild);
         registerUserRead(registerUserUsingInvitationCodeRequest.userId(), targetGuild.getGuildId().getId());

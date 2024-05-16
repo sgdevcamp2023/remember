@@ -2,7 +2,7 @@ package harmony.communityservice.room.repository.command;
 
 import harmony.communityservice.room.domain.Room;
 import harmony.communityservice.room.domain.RoomId;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import java.util.Optional;
 
 public interface RoomCommandRepository {

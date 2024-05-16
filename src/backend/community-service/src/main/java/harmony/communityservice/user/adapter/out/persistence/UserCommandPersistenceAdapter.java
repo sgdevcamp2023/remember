@@ -1,0 +1,35 @@
+package harmony.communityservice.user.adapter.out.persistence;
+
+import harmony.communityservice.common.annotation.PersistenceAdapter;
+import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.user.application.port.out.LoadUserQueryPort;
+import harmony.communityservice.user.application.port.out.ModifyUserInfoPort;
+import harmony.communityservice.user.application.port.out.RegisterUserPort;
+import harmony.communityservice.user.domain.User;
+import lombok.RequiredArgsConstructor;
+
+@PersistenceAdapter
+@RequiredArgsConstructor
+class UserCommandPersistenceAdapter implements RegisterUserPort, LoadUserQueryPort, ModifyUserInfoPort {
+
+    private final UserCommandRepository userCommandRepository;
+
+    @Override
+    public void register(User user) {
+        UserJpaEntity userEntity = UserEntityMapper.convert(user);
+        userCommandRepository.save(userEntity);
+    }
+
+    @Override
+    public User loadUser(Long userId) {
+        UserJpaEntity userEntity = userCommandRepository.findById(UserIdJpaVO.make(userId))
+                .orElseThrow(NotFoundDataException::new);
+        return UserMapper.convert(userEntity);
+    }
+
+    @Override
+    public void modifyUserInfo(User user) {
+        UserJpaEntity userEntity = UserEntityMapper.convert(user);
+        userCommandRepository.save(userEntity);
+    }
+}

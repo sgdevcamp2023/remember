@@ -4,9 +4,7 @@ import harmony.communityservice.room.domain.Room;
 import harmony.communityservice.room.domain.RoomId;
 import harmony.communityservice.room.repository.command.RoomCommandRepository;
 import harmony.communityservice.room.repository.command.jpa.JpaRoomCommandRepository;
-import harmony.communityservice.user.domain.UserId;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 

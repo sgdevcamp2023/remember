@@ -6,7 +6,7 @@ import harmony.communityservice.guild.guild.dto.SearchGuildReadResponse;
 import harmony.communityservice.guild.guild.mapper.ToSearchGuildReadResponseMapper;
 import harmony.communityservice.guild.guild.repository.query.GuildReadQueryRepository;
 import harmony.communityservice.guild.guild.service.query.GuildReadQueryService;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

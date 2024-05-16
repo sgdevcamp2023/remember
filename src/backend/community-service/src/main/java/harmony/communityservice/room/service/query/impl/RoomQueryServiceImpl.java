@@ -15,8 +15,8 @@ import harmony.communityservice.room.mapper.ToSearchUserStateResponseMapper;
 import harmony.communityservice.room.mapper.ToUserIdsMapper;
 import harmony.communityservice.room.repository.query.RoomQueryRepository;
 import harmony.communityservice.room.service.query.RoomQueryService;
-import harmony.communityservice.user.domain.User;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserJpaEntity;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import harmony.communityservice.user.service.query.UserQueryService;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +55,7 @@ public class RoomQueryServiceImpl implements RoomQueryService {
     @Override
     public Map<Long, ?> searchUserStatesInRoom(long roomId) {
         Room targetRoom = roomQueryRepository.findByRoomId(RoomId.make(roomId)).orElseThrow(NotFoundDataException::new);
-        List<User> users = targetRoom.getRoomUsers()
+        List<UserJpaEntity> users = targetRoom.getRoomUsers()
                 .stream()
                 .map(RoomUser::getUserId)
                 .map(userQueryService::searchByUserId)
@@ -63,9 +63,9 @@ public class RoomQueryServiceImpl implements RoomQueryService {
         return makeCurrentUserStates(users);
     }
 
-    private Map<Long, SearchUserStateResponse> makeCurrentUserStates(List<User> users) {
+    private Map<Long, SearchUserStateResponse> makeCurrentUserStates(List<UserJpaEntity> users) {
         Map<Long, SearchUserStateResponse> userStates = new HashMap<>();
-        for (User user : users) {
+        for (UserJpaEntity user : users) {
             SearchUserStateResponse searchUserStateResponse = ToSearchUserStateResponseMapper.convert(user,
                     getConnectionStates(users).get(user.getUserId().getId()));
             userStates.put(user.getUserId().getId(), searchUserStateResponse);
@@ -73,7 +73,7 @@ public class RoomQueryServiceImpl implements RoomQueryService {
         return userStates;
     }
 
-    private Map<Long, String> getConnectionStates(List<User> users) {
+    private Map<Long, String> getConnectionStates(List<UserJpaEntity> users) {
         List<Long> userIds = users
                 .stream()
                 .map(ToUserIdsMapper::convert)

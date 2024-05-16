@@ -2,7 +2,7 @@ package harmony.communityservice.room.domain;
 
 import harmony.communityservice.common.domain.DomainEntity;
 import harmony.communityservice.room.domain.RoomUserId.RoomUserIdJavaType;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

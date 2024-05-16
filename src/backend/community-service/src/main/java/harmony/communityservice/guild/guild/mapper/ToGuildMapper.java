@@ -2,7 +2,7 @@ package harmony.communityservice.guild.guild.mapper;
 
 import harmony.communityservice.guild.guild.dto.RegisterGuildRequest;
 import harmony.communityservice.guild.guild.domain.Guild;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import java.util.UUID;
 
 public class ToGuildMapper {

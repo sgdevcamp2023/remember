@@ -4,12 +4,12 @@ import harmony.communityservice.board.board.domain.Board;
 import harmony.communityservice.board.board.domain.Image;
 import harmony.communityservice.board.board.dto.RegisterBoardRequest;
 import harmony.communityservice.guild.channel.domain.ChannelId;
-import harmony.communityservice.user.domain.UserRead;
+import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;
 import java.util.List;
 
 public class ToBoardMapper {
 
-    public static Board convert(RegisterBoardRequest registerBoardRequest, UserRead userRead, List<Image> images) {
+    public static Board convert(RegisterBoardRequest registerBoardRequest, UserReadEntity userRead, List<Image> images) {
         return Board.builder()
                 .title(registerBoardRequest.title())
                 .content(registerBoardRequest.content())

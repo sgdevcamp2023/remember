@@ -4,8 +4,8 @@ import harmony.communityservice.common.dto.SearchUserReadRequest;
 import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.guild.guild.domain.GuildId;
-import harmony.communityservice.user.domain.UserId;
-import harmony.communityservice.user.domain.UserRead;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;
 import harmony.communityservice.user.repository.query.UserReadQueryRepository;
 import harmony.communityservice.user.service.query.UserReadQueryService;
 import java.util.List;
@@ -27,18 +27,18 @@ public class UserReadQueryServiceImpl implements UserReadQueryService {
     }
 
     @Override
-    public UserRead searchByUserIdAndGuildId(SearchUserReadRequest searchUserReadRequest) {
+    public UserReadEntity searchByUserIdAndGuildId(SearchUserReadRequest searchUserReadRequest) {
         return userReadQueryRepository.findByUserIdAndGuildId(UserId.make(searchUserReadRequest.userId()),
                 GuildId.make(searchUserReadRequest.guildId())).orElseThrow(NotFoundDataException::new);
     }
 
     @Override
-    public List<UserRead> searchListByUserId(long userId) {
+    public List<UserReadEntity> searchListByUserId(long userId) {
         return userReadQueryRepository.findUserReadsByUserId(UserId.make(userId));
     }
 
     @Override
-    public List<UserRead> searchListByGuildId(long guildId) {
+    public List<UserReadEntity> searchListByGuildId(long guildId) {
         return userReadQueryRepository.findUserReadsByGuildId(GuildId.make(guildId));
     }
 

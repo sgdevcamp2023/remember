@@ -3,7 +3,8 @@ package harmony.communityservice.guild.guild.domain;
 import harmony.communityservice.generic.ProfileInfo;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import harmony.communityservice.guild.guild.domain.GuildReadId.GuildReadIdJavaType;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
+import harmony.communityservice.user.adapter.out.persistence.UserInfoJpaVO;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
@@ -37,7 +38,10 @@ public class GuildRead {
 
     @Embedded
     @Column(name = "user_id")
-    private UserId userId;
+    private UserIdJpaVO userId;
+
+    @Embedded
+    private UserInfoJpaVO userInfoJpaVO;
 
     @Embedded
     @AttributeOverrides({
@@ -47,7 +51,7 @@ public class GuildRead {
     private ProfileInfo guildInfo;
 
     @Builder
-    public GuildRead(GuildId guildId, UserId userId, String name, String profile) {
+    public GuildRead(GuildId guildId, UserIdJpaVO userId, String name, String profile) {
         this.guildId = guildId;
         this.userId = userId;
         this.guildInfo = makeGuildInfo(name, profile);

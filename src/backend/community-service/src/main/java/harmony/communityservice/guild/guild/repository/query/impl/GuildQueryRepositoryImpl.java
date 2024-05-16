@@ -4,7 +4,7 @@ import harmony.communityservice.guild.guild.domain.Guild;
 import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.repository.query.GuildQueryRepository;
 import harmony.communityservice.guild.guild.repository.query.jpa.JpaGuildQueryRepository;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;

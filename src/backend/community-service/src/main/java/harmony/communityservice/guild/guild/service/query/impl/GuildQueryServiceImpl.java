@@ -16,8 +16,8 @@ import harmony.communityservice.guild.guild.repository.query.GuildQueryRepositor
 import harmony.communityservice.guild.guild.service.query.GuildQueryService;
 import harmony.communityservice.room.dto.SearchUserStateResponse;
 import harmony.communityservice.room.mapper.ToSearchUserStateResponseMapper;
-import harmony.communityservice.user.domain.UserId;
-import harmony.communityservice.user.domain.UserRead;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;
 import harmony.communityservice.user.service.query.UserReadQueryService;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +67,7 @@ public class GuildQueryServiceImpl implements GuildQueryService {
     }
 
     private List<SearchUserStateResponse> makeSearchUserStateResponses(long guildId) {
-        List<UserRead> targetUserReads = userReadQueryService.searchListByGuildId(guildId);
+        List<UserReadEntity> targetUserReads = userReadQueryService.searchListByGuildId(guildId);
         return targetUserReads
                 .stream()
                 .map(ToSearchUserStateResponseMapper::convert)
@@ -96,16 +96,16 @@ public class GuildQueryServiceImpl implements GuildQueryService {
         Map<Long, Map<Long, ?>> voiceChannelStates = new HashMap<>();
         for (Long channelId : channelStates.keySet()) {
             Set<Long> voiceUserIds = channelStates.get(channelId);
-            Map<Long, UserRead> userReads = getUserReads(guildId, voiceUserIds);
+            Map<Long, UserReadEntity> userReads = getUserReads(guildId, voiceUserIds);
             voiceChannelStates.put(channelId, userReads);
         }
         return voiceChannelStates;
     }
 
-    private Map<Long, UserRead> getUserReads(long guildId, Set<Long> voiceUserIds) {
-        Map<Long, UserRead> userReads = new HashMap<>();
+    private Map<Long, UserReadEntity> getUserReads(long guildId, Set<Long> voiceUserIds) {
+        Map<Long, UserReadEntity> userReads = new HashMap<>();
         for (Long voiceUserId : voiceUserIds) {
-            UserRead findUserRead = userReadQueryService.searchByUserIdAndGuildId(
+            UserReadEntity findUserRead = userReadQueryService.searchByUserIdAndGuildId(
                     new SearchUserReadRequest(voiceUserId, guildId));
             userReads.put(findUserRead.getUserId().getId(), findUserRead);
         }

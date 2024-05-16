@@ -27,10 +27,10 @@ public class WriterInfo extends ValueObject<WriterInfo> {
             @AttributeOverride(name = "nickname", column = @Column(name = "writer_name")),
             @AttributeOverride(name = "profile", column = @Column(name = "writer_profile"))
     })
-    private CommonUserInfo commonUserInfo;
+    private CommonUserInfoJpaVO commonUserInfo;
 
     public static WriterInfo make(String name, Long id, String profile) {
-        CommonUserInfo newCommonUserInfo = CommonUserInfo.make(name, profile);
+        CommonUserInfoJpaVO newCommonUserInfo = CommonUserInfoJpaVO.make(name, profile);
         return new WriterInfo(id, newCommonUserInfo);
     }
 

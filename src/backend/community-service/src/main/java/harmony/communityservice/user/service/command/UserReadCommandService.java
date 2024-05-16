@@ -1,8 +1,8 @@
 package harmony.communityservice.user.service.command;
 
 import harmony.communityservice.guild.guild.dto.ModifyUserNicknameInGuildRequest;
-import harmony.communityservice.user.domain.UserRead;
-import harmony.communityservice.user.dto.RegisterUserReadRequest;
+import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;
+import harmony.communityservice.user.adapter.in.web.RegisterUserReadRequest;
 
 public interface UserReadCommandService {
 
@@ -10,7 +10,7 @@ public interface UserReadCommandService {
 
     void modifyUserNicknameInGuild(ModifyUserNicknameInGuildRequest modifyUserNicknameInGuildRequest);
 
-    UserRead searchByUserIdAndGuildId(Long userId, Long guildId);
+    UserReadEntity searchByUserIdAndGuildId(Long userId, Long guildId);
 
 
 }

@@ -3,7 +3,7 @@ package harmony.communityservice.guild.guild.domain;
 import harmony.communityservice.common.domain.AggregateRoot;
 import harmony.communityservice.generic.ProfileInfo;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CascadeType;

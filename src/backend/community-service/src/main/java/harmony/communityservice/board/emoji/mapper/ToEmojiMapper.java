@@ -3,7 +3,7 @@ package harmony.communityservice.board.emoji.mapper;
 import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.domain.EmojiUser;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 
 public class ToEmojiMapper {
 

@@ -18,7 +18,7 @@ import harmony.communityservice.common.event.dto.inner.DeleteEmojisEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.ContentService;
 import harmony.communityservice.guild.channel.domain.ChannelId;
-import harmony.communityservice.user.domain.UserRead;
+import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +51,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     }
 
     private Board createBoard(RegisterBoardRequest registerBoardRequest, List<Image> images) {
-        UserRead boardWriter = userReadCommandService.searchByUserIdAndGuildId(
+        UserReadEntity boardWriter = userReadCommandService.searchByUserIdAndGuildId(
                 registerBoardRequest.userId(), registerBoardRequest.guildId());
         return ToBoardMapper.convert(registerBoardRequest, boardWriter, images);
     }

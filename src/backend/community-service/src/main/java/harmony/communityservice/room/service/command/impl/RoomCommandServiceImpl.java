@@ -6,7 +6,7 @@ import harmony.communityservice.room.dto.RegisterRoomRequest;
 import harmony.communityservice.room.mapper.ToRoomMapper;
 import harmony.communityservice.room.repository.command.RoomCommandRepository;
 import harmony.communityservice.room.service.command.RoomCommandService;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

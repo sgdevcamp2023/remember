@@ -5,7 +5,7 @@ import harmony.communityservice.board.board.domain.BoardId.BoardIdJavaType;
 import harmony.communityservice.board.emoji.domain.EmojiId.EmojiIdJavaType;
 import harmony.communityservice.common.domain.AggregateRoot;
 import harmony.communityservice.common.exception.DuplicatedEmojiException;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;

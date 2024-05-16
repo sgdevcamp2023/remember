@@ -4,7 +4,7 @@ import harmony.communityservice.common.dto.SearchRoomsAndGuildsResponse;
 import harmony.communityservice.guild.guild.domain.GuildId;
 import harmony.communityservice.guild.guild.service.query.GuildReadQueryService;
 import harmony.communityservice.room.service.query.RoomQueryService;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

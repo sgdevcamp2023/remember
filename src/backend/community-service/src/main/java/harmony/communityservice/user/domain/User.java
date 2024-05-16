@@ -1,55 +1,46 @@
 package harmony.communityservice.user.domain;
 
-import harmony.communityservice.common.domain.AggregateRoot;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
-@Table(name = "user")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends AggregateRoot<User, UserId> {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class User {
 
-    @EmbeddedId
-    @Column(name = "user_id")
-    private UserId userId;
+    private final UserId userId;
 
-    @Embedded
-    private UserInfo userInfo;
-
-    @Version
-    private Long version;
+    private final UserInfo userInfo;
 
     @Builder
-    public User(UserId userId, String email, String nickname, String profile) {
-        this.userId = userId;
-        this.userInfo = makeUserInfo(email, nickname, profile);
+    public User(Long userId, String email, String nickname, String profile) {
+        this.userId = UserId.make(userId);
+        this.userInfo = UserInfo.make(email, profile, nickname);
     }
 
-    private UserInfo makeUserInfo(String email, String nickname, String profile) {
-        return UserInfo.make(email, nickname, profile);
+
+    public User modifiedNickname(String nickname) {
+        UserInfo modifiedUserInfo = userInfo.modifyNickname(nickname);
+        return new User(this.userId, modifiedUserInfo);
     }
 
-    public void modifyProfile(String profile) {
-        this.userInfo = this.userInfo.modifyProfile(profile);
-        super.updateType();
+    public User modifiedProfile(String profile) {
+        UserInfo modifiedUserInfo = userInfo.modifyProfile(profile);
+        return new User(this.userId, modifiedUserInfo);
     }
 
-    public void modifyNickname(String nickname) {
-        this.userInfo = this.userInfo.modifyNickname(nickname);
-        super.updateType();
-    }
+    @Getter
+    public static class UserId {
 
-    @Override
-    public UserId getId() {
-        return userId;
+        private final Long id;
+
+        private UserId(Long id) {
+            this.id = id;
+        }
+
+        public static UserId make(Long id) {
+            return new UserId(id);
+        }
     }
 }

@@ -2,7 +2,7 @@ package harmony.communityservice.room.repository.command.jpa;
 
 import harmony.communityservice.room.domain.Room;
 import harmony.communityservice.room.domain.RoomId;
-import harmony.communityservice.user.domain.UserId;
+import harmony.communityservice.user.adapter.out.persistence.UserId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

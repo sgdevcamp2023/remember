@@ -6,7 +6,7 @@ import harmony.communityservice.common.outbox.InnerEventOutBoxMapper;
 import harmony.communityservice.common.outbox.InnerEventRecord;
 import harmony.communityservice.common.outbox.InnerEventType;
 import harmony.communityservice.common.outbox.SentType;
-import harmony.communityservice.user.dto.RegisterUserReadRequest;
+import harmony.communityservice.user.adapter.in.web.RegisterUserReadRequest;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
