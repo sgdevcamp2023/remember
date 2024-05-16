@@ -2,6 +2,7 @@ package harmony.communityservice.user.adapter.out.persistence;
 
 import harmony.communityservice.common.annotation.PersistenceAdapter;
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.user.application.port.out.LoadUserCommandPort;
 import harmony.communityservice.user.application.port.out.LoadUserQueryPort;
 import harmony.communityservice.user.application.port.out.ModifyUserInfoPort;
 import harmony.communityservice.user.application.port.out.RegisterUserPort;
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-class UserCommandPersistenceAdapter implements RegisterUserPort, LoadUserQueryPort, ModifyUserInfoPort {
+class UserCommandPersistenceAdapter implements RegisterUserPort, LoadUserCommandPort, ModifyUserInfoPort {
 
     private final UserCommandRepository userCommandRepository;
 

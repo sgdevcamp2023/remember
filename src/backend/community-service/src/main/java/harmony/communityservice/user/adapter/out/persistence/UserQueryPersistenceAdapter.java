@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class UserQueryPersistenceAdapter implements LoadUserQueryPort {
+class UserQueryPersistenceAdapter implements LoadUserQueryPort {
 
     private final UserQueryRepository userQueryRepository;
 

@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-class UserInfo {
+public class UserInfo {
     private final String email;
     private final CommonUserInfo commonUserInfo;
 

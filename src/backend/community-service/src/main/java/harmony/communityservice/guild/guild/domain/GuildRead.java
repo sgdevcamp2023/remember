@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.guild.domain;
 
-import harmony.communityservice.generic.ProfileInfo;
+import harmony.communityservice.generic.ProfileInfoJpaVO;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import harmony.communityservice.guild.guild.domain.GuildReadId.GuildReadIdJavaType;
 import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
@@ -48,7 +48,7 @@ public class GuildRead {
             @AttributeOverride(name = "name", column = @Column(name = "guild_name")),
             @AttributeOverride(name = "profile", column = @Column(name = "guild_profile"))
     })
-    private ProfileInfo guildInfo;
+    private ProfileInfoJpaVO guildInfo;
 
     @Builder
     public GuildRead(GuildId guildId, UserIdJpaVO userId, String name, String profile) {
@@ -57,7 +57,7 @@ public class GuildRead {
         this.guildInfo = makeGuildInfo(name, profile);
     }
 
-    private ProfileInfo makeGuildInfo(String name, String profile) {
-        return ProfileInfo.make(name, profile);
+    private ProfileInfoJpaVO makeGuildInfo(String name, String profile) {
+        return ProfileInfoJpaVO.make(name, profile);
     }
 }

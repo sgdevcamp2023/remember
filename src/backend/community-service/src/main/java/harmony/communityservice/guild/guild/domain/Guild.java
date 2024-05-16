@@ -1,7 +1,7 @@
 package harmony.communityservice.guild.guild.domain;
 
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.ProfileInfo;
+import harmony.communityservice.generic.ProfileInfoJpaVO;
 import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
 import harmony.communityservice.user.adapter.out.persistence.UserId;
 import jakarta.persistence.AttributeOverride;
@@ -47,7 +47,7 @@ public class Guild extends AggregateRoot<Guild, GuildId> {
             @AttributeOverride(name = "name", column = @Column(name = "guild_name")),
             @AttributeOverride(name = "profile", column = @Column(name = "guild_profile"))
     })
-    private ProfileInfo guildInfo;
+    private ProfileInfoJpaVO guildInfo;
 
     @NotBlank
     @Column(name = "invite_code")
@@ -76,8 +76,8 @@ public class Guild extends AggregateRoot<Guild, GuildId> {
         super.updateType();
     }
 
-    private ProfileInfo makeGuildInfo(String name, String profile) {
-        return ProfileInfo.make(name, profile);
+    private ProfileInfoJpaVO makeGuildInfo(String name, String profile) {
+        return ProfileInfoJpaVO.make(name, profile);
     }
 
     @Override

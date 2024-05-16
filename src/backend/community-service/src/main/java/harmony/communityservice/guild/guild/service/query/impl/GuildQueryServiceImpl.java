@@ -14,7 +14,7 @@ import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildResponse;
 import harmony.communityservice.guild.guild.mapper.ToInvitationCodeMapper;
 import harmony.communityservice.guild.guild.repository.query.GuildQueryRepository;
 import harmony.communityservice.guild.guild.service.query.GuildQueryService;
-import harmony.communityservice.room.dto.SearchUserStateResponse;
+import harmony.communityservice.room.application.port.in.SearchUserStateResponse;
 import harmony.communityservice.room.mapper.ToSearchUserStateResponseMapper;
 import harmony.communityservice.user.adapter.out.persistence.UserId;
 import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;

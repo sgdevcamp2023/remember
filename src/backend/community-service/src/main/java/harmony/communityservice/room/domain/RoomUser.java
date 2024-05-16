@@ -1,48 +1,34 @@
 package harmony.communityservice.room.domain;
 
-import harmony.communityservice.common.domain.DomainEntity;
-import harmony.communityservice.room.domain.RoomUserId.RoomUserIdJavaType;
-import harmony.communityservice.user.adapter.out.persistence.UserId;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JavaType;
 
 @Getter
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "room_user",indexes = @Index(name = "idx__user_id", columnList = "user_id"))
-public class RoomUser extends DomainEntity<RoomUser, RoomUserId> {
+public class RoomUser {
 
-    @Id
-    @Column(name = "room_user_id")
-    @JavaType(RoomUserIdJavaType.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private RoomUserId roomUserId;
 
-    @Getter
-    @Embedded
-    @Column(name = "user_id")
-    private UserId userId;
+    private final UserId userId;
 
     private RoomUser(UserId userId) {
         this.userId = userId;
     }
 
-    @Override
-    public RoomUserId getId() {
-        return roomUserId;
+    public static RoomUser make(UserId userId){
+        return new RoomUser(userId);
     }
 
-    public static RoomUser make(UserId userId) {
-        return new RoomUser(userId);
+
+
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class RoomUserId{
+        private final Long id;
+
+        public static RoomUserId make(Long id) {
+            return new RoomUserId(id);
+        }
     }
 }
