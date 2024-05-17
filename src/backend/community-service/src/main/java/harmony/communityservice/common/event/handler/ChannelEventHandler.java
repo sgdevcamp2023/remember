@@ -7,9 +7,10 @@ import harmony.communityservice.common.outbox.InnerEventOutBoxMapper;
 import harmony.communityservice.common.outbox.InnerEventRecord;
 import harmony.communityservice.common.outbox.InnerEventType;
 import harmony.communityservice.common.outbox.SentType;
-import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
-import harmony.communityservice.guild.channel.mapper.ToRegisterChannelRequestMapper;
-import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
+import harmony.communityservice.guild.channel.application.port.in.DeleteGuildChannelsUseCase;
+import harmony.communityservice.guild.channel.application.port.in.RegisterChannelCommand;
+import harmony.communityservice.guild.channel.application.port.in.RegisterChannelUseCase;
+import harmony.communityservice.guild.guild.application.service.RegisterChannelCommandMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -25,7 +26,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class ChannelEventHandler {
 
     private final InnerEventOutBoxMapper outBoxMapper;
-    private final ChannelCommandService channelCommandService;
+    private final RegisterChannelUseCase registerChannelUseCase;
+    private final DeleteGuildChannelsUseCase deleteGuildChannelsUseCase;
 
     @TransactionalEventListener(classes = RegisterChannelEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void channelRegisterEventBeforeHandler(RegisterChannelEvent event) {
@@ -42,8 +44,8 @@ public class ChannelEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            RegisterChannelRequest registerChannelRequest = ToRegisterChannelRequestMapper.convert(innerEventRecord);
-            channelCommandService.register(registerChannelRequest);
+            RegisterChannelCommand registerChannelCommand = RegisterChannelCommandMapper.convert(innerEventRecord);
+            registerChannelUseCase.register(registerChannelCommand);
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
@@ -65,7 +67,7 @@ public class ChannelEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            channelCommandService.deleteByGuildId(innerEventRecord.getGuildId());
+            deleteGuildChannelsUseCase.deleteByGuildId(innerEventRecord.getGuildId());
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());

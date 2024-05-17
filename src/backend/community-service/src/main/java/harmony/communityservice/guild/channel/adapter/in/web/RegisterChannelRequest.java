@@ -1,4 +1,4 @@
-package harmony.communityservice.guild.channel.dto;
+package harmony.communityservice.guild.channel.adapter.in.web;
 
 import harmony.communityservice.common.dto.CommonRequest;
 import jakarta.validation.constraints.NotBlank;

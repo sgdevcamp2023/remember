@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface JpaChannelCommandRepository extends JpaRepository<ChannelEntity, ChannelIdJpaVO> {
+interface ChannelCommandRepository extends JpaRepository<ChannelEntity, ChannelIdJpaVO> {
 
     @Modifying
     @Query("delete from ChannelEntity c where c.guildId = :guildId")

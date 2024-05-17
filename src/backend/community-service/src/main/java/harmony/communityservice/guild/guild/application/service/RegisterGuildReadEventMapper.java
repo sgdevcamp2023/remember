@@ -1,9 +1,9 @@
-package harmony.communityservice.common.event.mapper;
+package harmony.communityservice.guild.guild.application.service;
 
 import harmony.communityservice.common.event.dto.inner.RegisterGuildReadEvent;
 import harmony.communityservice.guild.guild.domain.Guild;
 
-public class ToRegisterGuildReadEventMapper {
+public class RegisterGuildReadEventMapper {
 
     public static RegisterGuildReadEvent convert(Guild guild, Long userId) {
         return RegisterGuildReadEvent.builder()

@@ -1,10 +1,9 @@
-package harmony.communityservice.common.event.mapper;
+package harmony.communityservice.guild.guild.application.service;
 
 import harmony.communityservice.common.event.dto.produce.GuildCreatedEvent;
-import harmony.communityservice.guild.guild.adapter.out.persistence.GuildEntity;
 import harmony.communityservice.guild.guild.domain.Guild;
 
-public class ToGuildCreatedEventMapper {
+public class GuildCreatedEventMapper {
 
     public static GuildCreatedEvent convert(Guild targetGuild) {
         return GuildCreatedEvent.builder()

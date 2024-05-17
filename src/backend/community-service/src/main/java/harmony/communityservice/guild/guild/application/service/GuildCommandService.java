@@ -6,9 +6,6 @@ import harmony.communityservice.common.event.dto.inner.DeleteCategoryEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteChannelEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteGuildReadEvent;
 import harmony.communityservice.common.event.dto.inner.RegisterChannelEvent;
-import harmony.communityservice.common.event.mapper.ToGuildCreatedEventMapper;
-import harmony.communityservice.common.event.mapper.ToGuildDeletedEventMapper;
-import harmony.communityservice.common.event.mapper.ToRegisterGuildReadEventMapper;
 import harmony.communityservice.common.service.FileConverter;
 import harmony.communityservice.guild.guild.application.port.in.DeleteGuildCommand;
 import harmony.communityservice.guild.guild.application.port.in.DeleteGuildUseCase;
@@ -58,14 +55,14 @@ class GuildCommandService implements RegisterGuildUseCase, JoinGuildUseCase, Del
     }
 
     private void registerGuildRead(Long userId, Guild guild) {
-        Events.send(ToRegisterGuildReadEventMapper.convert(guild, userId));
-        Events.send(ToGuildCreatedEventMapper.convert(guild));
+        Events.send(RegisterGuildReadEventMapper.convert(guild, userId));
+        Events.send(GuildCreatedEventMapper.convert(guild));
     }
 
     @Override
     public void delete(DeleteGuildCommand deleteGuildCommand) {
         deleteGuildPort.delete(GuildId.make(deleteGuildCommand.guildId()), UserId.make(deleteGuildCommand.userId()));
-        Events.send(ToGuildDeletedEventMapper.convert(deleteGuildCommand.guildId()));
+        Events.send(GuildDeletedEventMapper.convert(deleteGuildCommand.guildId()));
         Events.send(new DeleteGuildReadEvent(deleteGuildCommand.guildId()));
         Events.send(new DeleteCategoryEvent(deleteGuildCommand.guildId()));
         Events.send(new DeleteChannelEvent(deleteGuildCommand.guildId()));
