@@ -1,7 +1,7 @@
 package harmony.communityservice.room.mapper;
 
+import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.room.application.port.in.SearchUserStateResponse;
-import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;
 import harmony.communityservice.user.domain.CommonUserInfo;
 import harmony.communityservice.user.domain.User;
 
@@ -17,11 +17,11 @@ public class ToSearchUserStateResponseMapper {
                 .build();
     }
 
-    public static SearchUserStateResponse convert(UserReadEntity userRead) {
+    public static SearchUserStateResponse convert(GuildRead guildRead) {
         return SearchUserStateResponse.builder()
-                .userName(userRead.getUserInfo().getNickname())
-                .profile(userRead.getUserInfo().getProfile())
-                .userId(userRead.getUserId().getId())
+                .userName(guildRead.getCommonUserInfo().getNickname())
+                .profile(guildRead.getCommonUserInfo().getProfile())
+                .userId(guildRead.getUserId().getId())
                 .build();
     }
 }

@@ -2,8 +2,8 @@ package harmony.communityservice.guild.category.domain;
 
 import harmony.communityservice.common.domain.AggregateRoot;
 import harmony.communityservice.guild.category.domain.CategoryId.CategoryIdJavaType;
-import harmony.communityservice.guild.guild.domain.GuildId;
-import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO.GuildIdJavaType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,14 +32,14 @@ public class Category extends AggregateRoot<Category, CategoryId> {
 
     @Column(name = "guild_id")
     @JavaType(GuildIdJavaType.class)
-    private GuildId guildId;
+    private GuildIdJpaVO guildId;
 
     @NotBlank
     @Column(name = "category_name")
     private String name;
 
     @Builder
-    public Category(String name, GuildId guildId) {
+    public Category(String name, GuildIdJpaVO guildId) {
         this.name = name;
         this.guildId = guildId;
     }

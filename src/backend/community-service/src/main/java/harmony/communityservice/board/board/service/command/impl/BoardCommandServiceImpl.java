@@ -16,7 +16,7 @@ import harmony.communityservice.common.event.dto.inner.DeleteCommentsEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojiEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojisEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.common.service.FileConverter;
 import harmony.communityservice.guild.channel.domain.ChannelId;
 import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;
 import harmony.communityservice.user.service.command.UserReadCommandService;
@@ -30,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class BoardCommandServiceImpl implements BoardCommandService {
 
-    private final ContentService contentService;
+    private final FileConverter contentService;
     private final UserReadCommandService userReadCommandService;
     private final BoardCommandRepository boardCommandRepository;
 
@@ -45,7 +45,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     private List<Image> createImages(List<MultipartFile> images) {
         return images.stream()
-                .map(contentService::convertFileToUrl)
+                .map(contentService::fileToUrl)
                 .map(Image::make)
                 .collect(Collectors.toList());
     }

@@ -33,20 +33,24 @@ import org.hibernate.annotations.JavaType;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomEntity extends AggregateRoot<RoomEntity, RoomIdJpaVO> {
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "room_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private final List<RoomUserEntity> roomUserEntities = new ArrayList<>();
+
     @Id
     @Column(name = "room_id")
     @JavaType(RoomIdJavaType.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private RoomIdJpaVO roomIdJpaVO;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "room_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private final List<RoomUserEntity> roomUserEntities = new ArrayList<>();
+
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "name", column = @Column(name = "room_name")),
             @AttributeOverride(name = "profile", column = @Column(name = "room_profile"))
     })
     private ProfileInfoJpaVO roomInfo;
+
     @Version
     private Long version;
 

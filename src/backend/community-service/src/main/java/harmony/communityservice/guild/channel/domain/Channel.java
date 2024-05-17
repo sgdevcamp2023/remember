@@ -4,8 +4,8 @@ import harmony.communityservice.common.domain.AggregateRoot;
 import harmony.communityservice.guild.category.domain.CategoryId;
 import harmony.communityservice.guild.category.domain.CategoryId.CategoryIdJavaType;
 import harmony.communityservice.guild.channel.domain.ChannelId.ChannelIdJavaType;
-import harmony.communityservice.guild.guild.domain.GuildId;
-import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO.GuildIdJavaType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,7 +36,7 @@ public class Channel extends AggregateRoot<Channel, ChannelId> {
 
     @Column(name = "guild_id")
     @JavaType(GuildIdJavaType.class)
-    private GuildId guildId;
+    private GuildIdJpaVO guildId;
 
     @Column(name = "category_id")
     @JavaType(CategoryIdJavaType.class)
@@ -51,7 +51,7 @@ public class Channel extends AggregateRoot<Channel, ChannelId> {
 
 
     @Builder
-    public Channel(CategoryId categoryId, String name, GuildId guildId,
+    public Channel(CategoryId categoryId, String name, GuildIdJpaVO guildId,
                    String type) {
         this.categoryId = categoryId;
         this.name = name;

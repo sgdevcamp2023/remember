@@ -1,87 +1,50 @@
 package harmony.communityservice.guild.guild.domain;
 
-import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.ProfileInfoJpaVO;
-import harmony.communityservice.guild.guild.domain.GuildId.GuildIdJavaType;
-import harmony.communityservice.user.adapter.out.persistence.UserId;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.user.domain.User.UserId;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JavaType;
 
 @Getter
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "guild", indexes = @Index(name = "idx__invite_code", columnList = "invite_code"))
-public class Guild extends AggregateRoot<Guild, GuildId> {
+public class Guild {
 
-    @Id
-    @Column(name = "guild_id")
-    @JavaType(GuildIdJavaType.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final String invitationCode;
+    private final UserId managerId;
+    private final ProfileInfo profileInfo;
     private GuildId guildId;
-
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "guild_name")),
-            @AttributeOverride(name = "profile", column = @Column(name = "guild_profile"))
-    })
-    private ProfileInfoJpaVO guildInfo;
-
-    @NotBlank
-    @Column(name = "invite_code")
-    private String inviteCode;
-
-    @NotNull
-    @Embedded
-    @Column(name = "manager_id")
-    private UserId managerId;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "guild_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private List<GuildUser> guildUsers = new ArrayList<>();
+    private final List<GuildUser> guildUsers = new ArrayList<>();
 
     @Builder
-    public Guild(String name, String profile, String inviteCode,
+    public Guild(GuildId guildId, String name, String profile, String inviteCode,
                  UserId managerId) {
-        this.guildInfo = makeGuildInfo(name, profile);
-        this.inviteCode = inviteCode;
+        this.guildId = guildId;
+        this.invitationCode = inviteCode;
         this.managerId = managerId;
-        this.guildUsers = new ArrayList<>();
+        if (managerId != null) {
+            guildUsers.add(GuildUser.make(managerId));
+        }
+        this.profileInfo = makeGuildInfo(name, profile);
     }
 
-    public void updateUserIds(GuildUser guildUser) {
-        this.guildUsers.add(guildUser);
-        super.updateType();
+    private ProfileInfo makeGuildInfo(String name, String profile) {
+        if (name == null || profile == null) {
+            throw new NotFoundDataException();
+        }
+
+        return ProfileInfo.make(name, profile);
     }
 
-    private ProfileInfoJpaVO makeGuildInfo(String name, String profile) {
-        return ProfileInfoJpaVO.make(name, profile);
-    }
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GuildId {
+        private final Long id;
 
-    @Override
-    public GuildId getId() {
-        return guildId;
+        public static GuildId make(Long guildId) {
+            return new GuildId(guildId);
+        }
     }
 }

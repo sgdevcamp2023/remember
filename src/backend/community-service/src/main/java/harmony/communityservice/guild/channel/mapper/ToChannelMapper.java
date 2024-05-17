@@ -3,7 +3,7 @@ package harmony.communityservice.guild.channel.mapper;
 import harmony.communityservice.guild.category.domain.CategoryId;
 import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.domain.Channel;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 
 public class ToChannelMapper {
 
@@ -12,7 +12,7 @@ public class ToChannelMapper {
                 .name(registerChannelRequest.name())
                 .type(registerChannelRequest.type())
                 .categoryId(CategoryId.make(registerChannelRequest.categoryId()))
-                .guildId(GuildId.make(registerChannelRequest.guildId()))
+                .guildId(GuildIdJpaVO.make(registerChannelRequest.guildId()))
                 .build();
     }
 }

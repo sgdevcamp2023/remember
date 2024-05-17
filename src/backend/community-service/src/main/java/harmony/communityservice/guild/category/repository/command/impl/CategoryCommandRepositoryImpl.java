@@ -4,7 +4,7 @@ import harmony.communityservice.guild.category.domain.Category;
 import harmony.communityservice.guild.category.domain.CategoryId;
 import harmony.communityservice.guild.category.repository.command.CategoryCommandRepository;
 import harmony.communityservice.guild.category.repository.command.jpa.JpaCategoryCommandRepository;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +29,7 @@ public class CategoryCommandRepositoryImpl implements CategoryCommandRepository 
     }
 
     @Override
-    public void deleteByGuildId(GuildId guildId) {
+    public void deleteByGuildId(GuildIdJpaVO guildId) {
         jpaCategoryCommandRepository.deleteCategoriesByGuildId(guildId);
     }
 }

@@ -2,7 +2,7 @@ package harmony.communityservice.user.adapter.in.web;
 
 import harmony.communityservice.common.annotation.WebAdapter;
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.guild.guild.dto.ModifyUserNicknameInGuildRequest;
+import harmony.communityservice.guild.guild.adapter.in.web.ModifyUserNicknameInGuildRequest;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

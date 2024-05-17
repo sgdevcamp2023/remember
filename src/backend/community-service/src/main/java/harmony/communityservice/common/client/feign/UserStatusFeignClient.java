@@ -4,7 +4,7 @@ package harmony.communityservice.common.client.feign;
 import harmony.communityservice.common.config.HeaderConfig;
 import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
 import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
-import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildRequest;
+import harmony.communityservice.guild.guild.adapter.in.web.SearchUserStatesInGuildRequest;
 import harmony.communityservice.room.dto.SearchUserStatusInDmRoomRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;

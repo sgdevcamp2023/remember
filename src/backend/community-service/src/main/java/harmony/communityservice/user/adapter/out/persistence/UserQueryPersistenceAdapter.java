@@ -14,7 +14,7 @@ class UserQueryPersistenceAdapter implements LoadUserQueryPort {
 
     @Override
     public User loadUser(Long userId) {
-        UserJpaEntity userJpaEntity = userQueryRepository.findById(UserIdJpaVO.make(userId))
+        UserEntity userJpaEntity = userQueryRepository.findById(UserIdJpaVO.make(userId))
                 .orElseThrow(NotFoundDataException::new);
         return UserMapper.convert(userJpaEntity);
     }

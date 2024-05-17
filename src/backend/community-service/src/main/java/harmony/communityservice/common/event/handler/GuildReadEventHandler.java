@@ -7,8 +7,10 @@ import harmony.communityservice.common.outbox.InnerEventOutBoxMapper;
 import harmony.communityservice.common.outbox.InnerEventRecord;
 import harmony.communityservice.common.outbox.InnerEventType;
 import harmony.communityservice.common.outbox.SentType;
-import harmony.communityservice.guild.guild.dto.RegisterGuildReadRequest;
-import harmony.communityservice.guild.guild.mapper.ToRegisterGuildReadRequestMapper;
+import harmony.communityservice.guild.guild.application.port.in.DeleteGuildReadUseCase;
+import harmony.communityservice.guild.guild.application.port.in.RegisterGuildReadUseCase;
+import harmony.communityservice.guild.guild.application.port.in.RegisterGuildReadCommand;
+import harmony.communityservice.guild.guild.application.service.RegisterGuildReadCommandMapper;
 import harmony.communityservice.guild.guild.service.command.GuildReadCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
@@ -25,7 +27,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class GuildReadEventHandler {
 
     private final InnerEventOutBoxMapper outBoxMapper;
-    private final GuildReadCommandService guildReadCommandService;
+    private final RegisterGuildReadUseCase registerGuildReadUseCase;
+    private final DeleteGuildReadUseCase deleteGuildReadUseCase;
 
     private InnerEventRecord createGuildReadRegisterEvent(RegisterGuildReadEvent event) {
         return InnerEventRecord.builder()
@@ -53,9 +56,9 @@ public class GuildReadEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            RegisterGuildReadRequest registerGuildReadRequest = ToRegisterGuildReadRequestMapper.convert(
+            RegisterGuildReadCommand registerGuildReadCommand = RegisterGuildReadCommandMapper.convert(
                     innerEventRecord);
-            guildReadCommandService.register(registerGuildReadRequest);
+            registerGuildReadUseCase.register(registerGuildReadCommand);
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
@@ -85,7 +88,7 @@ public class GuildReadEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            guildReadCommandService.delete(innerEventRecord.getGuildId());
+            deleteGuildReadUseCase.delete(innerEventRecord.getGuildId());
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());

@@ -2,7 +2,7 @@ package harmony.communityservice.guild.category.repository.command;
 
 import harmony.communityservice.guild.category.domain.Category;
 import harmony.communityservice.guild.category.domain.CategoryId;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import java.util.Optional;
 
 public interface CategoryCommandRepository {
@@ -12,5 +12,5 @@ public interface CategoryCommandRepository {
 
     void deleteById(CategoryId categoryId);
 
-    void deleteByGuildId(GuildId guildId);
+    void deleteByGuildId(GuildIdJpaVO guildId);
 }

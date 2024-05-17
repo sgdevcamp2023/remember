@@ -9,8 +9,8 @@ public class ToRegisterGuildReadEventMapper {
         return RegisterGuildReadEvent.builder()
                 .userId(userId)
                 .guildId(guild.getGuildId().getId())
-                .profile(guild.getGuildInfo().getProfile())
-                .name(guild.getGuildInfo().getName())
+                .profile(guild.getProfileInfo().getProfile())
+                .name(guild.getProfileInfo().getName())
                 .build();
     }
 }

@@ -7,7 +7,7 @@ import harmony.communityservice.guild.channel.dto.SearchChannelResponse;
 import harmony.communityservice.guild.channel.mapper.ToSearchChannelResponseMapper;
 import harmony.communityservice.guild.channel.repository.query.ChannelQueryRepository;
 import harmony.communityservice.guild.channel.service.query.ChannelQueryService;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class ChannelQueryServiceImpl implements ChannelQueryService {
 
     private Map<Long, SearchChannelResponse> findChannels(Long guildId) {
         Map<Long, SearchChannelResponse> channelReads = new HashMap<>();
-        List<Channel> channels = channelQueryRepository.findListByGuildId(GuildId.make(guildId));
+        List<Channel> channels = channelQueryRepository.findListByGuildId(GuildIdJpaVO.make(guildId));
         channels.forEach(channel -> {
             SearchChannelResponse searchChannelResponse = ToSearchChannelResponseMapper.convert(channel,
                     channel.getChannelId().getId(), guildId);

@@ -5,7 +5,7 @@ import harmony.communityservice.guild.channel.domain.ChannelId;
 import harmony.communityservice.guild.channel.domain.ChannelType;
 import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
 import harmony.communityservice.guild.channel.repository.command.jpa.JpaChannelCommandRepository;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -25,12 +25,12 @@ public class ChannelCommandRepositoryImpl implements ChannelCommandRepository {
     }
 
     @Override
-    public void deleteByGuildId(GuildId guildId) {
+    public void deleteByGuildId(GuildIdJpaVO guildId) {
         jpaChannelCommandRepository.deleteChannelsByGuildId(guildId);
     }
 
     @Override
-    public List<ChannelId> findIdsByGuildIdAndType(GuildId guildId, ChannelType type) {
+    public List<ChannelId> findIdsByGuildIdAndType(GuildIdJpaVO guildId, ChannelType type) {
         return jpaChannelCommandRepository.findChannelIdsByGuildIdAndType(guildId, type);
     }
 }

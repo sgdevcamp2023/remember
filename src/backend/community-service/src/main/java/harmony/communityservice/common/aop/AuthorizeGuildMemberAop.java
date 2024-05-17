@@ -1,8 +1,8 @@
 package harmony.communityservice.common.aop;
 
 import harmony.communityservice.common.dto.CommonRequest;
-import harmony.communityservice.common.dto.VerifyGuildMemberRequest;
-import harmony.communityservice.user.service.query.UserReadQueryService;
+import harmony.communityservice.guild.guild.application.port.in.VerifyGuildMemberCommand;
+import harmony.communityservice.guild.guild.application.port.in.VerifyGuildUserQuery;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthorizeGuildMemberAop {
 
-    private final UserReadQueryService userReadQueryService;
+    private final VerifyGuildUserQuery verifyGuildUserQuery;
 
     @Pointcut("@annotation(harmony.communityservice.common.annotation.AuthorizeGuildMember)")
     public void AuthorizeGuildMember() {
@@ -25,8 +25,7 @@ public class AuthorizeGuildMemberAop {
     public Object Authorize(ProceedingJoinPoint joinPoint) throws Throwable {
         Object firstArg = joinPoint.getArgs()[0];
         if (firstArg instanceof CommonRequest request) {
-            userReadQueryService.existsByUserIdAndGuildId(
-                    new VerifyGuildMemberRequest(request.getUserId(), request.getGuildId()));
+            verifyGuildUserQuery.verify(new VerifyGuildMemberCommand(request.getUserId(), request.getGuildId()));
         }
         return joinPoint.proceed();
     }

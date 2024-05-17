@@ -10,7 +10,7 @@ import harmony.communityservice.guild.category.dto.RegisterCategoryRequest;
 import harmony.communityservice.guild.category.mapper.ToCategoryMapper;
 import harmony.communityservice.guild.category.repository.command.CategoryCommandRepository;
 import harmony.communityservice.guild.category.service.command.CategoryCommandService;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +45,6 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
 
     @Override
     public void deleteByGuildId(Long guildId) {
-        categoryCommandRepository.deleteByGuildId(GuildId.make(guildId));
+        categoryCommandRepository.deleteByGuildId(GuildIdJpaVO.make(guildId));
     }
 }

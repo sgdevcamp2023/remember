@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserInfoJpaVO extends ValueObject<UserInfoJpaVO> {
+class UserInfoJpaVO extends ValueObject<UserInfoJpaVO> {
 
     @NotBlank
     @Column(name = "email")

@@ -15,7 +15,7 @@ import harmony.communityservice.board.emoji.repository.command.impl.EmojiCommand
 import harmony.communityservice.board.emoji.repository.command.jpa.JpaEmojiCommandRepository;
 import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
 import harmony.communityservice.board.emoji.service.command.impl.EmojiCommandServiceImpl;
-import harmony.communityservice.common.service.ContentService;
+import harmony.communityservice.common.service.FileConverter;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,7 @@ public class BoardCommandConfig {
 
     private final JpaEmojiCommandRepository jpaEmojiCommandRepository;
     private final JpaBoardCommandRepository jpaBoardCommandRepository;
-    private final ContentService contentService;
+    private final FileConverter contentService;
     private final UserReadCommandService userReadCommandService;
     private final JpaCommentCommandRepository jpaCommentCommandRepository;
 

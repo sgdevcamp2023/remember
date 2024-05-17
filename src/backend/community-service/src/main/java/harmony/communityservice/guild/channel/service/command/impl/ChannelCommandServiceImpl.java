@@ -15,7 +15,7 @@ import harmony.communityservice.guild.channel.dto.RegisterChannelRequest;
 import harmony.communityservice.guild.channel.mapper.ToChannelMapper;
 import harmony.communityservice.guild.channel.repository.command.ChannelCommandRepository;
 import harmony.communityservice.guild.channel.service.command.ChannelCommandService;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +49,10 @@ public class ChannelCommandServiceImpl implements ChannelCommandService {
 
     @Override
     public void deleteByGuildId(Long guildId) {
-        List<ChannelId> channelIds = channelCommandRepository.findIdsByGuildIdAndType(GuildId.make(guildId),
+        List<ChannelId> channelIds = channelCommandRepository.findIdsByGuildIdAndType(GuildIdJpaVO.make(guildId),
                 ChannelType.FORUM);
         Events.send(new DeleteBoardsInGuildEvent(channelIds));
-        channelCommandRepository.deleteByGuildId(GuildId.make(guildId));
+        channelCommandRepository.deleteByGuildId(GuildIdJpaVO.make(guildId));
         for (ChannelId channelId : channelIds) {
             Events.send(ToChannelDeletedEventMapper.convert(channelId.getId(), guildId));
         }

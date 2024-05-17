@@ -3,7 +3,7 @@ package harmony.communityservice.guild.channel.repository.command.jpa;
 import harmony.communityservice.guild.channel.domain.Channel;
 import harmony.communityservice.guild.channel.domain.ChannelId;
 import harmony.communityservice.guild.channel.domain.ChannelType;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,8 +14,8 @@ public interface JpaChannelCommandRepository extends JpaRepository<Channel, Chan
 
     @Modifying
     @Query("delete from Channel c where c.guildId = :guildId")
-    void deleteChannelsByGuildId(@Param("guildId") GuildId guildId);
+    void deleteChannelsByGuildId(@Param("guildId") GuildIdJpaVO guildId);
 
     @Query("select c.channelId from Channel c where c.guildId = :guildId and c.channelType = :type")
-    List<ChannelId> findChannelIdsByGuildIdAndType(@Param("guildId") GuildId guildId, @Param("type") ChannelType type);
+    List<ChannelId> findChannelIdsByGuildIdAndType(@Param("guildId") GuildIdJpaVO guildId, @Param("type") ChannelType type);
 }

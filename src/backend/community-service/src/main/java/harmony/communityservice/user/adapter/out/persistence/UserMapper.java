@@ -4,7 +4,7 @@ import harmony.communityservice.user.domain.User;
 
 class UserMapper {
 
-    static User convert(UserJpaEntity userEntity) {
+    static User convert(UserEntity userEntity) {
         return User.builder()
                 .userId(userEntity.getUserId().getId())
                 .email(userEntity.getUserInfo().getEmail())

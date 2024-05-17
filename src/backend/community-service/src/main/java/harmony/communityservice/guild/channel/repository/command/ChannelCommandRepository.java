@@ -3,7 +3,7 @@ package harmony.communityservice.guild.channel.repository.command;
 import harmony.communityservice.guild.channel.domain.Channel;
 import harmony.communityservice.guild.channel.domain.ChannelId;
 import harmony.communityservice.guild.channel.domain.ChannelType;
-import harmony.communityservice.guild.guild.domain.GuildId;
+import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import java.util.List;
 
 public interface ChannelCommandRepository {
@@ -11,7 +11,7 @@ public interface ChannelCommandRepository {
 
     void deleteById(ChannelId channelId);
 
-    void deleteByGuildId(GuildId guildId);
+    void deleteByGuildId(GuildIdJpaVO guildId);
 
-    List<ChannelId> findIdsByGuildIdAndType(GuildId guildId, ChannelType type);
+    List<ChannelId> findIdsByGuildIdAndType(GuildIdJpaVO guildId, ChannelType type);
 }
