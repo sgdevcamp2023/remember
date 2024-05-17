@@ -8,7 +8,7 @@ import harmony.communityservice.common.outbox.InnerEventOutBoxMapper;
 import harmony.communityservice.common.outbox.InnerEventRecord;
 import harmony.communityservice.common.outbox.InnerEventType;
 import harmony.communityservice.common.outbox.SentType;
-import harmony.communityservice.guild.channel.domain.ChannelId;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
@@ -82,7 +82,7 @@ public class BoardEventHandler {
 
     private List<InnerEventRecord> createBoardsDeleteInGuildEvent(DeleteBoardsInGuildEvent event) {
         return event.channelIds().stream()
-                .map(ChannelId::getId)
+                .map(ChannelIdJpaVO::getId)
                 .map(channelId ->
                         InnerEventRecord.builder()
                                 .type(InnerEventType.DELETED_BOARD_IN_CHANNELS)

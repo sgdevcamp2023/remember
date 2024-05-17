@@ -20,7 +20,7 @@ import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildRead;
 import harmony.communityservice.guild.guild.adapter.in.web.SearchUserStatesInGuildRequest;
 import harmony.communityservice.room.application.port.in.SearchUserStateResponse;
-import harmony.communityservice.room.mapper.ToSearchUserStateResponseMapper;
+import harmony.communityservice.room.application.service.SearchUserStateResponseMapper;
 import harmony.communityservice.user.domain.User.UserId;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +71,7 @@ class GuildQueryService implements LoadInvitationCodeQuery, VerifyGuildManagerQu
         List<GuildRead> guildReads = loadGuildReadsUseCase.loadList(guildId);
         return guildReads
                 .stream()
-                .map(ToSearchUserStateResponseMapper::convert)
+                .map(SearchUserStateResponseMapper::convert)
                 .toList();
     }
 

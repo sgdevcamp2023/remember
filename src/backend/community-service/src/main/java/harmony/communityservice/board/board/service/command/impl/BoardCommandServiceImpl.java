@@ -17,7 +17,7 @@ import harmony.communityservice.common.event.dto.inner.DeleteEmojiEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojisEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.service.FileConverter;
-import harmony.communityservice.guild.channel.domain.ChannelId;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
 import harmony.communityservice.user.adapter.out.persistence.UserReadEntity;
 import harmony.communityservice.user.service.command.UserReadCommandService;
 import java.util.List;
@@ -75,14 +75,14 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     @Override
     public void deleteAllInChannelId(Long channelId) {
-        List<BoardId> boardIds = boardCommandRepository.findBoardIdsByChannelId(ChannelId.make(channelId));
-        boardCommandRepository.deleteByChannelId(ChannelId.make(channelId));
+        List<BoardId> boardIds = boardCommandRepository.findBoardIdsByChannelId(ChannelIdJpaVO.make(channelId));
+        boardCommandRepository.deleteByChannelId(ChannelIdJpaVO.make(channelId));
         Events.send(new DeleteCommentsEvent(boardIds));
         Events.send(new DeleteEmojisEvent(boardIds));
     }
 
     @Override
-    public void deleteAllInChannelIds(List<ChannelId> channelIds) {
+    public void deleteAllInChannelIds(List<ChannelIdJpaVO> channelIds) {
         List<BoardId> boardIds = boardCommandRepository.findAllByChannelIds(channelIds);
         boardCommandRepository.deleteAllByChannelIds(channelIds);
         Events.send(new DeleteCommentsEvent(boardIds));

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import harmony.communityservice.common.outbox.ExternalEventType;
 import harmony.communityservice.common.outbox.SentType;
-import harmony.communityservice.guild.channel.domain.ChannelType;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelTypeJpaEnum;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
@@ -12,7 +12,7 @@ import lombok.Builder;
 public record ExternalEvent(SentType sentType,
                             ExternalEventType type,
                             Long guildId,
-                            ChannelType channelType,
+                            ChannelTypeJpaEnum channelType,
                             Long channelId,
                             String channelName,
                             Long categoryId,

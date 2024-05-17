@@ -4,7 +4,7 @@ import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.board.repository.query.BoardQueryRepository;
 import harmony.communityservice.board.board.repository.query.jpa.JpaBoardQueryRepository;
 import harmony.communityservice.board.board.domain.Board;
-import harmony.communityservice.guild.channel.domain.ChannelId;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class BoardQueryRepositoryImpl implements BoardQueryRepository {
     private final JpaBoardQueryRepository jpaBoardQueryRepository;
 
     @Override
-    public List<Board> findByChannelOrderByBoardId(ChannelId channelId, BoardId lastBoardId, Pageable pageable) {
+    public List<Board> findByChannelOrderByBoardId(ChannelIdJpaVO channelId, BoardId lastBoardId, Pageable pageable) {
         return jpaBoardQueryRepository.findBoardsByChannelOrderByBoardIdDesc(channelId, lastBoardId, pageable);
     }
 

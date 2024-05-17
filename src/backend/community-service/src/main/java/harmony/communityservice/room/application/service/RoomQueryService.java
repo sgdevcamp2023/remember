@@ -3,8 +3,6 @@ package harmony.communityservice.room.application.service;
 import harmony.communityservice.common.annotation.UseCase;
 import harmony.communityservice.common.client.UserStatusClient;
 import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
-import harmony.communityservice.room.adapter.out.persistence.RoomEntity;
-import harmony.communityservice.room.adapter.out.persistence.RoomIdJpaVO;
 import harmony.communityservice.room.application.port.in.LoadRoomIdsQuery;
 import harmony.communityservice.room.application.port.in.LoadRoomsQuery;
 import harmony.communityservice.room.application.port.in.LoadUserStatesInRoomQuery;
@@ -15,8 +13,7 @@ import harmony.communityservice.room.application.port.out.LoadRoomsPort;
 import harmony.communityservice.room.domain.Room;
 import harmony.communityservice.room.domain.Room.RoomId;
 import harmony.communityservice.room.application.port.in.SearchUserStateResponse;
-import harmony.communityservice.room.dto.SearchUserStatusInDmRoomRequest;
-import harmony.communityservice.room.mapper.ToSearchUserStateResponseMapper;
+import harmony.communityservice.common.dto.SearchUserStatusInDmRoomRequest;
 import harmony.communityservice.user.application.port.in.LoadUserUseCase;
 import harmony.communityservice.user.domain.User;
 import harmony.communityservice.user.domain.User.UserId;
@@ -64,7 +61,7 @@ class RoomQueryService implements LoadRoomsQuery, LoadUserStatesInRoomQuery, Loa
     private Map<Long, SearchUserStateResponse> makeCurrentUserStates(List<User> users) {
         Map<Long, SearchUserStateResponse> userStates = new HashMap<>();
         for (User user : users) {
-            SearchUserStateResponse searchUserStateResponse = ToSearchUserStateResponseMapper.convert(user,
+            SearchUserStateResponse searchUserStateResponse = SearchUserStateResponseMapper.convert(user,
                     getConnectionStates(users).get(user.getUserId().getId()));
             userStates.put(user.getUserId().getId(), searchUserStateResponse);
         }

@@ -13,7 +13,7 @@ import harmony.communityservice.board.comment.service.query.CommentQueryService;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
 import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
 import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.guild.channel.domain.ChannelId;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     @Override
     public List<SearchBoardResponse> searchList(long channelId, long lastBoardId) {
         PageRequest pageRequest = PageRequest.of(0, MAX_PAGE_COUNT);
-        return boardQueryRepository.findByChannelOrderByBoardId(ChannelId.make(channelId), BoardId.make(lastBoardId),
+        return boardQueryRepository.findByChannelOrderByBoardId(ChannelIdJpaVO.make(channelId), BoardId.make(lastBoardId),
                         pageRequest)
                 .stream()
                 .map(b -> {

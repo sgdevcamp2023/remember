@@ -4,7 +4,7 @@ import harmony.communityservice.board.board.domain.Board;
 import harmony.communityservice.board.board.domain.BoardId;
 import harmony.communityservice.board.board.repository.command.BoardCommandRepository;
 import harmony.communityservice.board.board.repository.command.jpa.JpaBoardCommandRepository;
-import harmony.communityservice.guild.channel.domain.ChannelId;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -30,24 +30,24 @@ public class BoardCommandRepositoryImpl implements BoardCommandRepository {
     }
 
     @Override
-    public List<BoardId> findBoardIdsByChannelId(ChannelId channelId) {
+    public List<BoardId> findBoardIdsByChannelId(ChannelIdJpaVO channelId) {
         return jpaBoardCommandRepository.findIdsByChannelId(channelId);
     }
 
     @Override
-    public void deleteByChannelId(ChannelId channelId) {
+    public void deleteByChannelId(ChannelIdJpaVO channelId) {
         jpaBoardCommandRepository.deleteImagesByChannelId(channelId.getId());
         jpaBoardCommandRepository.deleteBoardsByChannelId(channelId);
     }
 
     @Override
-    public void deleteAllByChannelIds(List<ChannelId> channelIds) {
-        jpaBoardCommandRepository.deleteImagesByChannelIds(channelIds.stream().map(ChannelId::getId).toList());
+    public void deleteAllByChannelIds(List<ChannelIdJpaVO> channelIds) {
+        jpaBoardCommandRepository.deleteImagesByChannelIds(channelIds.stream().map(ChannelIdJpaVO::getId).toList());
         jpaBoardCommandRepository.deleteAllByChannelIds(channelIds);
     }
 
     @Override
-    public List<BoardId> findAllByChannelIds(List<ChannelId> channelIds) {
+    public List<BoardId> findAllByChannelIds(List<ChannelIdJpaVO> channelIds) {
         return jpaBoardCommandRepository.findAllByChannelIds(channelIds);
     }
 }

@@ -6,9 +6,9 @@ import lombok.Builder;
 
 @Builder(toBuilder = true)
 public record RegisterGuildReadCommand(
-        @NotNull Long guildId,
-        @NotNull Long userId,
-        @NotBlank String name,
-        @NotBlank String profile
+        Long guildId,
+        Long userId,
+        String name,
+        String profile
 ) {
 }

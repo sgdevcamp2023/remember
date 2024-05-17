@@ -5,7 +5,7 @@ import harmony.communityservice.common.config.HeaderConfig;
 import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
 import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
 import harmony.communityservice.guild.guild.adapter.in.web.SearchUserStatesInGuildRequest;
-import harmony.communityservice.room.dto.SearchUserStatusInDmRoomRequest;
+import harmony.communityservice.common.dto.SearchUserStatusInDmRoomRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;

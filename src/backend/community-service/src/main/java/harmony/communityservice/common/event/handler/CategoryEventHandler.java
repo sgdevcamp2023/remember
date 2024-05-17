@@ -6,7 +6,7 @@ import harmony.communityservice.common.outbox.InnerEventOutBoxMapper;
 import harmony.communityservice.common.outbox.InnerEventRecord;
 import harmony.communityservice.common.outbox.InnerEventType;
 import harmony.communityservice.common.outbox.SentType;
-import harmony.communityservice.guild.category.service.command.CategoryCommandService;
+import harmony.communityservice.guild.category.application.port.in.DeleteCategoryUsingGuildIdUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -22,7 +22,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class CategoryEventHandler {
 
     private final InnerEventOutBoxMapper outBoxMapper;
-    private final CategoryCommandService categoryCommandService;
+    private final DeleteCategoryUsingGuildIdUseCase deleteCategoryUsingGuildIdUseCase;
 
     @TransactionalEventListener(classes = DeleteCategoryEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void categoryDeleteEventBeforeHandler(DeleteCategoryEvent event) {
@@ -39,7 +39,7 @@ public class CategoryEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            categoryCommandService.deleteByGuildId(innerEventRecord.getGuildId());
+            deleteCategoryUsingGuildIdUseCase.deleteByGuildId(innerEventRecord.getGuildId());
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());

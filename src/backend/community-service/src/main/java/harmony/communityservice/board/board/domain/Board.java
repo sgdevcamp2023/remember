@@ -6,8 +6,8 @@ import harmony.communityservice.board.board.dto.SearchImageResponse;
 import harmony.communityservice.board.board.dto.SearchImagesResponse;
 import harmony.communityservice.common.domain.AggregateRoot;
 import harmony.communityservice.generic.WriterInfo;
-import harmony.communityservice.guild.channel.domain.ChannelId;
-import harmony.communityservice.guild.channel.domain.ChannelId.ChannelIdJavaType;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO.ChannelIdJavaType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -46,7 +46,7 @@ public class Board extends AggregateRoot<Board, BoardId> {
 
     @Column(name = "channel_id")
     @JavaType(ChannelIdJavaType.class)
-    private ChannelId channelId;
+    private ChannelIdJpaVO channelId;
 
     @Embedded
     private Content content;
@@ -63,7 +63,7 @@ public class Board extends AggregateRoot<Board, BoardId> {
 
 
     @Builder
-    public Board(ChannelId channelId, List<Image> images,
+    public Board(ChannelIdJpaVO channelId, List<Image> images,
                  String title, String content, String writerName, Long writerId, String writerProfile) {
         this.channelId = channelId;
         this.images.addAll(images);

@@ -1,10 +1,10 @@
 package harmony.communityservice.common.outbox;
 
 
-import harmony.communityservice.guild.channel.domain.ChannelType;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelTypeJpaEnum;
 
-public class ChannelTypeHandler extends EnumTypeHandler<ChannelType> {
+public class ChannelTypeHandler extends EnumTypeHandler<ChannelTypeJpaEnum> {
     public ChannelTypeHandler() {
-        super(ChannelType.class);
+        super(ChannelTypeJpaEnum.class);
     }
 }
