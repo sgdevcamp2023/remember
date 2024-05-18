@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.service.command.impl;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.domain.EmojiId;
 import harmony.communityservice.board.emoji.dto.DeleteEmojiRequest;
@@ -22,7 +22,7 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
     @Override
     public void register(RegisterEmojiRequest registerEmojiRequest) {
         Emoji targetEmoji = emojiCommandRepository.findByBoardIdAndEmojiType(
-                BoardId.make(registerEmojiRequest.boardId()),
+                BoardIdJpaVO.make(registerEmojiRequest.boardId()),
                 registerEmojiRequest.emojiType()).orElse(null);
 
         if (targetEmoji == null) {
@@ -44,12 +44,12 @@ public class EmojiCommandServiceImpl implements EmojiCommandService {
     }
 
     @Override
-    public void deleteListByBoardId(BoardId boardId) {
+    public void deleteListByBoardId(BoardIdJpaVO boardId) {
         emojiCommandRepository.deleteListByBoardId(boardId);
     }
 
     @Override
-    public void deleteListByBoardIds(List<BoardId> boardIds) {
+    public void deleteListByBoardIds(List<BoardIdJpaVO> boardIds) {
         emojiCommandRepository.deleteListByBoardIds(boardIds);
     }
 }

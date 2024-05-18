@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.repository.query.impl;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.domain.EmojiId;
 import harmony.communityservice.board.emoji.repository.query.EmojiQueryRepository;
@@ -15,7 +15,7 @@ public class EmojiQueryRepositoryImpl implements EmojiQueryRepository {
     private final JpaEmojiQueryRepository jpaEmojiQueryRepository;
 
     @Override
-    public Optional<Emoji> findByBoardAndEmojiType(BoardId boardId, Long emojiType) {
+    public Optional<Emoji> findByBoardAndEmojiType(BoardIdJpaVO boardId, Long emojiType) {
         return jpaEmojiQueryRepository.findEmojiByBoardIdAndEmojiType(boardId, emojiType);
     }
 
@@ -25,7 +25,7 @@ public class EmojiQueryRepositoryImpl implements EmojiQueryRepository {
     }
 
     @Override
-    public List<Emoji> findEmojisByBoardId(BoardId boardId) {
+    public List<Emoji> findEmojisByBoardId(BoardIdJpaVO boardId) {
         return jpaEmojiQueryRepository.findEmojisByBoardId(boardId);
     }
 }

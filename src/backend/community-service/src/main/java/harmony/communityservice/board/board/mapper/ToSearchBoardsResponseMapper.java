@@ -1,12 +1,12 @@
 package harmony.communityservice.board.board.mapper;
 
-import harmony.communityservice.board.board.domain.Board;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardEntity;
 import harmony.communityservice.board.board.dto.SearchBoardResponse;
 import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
 import java.time.ZoneId;
 
 public class ToSearchBoardsResponseMapper {
-    public static SearchBoardResponse convert(Board targetBoard, Long commentCount,
+    public static SearchBoardResponse convert(BoardEntity targetBoard, Long commentCount,
                                               SearchEmojisResponse searchEmojisResponse) {
         return SearchBoardResponse.builder()
                 .boardId(targetBoard.getBoardId().getId())

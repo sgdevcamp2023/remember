@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.repository.command.jpa;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.domain.EmojiId;
 import jakarta.persistence.LockModeType;
@@ -15,7 +15,7 @@ import org.springframework.data.repository.query.Param;
 public interface JpaEmojiCommandRepository extends JpaRepository<Emoji, EmojiId> {
 
     @Lock(value = LockModeType.PESSIMISTIC_READ)
-    Optional<Emoji> findByBoardIdAndEmojiType(BoardId boardId, Long emojiType);
+    Optional<Emoji> findByBoardIdAndEmojiType(BoardIdJpaVO boardId, Long emojiType);
 
     @Modifying
     @Query(value = "delete from emoji_user as eu where eu.emoji_id in "
@@ -25,7 +25,7 @@ public interface JpaEmojiCommandRepository extends JpaRepository<Emoji, EmojiId>
 
     @Modifying
     @Query("delete from Emoji e where e.boardId  = :boardId")
-    void deleteEmojisByBoardId(@Param("boardId") BoardId boardId);
+    void deleteEmojisByBoardId(@Param("boardId") BoardIdJpaVO boardId);
 
     @Modifying
     @Query(value = "delete from emoji_user as eu where eu.emoji_id in "
@@ -35,6 +35,6 @@ public interface JpaEmojiCommandRepository extends JpaRepository<Emoji, EmojiId>
 
     @Modifying
     @Query("delete from Emoji e where e.boardId in :boardIds")
-    void deleteEmojisByBoardIds(@Param("boardIds") List<BoardId> boardIds);
+    void deleteEmojisByBoardIds(@Param("boardIds") List<BoardIdJpaVO> boardIds);
 
 }

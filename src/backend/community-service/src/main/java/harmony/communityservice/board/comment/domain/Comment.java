@@ -1,10 +1,10 @@
 package harmony.communityservice.board.comment.domain;
 
-import harmony.communityservice.board.board.domain.BoardId;
-import harmony.communityservice.board.board.domain.BoardId.BoardIdJavaType;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO.BoardIdJavaType;
 import harmony.communityservice.board.comment.domain.CommentId.CommentIdJavaType;
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.WriterInfo;
+import harmony.communityservice.generic.WriterInfoJpaVO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -39,23 +39,23 @@ public class Comment extends AggregateRoot<Comment, CommentId> {
 
     @Column(name = "board_id")
     @JavaType(BoardIdJavaType.class)
-    private BoardId boardId;
+    private BoardIdJpaVO boardId;
 
     @Embedded
-    private WriterInfo writerInfo;
+    private WriterInfoJpaVO writerInfo;
 
     @Version
     private Long version;
 
     @Builder
-    public Comment(String comment, Long writerId, String writerName, String writerProfile, BoardId boardId) {
+    public Comment(String comment, Long writerId, String writerName, String writerProfile, BoardIdJpaVO boardId) {
         this.comment = comment;
         this.boardId = boardId;
         this.writerInfo = makeWriterInfo(writerId, writerName, writerProfile);
     }
 
-    private WriterInfo makeWriterInfo(Long writerId, String writerName, String writerProfile) {
-        return WriterInfo.make(writerName, writerId, writerProfile);
+    private WriterInfoJpaVO makeWriterInfo(Long writerId, String writerName, String writerProfile) {
+        return WriterInfoJpaVO.make(writerName, writerId, writerProfile);
     }
 
     public void verifyWriter(Long writerId) {

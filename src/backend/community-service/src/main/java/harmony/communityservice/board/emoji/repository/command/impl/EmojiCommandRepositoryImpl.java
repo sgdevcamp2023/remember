@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.repository.command.impl;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.domain.EmojiId;
 import harmony.communityservice.board.emoji.repository.command.EmojiCommandRepository;
@@ -20,7 +20,7 @@ public class EmojiCommandRepositoryImpl implements EmojiCommandRepository {
     }
 
     @Override
-    public Optional<Emoji> findByBoardIdAndEmojiType(BoardId boardId, Long emojiType) {
+    public Optional<Emoji> findByBoardIdAndEmojiType(BoardIdJpaVO boardId, Long emojiType) {
         return jpaEmojiCommandRepository.findByBoardIdAndEmojiType(boardId, emojiType);
     }
 
@@ -30,14 +30,14 @@ public class EmojiCommandRepositoryImpl implements EmojiCommandRepository {
     }
 
     @Override
-    public void deleteListByBoardId(BoardId boardId) {
+    public void deleteListByBoardId(BoardIdJpaVO boardId) {
         jpaEmojiCommandRepository.deleteEmojiUsersByBoardId(boardId.getId());
         jpaEmojiCommandRepository.deleteEmojisByBoardId(boardId);
     }
 
     @Override
-    public void deleteListByBoardIds(List<BoardId> boardIds) {
-        jpaEmojiCommandRepository.deleteEmojiUsersByBoardIds(boardIds.stream().map(BoardId::getId).toList());
+    public void deleteListByBoardIds(List<BoardIdJpaVO> boardIds) {
+        jpaEmojiCommandRepository.deleteEmojiUsersByBoardIds(boardIds.stream().map(BoardIdJpaVO::getId).toList());
         jpaEmojiCommandRepository.deleteEmojisByBoardIds(boardIds);
     }
 }

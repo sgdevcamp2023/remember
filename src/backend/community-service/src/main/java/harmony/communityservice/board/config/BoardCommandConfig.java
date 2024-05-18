@@ -2,9 +2,9 @@ package harmony.communityservice.board.config;
 
 import harmony.communityservice.board.board.repository.command.BoardCommandRepository;
 import harmony.communityservice.board.board.repository.command.impl.BoardCommandRepositoryImpl;
-import harmony.communityservice.board.board.repository.command.jpa.JpaBoardCommandRepository;
+import harmony.communityservice.board.board.adapter.out.persistence.JpaBoardCommandRepository;
 import harmony.communityservice.board.board.service.command.BoardCommandService;
-import harmony.communityservice.board.board.service.command.impl.BoardCommandServiceImpl;
+import harmony.communityservice.board.board.application.service.BoardCommandService;
 import harmony.communityservice.board.comment.repository.command.CommentCommandRepository;
 import harmony.communityservice.board.comment.repository.command.impl.CommentCommandRepositoryImpl;
 import harmony.communityservice.board.comment.repository.command.jpa.JpaCommentCommandRepository;
@@ -59,6 +59,6 @@ public class BoardCommandConfig {
 
     @Bean
     public BoardCommandService boardCommandService() {
-        return new BoardCommandServiceImpl(contentService, userReadCommandService, boardCommandRepository());
+        return new BoardCommandService(contentService, userReadCommandService, boardCommandRepository());
     }
 }

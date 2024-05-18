@@ -1,6 +1,6 @@
 package harmony.communityservice.board.comment.repository.query.impl;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.comment.domain.Comment;
 import harmony.communityservice.board.comment.repository.query.CommentQueryRepository;
 import harmony.communityservice.board.comment.repository.query.jpa.JpaCommentQueryRepository;
@@ -13,12 +13,12 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
     private final JpaCommentQueryRepository jpaCommentQueryRepository;
 
     @Override
-    public Long countListByBoardId(BoardId boardId) {
+    public Long countListByBoardId(BoardIdJpaVO boardId) {
         return jpaCommentQueryRepository.countCommentsByBoardId(boardId);
     }
 
     @Override
-    public List<Comment> findListByBoardId(BoardId boardId) {
+    public List<Comment> findListByBoardId(BoardIdJpaVO boardId) {
         return jpaCommentQueryRepository.findCommentsByBoardId(boardId);
     }
 }

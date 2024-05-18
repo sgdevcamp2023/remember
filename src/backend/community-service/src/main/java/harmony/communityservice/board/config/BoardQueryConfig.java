@@ -3,9 +3,9 @@ package harmony.communityservice.board.config;
 
 import harmony.communityservice.board.board.repository.query.BoardQueryRepository;
 import harmony.communityservice.board.board.repository.query.impl.BoardQueryRepositoryImpl;
-import harmony.communityservice.board.board.repository.query.jpa.JpaBoardQueryRepository;
+import harmony.communityservice.board.board.adapter.out.persistence.JpaBoardQueryRepository;
 import harmony.communityservice.board.board.service.query.BoardQueryService;
-import harmony.communityservice.board.board.service.query.impl.BoardQueryServiceImpl;
+import harmony.communityservice.board.board.application.service.BoardQueryServiceImpl;
 import harmony.communityservice.board.comment.repository.query.CommentQueryRepository;
 import harmony.communityservice.board.comment.repository.query.impl.CommentQueryRepositoryImpl;
 import harmony.communityservice.board.comment.repository.query.jpa.JpaCommentQueryRepository;

@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.service.command;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.emoji.dto.DeleteEmojiRequest;
 import harmony.communityservice.board.emoji.dto.RegisterEmojiRequest;
 import java.util.List;
@@ -11,7 +11,7 @@ public interface EmojiCommandService {
 
     void delete(DeleteEmojiRequest deleteEmojiRequest);
 
-    void deleteListByBoardId(BoardId boardId);
+    void deleteListByBoardId(BoardIdJpaVO boardId);
 
-    void deleteListByBoardIds(List<BoardId> boardIds);
+    void deleteListByBoardIds(List<BoardIdJpaVO> boardIds);
 }

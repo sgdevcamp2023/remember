@@ -1,104 +1,58 @@
 package harmony.communityservice.board.board.domain;
 
-import harmony.communityservice.board.board.domain.BoardId.BoardIdJavaType;
-import harmony.communityservice.board.board.dto.ModifyBoardRequest;
-import harmony.communityservice.board.board.dto.SearchImageResponse;
-import harmony.communityservice.board.board.dto.SearchImagesResponse;
-import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.WriterInfo;
-import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
-import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO.ChannelIdJavaType;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Version;
-import java.util.ArrayList;
+import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JavaType;
 
 @Getter
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "board", indexes = @Index(name = "idx__channelId", columnList = "channel_id"))
-public class Board extends AggregateRoot<Board, BoardId> {
+public class Board {
 
-    @Id
-    @Column(name = "board_id")
-    @JavaType(BoardIdJavaType.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BoardId boardId;
+    private final BoardId boardId;
 
-    @Column(name = "channel_id")
-    @JavaType(ChannelIdJavaType.class)
-    private ChannelIdJpaVO channelId;
+    private final ChannelId channelId;
 
-    @Embedded
-    private Content content;
+    private final Content content;
 
-    @Embedded
-    private WriterInfo writerInfo;
+    private final WriterInfo writerInfo;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private final List<Image> images = new ArrayList<>();
-
-    @Version
-    private Long version;
-
+    private final List<Image> images;
 
     @Builder
-    public Board(ChannelIdJpaVO channelId, List<Image> images,
-                 String title, String content, String writerName, Long writerId, String writerProfile) {
+    public Board(BoardId boardId, ChannelId channelId, String title, String content, List<Image> images, Long writerId,
+                 String username, String profile) {
+        this.boardId = boardId;
         this.channelId = channelId;
-        this.images.addAll(images);
         this.content = makeContent(title, content);
-        this.writerInfo = makeWriterInfo(writerName, writerId, writerProfile);
-    }
-
-    public void verifyWriter(Long writerId) {
-        writerInfo.verifyWriter(writerId);
-    }
-
-    public void modifyTitleAndContent(ModifyBoardRequest modifyBoardRequest) {
-        verifyWriter(modifyBoardRequest.userId());
-        this.content = this.content.modify(modifyBoardRequest.title(), modifyBoardRequest.content());
-        super.updateType();
-    }
-
-    public SearchImagesResponse makeSearchImagesResponse() {
-        return new SearchImagesResponse(
-                this.images.stream()
-                        .map(image -> new SearchImageResponse(image.getImageUrl()))
-                        .collect(Collectors.toList())
-        );
+        this.images = images;
+        this.writerInfo = makeWriterInfo(writerId, username, profile);
     }
 
     private Content makeContent(String title, String content) {
-        return Content.make(title, content);
+        return Content.builder()
+                .content(content)
+                .title(title)
+                .build();
     }
 
-    private WriterInfo makeWriterInfo(String writerName, Long writerId, String writerProfile) {
-        return WriterInfo.make(writerName, writerId, writerProfile);
+
+    private WriterInfo makeWriterInfo(Long writerId, String username, String profile) {
+        return WriterInfo.builder()
+                .userName(username)
+                .profile(profile)
+                .writerId(writerId)
+                .build();
     }
 
-    @Override
-    public BoardId getId() {
-        return boardId;
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class BoardId {
+        private final Long id;
+
+        public static BoardId make(Long boardId) {
+            return new BoardId(boardId);
+        }
     }
 }

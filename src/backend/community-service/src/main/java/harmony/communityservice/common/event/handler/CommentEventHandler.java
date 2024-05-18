@@ -1,6 +1,6 @@
 package harmony.communityservice.common.event.handler;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.comment.service.command.CommentCommandService;
 import harmony.communityservice.common.event.dto.inner.DeleteCommentEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteCommentsEvent;
@@ -42,7 +42,7 @@ public class CommentEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            commentCommandService.deleteListByBoardId(BoardId.make(innerEventRecord.getBoardId()));
+            commentCommandService.deleteListByBoardId(BoardIdJpaVO.make(innerEventRecord.getBoardId()));
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
@@ -80,7 +80,7 @@ public class CommentEventHandler {
 
     private List<InnerEventRecord> createCommentsInBoardsDeleteEvent(DeleteCommentsEvent event) {
         return event.boardIds().stream()
-                .map(BoardId::getId)
+                .map(BoardIdJpaVO::getId)
                 .map(boardId ->
                         InnerEventRecord.builder()
                                 .sentType(SentType.INIT)

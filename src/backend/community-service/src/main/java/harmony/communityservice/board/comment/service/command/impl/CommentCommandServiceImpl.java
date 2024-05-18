@@ -1,6 +1,6 @@
 package harmony.communityservice.board.comment.service.command.impl;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.comment.domain.Comment;
 import harmony.communityservice.board.comment.domain.CommentId;
 import harmony.communityservice.board.comment.dto.DeleteCommentRequest;
@@ -39,12 +39,12 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     }
 
     @Override
-    public void deleteListByBoardId(BoardId boardId) {
+    public void deleteListByBoardId(BoardIdJpaVO boardId) {
         commentCommandRepository.deleteListByBoardId(boardId);
     }
 
     @Override
-    public void deleteListByBoardIds(List<BoardId> boardIds) {
+    public void deleteListByBoardIds(List<BoardIdJpaVO> boardIds) {
         commentCommandRepository.deleteListByBoardIds(boardIds);
     }
 }

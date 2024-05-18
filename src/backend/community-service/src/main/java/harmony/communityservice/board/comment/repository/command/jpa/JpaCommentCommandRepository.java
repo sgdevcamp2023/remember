@@ -1,6 +1,6 @@
 package harmony.communityservice.board.comment.repository.command.jpa;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.comment.domain.Comment;
 import harmony.communityservice.board.comment.domain.CommentId;
 import java.util.List;
@@ -13,9 +13,9 @@ public interface JpaCommentCommandRepository extends JpaRepository<Comment, Comm
 
     @Modifying
     @Query("delete from Comment c where c.boardId = :boardId")
-    void deleteCommentsByBoardId(@Param("boardId") BoardId boardId);
+    void deleteCommentsByBoardId(@Param("boardId") BoardIdJpaVO boardId);
 
     @Modifying
     @Query("delete from Comment c where c.boardId in :boardIds")
-    void deleteAllByBoardIds(@Param("boardIds") List<BoardId> boardIds);
+    void deleteAllByBoardIds(@Param("boardIds") List<BoardIdJpaVO> boardIds);
 }

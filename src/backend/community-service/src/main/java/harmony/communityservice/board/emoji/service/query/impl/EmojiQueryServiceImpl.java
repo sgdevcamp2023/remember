@@ -1,6 +1,6 @@
 package harmony.communityservice.board.emoji.service.query.impl;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.emoji.domain.EmojiId;
 import harmony.communityservice.board.emoji.repository.query.EmojiQueryRepository;
 import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
@@ -21,7 +21,7 @@ public class EmojiQueryServiceImpl implements EmojiQueryService {
 
     @Override
     public Emoji searchByBoardIdAndEmojiType(Long boardId, Long emojiType) {
-        return emojiQueryRepository.findByBoardAndEmojiType(BoardId.make(boardId), emojiType).orElse(null);
+        return emojiQueryRepository.findByBoardAndEmojiType(BoardIdJpaVO.make(boardId), emojiType).orElse(null);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class EmojiQueryServiceImpl implements EmojiQueryService {
 
     @Override
     public SearchEmojisResponse searchListByBoardId(Long boardId) {
-        List<Emoji> emojis = emojiQueryRepository.findEmojisByBoardId(BoardId.make(boardId));
+        List<Emoji> emojis = emojiQueryRepository.findEmojisByBoardId(BoardIdJpaVO.make(boardId));
         List<SearchEmojiResponse> searchEmojiResponses = emojis.stream()
                 .map(ToSearchEmojiResponseMapper::convert).toList();
         return new SearchEmojisResponse(searchEmojiResponses);

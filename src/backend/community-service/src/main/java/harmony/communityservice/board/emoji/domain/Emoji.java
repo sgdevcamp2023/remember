@@ -1,7 +1,7 @@
 package harmony.communityservice.board.emoji.domain;
 
-import harmony.communityservice.board.board.domain.BoardId;
-import harmony.communityservice.board.board.domain.BoardId.BoardIdJavaType;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO.BoardIdJavaType;
 import harmony.communityservice.board.emoji.domain.EmojiId.EmojiIdJavaType;
 import harmony.communityservice.common.domain.AggregateRoot;
 import harmony.communityservice.common.exception.DuplicatedEmojiException;
@@ -45,7 +45,7 @@ public class Emoji extends AggregateRoot<Emoji, EmojiId> {
     @NotNull
     @Column(name = "board_id")
     @JavaType(BoardIdJavaType.class)
-    private BoardId boardId;
+    private BoardIdJpaVO boardId;
 
     @NotNull
     @Column(name = "emoji_type")
@@ -56,7 +56,7 @@ public class Emoji extends AggregateRoot<Emoji, EmojiId> {
     private List<EmojiUser> emojiUsers = new ArrayList<>();
 
     @Builder
-    public Emoji(BoardId boardId, Long emojiType, EmojiUser emojiUser) {
+    public Emoji(BoardIdJpaVO boardId, Long emojiType, EmojiUser emojiUser) {
         this.boardId = boardId;
         this.emojiType = emojiType;
         updateEmojiUsers(emojiUser);

@@ -1,6 +1,6 @@
 package harmony.communityservice.board.comment.mapper;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.comment.dto.RegisterCommentRequest;
 import harmony.communityservice.board.comment.domain.Comment;
 
@@ -10,7 +10,7 @@ public class ToCommentMapper {
         return Comment.builder()
                 .comment(registerCommentRequest.comment())
                 .writerId(registerCommentRequest.userId())
-                .boardId(BoardId.make(registerCommentRequest.boardId()))
+                .boardId(BoardIdJpaVO.make(registerCommentRequest.boardId()))
                 .writerName(registerCommentRequest.writerName())
                 .writerProfile(registerCommentRequest.writerProfile())
                 .build();

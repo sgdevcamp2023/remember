@@ -1,6 +1,6 @@
 package harmony.communityservice.common.event.handler;
 
-import harmony.communityservice.board.board.domain.BoardId;
+import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.emoji.service.command.EmojiCommandService;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojiEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojisEvent;
@@ -42,7 +42,7 @@ public class EmojiEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            emojiCommandService.deleteListByBoardId(BoardId.make(innerEventRecord.getBoardId()));
+            emojiCommandService.deleteListByBoardId(BoardIdJpaVO.make(innerEventRecord.getBoardId()));
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
@@ -81,7 +81,7 @@ public class EmojiEventHandler {
 
     private List<InnerEventRecord> createEmojisInBoardsDeleteEvent(DeleteEmojisEvent event) {
         return event.boardIds().stream()
-                .map(BoardId::getId)
+                .map(BoardIdJpaVO::getId)
                 .map(boardId ->
                         InnerEventRecord.builder()
                                 .sentType(SentType.INIT)
