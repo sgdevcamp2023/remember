@@ -8,7 +8,7 @@ import harmony.communityservice.board.board.mapper.ToSearchBoardResponseMapper;
 import harmony.communityservice.board.board.mapper.ToSearchBoardsResponseMapper;
 import harmony.communityservice.board.board.repository.query.BoardQueryRepository;
 import harmony.communityservice.board.board.service.query.BoardQueryService;
-import harmony.communityservice.board.comment.dto.SearchCommentsResponse;
+import harmony.communityservice.board.comment.application.port.in.LoadCommentsResponse;
 import harmony.communityservice.board.comment.service.query.CommentQueryService;
 import harmony.communityservice.board.emoji.application.port.in.SearchEmojisResponse;
 import harmony.communityservice.board.emoji.service.query.EmojiQueryService;
@@ -52,12 +52,12 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     @Override
     public SearchBoardDetailResponse searchDetail(Long boardId) {
         BoardEntity targetBoard = searchByBoardId(boardId);
-        SearchCommentsResponse searchCommentsResponse = createSearchCommentsResponse(targetBoard);
+        LoadCommentsResponse searchCommentsResponse = createSearchCommentsResponse(targetBoard);
         SearchEmojisResponse searchEmojisResponse = emojiQueryService.searchListByBoardId(boardId);
         return ToSearchBoardResponseMapper.convert(targetBoard, searchCommentsResponse, searchEmojisResponse);
     }
 
-    private SearchCommentsResponse createSearchCommentsResponse(BoardEntity targetBoard) {
+    private LoadCommentsResponse createSearchCommentsResponse(BoardEntity targetBoard) {
         return commentQueryService.searchListByBoardId(targetBoard.getBoardId().getId());
     }
 }

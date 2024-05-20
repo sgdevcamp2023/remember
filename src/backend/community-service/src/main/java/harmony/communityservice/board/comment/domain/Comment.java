@@ -1,75 +1,51 @@
 package harmony.communityservice.board.comment.domain;
 
-import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
-import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO.BoardIdJavaType;
-import harmony.communityservice.board.comment.domain.CommentId.CommentIdJavaType;
-import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.WriterInfoJpaVO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotBlank;
+import harmony.communityservice.board.board.domain.Board.BoardId;
+import java.time.Instant;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JavaType;
 
 @Getter
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "comment", indexes = @Index(name = "idx__boardId", columnList = "board_id"))
-public class Comment extends AggregateRoot<Comment, CommentId> {
+public class Comment {
 
-    @Id
-    @Column(name = "comment_id")
-    @JavaType(CommentIdJavaType.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private CommentId commentId;
 
-    @NotBlank
-    @Column(name = "content")
     private String comment;
 
-    @Column(name = "board_id")
-    @JavaType(BoardIdJavaType.class)
-    private BoardIdJpaVO boardId;
+    private BoardId boardId;
 
-    @Embedded
-    private WriterInfoJpaVO writerInfo;
-
-    @Version
-    private Long version;
+    private WriterInfo writerInfo;
+    private Instant createdAt;
+    private ModifiedType type;
 
     @Builder
-    public Comment(String comment, Long writerId, String writerName, String writerProfile, BoardIdJpaVO boardId) {
-        this.comment = comment;
+    public Comment(BoardId boardId, String comment, CommentId commentId, Long writerId, String nickname,
+                   String profile, Instant createdAt, ModifiedType type) {
         this.boardId = boardId;
-        this.writerInfo = makeWriterInfo(writerId, writerName, writerProfile);
-    }
-
-    private WriterInfoJpaVO makeWriterInfo(Long writerId, String writerName, String writerProfile) {
-        return WriterInfoJpaVO.make(writerName, writerId, writerProfile);
-    }
-
-    public void verifyWriter(Long writerId) {
-        writerInfo.verifyWriter(writerId);
-    }
-
-    public void modify(Long userId, String comment) {
-        verifyWriter(userId);
         this.comment = comment;
-        super.updateType();
+        this.commentId = commentId;
+        this.writerInfo = makeWriterInfo(writerId, nickname, profile);
+        this.createdAt = createdAt;
+        this.type = type;
     }
 
-    @Override
-    public CommentId getId() {
-        return commentId;
+    private WriterInfo makeWriterInfo(Long writerId, String nickname, String profile) {
+        return WriterInfo.builder()
+                .userName(nickname)
+                .profile(profile)
+                .writerId(writerId)
+                .build();
+    }
+
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class CommentId {
+        private final Long id;
+
+        public static CommentId make(Long commentId) {
+            return new CommentId(commentId);
+        }
     }
 }

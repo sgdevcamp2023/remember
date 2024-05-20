@@ -1,7 +1,7 @@
 package harmony.communityservice.common.event.handler;
 
-import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
-import harmony.communityservice.board.comment.service.command.CommentCommandService;
+import harmony.communityservice.board.board.domain.Board.BoardId;
+import harmony.communityservice.board.comment.application.port.in.DeleteCommentsUseCase;
 import harmony.communityservice.common.event.dto.inner.DeleteCommentEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteCommentsEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
@@ -25,7 +25,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class CommentEventHandler {
 
     private final InnerEventOutBoxMapper outBoxMapper;
-    private final CommentCommandService commentCommandService;
+    private final DeleteCommentsUseCase deleteCommentsUseCase;
 
     @TransactionalEventListener(classes = DeleteCommentEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void commentsDeleteEventBeforeHandler(DeleteCommentEvent event) {
@@ -42,7 +42,7 @@ public class CommentEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            commentCommandService.deleteListByBoardId(BoardIdJpaVO.make(innerEventRecord.getBoardId()));
+            deleteCommentsUseCase.deleteByBoardId(BoardId.make(innerEventRecord.getBoardId()));
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
@@ -63,7 +63,7 @@ public class CommentEventHandler {
         List<InnerEventRecord> records = createCommentsInBoardsDeleteEvent(event);
         List<InnerEventRecord> innerEventRecords = outBoxMapper.findInnerEventRecords(records);
         try {
-            commentCommandService.deleteListByBoardIds(event.boardIds());
+            deleteCommentsUseCase.deleteByBoardIds(event.boardIds());
             outBoxMapper.updateInnerEventRecords(SentType.SEND_SUCCESS, innerEventRecords);
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecords(SentType.SEND_FAIL, innerEventRecords);
@@ -80,7 +80,7 @@ public class CommentEventHandler {
 
     private List<InnerEventRecord> createCommentsInBoardsDeleteEvent(DeleteCommentsEvent event) {
         return event.boardIds().stream()
-                .map(BoardIdJpaVO::getId)
+                .map(BoardId::getId)
                 .map(boardId ->
                         InnerEventRecord.builder()
                                 .sentType(SentType.INIT)
