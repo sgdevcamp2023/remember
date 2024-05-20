@@ -1,49 +1,29 @@
 package harmony.communityservice.board.emoji.domain;
 
-import harmony.communityservice.board.emoji.domain.EmojiUserId.EmojiUserIdJavaType;
-import harmony.communityservice.common.domain.DomainEntity;
-import harmony.communityservice.user.adapter.out.persistence.UserId;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JavaType;
 
 @Getter
-@Entity
-@Table(name = "emoji_user")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EmojiUser extends DomainEntity<EmojiUser, EmojiUserId> {
+public class EmojiUser {
 
-    @Id
-    @Column(name = "emoji_user_id")
-    @JavaType(EmojiUserIdJavaType.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final UserId userId;
     private EmojiUserId emojiUserId;
 
-    @Getter
-    @NotNull
-    @Embedded
-    @Column(name = "user_id")
-    private UserId userId;
-
-    private EmojiUser(UserId userId) {
+    public EmojiUser(UserId userId, EmojiUserId emojiUserId) {
         this.userId = userId;
+        this.emojiUserId = emojiUserId;
     }
 
-    public static EmojiUser make(UserId userId) {
-        return new EmojiUser(userId);
-    }
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class EmojiUserId {
+        private final Long id;
 
-    @Override
-    public EmojiUserId getId() {
-        return emojiUserId;
+        public static EmojiUserId make(Long emojiUserId) {
+            return new EmojiUserId(emojiUserId);
+        }
     }
 }

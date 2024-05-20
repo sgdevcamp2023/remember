@@ -2,7 +2,7 @@ package harmony.communityservice.board.board.mapper;
 
 import harmony.communityservice.board.board.adapter.out.persistence.BoardEntity;
 import harmony.communityservice.board.board.dto.SearchBoardResponse;
-import harmony.communityservice.board.emoji.dto.SearchEmojisResponse;
+import harmony.communityservice.board.emoji.application.port.in.SearchEmojisResponse;
 import java.time.ZoneId;
 
 public class ToSearchBoardsResponseMapper {
