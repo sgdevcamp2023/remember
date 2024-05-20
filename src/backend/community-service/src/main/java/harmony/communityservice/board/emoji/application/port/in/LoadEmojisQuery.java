@@ -4,5 +4,5 @@ import harmony.communityservice.board.board.domain.Board.BoardId;
 
 public interface LoadEmojisQuery {
 
-    SearchEmojisResponse loadByBoardId(BoardId boardId);
+    LoadEmojisResponse loadByBoardId(BoardId boardId);
 }

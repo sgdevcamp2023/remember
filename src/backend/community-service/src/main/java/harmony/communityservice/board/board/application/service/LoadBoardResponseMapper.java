@@ -1,14 +1,14 @@
-package harmony.communityservice.board.board.mapper;
+package harmony.communityservice.board.board.application.service;
 
-import harmony.communityservice.board.board.adapter.out.persistence.BoardEntity;
-import harmony.communityservice.board.board.dto.SearchBoardResponse;
-import harmony.communityservice.board.emoji.application.port.in.SearchEmojisResponse;
+import harmony.communityservice.board.board.application.port.in.LoadBoardResponse;
+import harmony.communityservice.board.board.domain.Board;
+import harmony.communityservice.board.emoji.application.port.in.LoadEmojisResponse;
 import java.time.ZoneId;
 
-public class ToSearchBoardsResponseMapper {
-    public static SearchBoardResponse convert(BoardEntity targetBoard, Long commentCount,
-                                              SearchEmojisResponse searchEmojisResponse) {
-        return SearchBoardResponse.builder()
+class LoadBoardResponseMapper {
+    static LoadBoardResponse convert(Board targetBoard, Long commentCount,
+                                            LoadEmojisResponse searchEmojisResponse) {
+        return LoadBoardResponse.builder()
                 .boardId(targetBoard.getBoardId().getId())
                 .commentCount(commentCount)
                 .title(targetBoard.getContent().getTitle())

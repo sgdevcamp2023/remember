@@ -12,6 +12,10 @@ public class ImageIdJpaVO extends LongTypeIdentifier {
         return new ImageIdJpaVO(id);
     }
 
+    public Long getId() {
+        return longValue();
+    }
+
     public static class ImageIdJavaType extends LongTypeIdentifierJavaType<ImageIdJpaVO> {
         public ImageIdJavaType() {
             super(ImageIdJpaVO.class);

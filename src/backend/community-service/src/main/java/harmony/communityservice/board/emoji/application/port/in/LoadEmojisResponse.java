@@ -5,10 +5,10 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class SearchEmojisResponse {
-    private List<SearchEmojiResponse> searchEmojiResponses = new ArrayList<>();
+public class LoadEmojisResponse {
+    private List<LoadEmojiResponse> searchEmojiResponses = new ArrayList<>();
 
-    public SearchEmojisResponse(List<SearchEmojiResponse> searchEmojiResponses) {
+    public LoadEmojisResponse(List<LoadEmojiResponse> searchEmojiResponses) {
         this.searchEmojiResponses = searchEmojiResponses;
     }
 }

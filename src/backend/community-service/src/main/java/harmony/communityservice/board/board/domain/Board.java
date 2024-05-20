@@ -1,6 +1,7 @@
 package harmony.communityservice.board.board.domain;
 
 import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
+import java.time.Instant;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,14 +21,20 @@ public class Board {
 
     private final List<Image> images;
 
+    private final Instant createdAt;
+
+    private final ModifiedType type;
+
     @Builder
     public Board(BoardId boardId, ChannelId channelId, String title, String content, List<Image> images, Long writerId,
-                 String username, String profile) {
+                 String username, String profile, Instant createdAt, ModifiedType type) {
         this.boardId = boardId;
         this.channelId = channelId;
         this.content = makeContent(title, content);
         this.images = images;
         this.writerInfo = makeWriterInfo(writerId, username, profile);
+        this.createdAt = createdAt;
+        this.type = type;
     }
 
     private Content makeContent(String title, String content) {

@@ -14,9 +14,19 @@ public class Image {
         this.imageUrl = imageUrl;
     }
 
+    private Image(String imageUrl, ImageId imageId) {
+        this.imageUrl = imageUrl;
+        this.imageId = imageId;
+    }
+
     public static Image make(String imageUrl) {
         return new Image(imageUrl);
     }
+
+    public static Image make(Long imageId, String imageUrl) {
+        return new Image(imageUrl, ImageId.make(imageId));
+    }
+
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)

@@ -3,8 +3,8 @@ package harmony.communityservice.board.emoji.application.service;
 import harmony.communityservice.board.board.domain.Board.BoardId;
 import harmony.communityservice.board.emoji.application.port.in.LoadEmojiQuery;
 import harmony.communityservice.board.emoji.application.port.in.LoadEmojisQuery;
-import harmony.communityservice.board.emoji.application.port.in.SearchEmojiResponse;
-import harmony.communityservice.board.emoji.application.port.in.SearchEmojisResponse;
+import harmony.communityservice.board.emoji.application.port.in.LoadEmojiResponse;
+import harmony.communityservice.board.emoji.application.port.in.LoadEmojisResponse;
 import harmony.communityservice.board.emoji.application.port.out.LoadEmojiPort;
 import harmony.communityservice.board.emoji.application.port.out.LoadEmojisPort;
 import harmony.communityservice.board.emoji.domain.Emoji;
@@ -33,10 +33,10 @@ class EmojiQueryService implements LoadEmojiQuery, LoadEmojisQuery {
     }
 
     @Override
-    public SearchEmojisResponse loadByBoardId(BoardId boardId) {
+    public LoadEmojisResponse loadByBoardId(BoardId boardId) {
         List<Emoji> emojis = loadEmojisPort.loadEmojisByBoardId(boardId);
-        List<SearchEmojiResponse> searchEmojiResponses = emojis.stream()
+        List<LoadEmojiResponse> searchEmojiResponses = emojis.stream()
                 .map(SearchEmojiResponseMapper::convert).toList();
-        return new SearchEmojisResponse(searchEmojiResponses);
+        return new LoadEmojisResponse(searchEmojiResponses);
     }
 }

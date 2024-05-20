@@ -1,9 +1,6 @@
 package harmony.communityservice.board.board.adapter.out.persistence;
 
 import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO.BoardIdJavaType;
-import harmony.communityservice.board.board.adapter.in.web.ModifyBoardRequest;
-import harmony.communityservice.board.board.dto.SearchImageResponse;
-import harmony.communityservice.board.board.dto.SearchImagesResponse;
 import harmony.communityservice.common.domain.AggregateRoot;
 import harmony.communityservice.generic.WriterInfoJpaVO;
 import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
@@ -25,7 +22,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -69,24 +65,6 @@ public class BoardEntity extends AggregateRoot<BoardEntity, BoardIdJpaVO> {
         this.images.addAll(images);
         this.content = makeContent(title, content);
         this.writerInfo = makeWriterInfo(writerName, writerId, writerProfile);
-    }
-
-    public void verifyWriter(Long writerId) {
-        writerInfo.verifyWriter(writerId);
-    }
-
-    public void modifyTitleAndContent(ModifyBoardRequest modifyBoardRequest) {
-        verifyWriter(modifyBoardRequest.userId());
-        this.content = this.content.modify(modifyBoardRequest.title(), modifyBoardRequest.content());
-        super.updateType();
-    }
-
-    public SearchImagesResponse makeSearchImagesResponse() {
-        return new SearchImagesResponse(
-                this.images.stream()
-                        .map(image -> new SearchImageResponse(image.getImageUrl()))
-                        .collect(Collectors.toList())
-        );
     }
 
     private ContentJpaVO makeContent(String title, String content) {

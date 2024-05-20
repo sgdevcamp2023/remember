@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface JpaBoardQueryRepository extends JpaRepository<BoardEntity, BoardIdJpaVO> {
+interface BoardQueryRepository extends JpaRepository<BoardEntity, BoardIdJpaVO> {
 
     @Query(value = "SELECT b FROM BoardEntity b "
             + "WHERE b.channelId = :channelId AND b.boardId < :lastBoardId "

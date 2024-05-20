@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record SearchEmojiResponse(
+public record LoadEmojiResponse(
         Long emojiId,
         Long boardId,
         Long commentId,
