@@ -1,33 +1,25 @@
 package harmony.communityservice.user.domain;
 
-import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotBlank;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonUserInfo {
+    private final String nickname;
+    private final String profile;
 
-    @NotBlank
-    private String nickname;
-
-    @NotBlank
-    private String profile;
-
-    public static CommonUserInfo make(String nickname, String profile) {
+    static CommonUserInfo make(String nickname, String profile) {
         return new CommonUserInfo(nickname, profile);
     }
 
-    public CommonUserInfo modifyProfile(String profile) {
-        return new CommonUserInfo(this.nickname, profile);
+    CommonUserInfo modifyNickname(String nickname) {
+        return new CommonUserInfo(nickname, this.profile);
     }
 
-    public CommonUserInfo modifyNickname(String nickname) {
-        return new CommonUserInfo(nickname, this.profile);
+    CommonUserInfo modifyProfile(String profile) {
+        return new CommonUserInfo(this.nickname, profile);
     }
 }

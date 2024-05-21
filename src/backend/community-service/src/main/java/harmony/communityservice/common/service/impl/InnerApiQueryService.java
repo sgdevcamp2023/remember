@@ -1,12 +1,11 @@
 package harmony.communityservice.common.service.impl;
 
-import harmony.communityservice.guild.guild.service.query.GuildReadQueryService;
-import harmony.communityservice.guild.domain.GuildRead;
 import harmony.communityservice.common.dto.SearchRoomsAndGuildsResponse;
-import harmony.communityservice.room.service.query.RoomQueryService;
-import java.util.ArrayList;
+import harmony.communityservice.guild.guild.application.port.in.LoadGuildIdsQuery;
+import harmony.communityservice.guild.guild.domain.Guild.GuildId;
+import harmony.communityservice.room.application.port.in.LoadRoomIdsQuery;
+import harmony.communityservice.user.domain.User.UserId;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class InnerApiQueryService {
 
-    private final RoomQueryService roomQueryService;
-    private final GuildReadQueryService guildReadQueryService;
+    private final LoadRoomIdsQuery loadRoomIdsQuery;
+    private final LoadGuildIdsQuery loadGuildIdsQuery;
 
     public SearchRoomsAndGuildsResponse search(long userId) {
-        Map<Long, GuildRead> targetGuildReads = guildReadQueryService.searchMapByUserId(userId);
-        List<Long> guildIds = new ArrayList<>(targetGuildReads.keySet());
-        List<Long> roomIds = roomQueryService.searchRoomIdsByUserId(userId);
+        List<Long> guildIds = loadGuildIdsQuery.loadGuildIdsByUserId(UserId.make(userId))
+                .stream()
+                .map(GuildId::getId)
+                .toList();
+        List<Long> roomIds = loadRoomIdsQuery.loadRoomIds(userId);
         return new SearchRoomsAndGuildsResponse(roomIds, guildIds);
     }
 }

@@ -1,58 +1,47 @@
 package harmony.communityservice.room.domain;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import harmony.communityservice.common.exception.NotFoundDataException;
+import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
-@Table(name = "room")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonInclude(Include.NON_NULL)
 public class Room {
 
-    @Id
-    @Column(name = "room_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;
+    private final RoomId roomId;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "room_name")),
-            @AttributeOverride(name = "profile", column = @Column(name = "room_profile"))
-    })
-    private ProfileInfo roomInfo;
+    private final List<RoomUser> roomUsers;
 
-    @Embedded
-    private CreationTime creationTime;
+    private final ProfileInfo profileInfo;
 
-    @ElementCollection
-    @CollectionTable(name = "room_user",
-            joinColumns = @JoinColumn(name = "room_id"))
-    private Set<Long> userIds = new HashSet<>();
 
     @Builder
-    public Room(String name, String profile, Set<Long> userIds) {
-        this.roomInfo = makeRoomInfo(name, profile);
-        this.creationTime = new CreationTime();
-        this.userIds = userIds;
+    public Room(String profile, String name, RoomId roomId, List<RoomUser> roomUsers) {
+        verifyProfileInfo(profile, name);
+        this.profileInfo = ProfileInfo.make(name, profile);
+        this.roomId = roomId;
+        this.roomUsers = roomUsers;
     }
 
-    private ProfileInfo makeRoomInfo(String name, String profile) {
-        return ProfileInfo.make(name, profile);
+    private void verifyProfileInfo(String profile, String name) {
+        if (profile == null || name == null) {
+            throw new NotFoundDataException("데이터가 없습니다");
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class RoomId {
+
+        private final Long id;
+
+        public static RoomId make(Long id) {
+            return new RoomId(id);
+        }
     }
 }
