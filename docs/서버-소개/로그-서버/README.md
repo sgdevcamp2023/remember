@@ -13,8 +13,19 @@
 | Kibana        | `docker.elastic.co/kibana/kibana:7.10.2`               |
 
 ## 동작 방식
+### 로그 형식
+- 각 서비스 별로 `로그 형식`이 다르기에 통용되는 `로그 형식`을 개발해야 했습니다
+- `ECS(Elastic Common Schema)`에 맞춰 통용되는 `로그 형식`을 개발했습니다
+```
+{"@timestamp":"2024-05-21T23:30:33.910+0900", "level":"INFO", "thread" :"http-nio-8000-exec-1",
+                "service":"community-service", "trace": "example-trace-id", "apiAddr": "/api/community/register/user",
+                "httpMethod":"POST","userId":"1",
+                "message":"UserRegisterController-register"}
+```
 ### fluentd
-- 서버별로 fluentd를 띄우고 서버별로 구성되어 있는 로그 파일들을 각 서버별로 붙어 있는 사이드카 형태로 fluentd가 실시간 로그 처리를 하고 있습니다
+- 저희의 프로젝트는 `MSA(Micro Service Architecture)`로 구성되어 있습니다. 
+- `LogStash`는 무겁기 때문에, `MSA`환경에서는 적합하지 않으며 그래서 `fluentd`를 사용하여 로그를 수집했습니다.
+- 서버별로 `fluentd`를 띄우고 사이드카 형태로 각 서버에 적용중인 `fluentd`가 서버별로 구성되어 있는 로그 파일들을 실시간 로그 처리를 하고 있습니다
 ~~~Dockerfile
 FROM fluent/fluentd:edge-debian
 ADD ./conf/fluentd.conf /fluentd/etc/fluentd.conf
@@ -95,9 +106,9 @@ networks:
 volumes:
   logs:
 ~~~
-- fluentd를 통해 긁어온 로그들을 버퍼를 통해 ElasticSearch로 전송하고 있습니다
+- `fluentd`를 통해 긁어온 로그들을 `버퍼`를 통해 `ElasticSearch`로 전송하고 있습니다
 ### ElasticSearch
-- ElasticSearch DB에 fluentd로 보낸 로그들을 계속 쌓고 있습니다
+- `ElasticSearch DB`에 `fluentd`로 보낸 로그들을 저장하고 있습니다.
 ~~~Dockerfile
 FROM docker.elastic.co/elasticsearch/elasticsearch:7.10.2
 RUN elasticsearch-plugin install --batch analysis-nori
@@ -142,9 +153,9 @@ networks:
   community-network:
 ~~~
 ### Kibana
-- ElasticSearch DB에 저장된 로그들을 분석할 수 있으며 Alerting 기능을 통하여 에러 로그 발생 시 슬랙에 알람기능 
-- trace-id를 통하여 분산 추적
-- logging, tracing을 통한 Observability 구현
+- `ElasticSearch DB`에 저장된 `로그`들을 분석할 수 있으며 `Alerting` 기능을 통하여 에러 로그 발생 시 슬랙에 알람기능 
+- `trace-id`를 통하여 분산 추적
+- `logging`, `tracing`을 통한 `Observability` 구현
 ~~~yml
 version: '3.4'
 services:
@@ -169,7 +180,7 @@ FROM docker.elastic.co/kibana/kibana:7.10.2
 RUN kibana-plugin install https://github.com/opendistro-for-elasticsearch/alerting-kibana-plugin/releases/download/v1.13.0.0/opendistroAlertingKibana-1.13.0.0.zip
 ~~~
 ![Alt text](image.png)
-
+- 에러 로그 발생 시 실시간으로 슬랙에 알림이 발생하고 있습니다.
 ## 트러블 슈팅
 ### Docker 버전 문제
 - MacOS에서 fluentd 버전 이슈
