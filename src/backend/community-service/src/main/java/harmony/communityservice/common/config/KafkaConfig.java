@@ -1,8 +1,8 @@
 package harmony.communityservice.common.config;
 
 import harmony.communityservice.common.event.dto.produce.ExternalEvent;
-import harmony.communityservice.common.service.ProducerService;
-import harmony.communityservice.common.service.impl.KafkaProducerService;
+import harmony.communityservice.common.service.EventProducer;
+import harmony.communityservice.common.service.impl.KafkaEventProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ public class KafkaConfig {
     private final KafkaTemplate<String, ExternalEvent> ExternalEventKafkaTemplate;
 
     @Bean
-    public ProducerService producerService() {
-        return new KafkaProducerService(ExternalEventKafkaTemplate);
+    public EventProducer producerService() {
+        return new KafkaEventProducer(ExternalEventKafkaTemplate);
     }
 }

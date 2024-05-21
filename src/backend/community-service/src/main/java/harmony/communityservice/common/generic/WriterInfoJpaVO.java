@@ -1,4 +1,4 @@
-package harmony.communityservice.generic;
+package harmony.communityservice.common.generic;
 
 import harmony.communityservice.common.domain.ValueObject;
 import jakarta.persistence.AttributeOverride;
@@ -25,7 +25,7 @@ public class WriterInfoJpaVO extends ValueObject<WriterInfoJpaVO> {
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "nickname", column = @Column(name = "writer_name")),
-            @AttributeOverride(name = "profile", column = @Column(name = "writer_profile"))
+            @AttributeOverride(name = "userProfile", column = @Column(name = "writer_profile"))
     })
     private CommonUserInfoJpaVO commonUserInfo;
 

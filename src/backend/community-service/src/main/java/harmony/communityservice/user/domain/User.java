@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -31,6 +32,7 @@ public class User {
     }
 
     @Getter
+    @ToString
     public static class UserId {
 
         private final Long id;

@@ -37,7 +37,8 @@ class GuildCommandService implements RegisterGuildUseCase, JoinGuildUseCase, Del
         Long guildId = registerGuildPort.register(guild);
         Events.send(new RegisterChannelEvent(
                 guildId, "기본채널", registerGuildCommand.managerId(), 0L, "TEXT"));
-        registerGuildRead(registerGuildCommand.managerId(), guild);
+        Events.send(RegisterGuildReadEventMapper.convert(guild, registerGuildCommand.managerId(), guildId));
+        Events.send(GuildCreatedEventMapper.convert(guild,guildId));
         return guildId;
     }
 
@@ -46,7 +47,8 @@ class GuildCommandService implements RegisterGuildUseCase, JoinGuildUseCase, Del
         List<String> parsedInvitationCodes = List.of(
                 joinGuildCommand.invitationCode().split("\\."));
         Guild guild = registerGuildPort.join(parsedInvitationCodes.get(0), UserId.make(joinGuildCommand.userId()));
-        registerGuildRead(joinGuildCommand.userId(), guild);
+        Events.send(RegisterGuildReadEventMapper.convert(guild, joinGuildCommand.userId()));
+        Events.send(GuildCreatedEventMapper.convert(guild));
     }
 
     private Guild createGuild(RegisterGuildCommand registerGuildCommand) {
@@ -54,10 +56,6 @@ class GuildCommandService implements RegisterGuildUseCase, JoinGuildUseCase, Del
         return GuildMapper.convert(registerGuildCommand, uploadedImageUrl);
     }
 
-    private void registerGuildRead(Long userId, Guild guild) {
-        Events.send(RegisterGuildReadEventMapper.convert(guild, userId));
-        Events.send(GuildCreatedEventMapper.convert(guild));
-    }
 
     @Override
     public void delete(DeleteGuildCommand deleteGuildCommand) {

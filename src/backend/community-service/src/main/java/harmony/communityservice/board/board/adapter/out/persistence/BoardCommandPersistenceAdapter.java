@@ -39,12 +39,13 @@ class BoardCommandPersistenceAdapter implements RegisterBoardPort, ModifyBoardPo
 
     @Override
     public List<BoardId> deleteChannelBoards(ChannelId channelId) {
-        boardCommandRepository.deleteBoardsByChannelId(ChannelIdJpaVO.make(channelId.getId()));
-        boardCommandRepository.deleteImagesByChannelId(channelId.getId());
-        return boardCommandRepository.findIdsByChannelId(ChannelIdJpaVO.make(channelId.getId()))
+        List<BoardId> boardIds = boardCommandRepository.findIdsByChannelId(ChannelIdJpaVO.make(channelId.getId()))
                 .stream()
                 .map(boardIdJpaVO -> BoardId.make(boardIdJpaVO.getId()))
                 .toList();
+        boardCommandRepository.deleteBoardsByChannelId(ChannelIdJpaVO.make(channelId.getId()));
+        boardCommandRepository.deleteImagesByChannelId(channelId.getId());
+        return boardIds;
     }
 
     @Override
@@ -55,12 +56,13 @@ class BoardCommandPersistenceAdapter implements RegisterBoardPort, ModifyBoardPo
         List<ChannelIdJpaVO> channelIdJpaVOS = channelIds.stream()
                 .map(channelId -> ChannelIdJpaVO.make(channelId.getId()))
                 .toList();
-        boardCommandRepository.deleteImagesByChannelIds(ids);
-        boardCommandRepository.deleteAllByChannelIds(channelIdJpaVOS);
-
-        return boardCommandRepository.findAllByChannelIds(channelIdJpaVOS)
+        List<BoardId> boardIds = boardCommandRepository.findAllByChannelIds(channelIdJpaVOS)
                 .stream()
                 .map(boardIdJpaVO -> BoardId.make(boardIdJpaVO.getId()))
                 .toList();
+        boardCommandRepository.deleteImagesByChannelIds(ids);
+        boardCommandRepository.deleteAllByChannelIds(channelIdJpaVOS);
+
+        return boardIds;
     }
 }

@@ -9,7 +9,7 @@ class ChannelEntityMapper {
     static ChannelEntity convert(Channel channel) {
         return ChannelEntity.builder()
                 .type(channel.getType().name())
-                .guildId(GuildIdJpaVO.make(channel.getChannelId().getId()))
+                .guildId(GuildIdJpaVO.make(channel.getGuildId().getId()))
                 .categoryId(CategoryIdJpaVO.make(channel.getCategoryId().getId()))
                 .name(channel.getName())
                 .build();

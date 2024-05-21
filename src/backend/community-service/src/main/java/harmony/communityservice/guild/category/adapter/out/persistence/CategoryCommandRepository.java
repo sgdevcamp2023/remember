@@ -15,7 +15,6 @@ interface CategoryCommandRepository extends JpaRepository<CategoryEntity, Catego
     void deleteCategoriesByGuildId(@Param("guildId") GuildIdJpaVO guildId);
 
     @Modifying
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("update CategoryEntity c set c.name = :newName where c.categoryId = :categoryId")
     void modifyCategory(@Param("newName") String newName, @Param("categoryId") CategoryIdJpaVO categoryId);
 }

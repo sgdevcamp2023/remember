@@ -52,7 +52,9 @@ public class CommentEventHandler {
     @TransactionalEventListener(classes = DeleteCommentsEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void commentsDeleteEventBeforeHandler(DeleteCommentsEvent event) {
         List<InnerEventRecord> records = createCommentsInBoardsDeleteEvent(event);
-        outBoxMapper.insertInnerEventRecords(records);
+        if (!records.isEmpty()) {
+            outBoxMapper.insertInnerEventRecords(records);
+        }
     }
 
     @Async

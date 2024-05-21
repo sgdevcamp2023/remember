@@ -11,7 +11,7 @@ class CommentMapper {
         return Comment.builder()
                 .nickname(commentEntity.getWriterInfo().getCommonUserInfo().getNickname())
                 .writerId(commentEntity.getWriterInfo().getWriterId())
-                .profile(commentEntity.getWriterInfo().getCommonUserInfo().getProfile())
+                .profile(commentEntity.getWriterInfo().getCommonUserInfo().getUserProfile())
                 .comment(commentEntity.getComment())
                 .commentId(CommentId.make(commentEntity.getCommentId().getId()))
                 .boardId(BoardId.make(commentEntity.getBoardId().getId()))

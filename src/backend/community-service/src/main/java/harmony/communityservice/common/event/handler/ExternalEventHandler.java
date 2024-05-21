@@ -5,11 +5,12 @@ import harmony.communityservice.common.event.dto.produce.ChannelDeletedEvent;
 import harmony.communityservice.common.event.dto.produce.GuildCreatedEvent;
 import harmony.communityservice.common.event.dto.produce.GuildDeletedEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
-import harmony.communityservice.common.outbox.ExternalEventType;
-import harmony.communityservice.common.outbox.ExternalEventRecord;
 import harmony.communityservice.common.outbox.ExternalEventOutBoxMapper;
+import harmony.communityservice.common.outbox.ExternalEventRecord;
+import harmony.communityservice.common.outbox.ExternalEventType;
 import harmony.communityservice.common.outbox.SentType;
-import harmony.communityservice.common.service.ProducerService;
+import harmony.communityservice.common.service.EventProducer;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelTypeJpaEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -24,7 +25,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class ExternalEventHandler {
 
-    private final ProducerService producerService;
+    private final EventProducer producerService;
     private final ExternalEventOutBoxMapper outBoxMapper;
 
     @TransactionalEventListener(classes = GuildCreatedEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
@@ -79,7 +80,6 @@ public class ExternalEventHandler {
     }
 
 
-
     @Async
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = ChannelDeletedEvent.class, phase = TransactionPhase.AFTER_COMMIT)
@@ -125,7 +125,7 @@ public class ExternalEventHandler {
                 .channelId(event.getChannelId())
                 .categoryId(event.getCategoryId())
                 .channelName(event.getChannelName())
-                .channelType(event.getChannelType())
+                .channelType(ChannelTypeJpaEnum.valueOf(event.getChannelType().name()))
                 .build();
     }
 

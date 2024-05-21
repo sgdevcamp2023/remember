@@ -1,7 +1,7 @@
 package harmony.communityservice.room.adapter.out.persistence;
 
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.ProfileInfoJpaVO;
+import harmony.communityservice.common.generic.ProfileInfoJpaVO;
 import harmony.communityservice.room.adapter.out.persistence.RoomIdJpaVO.RoomIdJavaType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;

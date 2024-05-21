@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @UseCase
 @Transactional
 @RequiredArgsConstructor
-public class ChannelCommandService implements RegisterChannelUseCase, DeleteChannelUseCase, DeleteGuildChannelsUseCase {
+class ChannelCommandService implements RegisterChannelUseCase, DeleteChannelUseCase, DeleteGuildChannelsUseCase {
 
     private final RegisterChannelPort registerChannelPort;
     private final DeleteChannelPort deleteChannelPort;

@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class GuildQueryPersistenceAdapter implements LoadGuildPort, VerifyGuildManagerPort {
 
-    private GuildQueryRepository guildQueryRepository;
+    private final GuildQueryRepository guildQueryRepository;
 
     @Override
     public Guild loadById(GuildId guildId) {

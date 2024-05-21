@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @UseCase
 @RequiredArgsConstructor
-public class ContentService implements FileConverter {
+public class GcsFileConverter implements FileConverter {
 
     private final Storage storage;
 

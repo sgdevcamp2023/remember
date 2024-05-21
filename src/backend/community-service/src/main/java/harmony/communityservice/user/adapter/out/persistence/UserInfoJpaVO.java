@@ -1,7 +1,7 @@
 package harmony.communityservice.user.adapter.out.persistence;
 
 import harmony.communityservice.common.domain.ValueObject;
-import harmony.communityservice.generic.CommonUserInfoJpaVO;
+import harmony.communityservice.common.generic.CommonUserInfoJpaVO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;

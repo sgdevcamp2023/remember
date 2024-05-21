@@ -1,7 +1,7 @@
 package harmony.communityservice.common.event.handler;
 
-import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.board.domain.Board.BoardId;
+import harmony.communityservice.board.emoji.application.port.in.DeleteEmojisUseCase;
 import harmony.communityservice.board.emoji.application.port.out.DeleteEmojisPort;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojiEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojisEvent;
@@ -26,7 +26,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class EmojiEventHandler {
 
     private final InnerEventOutBoxMapper outBoxMapper;
-    private final DeleteEmojisPort deleteEmojisPort;
+    private final DeleteEmojisUseCase deleteEmojisUseCase;
 
     @TransactionalEventListener(classes = DeleteEmojiEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void emojisDeleteEventBeforeHandler(DeleteEmojiEvent event) {
@@ -43,7 +43,7 @@ public class EmojiEventHandler {
         InnerEventRecord innerEventRecord = outBoxMapper.findInnerEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            deleteEmojisPort.deleteByBoardId(BoardId.make(innerEventRecord.getBoardId()));
+            deleteEmojisUseCase.deleteByBoardId(BoardId.make(innerEventRecord.getBoardId()));
             outBoxMapper.updateInnerEventRecord(SentType.SEND_SUCCESS, innerEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecord(SentType.SEND_FAIL, innerEventRecord.getEventId());
@@ -53,7 +53,9 @@ public class EmojiEventHandler {
     @TransactionalEventListener(classes = DeleteEmojisEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void emojisDeleteEventBeforeHandler(DeleteEmojisEvent event) {
         List<InnerEventRecord> records = createEmojisInBoardsDeleteEvent(event);
-        outBoxMapper.insertInnerEventRecords(records);
+        if (!records.isEmpty()) {
+            outBoxMapper.insertInnerEventRecords(records);
+        }
     }
 
 
@@ -65,7 +67,7 @@ public class EmojiEventHandler {
         List<InnerEventRecord> records = createEmojisInBoardsDeleteEvent(event);
         List<InnerEventRecord> innerEventRecords = outBoxMapper.findInnerEventRecords(records);
         try {
-            deleteEmojisPort.deleteByBoardIds(event.boardIds());
+            deleteEmojisUseCase.deleteByBoardIds(event.boardIds());
             outBoxMapper.updateInnerEventRecords(SentType.SEND_SUCCESS, innerEventRecords);
         } catch (Exception e) {
             outBoxMapper.updateInnerEventRecords(SentType.SEND_FAIL, innerEventRecords);
@@ -86,7 +88,7 @@ public class EmojiEventHandler {
                 .map(boardId ->
                         InnerEventRecord.builder()
                                 .sentType(SentType.INIT)
-                                .type(InnerEventType.DELETED_COMMENT_IN_BOARDS)
+                                .type(InnerEventType.DELETED_EMOJI_IN_BOARDS)
                                 .boardId(boardId)
                                 .build()
                 )

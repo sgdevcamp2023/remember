@@ -2,7 +2,7 @@ package harmony.communityservice.board.board.adapter.out.persistence;
 
 import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO.BoardIdJavaType;
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.WriterInfoJpaVO;
+import harmony.communityservice.common.generic.WriterInfoJpaVO;
 import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
 import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO.ChannelIdJavaType;
 import jakarta.persistence.CascadeType;

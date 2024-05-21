@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/community")
 public class LoadBoardsController {
 
-    private LoadBoardsQuery loadBoardsQuery;
+    private final LoadBoardsQuery loadBoardsQuery;
 
     @GetMapping("/search/board/list/{guildId}/{channelId}/{cursor}/{userId}")
     public BaseResponse<?> searchList(@PathVariable Long userId, @PathVariable Long guildId,

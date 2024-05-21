@@ -16,7 +16,7 @@ class BoardMapper {
                 .map(imageEntity -> Image.make(imageEntity.getImageId().getId(), imageEntity.getImageUrl()))
                 .toList();
         return Board.builder()
-                .profile(boardEntity.getWriterInfo().getCommonUserInfo().getProfile())
+                .profile(boardEntity.getWriterInfo().getCommonUserInfo().getUserProfile())
                 .username(boardEntity.getWriterInfo().getCommonUserInfo().getNickname())
                 .boardId(BoardId.make(boardEntity.getBoardId().getId()))
                 .title(boardEntity.getContent().getTitle())

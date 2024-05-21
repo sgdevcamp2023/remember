@@ -54,7 +54,9 @@ public class BoardEventHandler {
     @TransactionalEventListener(classes = DeleteBoardsInGuildEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
     public void boardsDeleteInGuildEventBeforeHandler(DeleteBoardsInGuildEvent event) {
         List<InnerEventRecord> records = createBoardsDeleteInGuildEvent(event);
-        outBoxMapper.insertInnerEventRecords(records);
+        if (!records.isEmpty()) {
+            outBoxMapper.insertInnerEventRecords(records);
+        }
     }
 
 

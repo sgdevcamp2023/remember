@@ -8,7 +8,7 @@ class UserMapper {
         return User.builder()
                 .userId(userEntity.getUserId().getId())
                 .email(userEntity.getUserInfo().getEmail())
-                .profile(userEntity.getUserInfo().getCommonUserInfo().getProfile())
+                .profile(userEntity.getUserInfo().getCommonUserInfo().getUserProfile())
                 .nickname(userEntity.getUserInfo().getCommonUserInfo().getNickname())
                 .build();
     }

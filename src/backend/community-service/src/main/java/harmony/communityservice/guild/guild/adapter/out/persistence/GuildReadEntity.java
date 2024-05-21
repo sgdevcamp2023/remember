@@ -1,7 +1,8 @@
 package harmony.communityservice.guild.guild.adapter.out.persistence;
 
-import harmony.communityservice.generic.CommonUserInfoJpaVO;
-import harmony.communityservice.generic.ProfileInfoJpaVO;
+import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.generic.CommonUserInfoJpaVO;
+import harmony.communityservice.common.generic.ProfileInfoJpaVO;
 import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO.GuildIdJavaType;
 import harmony.communityservice.guild.guild.adapter.out.persistence.GuildReadIdJpaVO.GuildReadIdJavaType;
 import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
@@ -24,7 +25,7 @@ import org.hibernate.annotations.JavaType;
 @Getter
 @NoArgsConstructor
 @Table(name = "guild_read", indexes = @Index(name = "idx__userId__guildId", columnList = "user_id, guild_id"))
-class GuildReadEntity {
+public class GuildReadEntity extends AggregateRoot<GuildReadEntity, GuildReadIdJpaVO> {
 
     @Id
     @Column(name = "guild_read_id")
@@ -41,10 +42,6 @@ class GuildReadEntity {
     private UserIdJpaVO userId;
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "nickname", column = @Column(name = "user_nickname")),
-            @AttributeOverride(name = "profile", column = @Column(name = "user_profile"))
-    })
     private CommonUserInfoJpaVO commonUserInfo;
 
     @Embedded
@@ -69,5 +66,10 @@ class GuildReadEntity {
 
     private CommonUserInfoJpaVO makeUserInfo(String nickname, String profile) {
         return CommonUserInfoJpaVO.make(nickname, profile);
+    }
+
+    @Override
+    public GuildReadIdJpaVO getId() {
+        return guildReadId;
     }
 }

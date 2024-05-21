@@ -1,4 +1,4 @@
-package harmony.communityservice.generic;
+package harmony.communityservice.common.generic;
 
 import harmony.communityservice.common.domain.ValueObject;
 import jakarta.persistence.Column;
@@ -7,8 +7,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProfileInfoJpaVO extends ValueObject<ProfileInfoJpaVO> {

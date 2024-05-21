@@ -3,7 +3,7 @@ package harmony.communityservice.guild.guild.adapter.out.persistence;
 import harmony.communityservice.common.domain.LongTypeIdentifier;
 import harmony.communityservice.common.domain.LongTypeIdentifierJavaType;
 
-class GuildReadIdJpaVO extends LongTypeIdentifier {
+public class GuildReadIdJpaVO extends LongTypeIdentifier {
 
     public GuildReadIdJpaVO(Long id) {
         super(id);

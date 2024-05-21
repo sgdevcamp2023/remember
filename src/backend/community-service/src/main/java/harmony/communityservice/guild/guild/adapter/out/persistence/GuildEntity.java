@@ -1,7 +1,7 @@
 package harmony.communityservice.guild.guild.adapter.out.persistence;
 
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.ProfileInfoJpaVO;
+import harmony.communityservice.common.generic.ProfileInfoJpaVO;
 import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO.GuildIdJavaType;
 import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
 import jakarta.persistence.AttributeOverride;

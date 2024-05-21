@@ -51,6 +51,10 @@ class EmojiCommandPersistenceAdapter implements RegisterEmojiPort, DeleteEmojiPo
         List<Long> ids = boardIds.stream()
                 .map(BoardId::getId)
                 .toList();
+        List<BoardIdJpaVO> boardIdJpaVOS = boardIds.stream()
+                .map(boardId -> BoardIdJpaVO.make(boardId.getId()))
+                .toList();
         emojiCommandRepository.deleteEmojiUsersByBoardIds(ids);
+        emojiCommandRepository.deleteEmojisByBoardIds(boardIdJpaVOS);
     }
 }

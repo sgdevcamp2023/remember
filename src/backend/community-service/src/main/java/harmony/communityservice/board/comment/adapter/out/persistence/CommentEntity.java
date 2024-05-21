@@ -4,7 +4,7 @@ import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO
 import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO.BoardIdJavaType;
 import harmony.communityservice.board.comment.adapter.out.persistence.CommentIdJpaVO.CommentIdJavaType;
 import harmony.communityservice.common.domain.AggregateRoot;
-import harmony.communityservice.generic.WriterInfoJpaVO;
+import harmony.communityservice.common.generic.WriterInfoJpaVO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
