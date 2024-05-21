@@ -4,8 +4,8 @@ import harmony.communityservice.common.client.UserStatusClient;
 import harmony.communityservice.common.client.feign.UserStatusFeignClient;
 import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
 import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
-import harmony.communityservice.room.dto.SearchUserStatusInDmRoomRequest;
-import harmony.communityservice.guild.guild.dto.SearchUserStatesInGuildRequest;
+import harmony.communityservice.common.dto.SearchUserStatusInDmRoomRequest;
+import harmony.communityservice.guild.guild.adapter.in.web.SearchUserStatesInGuildRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

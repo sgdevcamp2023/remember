@@ -1,44 +1,48 @@
 package harmony.communityservice.user.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@Entity
-@Table(name = "user")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
 
-    @Id
-    @Column(name = "user_id")
-    private Long userId;
+    private final UserId userId;
 
-    @Embedded
-    private UserInfo userInfo;
+    private final UserInfo userInfo;
 
     @Builder
     public User(Long userId, String email, String nickname, String profile) {
-        this.userId = userId;
-        this.userInfo = makeUserInfo(email, nickname, profile);
+        this.userId = UserId.make(userId);
+        this.userInfo = UserInfo.make(email, profile, nickname);
     }
 
-    private UserInfo makeUserInfo(String email, String nickname, String profile) {
-        return UserInfo.make(email, nickname, profile);
+
+    public User modifiedNickname(String nickname) {
+        UserInfo modifiedUserInfo = userInfo.modifyNickname(nickname);
+        return new User(this.userId, modifiedUserInfo);
     }
 
-    public void modifyProfile(String profile) {
-        this.userInfo = this.userInfo.modifyProfile(profile);
+    public User modifiedProfile(String profile) {
+        UserInfo modifiedUserInfo = userInfo.modifyProfile(profile);
+        return new User(this.userId, modifiedUserInfo);
     }
 
-    public void modifyNickname(String nickname) {
-        this.userInfo = this.userInfo.modifyNickname(nickname);
-    }
+    @Getter
+    @ToString
+    public static class UserId {
 
+        private final Long id;
+
+        private UserId(Long id) {
+            this.id = id;
+        }
+
+        public static UserId make(Long id) {
+            return new UserId(id);
+        }
+    }
 }
