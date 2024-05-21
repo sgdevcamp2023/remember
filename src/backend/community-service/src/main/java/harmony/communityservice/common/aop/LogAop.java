@@ -1,7 +1,7 @@
 package harmony.communityservice.common.aop;
 
+import harmony.communityservice.common.utils.InfoLogPrinter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -9,41 +9,61 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-@Slf4j
+
 @Aspect
 @Component
 @RequiredArgsConstructor
 public class LogAop {
 
-    @Pointcut("execution(* harmony.communityservice.board.board.service.command.impl..*.*(..))")
-    public void commandService() {
+    private final InfoLogPrinter infoLogPrinter;
+
+    @Pointcut("execution(* harmony.communityservice.board.board..*.*(..))")
+    public void board() {
     }
 
-    @Pointcut("execution(* harmony.communityservice.board.board.repository.command.impl..*.*(..))")
-    public void commandRepository() {
+    @Pointcut("execution(* harmony.communityservice.board.comment..*.*(..))")
+    public void comment() {
+    }
+
+    @Pointcut("execution(* harmony.communityservice.board.emoji..*.*(..))")
+    public void emoji() {
+    }
+
+    @Pointcut("execution(* harmony.communityservice.common.service.impl.*.*(..))")
+    public void common() {
+    }
+
+    @Pointcut("execution(* harmony.communityservice.guild.category..*.*(..))")
+    public void category() {
+    }
+
+    @Pointcut("execution(* harmony.communityservice.guild.channel..*.*(..))")
+    public void channel() {
+    }
+
+    @Pointcut("execution(* harmony.communityservice.guild.guild..*.*(..))")
+    public void guild() {
+    }
+
+    @Pointcut("execution(* harmony.communityservice.room..*.*(..))")
+    public void room() {
+    }
+
+    @Pointcut("execution(* harmony.communityservice.user..*.*(..))")
+    public void user() {
     }
 
 
-    @Pointcut("execution(* harmony.communityservice.board.board.service.query.impl..*.*(..))")
-    public void queryService() {
-    }
 
-    @Pointcut("execution(* harmony.communityservice.board.board.repository.query.impl..*.*(..))")
-    public void queryRepository() {
-    }
 
-    @Around("commandService()||commandRepository()||queryService()||queryRepository()")
+    @Around("board()||comment()||emoji()||common()||category()||channel()||guild()||room()||user()")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             return joinPoint.proceed();
         } finally {
             Signature signature = joinPoint.getSignature();
             String className = joinPoint.getTarget().getClass().getSimpleName();
-            log.info(className + "-" + signature.getName());
+            infoLogPrinter.logging(className + "-" + signature.getName());
         }
     }
 }
-
-
-
-

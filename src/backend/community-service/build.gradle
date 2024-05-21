@@ -9,6 +9,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
+    targetCompatibility = '17'
 }
 
 configurations {
@@ -29,7 +30,7 @@ ext {
 task copyPrivate(type: Copy) {
     copy {
         from './remember-community-private-env'
-        include "*.yml", "*.properties", "*.json", "*.xml"
+        include "*.yml", "*.properties", "*.json", "*.xml", "mybatis/**", "*.sql",""
         into 'src/main/resources'
     }
 }
@@ -38,7 +39,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation group: 'org.springframework.retry', name: 'spring-retry', version: '2.0.5'
+    implementation 'com.google.guava:guava:33.0.0-jre'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -57,6 +59,8 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'com.github.ben-manes.caffeine:caffeine'
+    implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '3.0.3'
+
 }
 
 dependencyManagement {
