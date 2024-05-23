@@ -1,6 +1,7 @@
 package harmony.communityservice.guild.channel.domain;
 
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.guild.category.domain.Category.CategoryId;
 import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
@@ -37,11 +38,16 @@ public class Channel extends Domain<Channel, ChannelId> {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ChannelId {
+    public static class ChannelId extends ValueObject<ChannelId> {
         private Long id;
 
         public static ChannelId make(Long channelId) {
             return new ChannelId(channelId);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

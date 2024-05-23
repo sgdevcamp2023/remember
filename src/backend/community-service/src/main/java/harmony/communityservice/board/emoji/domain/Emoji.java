@@ -3,6 +3,7 @@ package harmony.communityservice.board.emoji.domain;
 import harmony.communityservice.board.board.domain.Board.BoardId;
 import harmony.communityservice.board.emoji.domain.Emoji.EmojiId;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -43,11 +44,16 @@ public class Emoji extends Domain<Emoji, EmojiId> {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class EmojiId {
+    public static class EmojiId extends ValueObject<EmojiId> {
         private final Long id;
 
         public static EmojiId make(Long emojiId) {
             return new EmojiId(emojiId);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

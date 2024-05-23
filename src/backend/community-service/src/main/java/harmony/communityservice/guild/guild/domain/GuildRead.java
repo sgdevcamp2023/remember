@@ -2,6 +2,7 @@ package harmony.communityservice.guild.guild.domain;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildRead.GuildReadId;
 import harmony.communityservice.user.domain.User.UserId;
@@ -56,11 +57,16 @@ public class GuildRead extends Domain<GuildRead, GuildReadId> {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class GuildReadId {
+    public static class GuildReadId extends ValueObject<GuildReadId> {
         private Long id;
 
         public static GuildReadId make(Long id) {
             return new GuildReadId(id);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

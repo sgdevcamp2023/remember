@@ -16,4 +16,9 @@ public class Content extends ValueObject<Content> {
         this.content = content;
         this.title = title;
     }
+
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{title, content};
+    }
 }

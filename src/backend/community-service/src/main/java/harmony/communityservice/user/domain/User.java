@@ -1,6 +1,7 @@
 package harmony.communityservice.user.domain;
 
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class User extends Domain<User, UserId> {
     }
 
     @Getter
-    public static class UserId {
+    public static class UserId extends ValueObject<UserId> {
 
         private final Long id;
 
@@ -42,6 +43,11 @@ public class User extends Domain<User, UserId> {
 
         public static UserId make(Long id) {
             return new UserId(id);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return  new Object[] { id };
         }
     }
 }

@@ -25,4 +25,9 @@ public class WriterInfo extends ValueObject<WriterInfo> {
         }
         return CommonUserInfo.make(userName, profile);
     }
+
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{writerId, commonUserInfo};
+    }
 }

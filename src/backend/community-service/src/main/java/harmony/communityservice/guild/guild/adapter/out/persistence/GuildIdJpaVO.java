@@ -1,9 +1,9 @@
 package harmony.communityservice.guild.guild.adapter.out.persistence;
 
-import harmony.communityservice.common.domainentity.LongTypeIdentifier;
-import harmony.communityservice.common.domainentity.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifier;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifierJavaType;
 
-public class GuildIdJpaVO extends LongTypeIdentifier {
+public class GuildIdJpaVO extends EntityLongTypeIdentifier {
 
     public GuildIdJpaVO(Long id) {
         super(id);
@@ -17,7 +17,7 @@ public class GuildIdJpaVO extends LongTypeIdentifier {
         return new GuildIdJpaVO(id);
     }
 
-    public static class GuildIdJavaType extends LongTypeIdentifierJavaType<GuildIdJpaVO> {
+    public static class GuildIdJavaType extends EntityLongTypeIdentifierJavaType<GuildIdJpaVO> {
         public GuildIdJavaType() {
             super(GuildIdJpaVO.class);
         }

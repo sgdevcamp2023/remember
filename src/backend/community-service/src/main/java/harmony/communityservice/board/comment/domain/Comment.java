@@ -3,6 +3,7 @@ package harmony.communityservice.board.comment.domain;
 import harmony.communityservice.board.board.domain.Board.BoardId;
 import harmony.communityservice.board.comment.domain.Comment.CommentId;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -48,11 +49,16 @@ public class Comment extends Domain<Comment, CommentId> {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class CommentId {
+    public static class CommentId extends ValueObject<CommentId> {
         private final Long id;
 
         public static CommentId make(Long commentId) {
             return new CommentId(commentId);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

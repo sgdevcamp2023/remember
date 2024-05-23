@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.room.domain.Room.RoomId;
 import java.util.List;
 import lombok.AccessLevel;
@@ -43,12 +44,17 @@ public class Room extends Domain<Room, RoomId> {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class RoomId {
+    public static class RoomId extends ValueObject<RoomId> {
 
         private final Long id;
 
         public static RoomId make(Long id) {
             return new RoomId(id);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

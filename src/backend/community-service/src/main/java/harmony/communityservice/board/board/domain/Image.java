@@ -2,6 +2,7 @@ package harmony.communityservice.board.board.domain;
 
 import harmony.communityservice.board.board.domain.Image.ImageId;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,11 +38,16 @@ public class Image extends Domain<Image, ImageId> {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ImageId {
+    public static class ImageId extends ValueObject<ImageId> {
         private Long id;
 
         public static ImageId make(Long imageId) {
             return new ImageId(imageId);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

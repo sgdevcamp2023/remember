@@ -1,6 +1,7 @@
 package harmony.communityservice.guild.category.domain;
 
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.guild.category.domain.Category.CategoryId;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import lombok.AccessLevel;
@@ -31,11 +32,16 @@ public class Category extends Domain<Category, CategoryId> {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class CategoryId {
+    public static class CategoryId extends ValueObject<CategoryId> {
         private final Long id;
 
         public static CategoryId make(Long id) {
             return new CategoryId(id);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

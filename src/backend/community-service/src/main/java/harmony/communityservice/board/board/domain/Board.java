@@ -2,6 +2,7 @@ package harmony.communityservice.board.board.domain;
 
 import harmony.communityservice.board.board.domain.Board.BoardId;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import java.time.Instant;
 import java.util.List;
@@ -62,11 +63,16 @@ public class Board extends Domain<Board, BoardId> {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class BoardId {
+    public static class BoardId extends ValueObject<BoardId> {
         private final Long id;
 
         public static BoardId make(Long boardId) {
             return new BoardId(boardId);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

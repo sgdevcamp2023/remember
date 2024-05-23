@@ -1,10 +1,10 @@
 package harmony.communityservice.room.adapter.out.persistence;
 
-import harmony.communityservice.common.domainentity.LongTypeIdentifier;
-import harmony.communityservice.common.domainentity.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifier;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifierJavaType;
 
 
-public class RoomIdJpaVO extends LongTypeIdentifier {
+public class RoomIdJpaVO extends EntityLongTypeIdentifier {
 
     public RoomIdJpaVO(Long id) {
         super(id);
@@ -18,7 +18,7 @@ public class RoomIdJpaVO extends LongTypeIdentifier {
         return longValue();
     }
 
-    public static class RoomIdJavaType extends LongTypeIdentifierJavaType<RoomIdJpaVO> {
+    public static class RoomIdJavaType extends EntityLongTypeIdentifierJavaType<RoomIdJpaVO> {
         public RoomIdJavaType() {
             super(RoomIdJpaVO.class);
         }

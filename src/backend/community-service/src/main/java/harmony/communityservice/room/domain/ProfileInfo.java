@@ -18,4 +18,9 @@ public class ProfileInfo extends ValueObject<ProfileInfo> {
     public static ProfileInfo make(String name, String profile) {
         return new ProfileInfo(name, profile);
     }
+
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{name, profile};
+    }
 }
