@@ -3,6 +3,8 @@ package harmony.communityservice.room.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.domain.Domain;
+import harmony.communityservice.room.domain.Room.RoomId;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,7 +13,7 @@ import lombok.Getter;
 
 @Getter
 @JsonInclude(Include.NON_NULL)
-public class Room {
+public class Room extends Domain<Room, RoomId> {
 
     private final RoomId roomId;
 
@@ -32,6 +34,11 @@ public class Room {
         if (profile == null || name == null) {
             throw new NotFoundDataException("데이터가 없습니다");
         }
+    }
+
+    @Override
+    public RoomId getId() {
+        return roomId;
     }
 
     @Getter

@@ -1,6 +1,8 @@
 package harmony.communityservice.board.emoji.domain;
 
 import harmony.communityservice.board.board.domain.Board.BoardId;
+import harmony.communityservice.board.emoji.domain.Emoji.EmojiId;
+import harmony.communityservice.domain.Domain;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -9,7 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Emoji {
+public class Emoji extends Domain<Emoji, EmojiId> {
 
     private EmojiId emojiId;
 
@@ -32,6 +34,11 @@ public class Emoji {
         this.emojiId = emojiId;
         this.emojiType = emojiType;
         this.emojiUsers = emojiUsers;
+    }
+
+    @Override
+    public EmojiId getId() {
+        return emojiId;
     }
 
     @Getter

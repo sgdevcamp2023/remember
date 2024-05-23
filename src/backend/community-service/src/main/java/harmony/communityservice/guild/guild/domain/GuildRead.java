@@ -1,16 +1,17 @@
 package harmony.communityservice.guild.guild.domain;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.domain.Domain;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
+import harmony.communityservice.guild.guild.domain.GuildRead.GuildReadId;
 import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-public class GuildRead {
+public class GuildRead extends Domain<GuildRead, GuildReadId> {
 
     private GuildReadId guildReadId;
 
@@ -46,6 +47,11 @@ public class GuildRead {
         }
 
         return ProfileInfo.make(name, profile);
+    }
+
+    @Override
+    public GuildReadId getId() {
+        return guildReadId;
     }
 
     @Getter

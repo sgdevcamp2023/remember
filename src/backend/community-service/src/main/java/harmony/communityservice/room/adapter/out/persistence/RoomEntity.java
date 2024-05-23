@@ -1,6 +1,6 @@
 package harmony.communityservice.room.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.domainentity.AggregateRootEntity;
 import harmony.communityservice.common.generic.ProfileInfoJpaVO;
 import harmony.communityservice.room.adapter.out.persistence.RoomIdJpaVO.RoomIdJavaType;
 import jakarta.persistence.AttributeOverride;
@@ -31,7 +31,7 @@ import org.hibernate.annotations.JavaType;
 @Entity
 @Table(name = "room")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RoomEntity extends AggregateRoot<RoomEntity, RoomIdJpaVO> {
+public class RoomEntity extends AggregateRootEntity<RoomEntity, RoomIdJpaVO> {
 
 
     @Id

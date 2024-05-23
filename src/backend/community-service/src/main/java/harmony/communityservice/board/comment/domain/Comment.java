@@ -1,6 +1,8 @@
 package harmony.communityservice.board.comment.domain;
 
 import harmony.communityservice.board.board.domain.Board.BoardId;
+import harmony.communityservice.board.comment.domain.Comment.CommentId;
+import harmony.communityservice.domain.Domain;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,7 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Comment {
+public class Comment extends Domain<Comment, CommentId> {
 
     private CommentId commentId;
 
@@ -37,6 +39,11 @@ public class Comment {
                 .profile(profile)
                 .writerId(writerId)
                 .build();
+    }
+
+    @Override
+    public CommentId getId() {
+        return commentId;
     }
 
     @Getter

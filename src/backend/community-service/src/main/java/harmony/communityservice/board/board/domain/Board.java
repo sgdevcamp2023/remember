@@ -1,5 +1,7 @@
 package harmony.communityservice.board.board.domain;
 
+import harmony.communityservice.board.board.domain.Board.BoardId;
+import harmony.communityservice.domain.Domain;
 import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import java.time.Instant;
 import java.util.List;
@@ -9,7 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Board {
+public class Board extends Domain<Board, BoardId> {
 
     private final BoardId boardId;
 
@@ -51,6 +53,11 @@ public class Board {
                 .profile(profile)
                 .writerId(writerId)
                 .build();
+    }
+
+    @Override
+    public BoardId getId() {
+        return boardId;
     }
 
     @Getter

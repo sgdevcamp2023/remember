@@ -1,7 +1,7 @@
 package harmony.communityservice.guild.category.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.LongTypeIdentifier;
-import harmony.communityservice.common.domain.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.LongTypeIdentifier;
+import harmony.communityservice.common.domainentity.LongTypeIdentifierJavaType;
 
 public class CategoryIdJpaVO extends LongTypeIdentifier {
 

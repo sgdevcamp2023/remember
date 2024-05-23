@@ -1,6 +1,6 @@
 package harmony.communityservice.common.generic;
 
-import harmony.communityservice.common.domain.ValueObject;
+import harmony.communityservice.common.domainentity.EntityValueObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +15,7 @@ import lombok.ToString;
 @Embeddable
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommonUserInfoJpaVO extends ValueObject<CommonUserInfoJpaVO> {
+public class CommonUserInfoJpaVO extends EntityValueObject<CommonUserInfoJpaVO> {
 
     @NotBlank
     @Column(name = "user_nickname")

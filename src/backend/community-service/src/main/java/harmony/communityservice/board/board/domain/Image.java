@@ -1,11 +1,13 @@
 package harmony.communityservice.board.board.domain;
 
+import harmony.communityservice.board.board.domain.Image.ImageId;
+import harmony.communityservice.domain.Domain;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class Image {
+public class Image extends Domain<Image, ImageId> {
 
     private final String imageUrl;
     private ImageId imageId;
@@ -25,6 +27,11 @@ public class Image {
 
     public static Image make(Long imageId, String imageUrl) {
         return new Image(imageUrl, ImageId.make(imageId));
+    }
+
+    @Override
+    public ImageId getId() {
+        return imageId;
     }
 
 

@@ -1,5 +1,7 @@
 package harmony.communityservice.guild.guild.domain;
 
+import harmony.communityservice.domain.Domain;
+import harmony.communityservice.guild.guild.domain.GuildUser.GuildUserId;
 import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -7,7 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class GuildUser {
+public class GuildUser extends Domain<GuildUser, GuildUserId> {
 
     private GuildUserId guildUserId;
 
@@ -25,6 +27,11 @@ public class GuildUser {
 
     public static GuildUser make(UserId userId) {
         return new GuildUser(userId);
+    }
+
+    @Override
+    public GuildUserId getId() {
+        return guildUserId;
     }
 
     @Getter

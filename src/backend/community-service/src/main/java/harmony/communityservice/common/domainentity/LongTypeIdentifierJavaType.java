@@ -1,4 +1,4 @@
-package harmony.communityservice.common.domain;
+package harmony.communityservice.common.domainentity;
 
 import java.sql.Types;
 import org.hibernate.type.descriptor.WrapperOptions;

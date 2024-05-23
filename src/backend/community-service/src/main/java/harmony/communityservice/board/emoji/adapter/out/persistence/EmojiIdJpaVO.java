@@ -1,7 +1,7 @@
 package harmony.communityservice.board.emoji.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.LongTypeIdentifier;
-import harmony.communityservice.common.domain.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.LongTypeIdentifier;
+import harmony.communityservice.common.domainentity.LongTypeIdentifierJavaType;
 
 public class EmojiIdJpaVO extends LongTypeIdentifier {
 

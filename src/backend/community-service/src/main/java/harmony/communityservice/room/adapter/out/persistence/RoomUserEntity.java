@@ -1,6 +1,6 @@
 package harmony.communityservice.room.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.DomainEntity;
+import harmony.communityservice.common.domainentity.DomainEntity;
 import harmony.communityservice.room.adapter.out.persistence.RoomUserIdJpaVO.RoomUserIdJavaType;
 import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
 import jakarta.persistence.Column;

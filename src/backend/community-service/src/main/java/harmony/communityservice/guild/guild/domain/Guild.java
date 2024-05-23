@@ -1,6 +1,8 @@
 package harmony.communityservice.guild.guild.domain;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.domain.Domain;
+import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import harmony.communityservice.user.domain.User.UserId;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +10,15 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-public class Guild {
+public class Guild extends Domain<Guild, GuildId> {
 
     private final String invitationCode;
     private final UserId managerId;
     private final ProfileInfo profileInfo;
-    private GuildId guildId;
     private final List<GuildUser> guildUsers = new ArrayList<>();
+    private GuildId guildId;
 
     @Builder
     public Guild(GuildId guildId, String name, String profile, String inviteCode,
@@ -37,6 +38,11 @@ public class Guild {
         }
 
         return ProfileInfo.make(name, profile);
+    }
+
+    @Override
+    public GuildId getId() {
+        return guildId;
     }
 
     @Getter

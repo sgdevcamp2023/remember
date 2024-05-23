@@ -1,10 +1,11 @@
 package harmony.communityservice.board.board.domain;
 
+import harmony.communityservice.domain.ValueObject;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Content {
+public class Content extends ValueObject<Content> {
 
     private final String title;
 

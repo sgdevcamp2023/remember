@@ -1,11 +1,12 @@
 package harmony.communityservice.board.comment.domain;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.domain.ValueObject;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class WriterInfo {
+public class WriterInfo extends ValueObject<WriterInfo> {
 
     private final Long writerId;
 

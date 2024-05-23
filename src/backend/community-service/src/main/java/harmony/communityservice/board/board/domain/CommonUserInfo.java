@@ -1,13 +1,14 @@
 package harmony.communityservice.board.board.domain;
 
 
+import harmony.communityservice.domain.ValueObject;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommonUserInfo {
+public class CommonUserInfo extends ValueObject<CommonUserInfo> {
     private final String nickname;
     private final String profile;
 

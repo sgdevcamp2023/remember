@@ -1,6 +1,6 @@
 package harmony.communityservice.board.board.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.ValueObject;
+import harmony.communityservice.common.domainentity.EntityValueObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ContentJpaVO extends ValueObject<ContentJpaVO> {
+public class ContentJpaVO extends EntityValueObject<ContentJpaVO> {
 
     @NotBlank
     @Column(name = "title")

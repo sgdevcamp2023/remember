@@ -1,6 +1,8 @@
 package harmony.communityservice.guild.channel.domain;
 
+import harmony.communityservice.domain.Domain;
 import harmony.communityservice.guild.category.domain.Category.CategoryId;
+import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,7 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Channel {
+public class Channel extends Domain<Channel, ChannelId> {
 
     private ChannelId channelId;
 
@@ -26,6 +28,11 @@ public class Channel {
         this.guildId = guildId;
         this.name = name;
         this.type = ChannelType.valueOf(type);
+    }
+
+    @Override
+    public ChannelId getId() {
+        return channelId;
     }
 
     @Getter

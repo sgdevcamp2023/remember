@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.channel.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.domainentity.AggregateRootEntity;
 import harmony.communityservice.guild.category.adapter.out.persistence.CategoryIdJpaVO;
 import harmony.communityservice.guild.category.adapter.out.persistence.CategoryIdJpaVO.CategoryIdJavaType;
 import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO.ChannelIdJavaType;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.JavaType;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "channel", indexes = @Index(name = "idx__guild_id", columnList = "guild_id"))
-public class ChannelEntity extends AggregateRoot<ChannelEntity, ChannelIdJpaVO> {
+public class ChannelEntity extends AggregateRootEntity<ChannelEntity, ChannelIdJpaVO> {
 
     @Id
     @Column(name = "channel_id")

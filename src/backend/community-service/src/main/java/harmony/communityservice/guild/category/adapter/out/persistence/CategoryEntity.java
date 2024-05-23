@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.category.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.domainentity.AggregateRootEntity;
 import harmony.communityservice.guild.category.adapter.out.persistence.CategoryIdJpaVO.CategoryIdJavaType;
 import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO;
 import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO.GuildIdJavaType;
@@ -22,7 +22,7 @@ import org.hibernate.annotations.JavaType;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "category", indexes = @Index(name = "idx__guild_id", columnList = "guild_id"))
-public class CategoryEntity extends AggregateRoot<CategoryEntity, CategoryIdJpaVO> {
+public class CategoryEntity extends AggregateRootEntity<CategoryEntity, CategoryIdJpaVO> {
 
     @Id
     @Column(name = "category_id")

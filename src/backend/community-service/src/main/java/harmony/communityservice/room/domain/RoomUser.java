@@ -1,12 +1,14 @@
 package harmony.communityservice.room.domain;
 
+import harmony.communityservice.domain.Domain;
+import harmony.communityservice.room.domain.RoomUser.RoomUserId;
 import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class RoomUser {
+public class RoomUser extends Domain<RoomUser, RoomUserId> {
 
     private RoomUserId roomUserId;
 
@@ -20,6 +22,10 @@ public class RoomUser {
         return new RoomUser(userId);
     }
 
+    @Override
+    public RoomUserId getId() {
+        return roomUserId;
+    }
 
 
     @Getter

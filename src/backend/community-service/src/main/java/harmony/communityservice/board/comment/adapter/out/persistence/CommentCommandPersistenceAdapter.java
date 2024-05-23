@@ -9,7 +9,7 @@ import harmony.communityservice.board.comment.application.port.out.RegisterComme
 import harmony.communityservice.board.comment.domain.Comment;
 import harmony.communityservice.board.comment.domain.Comment.CommentId;
 import harmony.communityservice.common.annotation.PersistenceAdapter;
-import harmony.communityservice.common.domain.ModifiedType;
+import harmony.communityservice.common.domainentity.ModifiedType;
 import harmony.communityservice.user.domain.User.UserId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

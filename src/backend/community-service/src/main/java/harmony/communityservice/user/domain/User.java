@@ -1,14 +1,15 @@
 package harmony.communityservice.user.domain;
 
+import harmony.communityservice.domain.Domain;
+import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class User {
+public class User extends Domain<User, UserId> {
 
     private final UserId userId;
 
@@ -20,19 +21,17 @@ public class User {
         this.userInfo = UserInfo.make(email, profile, nickname);
     }
 
-
-    public User modifiedNickname(String nickname) {
-        UserInfo modifiedUserInfo = userInfo.modifyNickname(nickname);
-        return new User(this.userId, modifiedUserInfo);
-    }
-
     public User modifiedProfile(String profile) {
         UserInfo modifiedUserInfo = userInfo.modifyProfile(profile);
         return new User(this.userId, modifiedUserInfo);
     }
 
+    @Override
+    public UserId getId() {
+        return userId;
+    }
+
     @Getter
-    @ToString
     public static class UserId {
 
         private final Long id;

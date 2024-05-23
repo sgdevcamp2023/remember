@@ -1,9 +1,10 @@
 package harmony.communityservice.room.domain;
 
+import harmony.communityservice.domain.ValueObject;
 import lombok.Getter;
 
 @Getter
-public class ProfileInfo {
+public class ProfileInfo extends ValueObject<ProfileInfo> {
 
     private String name;
 
