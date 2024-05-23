@@ -18,15 +18,23 @@ public class RoomUser extends Domain<RoomUser, RoomUserId> {
         this.userId = userId;
     }
 
+    private RoomUser(RoomUserId roomUserId, UserId userId) {
+        this.roomUserId = roomUserId;
+        this.userId = userId;
+    }
+
     public static RoomUser make(UserId userId) {
         return new RoomUser(userId);
+    }
+
+    public static RoomUser make(RoomUserId roomUserId, UserId userId) {
+        return new RoomUser(roomUserId, userId);
     }
 
     @Override
     public RoomUserId getId() {
         return roomUserId;
     }
-
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
