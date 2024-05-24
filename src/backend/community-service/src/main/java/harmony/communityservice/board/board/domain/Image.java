@@ -1,7 +1,9 @@
 package harmony.communityservice.board.board.domain;
 
 import harmony.communityservice.board.board.domain.Image.ImageId;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ public class Image extends Domain<Image, ImageId> {
     }
 
     private Image(String imageUrl, ImageId imageId) {
+        verifyImageId(imageId);
         this.imageUrl = imageUrl;
         this.imageId = imageId;
     }
@@ -29,6 +32,13 @@ public class Image extends Domain<Image, ImageId> {
     public static Image make(Long imageId, String imageUrl) {
         return new Image(imageUrl, ImageId.make(imageId));
     }
+
+    private void verifyImageId(ImageId imageId) {
+        if (imageId != null && imageId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("imageId의 범위가 1 미만입니다");
+        }
+    }
+
 
     @Override
     public ImageId getId() {

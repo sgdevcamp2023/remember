@@ -29,9 +29,6 @@ public class WriterInfo extends ValueObject<WriterInfo> {
     }
 
     private CommonUserInfo makeUserInfo(String userName, String profile) {
-        if (userName == null || profile == null) {
-            throw new NotFoundDataException();
-        }
         return CommonUserInfo.make(userName, profile);
     }
 
