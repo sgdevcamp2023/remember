@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.guild.category.domain.Category.CategoryId;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class CategoryTest {
 
@@ -67,6 +70,26 @@ class CategoryTest {
                 .build());
     }
 
+    @ParameterizedTest
+    @DisplayName("guildId range 테스트")
+    @ValueSource(longs = {0L,-1L, -100L, -1000L})
+    void guild_id_range_threshold(long guildId) {
+        assertThrows(WrongThresholdRangeException.class, () -> Category.builder()
+                .categoryId(CategoryId.make(2L))
+                .guildId(GuildId.make(guildId))
+                .name("test")
+                .build());
+    }
 
+    @ParameterizedTest
+    @DisplayName("categoryId range 테스트")
+    @ValueSource(longs = {0L,-1L, -100L, -1000L})
+    void category_id_range_threshold(long categoryId) {
+        assertThrows(WrongThresholdRangeException.class, () -> Category.builder()
+                .categoryId(CategoryId.make(categoryId))
+                .guildId(GuildId.make(1L))
+                .name("test")
+                .build());
+    }
 
 }

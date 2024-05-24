@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.guild.category.domain.Category.CategoryId;
 import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
@@ -125,5 +126,31 @@ class ChannelTest {
                 .guildId(GuildId.make(1L))
                 .build());
 
+    }
+
+    @ParameterizedTest
+    @DisplayName("guildId 범위 테스트")
+    @ValueSource(longs = {0L, -1L, -10L, -100L, -1000L})
+    void guild_id_range_threshold(Long guildId) {
+        assertThrows(WrongThresholdRangeException.class,()->Channel.builder()
+                .name("test")
+                .type("FORUM")
+                .channelId(ChannelId.make(2L))
+                .categoryId(CategoryId.make(1L))
+                .guildId(GuildId.make(guildId))
+                .build());
+    }
+
+    @ParameterizedTest
+    @DisplayName("channelId 범위 테스트")
+    @ValueSource(longs = {0L, -1L, -10L, -100L, -1000L})
+    void channel_id_range_threshold(Long channelId) {
+        assertThrows(WrongThresholdRangeException.class,()->Channel.builder()
+                .name("test")
+                .type("FORUM")
+                .channelId(ChannelId.make(channelId))
+                .categoryId(CategoryId.make(1L))
+                .guildId(GuildId.make(1L))
+                .build());
     }
 }

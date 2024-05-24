@@ -3,7 +3,9 @@ package harmony.communityservice.room.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.room.domain.Room.RoomId;
 import java.util.List;
@@ -28,8 +30,15 @@ public class Room extends Domain<Room, RoomId> {
         verifyProfileInfo(profile, name);
         verifyRoomUsers(roomUsers);
         this.profileInfo = ProfileInfo.make(name, profile);
+        verifyRoomId(roomId);
         this.roomId = roomId;
         this.roomUsers = roomUsers;
+    }
+
+    private void verifyRoomId(RoomId roomId) {
+        if (roomId != null && roomId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("roomId가 1 미만입니다");
+        }
     }
 
     private void verifyProfileInfo(String profile, String name) {
@@ -40,7 +49,7 @@ public class Room extends Domain<Room, RoomId> {
 
     private void verifyRoomUsers(List<RoomUser> roomUsers) {
         if (roomUsers == null || roomUsers.isEmpty()) {
-            throw new NotFoundDataException("데이터가 존재하지 않습니다");
+            throw new NotFoundDataException("roomUser가 존재하지 않습니다");
         }
     }
 

@@ -1,12 +1,15 @@
 package harmony.communityservice.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.user.domain.User.UserId;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class UserTest {
 
@@ -82,7 +85,19 @@ class UserTest {
 
         boolean equals = firstUserId.equals(secondUserId);
 
-        assertSame(equals,true);
+        assertSame(equals, true);
+    }
+
+    @ParameterizedTest
+    @DisplayName("UserId 범위 테스트")
+    @ValueSource(longs = {0L, -1L, -10L, -100L, -1000L})
+    void modified_user(long userId) {
+        assertThrows(WrongThresholdRangeException.class, () -> User.builder()
+                .userId(userId)
+                .email("test@test.com")
+                .profile("https://cdn.com/test")
+                .nickname("test")
+                .build());
     }
 
 }

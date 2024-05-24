@@ -1,6 +1,9 @@
 package harmony.communityservice.room.domain;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.room.domain.RoomUser.RoomUserId;
 import harmony.communityservice.user.domain.User.UserId;
@@ -15,11 +18,14 @@ public class RoomUser extends Domain<RoomUser, RoomUserId> {
     private RoomUserId roomUserId;
 
     private RoomUser(UserId userId) {
+        verifyUserId(userId);
         this.userId = userId;
     }
 
     private RoomUser(RoomUserId roomUserId, UserId userId) {
+        verifyRoomUserId(roomUserId);
         this.roomUserId = roomUserId;
+        verifyUserId(userId);
         this.userId = userId;
     }
 
@@ -29,6 +35,22 @@ public class RoomUser extends Domain<RoomUser, RoomUserId> {
 
     public static RoomUser make(RoomUserId roomUserId, UserId userId) {
         return new RoomUser(roomUserId, userId);
+    }
+
+    private void verifyUserId(UserId userId) {
+        if (userId == null) {
+            throw new NotFoundDataException("userId를 찾을 수 없습니다");
+        }
+
+        if (userId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("userId 범위가 1 미만입니다");
+        }
+    }
+
+    private void verifyRoomUserId(RoomUserId roomUserId) {
+        if (roomUserId != null && roomUserId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("roomUserId의 범위가 1 미만입니다");
+        }
     }
 
     @Override

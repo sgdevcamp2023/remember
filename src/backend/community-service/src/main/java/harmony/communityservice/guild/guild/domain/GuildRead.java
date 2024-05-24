@@ -1,7 +1,9 @@
 package harmony.communityservice.guild.guild.domain;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildRead.GuildReadId;
@@ -31,13 +33,24 @@ public class GuildRead extends Domain<GuildRead, GuildReadId> {
         this.profileInfo = makeGuildInfo(guildId, name, profile);
         this.guildId = guildId;
         this.userId = userId;
+        verifyGuildReadId(guildReadId);
         this.guildReadId = guildReadId;
+    }
+
+    private void verifyGuildReadId(GuildReadId guildReadId) {
+        if (guildReadId != null && guildReadId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("guildReadId가 1 미만입니다");
+        }
     }
 
     private CommonUserInfo makeUserInfo(UserId userId, String name, String profile) {
 
         if (userId == null) {
             throw new NotFoundDataException("userId가 존재하지 않습니다");
+        }
+
+        if (userId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("userId가 1 미만입니다");
         }
 
         if (name == null || profile == null) {
@@ -50,6 +63,10 @@ public class GuildRead extends Domain<GuildRead, GuildReadId> {
     private ProfileInfo makeGuildInfo(GuildId guildId, String name, String profile) {
         if (guildId == null) {
             throw new NotFoundDataException("guildId가 존재하지 않습니다");
+        }
+
+        if (guildId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("guildId가 1 미만입니다");
         }
 
         if (name == null || profile == null) {

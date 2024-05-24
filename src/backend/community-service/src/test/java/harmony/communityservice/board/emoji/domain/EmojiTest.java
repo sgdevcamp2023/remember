@@ -119,17 +119,47 @@ class EmojiTest {
 
     @ParameterizedTest
     @DisplayName("emojiType 범위 넘을 때 예외 처리 테스트")
-    @ValueSource(longs = {0L,257L,258L,1000L, -1L, -1110L})
+    @ValueSource(longs = {0L, 257L, 258L, 1000L, -1L, -1110L})
     void emoji_type_range_check_threshold(Long emojiType) {
         List<EmojiUser> emojiUsers = new ArrayList<>(
                 List.of(new EmojiUser(UserId.make(1L), EmojiUserId.make(1L))));
 
-        assertThrows(WrongThresholdRangeException.class,()->Emoji.builder()
+        assertThrows(WrongThresholdRangeException.class, () -> Emoji.builder()
                 .emojiId(EmojiId.make(1L))
                 .emojiType(emojiType)
                 .boardId(BoardId.make(1L))
                 .emojiUsers(emojiUsers)
                 .build());
 
+    }
+
+    @ParameterizedTest
+    @DisplayName("boardId의 범위 예외 처리 테스트")
+    @ValueSource(longs = {0L, -1L, -1000L, -10000L})
+    void board_id_range_check_threshold(Long boardId) {
+        List<EmojiUser> emojiUsers = new ArrayList<>(
+                List.of(new EmojiUser(UserId.make(1L), EmojiUserId.make(1L))));
+
+        assertThrows(WrongThresholdRangeException.class, () -> Emoji.builder()
+                .emojiId(EmojiId.make(1L))
+                .emojiType(1L)
+                .boardId(BoardId.make(boardId))
+                .emojiUsers(emojiUsers)
+                .build());
+    }
+
+    @ParameterizedTest
+    @DisplayName("emojiId의 범위 예외 처리 테스트")
+    @ValueSource(longs = {0L, -1L, -1000L, -10000L})
+    void emoji_id_range_check_threshold(Long emojiId) {
+        List<EmojiUser> emojiUsers = new ArrayList<>(
+                List.of(new EmojiUser(UserId.make(1L), EmojiUserId.make(1L))));
+
+        assertThrows(WrongThresholdRangeException.class, () -> Emoji.builder()
+                .emojiId(EmojiId.make(emojiId))
+                .emojiType(1L)
+                .boardId(BoardId.make(1L))
+                .emojiUsers(emojiUsers)
+                .build());
     }
 }

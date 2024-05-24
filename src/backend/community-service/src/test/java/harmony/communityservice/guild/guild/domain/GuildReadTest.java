@@ -3,11 +3,14 @@ package harmony.communityservice.guild.guild.domain;
 import static org.junit.jupiter.api.Assertions.*;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildRead.GuildReadId;
 import harmony.communityservice.user.domain.User.UserId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class GuildReadTest {
 
@@ -147,4 +150,50 @@ class GuildReadTest {
                 .build());
     }
 
+    @ParameterizedTest
+    @DisplayName("guildId 범위 테스트")
+    @ValueSource(longs = {0L,-1L,-10L,-100L,-1000L})
+    void guild_id_range_threshold(long guildId) {
+
+        assertThrows(WrongThresholdRangeException.class,()->GuildRead.builder()
+                .name("first_guild")
+                .profile("http://cdn.com/test")
+                .guildId(GuildId.make(guildId))
+                .userId(UserId.make(1L))
+                .userNickname("test1")
+                .userProfile("http://cdn.com/user_test_profile")
+                .guildReadId(GuildReadId.make(1L))
+                .build());
+    }
+
+    @ParameterizedTest
+    @DisplayName("userId 범위 테스트")
+    @ValueSource(longs = {0L,-1L,-10L,-100L,-1000L})
+    void user_id_range_threshold(long userId) {
+
+        assertThrows(WrongThresholdRangeException.class,()->GuildRead.builder()
+                .name("first_guild")
+                .profile("http://cdn.com/test")
+                .guildId(GuildId.make(1L))
+                .userId(UserId.make(userId))
+                .userNickname("test1")
+                .userProfile("http://cdn.com/user_test_profile")
+                .guildReadId(GuildReadId.make(1L))
+                .build());
+    }
+
+    @ParameterizedTest
+    @DisplayName("guildReadId 범위 테스트")
+    @ValueSource(longs = {0L,-1L,-10L,-100L,-1000L})
+    void guild_read_id_range_threshold(long guildReadId) {
+        assertThrows(WrongThresholdRangeException.class,()->GuildRead.builder()
+                .name("first_guild")
+                .profile("http://cdn.com/test")
+                .guildId(GuildId.make(1L))
+                .userId(UserId.make(1L))
+                .userNickname("test1")
+                .userProfile("http://cdn.com/user_test_profile")
+                .guildReadId(GuildReadId.make(guildReadId))
+                .build());
+    }
 }

@@ -2,10 +2,13 @@ package harmony.communityservice.room.domain;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.room.domain.RoomUser.RoomUserId;
 import harmony.communityservice.user.domain.User.UserId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class RoomUserTest {
 
@@ -30,5 +33,21 @@ class RoomUserTest {
         boolean equals = firstRoomUser.equals(secondRoomUser);
 
         assertSame(equals,false);
+    }
+
+    @ParameterizedTest
+    @DisplayName("userId 범위 테스트")
+    @ValueSource(longs = {0L,-1L,-10L,-100L,-1000L})
+    void user_id_range_threshold(Long userId) {
+        assertThrows(WrongThresholdRangeException.class,
+                ()->RoomUser.make(RoomUserId.make(1L), UserId.make(userId)));
+    }
+
+    @ParameterizedTest
+    @DisplayName("roomUserId 범위 테스트")
+    @ValueSource(longs = {0L,-1L,-10L,-100L,-1000L})
+    void room_user_id_range_threshold(Long roomUserId) {
+        assertThrows(WrongThresholdRangeException.class,
+                ()->RoomUser.make(RoomUserId.make(roomUserId), UserId.make(1L)));
     }
 }

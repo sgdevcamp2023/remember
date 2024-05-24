@@ -1,6 +1,8 @@
 package harmony.communityservice.user.domain;
 
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
@@ -18,6 +20,7 @@ public class User extends Domain<User, UserId> {
 
     @Builder
     public User(Long userId, String email, String nickname, String profile) {
+        verifyUserId(userId);
         this.userId = UserId.make(userId);
         this.userInfo = UserInfo.make(email, profile, nickname);
     }
@@ -25,6 +28,12 @@ public class User extends Domain<User, UserId> {
     public User modifiedProfile(String profile) {
         UserInfo modifiedUserInfo = userInfo.modifyProfile(profile);
         return new User(this.userId, modifiedUserInfo);
+    }
+
+    private void verifyUserId(Long userId) {
+        if (userId != null && userId < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("userId가 1 미만입니다");
+        }
     }
 
     @Override

@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import harmony.communityservice.user.domain.User.UserId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class GuildTest {
 
@@ -102,6 +105,32 @@ class GuildTest {
                 .profile("http://cdn.com/test")
                 .name("test_guild")
                 .guildId(GuildId.make(1L))
+                .build());
+    }
+
+    @ParameterizedTest
+    @DisplayName("managerId 범위 테스트")
+    @ValueSource(longs = {0L, -1L, -10L, -100L})
+    void manager_id_range_threshold(Long managerId) {
+        assertThrows(WrongThresholdRangeException.class, () -> Guild.builder()
+                .inviteCode("test")
+                .profile("http://cdn.com/test")
+                .name("test_guild")
+                .guildId(GuildId.make(1L))
+                .managerId(UserId.make(managerId))
+                .build());
+    }
+
+    @ParameterizedTest
+    @DisplayName("guildId 범위 테스트")
+    @ValueSource(longs = {0L, -1L, -10L, -100L})
+    void guild_id_range_threshold(Long guildId) {
+        assertThrows(WrongThresholdRangeException.class, () -> Guild.builder()
+                .inviteCode("test")
+                .profile("http://cdn.com/test")
+                .name("test_guild")
+                .guildId(GuildId.make(guildId))
+                .managerId(UserId.make(1L))
                 .build());
     }
 }

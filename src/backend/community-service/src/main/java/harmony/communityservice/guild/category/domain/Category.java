@@ -1,7 +1,9 @@
 package harmony.communityservice.guild.category.domain;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.guild.category.domain.Category.CategoryId;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
@@ -21,6 +23,7 @@ public class Category extends Domain<Category, CategoryId> {
 
     @Builder
     public Category(CategoryId categoryId, GuildId guildId, String name) {
+        verifyCategoryId(categoryId);
         this.categoryId = categoryId;
         verifyGuildId(guildId);
         this.guildId = guildId;
@@ -31,6 +34,16 @@ public class Category extends Domain<Category, CategoryId> {
     private void verifyGuildId(GuildId guildId) {
         if (guildId == null) {
             throw new NotFoundDataException("guildId가 존재하지 않습니다");
+        }
+
+        if (guildId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("guildId가 1 미만입니다.");
+        }
+    }
+
+    private void verifyCategoryId(CategoryId categoryId) {
+        if (categoryId != null && categoryId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("categoryId가 1 미만입니다");
         }
     }
 

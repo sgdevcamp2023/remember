@@ -3,6 +3,7 @@ package harmony.communityservice.room.domain;
 import static org.junit.jupiter.api.Assertions.*;
 
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.room.domain.Room.RoomId;
 import harmony.communityservice.user.domain.User.UserId;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class RoomTest {
 
@@ -127,6 +130,24 @@ class RoomTest {
                     .name("first_room")
                     .roomUsers(roomUsers)
                     .roomId(RoomId.make(1L))
+                    .build();
+        });
+    }
+
+    @ParameterizedTest
+    @DisplayName("roomId 범위 테스트")
+    @ValueSource(longs = {0L, -1L, -10L, -100L, -1000L})
+    void room_id_range_threshold(long roomId) {
+
+        RoomUser first = RoomUser.make(UserId.make(1L));
+        RoomUser second = RoomUser.make(UserId.make(2L));
+        List<RoomUser> firstRoomUsers = new ArrayList<>(Arrays.asList(first, second));
+        assertThrows(WrongThresholdRangeException.class,()->{
+            Room.builder()
+                    .profile("http://cdn.com/test")
+                    .roomId(RoomId.make(roomId))
+                    .name("test")
+                    .roomUsers(firstRoomUsers)
                     .build();
         });
     }
