@@ -25,9 +25,11 @@ public class Guild extends Domain<Guild, GuildId> {
     public Guild(GuildId guildId, String name, String profile, String inviteCode,
                  UserId managerId) {
         this.guildId = guildId;
+        verifyInvitationCode(inviteCode);
         this.invitationCode = inviteCode;
+        verifyManagerId(managerId);
         this.managerId = managerId;
-        if (managerId != null) {
+        if (guildUsers.isEmpty()) {
             guildUsers.add(GuildUser.make(managerId));
         }
         this.profileInfo = makeGuildInfo(name, profile);
@@ -39,6 +41,18 @@ public class Guild extends Domain<Guild, GuildId> {
         }
 
         return ProfileInfo.make(name, profile);
+    }
+
+    private void verifyInvitationCode(String inviteCode) {
+        if (inviteCode == null) {
+            throw new NotFoundDataException("데이터가 존재하지 않습니다");
+        }
+    }
+
+    private void verifyManagerId(UserId managerId) {
+        if (managerId == null) {
+            throw new NotFoundDataException("데이터가 존재하지 않습니다");
+        }
     }
 
     @Override

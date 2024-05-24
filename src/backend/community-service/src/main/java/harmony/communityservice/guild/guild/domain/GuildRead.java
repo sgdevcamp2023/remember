@@ -27,24 +27,33 @@ public class GuildRead extends Domain<GuildRead, GuildReadId> {
     @Builder
     public GuildRead(String userProfile, String userNickname, GuildId guildId, String name, String profile,
                      UserId userId, GuildReadId guildReadId) {
-        this.commonUserInfo = makeUserInfo(userNickname, userProfile);
+        this.commonUserInfo = makeUserInfo(userId, userNickname, userProfile);
+        this.profileInfo = makeGuildInfo(guildId, name, profile);
         this.guildId = guildId;
-        this.profileInfo = makeGuildInfo(name, profile);
         this.userId = userId;
         this.guildReadId = guildReadId;
     }
 
-    private CommonUserInfo makeUserInfo(String name, String profile) {
+    private CommonUserInfo makeUserInfo(UserId userId, String name, String profile) {
+
+        if (userId == null) {
+            throw new NotFoundDataException("userId가 존재하지 않습니다");
+        }
+
         if (name == null || profile == null) {
-            throw new NotFoundDataException();
+            throw new NotFoundDataException("유저의 Profile이나 Name 정보가 존재하지 않습니다");
         }
 
         return CommonUserInfo.make(name, profile);
     }
 
-    private ProfileInfo makeGuildInfo(String name, String profile) {
+    private ProfileInfo makeGuildInfo(GuildId guildId, String name, String profile) {
+        if (guildId == null) {
+            throw new NotFoundDataException("guildId가 존재하지 않습니다");
+        }
+
         if (name == null || profile == null) {
-            throw new NotFoundDataException();
+            throw new NotFoundDataException("길드의 Name이나 Profile 정보가 존재하지 않습니다");
         }
 
         return ProfileInfo.make(name, profile);
