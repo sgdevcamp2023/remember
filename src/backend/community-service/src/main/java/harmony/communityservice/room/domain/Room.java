@@ -28,7 +28,6 @@ public class Room extends Domain<Room, RoomId> {
     @Builder
     public Room(String profile, String name, RoomId roomId, List<RoomUser> roomUsers) {
         verifyProfileInfo(profile, name);
-        verifyRoomUsers(roomUsers);
         this.profileInfo = ProfileInfo.make(name, profile);
         verifyRoomId(roomId);
         this.roomId = roomId;
@@ -47,11 +46,6 @@ public class Room extends Domain<Room, RoomId> {
         }
     }
 
-    private void verifyRoomUsers(List<RoomUser> roomUsers) {
-        if (roomUsers == null || roomUsers.isEmpty()) {
-            throw new NotFoundDataException("roomUser가 존재하지 않습니다");
-        }
-    }
 
     @Override
     public RoomId getId() {

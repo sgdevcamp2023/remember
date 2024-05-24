@@ -107,32 +107,6 @@ class RoomTest {
         });
     }
 
-    @Test
-    @DisplayName("roomUsers 정보가 null이면 NotFoundDataException throw 테스트")
-    void not_have_roomUsers_null() {
-        assertThrows(NotFoundDataException.class,()->{
-            Room.builder()
-                    .profile("http://cdn.com/test")
-                    .name("first_room")
-                    .roomId(RoomId.make(1L))
-                    .build();
-        });
-    }
-
-    @Test
-    @DisplayName("roomUsers에 roomUser가 한명도 없으면 NotFoundDataException throw 테스트")
-    void not_have_roomUsers() {
-
-        List<RoomUser> roomUsers = new ArrayList<>();
-        assertThrows(NotFoundDataException.class,()->{
-            Room.builder()
-                    .profile("http://cdn.com/test")
-                    .name("first_room")
-                    .roomUsers(roomUsers)
-                    .roomId(RoomId.make(1L))
-                    .build();
-        });
-    }
 
     @ParameterizedTest
     @DisplayName("roomId 범위 테스트")
