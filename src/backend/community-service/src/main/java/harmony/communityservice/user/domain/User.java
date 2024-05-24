@@ -30,6 +30,11 @@ public class User extends Domain<User, UserId> {
         return new User(this.userId, modifiedUserInfo);
     }
 
+    public User modifiedNickname(String nickname) {
+        UserInfo modifiedUserInfo = userInfo.modifyNickname(nickname);
+        return new User(this.userId, modifiedUserInfo);
+    }
+
     private void verifyUserId(Long userId) {
         if (userId != null && userId < Threshold.MIN.getValue()) {
             throw new WrongThresholdRangeException("userId가 1 미만입니다");

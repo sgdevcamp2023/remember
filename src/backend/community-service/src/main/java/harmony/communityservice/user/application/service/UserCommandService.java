@@ -7,7 +7,6 @@ import harmony.communityservice.user.application.port.in.ModifyUserProfileComman
 import harmony.communityservice.user.application.port.in.RegisterUserCommand;
 import harmony.communityservice.user.application.port.in.RegisterUserUseCase;
 import harmony.communityservice.user.application.port.out.LoadUserCommandPort;
-import harmony.communityservice.user.application.port.out.LoadUserQueryPort;
 import harmony.communityservice.user.application.port.out.ModifyUserInfoPort;
 import harmony.communityservice.user.application.port.out.RegisterUserPort;
 import harmony.communityservice.user.domain.User;
@@ -39,7 +38,7 @@ class UserCommandService implements RegisterUserUseCase, ModifyUserInfoUseCase {
     @Override
     public void modifyNickname(ModifyUserNicknameCommand modifyUserNicknameCommand) {
         User findUser = loadUserPort.loadUser(modifyUserNicknameCommand.userId());
-        User modifedUser = findUser.modifiedProfile(modifyUserNicknameCommand.nickname());
+        User modifedUser = findUser.modifiedNickname(modifyUserNicknameCommand.nickname());
         modifyUserInfoPort.modifyUserInfo(modifedUser);
     }
 }
