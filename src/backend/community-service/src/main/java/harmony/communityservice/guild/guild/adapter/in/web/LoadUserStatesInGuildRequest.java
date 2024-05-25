@@ -2,14 +2,16 @@ package harmony.communityservice.guild.guild.adapter.in.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
-public class SearchUserStatesInGuildRequest {
+@EqualsAndHashCode
+public class LoadUserStatesInGuildRequest {
     private Long guildId;
     private List<Long> userIds = new ArrayList<>();
 
-    public SearchUserStatesInGuildRequest(Long guildId, List<Long> userIds) {
+    public LoadUserStatesInGuildRequest(Long guildId, List<Long> userIds) {
         this.guildId = guildId;
         this.userIds = userIds;
     }

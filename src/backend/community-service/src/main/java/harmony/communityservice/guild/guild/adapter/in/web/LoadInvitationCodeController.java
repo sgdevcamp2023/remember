@@ -23,7 +23,7 @@ public class LoadInvitationCodeController {
             @RequestBody @Validated SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest) {
         LoadInvitationCodeCommand loadInvitationCodeCommand = new LoadInvitationCodeCommand(
                 searchGuildInvitationCodeRequest.userId(), searchGuildInvitationCodeRequest.guildId());
-        String invitationCode = loadInvitationCodeQuery.load(loadInvitationCodeCommand);
+        String invitationCode = loadInvitationCodeQuery.loadInvitationCode(loadInvitationCodeCommand);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", invitationCode);
     }
 }

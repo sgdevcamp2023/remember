@@ -6,6 +6,7 @@ import harmony.communityservice.guild.guild.application.port.in.LoadGuildReadUse
 import harmony.communityservice.guild.guild.application.port.in.ModifyGuildNicknameCommand;
 import harmony.communityservice.guild.guild.application.port.in.ModifyGuildNicknameUseCase;
 import harmony.communityservice.guild.guild.application.port.in.ModifyGuildNicknamesUseCase;
+import harmony.communityservice.guild.guild.application.port.in.RegisterGuildReadCommand;
 import harmony.communityservice.guild.guild.application.port.in.RegisterGuildReadUseCase;
 import harmony.communityservice.guild.guild.application.port.out.DeleteGuildReadPort;
 import harmony.communityservice.guild.guild.application.port.out.LoadGuildReadPort;
@@ -14,8 +15,7 @@ import harmony.communityservice.guild.guild.application.port.out.ModifyGuildUser
 import harmony.communityservice.guild.guild.application.port.out.RegisterGuildReadPort;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildRead;
-import harmony.communityservice.guild.guild.application.port.in.RegisterGuildReadCommand;
-import harmony.communityservice.user.application.port.out.LoadUserQueryPort;
+import harmony.communityservice.user.application.port.in.LoadUserUseCase;
 import harmony.communityservice.user.domain.User;
 import harmony.communityservice.user.domain.User.UserId;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 class GuildReadCommandService implements RegisterGuildReadUseCase, DeleteGuildReadUseCase, ModifyGuildNicknameUseCase,
         ModifyGuildNicknamesUseCase, LoadGuildReadUseCase {
 
-    private final LoadUserQueryPort loadUserQueryPort;
+    private final LoadUserUseCase loadUserUseCase;
     private final RegisterGuildReadPort registerGuildReadPort;
     private final DeleteGuildReadPort deleteGuildReadPort;
     private final ModifyGuildUserNicknamePort modifyGuildUserNicknamePort;
@@ -36,7 +36,7 @@ class GuildReadCommandService implements RegisterGuildReadUseCase, DeleteGuildRe
 
     @Override
     public void register(RegisterGuildReadCommand registerGuildReadCommand) {
-        User loadUser = loadUserQueryPort.loadUser(registerGuildReadCommand.userId());
+        User loadUser = loadUserUseCase.loadUser(registerGuildReadCommand.userId());
         GuildRead guildRead = GuildReadMapper.convert(registerGuildReadCommand, loadUser);
         registerGuildReadPort.register(guildRead);
     }
@@ -47,7 +47,7 @@ class GuildReadCommandService implements RegisterGuildReadUseCase, DeleteGuildRe
     }
 
     @Override
-    public GuildRead searchByUserIdAndGuildId(Long userId, Long guildId) {
+    public GuildRead loadByUserIdAndGuildId(Long userId, Long guildId) {
         return loadGuildReadPort.loadByUserIdAndGuildId(UserId.make(userId), GuildId.make(guildId));
     }
 
