@@ -1,10 +1,10 @@
-package harmony.communityservice.common.domain;
+package harmony.communityservice.common.domainentity;
 
-public abstract class LongTypeIdentifier extends ValueObject<LongTypeIdentifier> {
+public abstract class EntityLongTypeIdentifier extends EntityValueObject<EntityLongTypeIdentifier> {
 
     private Long id;
 
-    public LongTypeIdentifier(Long id) {
+    public EntityLongTypeIdentifier(Long id) {
         this.id = id;
     }
 

@@ -1,9 +1,9 @@
 package harmony.communityservice.board.emoji.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.LongTypeIdentifier;
-import harmony.communityservice.common.domain.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifier;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifierJavaType;
 
-public class EmojiIdJpaVO extends LongTypeIdentifier {
+public class EmojiIdJpaVO extends EntityLongTypeIdentifier {
 
     public EmojiIdJpaVO(Long id) {
         super(id);
@@ -17,7 +17,7 @@ public class EmojiIdJpaVO extends LongTypeIdentifier {
         return new EmojiIdJpaVO(id);
     }
 
-    public static class EmojiIdJavaType extends LongTypeIdentifierJavaType<EmojiIdJpaVO> {
+    public static class EmojiIdJavaType extends EntityLongTypeIdentifierJavaType<EmojiIdJpaVO> {
         public EmojiIdJavaType() {
             super(EmojiIdJpaVO.class);
         }

@@ -4,6 +4,7 @@ import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.common.annotation.UseCase;
 import harmony.communityservice.common.client.UserStatusClient;
 import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
+import harmony.communityservice.guild.guild.adapter.in.web.LoadUserStatesInGuildRequest;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildReadCommand;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildReadsQuery;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildUserStatesCommand;
@@ -18,8 +19,7 @@ import harmony.communityservice.guild.guild.application.port.out.VerifyGuildMana
 import harmony.communityservice.guild.guild.domain.Guild;
 import harmony.communityservice.guild.guild.domain.Guild.GuildId;
 import harmony.communityservice.guild.guild.domain.GuildRead;
-import harmony.communityservice.guild.guild.adapter.in.web.SearchUserStatesInGuildRequest;
-import harmony.communityservice.room.application.port.in.SearchUserStateResponse;
+import harmony.communityservice.room.application.port.in.LoadUserStateResponse;
 import harmony.communityservice.room.application.service.SearchUserStateResponseMapper;
 import harmony.communityservice.user.domain.User.UserId;
 import java.util.HashMap;
@@ -38,15 +38,14 @@ class GuildQueryService implements LoadInvitationCodeQuery, VerifyGuildManagerQu
     private final UserStatusClient userStatusClient;
     private final LoadGuildPort loadGuildPort;
     private final VerifyGuildManagerPort verifyGuildManagerPort;
-    private final LoadGuildReadsQuery loadGuildReadsUseCase;
-    private final LoadVoiceUserQuery loadVoiceUserQuery;
+    private final LoadGuildReadsQuery loadGuildReadsQuery;
 
     @Override
     @AuthorizeGuildMember
-    public String load(LoadInvitationCodeCommand searchGuildInvitationCodeCommand) {
-        Guild guild = loadGuildPort.loadById(GuildId.make(searchGuildInvitationCodeCommand.guildId()));
-        return guild.getInvitationCode() + "." + searchGuildInvitationCodeCommand.userId() + "."
-                + searchGuildInvitationCodeCommand.guildId();
+    public String loadInvitationCode(LoadInvitationCodeCommand loadInvitationCodeCommand) {
+        Guild guild = loadGuildPort.loadById(GuildId.make(loadInvitationCodeCommand.guildId()));
+        return guild.getInvitationCode() + "." + loadInvitationCodeCommand.userId() + "."
+                + loadInvitationCodeCommand.guildId();
     }
 
     @Override
@@ -58,56 +57,59 @@ class GuildQueryService implements LoadInvitationCodeQuery, VerifyGuildManagerQu
     @AuthorizeGuildMember
     public LoadGuildUserStatesResponse load(LoadGuildUserStatesCommand loadGuildUserStatesCommand) {
         Long guildId = loadGuildUserStatesCommand.getGuildId();
-        List<SearchUserStateResponse> searchUserStateResponses = makeSearchUserStateResponses(guildId);
-        SearchUserStateInGuildAndRoomFeignResponse userState = getSearchUserStateInGuildAndRoomFeignResponse(
-                guildId, searchUserStateResponses);
-        Map<Long, SearchUserStateResponse> guildStates = makeUserStatesInGuild(
-                searchUserStateResponses, userState);
-        Map<Long, Map<Long, ?>> voiceChannelStates = getUserStatesInVoiceChannel(guildId, userState);
-        return new LoadGuildUserStatesResponse(guildStates, voiceChannelStates);
-    }
-
-    private List<SearchUserStateResponse> makeSearchUserStateResponses(long guildId) {
-        List<GuildRead> guildReads = loadGuildReadsUseCase.loadList(guildId);
-        return guildReads
+        List<GuildRead> guildReads = loadGuildReadsQuery.loadList(guildId);
+        List<LoadUserStateResponse> loadUserStateResponses = guildReads
                 .stream()
                 .map(SearchUserStateResponseMapper::convert)
                 .toList();
+        Map<Long, GuildRead> guildReadMap = getGuildReadMap(guildReads);
+        SearchUserStateInGuildAndRoomFeignResponse userState = getSearchUserStateInGuildAndRoomFeignResponse(
+                guildId, loadUserStateResponses);
+        Map<Long, LoadUserStateResponse> guildStates = makeUserStatesInGuild(
+                loadUserStateResponses, userState);
+        Map<Long, Map<Long, ?>> voiceChannelStates = getUserStatesInVoiceChannel(userState, guildReadMap);
+        return new LoadGuildUserStatesResponse(guildStates, voiceChannelStates);
+    }
+
+    private Map<Long, GuildRead> getGuildReadMap(List<GuildRead> guildReads) {
+        Map<Long, GuildRead> guildReadMap = new HashMap<>();
+        guildReads.forEach(guildRead -> guildReadMap.put(guildRead.getUserId().getId(), guildRead));
+        return guildReadMap;
     }
 
     private SearchUserStateInGuildAndRoomFeignResponse getSearchUserStateInGuildAndRoomFeignResponse(long guildId,
-                                                                                                     List<SearchUserStateResponse> searchUserStateResponses) {
+                                                                                                     List<LoadUserStateResponse> searchUserStateResponses) {
         List<Long> userIds = searchUserStateResponses
                 .stream()
-                .map(SearchUserStateResponse::getUserId)
+                .map(LoadUserStateResponse::getUserId)
                 .collect(Collectors.toList());
-        return userStatusClient.userStatus(new SearchUserStatesInGuildRequest(guildId, userIds));
+        return userStatusClient.userStatus(new LoadUserStatesInGuildRequest(guildId, userIds));
     }
 
-    private Map<Long, SearchUserStateResponse> makeUserStatesInGuild(
-            List<SearchUserStateResponse> stateResponses, SearchUserStateInGuildAndRoomFeignResponse userState) {
+    private Map<Long, LoadUserStateResponse> makeUserStatesInGuild(
+            List<LoadUserStateResponse> stateResponses, SearchUserStateInGuildAndRoomFeignResponse userState) {
         stateResponses.forEach(state -> state.modifyState(userState.getConnectionStates().get(state.getUserId())));
         return stateResponses.stream()
-                .collect(Collectors.toMap(SearchUserStateResponse::getUserId, state -> state));
+                .collect(Collectors.toMap(LoadUserStateResponse::getUserId, state -> state));
     }
 
-    private Map<Long, Map<Long, ?>> getUserStatesInVoiceChannel(long guildId,
-                                                                SearchUserStateInGuildAndRoomFeignResponse userState) {
+    private Map<Long, Map<Long, ?>> getUserStatesInVoiceChannel(
+                                                                SearchUserStateInGuildAndRoomFeignResponse userState,
+                                                                Map<Long, GuildRead> guildReadMap) {
         Map<Long, Set<Long>> channelStates = userState.getChannelStates();
         Map<Long, Map<Long, ?>> voiceChannelStates = new HashMap<>();
         for (Long channelId : channelStates.keySet()) {
             Set<Long> voiceUserIds = channelStates.get(channelId);
-            Map<Long, GuildRead> guildReads = getUserReads(guildId, voiceUserIds);
+            Map<Long, GuildRead> guildReads = getUserReads(voiceUserIds, guildReadMap);
             voiceChannelStates.put(channelId, guildReads);
         }
         return voiceChannelStates;
     }
 
-    private Map<Long, GuildRead> getUserReads(long guildId, Set<Long> voiceUserIds) {
+    private Map<Long, GuildRead> getUserReads(Set<Long> voiceUserIds, Map<Long, GuildRead> guildReadMap) {
         Map<Long, GuildRead> userReads = new HashMap<>();
         for (Long voiceUserId : voiceUserIds) {
-            GuildRead guildRead = loadVoiceUserQuery.loadByUserIdAndGuildId(
-                    new LoadGuildReadCommand(voiceUserId, guildId));
+            GuildRead guildRead = guildReadMap.get(voiceUserId);
             userReads.put(guildRead.getUserId().getId(), guildRead);
         }
         return userReads;

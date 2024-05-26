@@ -1,6 +1,6 @@
 package harmony.communityservice.user.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.domainentity.AggregateRootEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EmbeddedId;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-class UserEntity extends AggregateRoot<UserEntity, UserIdJpaVO> {
+class UserEntity extends AggregateRootEntity<UserEntity, UserIdJpaVO> {
 
     @EmbeddedId
     @Column(name = "user_id")

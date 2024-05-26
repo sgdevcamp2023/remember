@@ -1,4 +1,4 @@
-package harmony.communityservice.common.domain;
+package harmony.communityservice.common.domainentity;
 
 import java.sql.Types;
 import org.hibernate.type.descriptor.WrapperOptions;
@@ -8,9 +8,9 @@ import org.hibernate.type.descriptor.java.MutabilityPlan;
 import org.hibernate.type.descriptor.jdbc.JdbcType;
 import org.hibernate.type.descriptor.jdbc.JdbcTypeIndicators;
 
-public abstract class LongTypeIdentifierJavaType<T extends LongTypeIdentifier> extends AbstractClassJavaType<T> {
+public abstract class EntityLongTypeIdentifierJavaType<T extends EntityLongTypeIdentifier> extends AbstractClassJavaType<T> {
 
-    protected LongTypeIdentifierJavaType(Class<? extends T> type) {
+    protected EntityLongTypeIdentifierJavaType(Class<? extends T> type) {
         super(type);
     }
 
@@ -64,10 +64,10 @@ public abstract class LongTypeIdentifierJavaType<T extends LongTypeIdentifier> e
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }
-        } else if (value instanceof LongTypeIdentifier) {
+        } else if (value instanceof EntityLongTypeIdentifier) {
             try {
                 return getJavaType().getDeclaredConstructor(Long.class)
-                        .newInstance(((LongTypeIdentifier) value).longValue());
+                        .newInstance(((EntityLongTypeIdentifier) value).longValue());
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }

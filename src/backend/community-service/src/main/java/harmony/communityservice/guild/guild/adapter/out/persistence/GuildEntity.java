@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.guild.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.domainentity.AggregateRootEntity;
 import harmony.communityservice.common.generic.ProfileInfoJpaVO;
 import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO.GuildIdJavaType;
 import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
@@ -34,7 +34,7 @@ import org.hibernate.annotations.JavaType;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "guild", indexes = @Index(name = "idx__invite_code", columnList = "invite_code"))
-class GuildEntity extends AggregateRoot<GuildEntity, GuildIdJpaVO> {
+class GuildEntity extends AggregateRootEntity<GuildEntity, GuildIdJpaVO> {
 
     @Id
     @Column(name = "guild_id")

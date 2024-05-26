@@ -1,6 +1,6 @@
 package harmony.communityservice.user.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.ValueObject;
+import harmony.communityservice.common.domainentity.EntityValueObject;
 import harmony.communityservice.common.generic.CommonUserInfoJpaVO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-class UserInfoJpaVO extends ValueObject<UserInfoJpaVO> {
+class UserInfoJpaVO extends EntityValueObject<UserInfoJpaVO> {
 
     @NotBlank
     @Column(name = "email")

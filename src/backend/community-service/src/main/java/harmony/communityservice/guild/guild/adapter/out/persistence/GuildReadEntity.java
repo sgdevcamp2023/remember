@@ -1,6 +1,6 @@
 package harmony.communityservice.guild.guild.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.domainentity.AggregateRootEntity;
 import harmony.communityservice.common.generic.CommonUserInfoJpaVO;
 import harmony.communityservice.common.generic.ProfileInfoJpaVO;
 import harmony.communityservice.guild.guild.adapter.out.persistence.GuildIdJpaVO.GuildIdJavaType;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.JavaType;
 @Getter
 @NoArgsConstructor
 @Table(name = "guild_read", indexes = @Index(name = "idx__userId__guildId", columnList = "user_id, guild_id"))
-public class GuildReadEntity extends AggregateRoot<GuildReadEntity, GuildReadIdJpaVO> {
+public class GuildReadEntity extends AggregateRootEntity<GuildReadEntity, GuildReadIdJpaVO> {
 
     @Id
     @Column(name = "guild_read_id")

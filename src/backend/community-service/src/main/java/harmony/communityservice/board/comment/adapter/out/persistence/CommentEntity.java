@@ -3,7 +3,7 @@ package harmony.communityservice.board.comment.adapter.out.persistence;
 import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO.BoardIdJavaType;
 import harmony.communityservice.board.comment.adapter.out.persistence.CommentIdJpaVO.CommentIdJavaType;
-import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.domainentity.AggregateRootEntity;
 import harmony.communityservice.common.generic.WriterInfoJpaVO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.JavaType;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment", indexes = @Index(name = "idx__boardId", columnList = "board_id"))
-public class CommentEntity extends AggregateRoot<CommentEntity, CommentIdJpaVO> {
+public class CommentEntity extends AggregateRootEntity<CommentEntity, CommentIdJpaVO> {
 
     @Id
     @Column(name = "comment_id")

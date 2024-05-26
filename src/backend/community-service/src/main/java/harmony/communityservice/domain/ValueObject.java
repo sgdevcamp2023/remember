@@ -1,4 +1,4 @@
-package harmony.communityservice.common.domain;
+package harmony.communityservice.domain;
 
 import java.util.Arrays;
 
