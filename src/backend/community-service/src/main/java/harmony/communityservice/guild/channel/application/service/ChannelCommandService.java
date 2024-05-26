@@ -63,6 +63,4 @@ class ChannelCommandService implements RegisterChannelUseCase, DeleteChannelUseC
             Events.send(ChannelDeletedEventMapper.convert(channelId.getId(), guildId));
         }
     }
-
-
 }

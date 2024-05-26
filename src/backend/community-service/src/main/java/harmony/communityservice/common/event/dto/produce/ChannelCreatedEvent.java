@@ -2,9 +2,11 @@ package harmony.communityservice.common.event.dto.produce;
 
 import harmony.communityservice.guild.channel.domain.ChannelType;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 public class ChannelCreatedEvent extends ProduceEvent {
 
     private ChannelType channelType;
