@@ -63,7 +63,7 @@ class BoardCommandService implements RegisterBoardUseCase, ModifyBoardUseCase, D
     }
 
     private Board createBoard(RegisterBoardCommand registerBoardCommand, List<Image> images) {
-        GuildRead guildRead = loadGuildReadUseCase.searchByUserIdAndGuildId(registerBoardCommand.userId(),
+        GuildRead guildRead = loadGuildReadUseCase.loadByUserIdAndGuildId(registerBoardCommand.userId(),
                 registerBoardCommand.guildId());
         return BoardMapper.convert(registerBoardCommand, guildRead, images);
     }

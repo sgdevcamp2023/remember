@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface LoadUserStatesInRoomQuery {
 
-    Map<Long, SearchUserStateResponse> loadUserStates(Long dmId);
+    Map<Long, LoadUserStateResponse> loadUserStates(Long dmId);
 }

@@ -15,7 +15,12 @@ class EmojiMapper {
                 .map(emojiUserEntity -> new EmojiUser(UserId.make(emojiUserEntity.getUserId().getId()),
                         EmojiUserId.make(emojiUserEntity.getEmojiUserId().getId())))
                 .toList();
-        return new Emoji(BoardId.make(emojiEntity.getBoardId().getId()), EmojiId.make(emojiEntity.getEmojiId().getId()),
-                emojiEntity.getEmojiType(), emojiUsers);
+        return Emoji.builder()
+                .boardId((BoardId.make(emojiEntity.getBoardId().getId())))
+                .emojiId(EmojiId.make(emojiEntity.getEmojiId().getId()))
+                .emojiType(emojiEntity.getEmojiType())
+                .emojiUsers(emojiUsers)
+                .build();
+
     }
 }

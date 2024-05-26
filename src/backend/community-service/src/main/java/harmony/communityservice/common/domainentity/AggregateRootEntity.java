@@ -1,4 +1,4 @@
-package harmony.communityservice.common.domain;
+package harmony.communityservice.common.domainentity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +11,7 @@ import org.springframework.data.domain.DomainEvents;
 import org.springframework.util.Assert;
 
 @NoArgsConstructor
-public abstract class AggregateRoot<T extends DomainEntity<T, TID>, TID> extends DomainEntity<T, TID> {
+public abstract class AggregateRootEntity<T extends DomainEntity<T, TID>, TID> extends DomainEntity<T, TID> {
 
     @Transient
     private final transient List<Object> domainEvents = new ArrayList();

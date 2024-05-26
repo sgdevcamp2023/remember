@@ -1,10 +1,14 @@
 package harmony.communityservice.room.application.port.in;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
-public class SearchUserStateResponse {
+@ToString
+@EqualsAndHashCode
+public class LoadUserStateResponse {
     private Long userId;
     private String userName;
     private String profile;
@@ -12,7 +16,7 @@ public class SearchUserStateResponse {
 
 
     @Builder
-    public SearchUserStateResponse(Long userId, String userName, String profile, String state) {
+    public LoadUserStateResponse(Long userId, String userName, String profile, String state) {
         this.userId = userId;
         this.userName = userName;
         this.profile = profile;

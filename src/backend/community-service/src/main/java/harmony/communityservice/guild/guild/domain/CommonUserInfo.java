@@ -1,13 +1,14 @@
 package harmony.communityservice.guild.guild.domain;
 
 
+import harmony.communityservice.domain.ValueObject;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommonUserInfo {
+public class CommonUserInfo extends ValueObject<CommonUserInfo> {
     private final String nickname;
     private final String profile;
 
@@ -15,11 +16,8 @@ public class CommonUserInfo {
         return new CommonUserInfo(nickname, profile);
     }
 
-    CommonUserInfo modifyNickname(String nickname) {
-        return new CommonUserInfo(nickname, this.profile);
-    }
-
-    CommonUserInfo modifyProfile(String profile) {
-        return new CommonUserInfo(this.nickname, profile);
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{nickname, profile};
     }
 }

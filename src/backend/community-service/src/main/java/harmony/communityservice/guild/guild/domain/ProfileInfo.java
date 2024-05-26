@@ -1,9 +1,10 @@
 package harmony.communityservice.guild.guild.domain;
 
+import harmony.communityservice.domain.ValueObject;
 import lombok.Getter;
 
 @Getter
-public class ProfileInfo {
+public class ProfileInfo extends ValueObject<ProfileInfo> {
 
     private String name;
 
@@ -18,4 +19,8 @@ public class ProfileInfo {
         return new ProfileInfo(name, profile);
     }
 
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{name, profile};
+    }
 }

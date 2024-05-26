@@ -1,9 +1,9 @@
 package harmony.communityservice.board.board.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.LongTypeIdentifier;
-import harmony.communityservice.common.domain.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifier;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifierJavaType;
 
-public class ImageIdJpaVO extends LongTypeIdentifier {
+public class ImageIdJpaVO extends EntityLongTypeIdentifier {
     public ImageIdJpaVO(Long id) {
         super(id);
     }
@@ -16,7 +16,7 @@ public class ImageIdJpaVO extends LongTypeIdentifier {
         return longValue();
     }
 
-    public static class ImageIdJavaType extends LongTypeIdentifierJavaType<ImageIdJpaVO> {
+    public static class ImageIdJavaType extends EntityLongTypeIdentifierJavaType<ImageIdJpaVO> {
         public ImageIdJavaType() {
             super(ImageIdJpaVO.class);
         }
