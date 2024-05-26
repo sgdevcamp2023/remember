@@ -21,7 +21,6 @@ class ChannelQueryService implements LoadChannelsQuery {
 
     private final LoadChannelsPort loadChannelsPort;
 
-
     @Override
     @AuthorizeGuildMember
     public Map<Long, LoadChannelResponse> loadChannels(LoadChannelsCommand loadChannelsCommand) {

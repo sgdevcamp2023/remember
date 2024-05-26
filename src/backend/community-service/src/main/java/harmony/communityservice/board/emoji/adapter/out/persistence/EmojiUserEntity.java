@@ -1,7 +1,7 @@
 package harmony.communityservice.board.emoji.adapter.out.persistence;
 
 import harmony.communityservice.board.emoji.adapter.out.persistence.EmojiUserIdJpaVO.EmojiUserIdJavaType;
-import harmony.communityservice.common.domain.DomainEntity;
+import harmony.communityservice.common.domainentity.DomainEntity;
 import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

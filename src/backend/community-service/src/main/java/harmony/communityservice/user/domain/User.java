@@ -1,14 +1,18 @@
 package harmony.communityservice.user.domain;
 
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
+import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.Threshold;
+import harmony.communityservice.domain.ValueObject;
+import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class User {
+public class User extends Domain<User, UserId> {
 
     private final UserId userId;
 
@@ -16,14 +20,9 @@ public class User {
 
     @Builder
     public User(Long userId, String email, String nickname, String profile) {
+        verifyUserId(userId);
         this.userId = UserId.make(userId);
         this.userInfo = UserInfo.make(email, profile, nickname);
-    }
-
-
-    public User modifiedNickname(String nickname) {
-        UserInfo modifiedUserInfo = userInfo.modifyNickname(nickname);
-        return new User(this.userId, modifiedUserInfo);
     }
 
     public User modifiedProfile(String profile) {
@@ -31,9 +30,24 @@ public class User {
         return new User(this.userId, modifiedUserInfo);
     }
 
+    public User modifiedNickname(String nickname) {
+        UserInfo modifiedUserInfo = userInfo.modifyNickname(nickname);
+        return new User(this.userId, modifiedUserInfo);
+    }
+
+    private void verifyUserId(Long userId) {
+        if (userId != null && userId < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("userId가 1 미만입니다");
+        }
+    }
+
+    @Override
+    public UserId getId() {
+        return userId;
+    }
+
     @Getter
-    @ToString
-    public static class UserId {
+    public static class UserId extends ValueObject<UserId> {
 
         private final Long id;
 
@@ -43,6 +57,11 @@ public class User {
 
         public static UserId make(Long id) {
             return new UserId(id);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return  new Object[] { id };
         }
     }
 }

@@ -1,25 +1,33 @@
 package harmony.communityservice.board.board.domain;
 
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.domain.ValueObject;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommonUserInfo {
+public class CommonUserInfo extends ValueObject<CommonUserInfo> {
     private final String nickname;
     private final String profile;
+
+    private CommonUserInfo(String nickname, String profile) {
+        verifyCommonUserInfo(nickname, profile);
+        this.nickname = nickname;
+        this.profile = profile;
+    }
 
     static CommonUserInfo make(String nickname, String profile) {
         return new CommonUserInfo(nickname, profile);
     }
 
-    CommonUserInfo modifyNickname(String nickname) {
-        return new CommonUserInfo(nickname, this.profile);
+    private void verifyCommonUserInfo(String nickname, String profile) {
+        if (nickname == null || profile == null) {
+            throw new NotFoundDataException("데이터를 찾을 수 없습니다");
+        }
     }
 
-    CommonUserInfo modifyProfile(String profile) {
-        return new CommonUserInfo(this.nickname, profile);
+    @Override
+    protected Object[] getEqualityFields() {
+        return new Object[]{nickname, profile};
     }
 }

@@ -1,9 +1,9 @@
 package harmony.communityservice.guild.category.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.LongTypeIdentifier;
-import harmony.communityservice.common.domain.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifier;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifierJavaType;
 
-public class CategoryIdJpaVO extends LongTypeIdentifier {
+public class CategoryIdJpaVO extends EntityLongTypeIdentifier {
 
     public CategoryIdJpaVO(Long id) {
         super(id);
@@ -17,7 +17,7 @@ public class CategoryIdJpaVO extends LongTypeIdentifier {
         return new CategoryIdJpaVO(id);
     }
 
-    public static class CategoryIdJavaType extends LongTypeIdentifierJavaType<CategoryIdJpaVO> {
+    public static class CategoryIdJavaType extends EntityLongTypeIdentifierJavaType<CategoryIdJpaVO> {
         public CategoryIdJavaType() {
             super(CategoryIdJpaVO.class);
         }

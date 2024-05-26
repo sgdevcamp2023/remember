@@ -1,9 +1,9 @@
 package harmony.communityservice.board.board.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.LongTypeIdentifier;
-import harmony.communityservice.common.domain.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifier;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifierJavaType;
 
-public class BoardIdJpaVO extends LongTypeIdentifier {
+public class BoardIdJpaVO extends EntityLongTypeIdentifier {
 
     public BoardIdJpaVO(Long id) {
         super(id);
@@ -17,7 +17,7 @@ public class BoardIdJpaVO extends LongTypeIdentifier {
         return new BoardIdJpaVO(id);
     }
 
-    public static class BoardIdJavaType extends LongTypeIdentifierJavaType<BoardIdJpaVO> {
+    public static class BoardIdJavaType extends EntityLongTypeIdentifierJavaType<BoardIdJpaVO> {
         public BoardIdJavaType() {
             super(BoardIdJpaVO.class);
         }

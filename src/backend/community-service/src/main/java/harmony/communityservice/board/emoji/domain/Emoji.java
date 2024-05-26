@@ -1,6 +1,15 @@
 package harmony.communityservice.board.emoji.domain;
 
+import static harmony.communityservice.board.emoji.domain.EmojiTypeRange.MAX;
+import static harmony.communityservice.board.emoji.domain.EmojiTypeRange.MIN;
+
 import harmony.communityservice.board.board.domain.Board.BoardId;
+import harmony.communityservice.board.emoji.domain.Emoji.EmojiId;
+import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.exception.WrongThresholdRangeException;
+import harmony.communityservice.domain.Domain;
+import harmony.communityservice.domain.Threshold;
+import harmony.communityservice.domain.ValueObject;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -9,7 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Emoji {
+public class Emoji extends Domain<Emoji, EmojiId> {
 
     private EmojiId emojiId;
 
@@ -20,27 +29,66 @@ public class Emoji {
     private List<EmojiUser> emojiUsers = new ArrayList<>();
 
     @Builder
-    public Emoji(BoardId boardId, EmojiId emojiId, Long emojiType, EmojiUser emojiUser) {
+    public Emoji(BoardId boardId, EmojiId emojiId, Long emojiType, List<EmojiUser> emojiUsers) {
+        verifyBoardId(boardId);
         this.boardId = boardId;
+        verifyEmojiId(emojiId);
         this.emojiId = emojiId;
+        verifyEmojiType(emojiType);
         this.emojiType = emojiType;
-        this.emojiUsers.add(emojiUser);
+        verifyEmojiUsers(emojiUsers);
+        this.emojiUsers = emojiUsers;
     }
 
-    public Emoji(BoardId boardId, EmojiId emojiId, Long emojiType, List<EmojiUser> emojiUsers) {
-        this.boardId = boardId;
-        this.emojiId = emojiId;
-        this.emojiType = emojiType;
-        this.emojiUsers = emojiUsers;
+    private void verifyEmojiId(EmojiId emojiId) {
+        if (emojiId != null && emojiId.getId() < MIN.getValue()) {
+            throw new WrongThresholdRangeException("emojiId의 범위가 1미만입니다");
+        }
+    }
+
+    private void verifyBoardId(BoardId boardId) {
+        if (boardId == null) {
+            throw new NotFoundDataException("BoardId를 찾을 수 없습니다");
+        }
+
+        if (boardId.getId() < Threshold.MIN.getValue()) {
+            throw new WrongThresholdRangeException("boardId의 범위가 1미만입니다.");
+        }
+    }
+
+    private void verifyEmojiType(Long emojiType) {
+        if (emojiType == null) {
+            throw new NotFoundDataException("EmojiType을 찾을 수 없습니다");
+        }
+
+        if (MIN.getValue() > emojiType || MAX.getValue() < emojiType) {
+            throw new WrongThresholdRangeException("emoji 범위가 잘못되었습니다");
+        }
+    }
+
+    private void verifyEmojiUsers(List<EmojiUser> emojiUsers) {
+        if (emojiUsers == null || emojiUsers.isEmpty()) {
+            throw new NotFoundDataException("EmojiUser를 찾을 수 없습니다");
+        }
+    }
+
+    @Override
+    public EmojiId getId() {
+        return emojiId;
     }
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class EmojiId {
+    public static class EmojiId extends ValueObject<EmojiId> {
         private final Long id;
 
         public static EmojiId make(Long emojiId) {
             return new EmojiId(emojiId);
+        }
+
+        @Override
+        protected Object[] getEqualityFields() {
+            return new Object[]{id};
         }
     }
 }

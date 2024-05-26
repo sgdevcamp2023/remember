@@ -4,5 +4,5 @@ import harmony.communityservice.guild.guild.domain.GuildRead;
 
 public interface LoadGuildReadUseCase {
 
-    GuildRead searchByUserIdAndGuildId(Long userId, Long guildId);
+    GuildRead loadByUserIdAndGuildId(Long userId, Long guildId);
 }

@@ -1,9 +1,9 @@
 package harmony.communityservice.board.comment.adapter.out.persistence;
 
-import harmony.communityservice.common.domain.LongTypeIdentifier;
-import harmony.communityservice.common.domain.LongTypeIdentifierJavaType;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifier;
+import harmony.communityservice.common.domainentity.EntityLongTypeIdentifierJavaType;
 
-public class CommentIdJpaVO extends LongTypeIdentifier {
+public class CommentIdJpaVO extends EntityLongTypeIdentifier {
     public CommentIdJpaVO(Long id) {
         super(id);
     }
@@ -16,7 +16,7 @@ public class CommentIdJpaVO extends LongTypeIdentifier {
         return new CommentIdJpaVO(id);
     }
 
-    public static class CommentIdJavaType extends LongTypeIdentifierJavaType<CommentIdJpaVO> {
+    public static class CommentIdJavaType extends EntityLongTypeIdentifierJavaType<CommentIdJpaVO> {
         public CommentIdJavaType() {
             super(CommentIdJpaVO.class);
         }

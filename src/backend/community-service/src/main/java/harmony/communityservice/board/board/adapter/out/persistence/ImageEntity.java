@@ -1,7 +1,7 @@
 package harmony.communityservice.board.board.adapter.out.persistence;
 
 import harmony.communityservice.board.board.adapter.out.persistence.ImageIdJpaVO.ImageIdJavaType;
-import harmony.communityservice.common.domain.DomainEntity;
+import harmony.communityservice.common.domainentity.DomainEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

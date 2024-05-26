@@ -1,6 +1,6 @@
 package harmony.communityservice.common.generic;
 
-import harmony.communityservice.common.domain.ValueObject;
+import harmony.communityservice.common.domainentity.EntityValueObject;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WriterInfoJpaVO extends ValueObject<WriterInfoJpaVO> {
+public class WriterInfoJpaVO extends EntityValueObject<WriterInfoJpaVO> {
 
     @NotNull
     @Column(name = "writer_id")

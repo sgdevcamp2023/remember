@@ -40,7 +40,6 @@ public class ExternalEventHandler {
     public void guildCreatedEventAfterHandler(GuildCreatedEvent event) {
         ExternalEventRecord record = createGuildCreatedEvent(event);
         publishExternalEvent(record);
-
     }
 
 

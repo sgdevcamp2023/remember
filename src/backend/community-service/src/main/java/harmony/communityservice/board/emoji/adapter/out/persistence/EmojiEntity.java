@@ -3,7 +3,7 @@ package harmony.communityservice.board.emoji.adapter.out.persistence;
 import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO.BoardIdJavaType;
 import harmony.communityservice.board.emoji.adapter.out.persistence.EmojiIdJpaVO.EmojiIdJavaType;
-import harmony.communityservice.common.domain.AggregateRoot;
+import harmony.communityservice.common.domainentity.AggregateRootEntity;
 import harmony.communityservice.common.exception.DuplicatedEmojiException;
 import harmony.communityservice.user.adapter.out.persistence.UserIdJpaVO;
 import jakarta.persistence.CascadeType;
@@ -34,7 +34,7 @@ import org.hibernate.annotations.JavaType;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "emoji", indexes = @Index(name = "idx__boardId__emojiType", columnList = "board_id, emoji_type"))
-public class EmojiEntity extends AggregateRoot<EmojiEntity, EmojiIdJpaVO> {
+public class EmojiEntity extends AggregateRootEntity<EmojiEntity, EmojiIdJpaVO> {
 
     @Id
     @Column(name = "emoji_id")
