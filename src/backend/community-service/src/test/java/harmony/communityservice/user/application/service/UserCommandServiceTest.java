@@ -1,7 +1,6 @@
 package harmony.communityservice.user.application.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
@@ -10,9 +9,11 @@ import harmony.communityservice.user.application.port.in.ModifyUserNicknameComma
 import harmony.communityservice.user.application.port.in.ModifyUserProfileCommand;
 import harmony.communityservice.user.application.port.in.RegisterUserCommand;
 import harmony.communityservice.user.application.port.out.LoadUserCommandPort;
-import harmony.communityservice.user.application.port.out.ModifyUserInfoPort;
+import harmony.communityservice.user.application.port.out.ModifyUserNicknamePort;
+import harmony.communityservice.user.application.port.out.ModifyUserProfilePort;
 import harmony.communityservice.user.application.port.out.RegisterUserPort;
 import harmony.communityservice.user.domain.User;
+import harmony.communityservice.user.domain.User.UserId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,9 @@ class UserCommandServiceTest {
     LoadUserCommandPort loadUserCommandPort;
 
     @Mock
-    ModifyUserInfoPort modifyUserInfoPort;
+    ModifyUserProfilePort modifyUserProfilePort;
+    @Mock
+    ModifyUserNicknamePort modifyUserNicknamePort;
 
     UserCommandService userCommandService;
 
@@ -39,7 +42,7 @@ class UserCommandServiceTest {
     @BeforeEach
     void setting() {
         userCommandService = new UserCommandService(registerUserPort, loadUserCommandPort,
-                modifyUserInfoPort);
+                modifyUserProfilePort, modifyUserNicknamePort);
 
         user = User.builder()
                 .userId(1L)
@@ -70,14 +73,16 @@ class UserCommandServiceTest {
     void modify_user_profile() {
         assertNotNull(userCommandService);
 
-        given(loadUserCommandPort.loadUser(1L)).willReturn(user);
+        willDoNothing().given(modifyUserProfilePort)
+                .modifyProfile(UserId.make(1L), "https://storage.googleapis.com/sg-dev-remember-harmony/test.png");
 
         ModifyUserProfileCommand modifyUserProfileCommand = new ModifyUserProfileCommand(1L,
                 "https://storage.googleapis.com/sg-dev-remember-harmony/test.png");
 
         userCommandService.modifyProfile(modifyUserProfileCommand);
 
-        then(modifyUserInfoPort).should(times(1)).modifyUserInfo(user);
+        then(modifyUserProfilePort).should(times(1))
+                .modifyProfile(UserId.make(1L), "https://storage.googleapis.com/sg-dev-remember-harmony/test.png");
     }
 
     @Test
@@ -85,14 +90,15 @@ class UserCommandServiceTest {
     void modify_user_nickname() {
         assertNotNull(userCommandService);
 
-        given(loadUserCommandPort.loadUser(1L)).willReturn(user);
+        willDoNothing().given(modifyUserNicknamePort)
+                .modifyNickname(UserId.make(1L), "0Chord");
 
         ModifyUserNicknameCommand modifyUserNicknameCommand = new ModifyUserNicknameCommand(1L,
                 "0Chord");
 
         userCommandService.modifyNickname(modifyUserNicknameCommand);
 
-        then(modifyUserInfoPort).should(times(1)).modifyUserInfo(user);
+        then(modifyUserNicknamePort).should(times(1)).modifyNickname(UserId.make(1L), "0Chord");
     }
 
 }

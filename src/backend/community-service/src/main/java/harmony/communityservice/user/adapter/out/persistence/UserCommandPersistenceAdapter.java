@@ -3,14 +3,17 @@ package harmony.communityservice.user.adapter.out.persistence;
 import harmony.communityservice.common.annotation.PersistenceAdapter;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.user.application.port.out.LoadUserCommandPort;
-import harmony.communityservice.user.application.port.out.ModifyUserInfoPort;
+import harmony.communityservice.user.application.port.out.ModifyUserNicknamePort;
+import harmony.communityservice.user.application.port.out.ModifyUserProfilePort;
 import harmony.communityservice.user.application.port.out.RegisterUserPort;
 import harmony.communityservice.user.domain.User;
+import harmony.communityservice.user.domain.User.UserId;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-class UserCommandPersistenceAdapter implements RegisterUserPort, LoadUserCommandPort, ModifyUserInfoPort {
+class UserCommandPersistenceAdapter implements RegisterUserPort, LoadUserCommandPort, ModifyUserProfilePort,
+        ModifyUserNicknamePort {
 
     private final UserCommandRepository userCommandRepository;
 
@@ -28,8 +31,12 @@ class UserCommandPersistenceAdapter implements RegisterUserPort, LoadUserCommand
     }
 
     @Override
-    public void modifyUserInfo(User user) {
-        UserEntity userEntity = UserEntityMapper.convert(user);
-        userCommandRepository.save(userEntity);
+    public void modifyNickname(UserId userId, String nickname) {
+        userCommandRepository.updateNickname(nickname,UserIdJpaVO.make(userId.getId()));
+    }
+
+    @Override
+    public void modifyProfile(UserId userId, String profile) {
+        userCommandRepository.updateProfile(profile,UserIdJpaVO.make(userId.getId()));
     }
 }

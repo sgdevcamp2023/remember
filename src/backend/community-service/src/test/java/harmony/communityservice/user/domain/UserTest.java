@@ -60,24 +60,6 @@ class UserTest {
     }
 
     @Test
-    @DisplayName("유저를 수정할 때 같은 유저로 인식 테스트")
-    void modified_user() {
-
-        User user = User.builder()
-                .userId(1L)
-                .email("test@test.com")
-                .profile("https://cdn.com/test")
-                .nickname("test")
-                .build();
-
-        User modifiedUser = user.modifiedProfile("https://cdn.com.test2");
-
-        boolean equals = user.equals(modifiedUser);
-
-        assertThat(equals).isEqualTo(true);
-    }
-
-    @Test
     @DisplayName("식별자의 값이 같을 때 다른 객체라도 같은 식별자로 인식하는지 테스트")
     void same_user_id() {
         UserId firstUserId = UserId.make(1L);

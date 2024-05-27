@@ -8,9 +8,11 @@ import harmony.communityservice.user.application.port.in.ModifyUserProfileComman
 import harmony.communityservice.user.application.port.in.RegisterUserCommand;
 import harmony.communityservice.user.application.port.in.RegisterUserUseCase;
 import harmony.communityservice.user.application.port.out.LoadUserCommandPort;
-import harmony.communityservice.user.application.port.out.ModifyUserInfoPort;
+import harmony.communityservice.user.application.port.out.ModifyUserNicknamePort;
+import harmony.communityservice.user.application.port.out.ModifyUserProfilePort;
 import harmony.communityservice.user.application.port.out.RegisterUserPort;
 import harmony.communityservice.user.domain.User;
+import harmony.communityservice.user.domain.User.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,8 @@ class UserCommandService implements RegisterUserUseCase, ModifyUserInfoUseCase, 
 
     private final RegisterUserPort registerUserPort;
     private final LoadUserCommandPort loadUserPort;
-    private final ModifyUserInfoPort modifyUserInfoPort;
+    private final ModifyUserProfilePort modifyUserProfilePort;
+    private final ModifyUserNicknamePort modifyUserNicknamePort;
 
     @Override
     public void register(RegisterUserCommand registerUserCommand) {
@@ -31,16 +34,14 @@ class UserCommandService implements RegisterUserUseCase, ModifyUserInfoUseCase, 
 
     @Override
     public void modifyProfile(ModifyUserProfileCommand modifyUserProfileCommand) {
-        User findUser = loadUserPort.loadUser(modifyUserProfileCommand.userId());
-        User modifedUser = findUser.modifiedProfile(modifyUserProfileCommand.profile());
-        modifyUserInfoPort.modifyUserInfo(modifedUser);
+        modifyUserProfilePort.modifyProfile(UserId.make(modifyUserProfileCommand.userId()),
+                modifyUserProfileCommand.profile());
     }
 
     @Override
     public void modifyNickname(ModifyUserNicknameCommand modifyUserNicknameCommand) {
-        User findUser = loadUserPort.loadUser(modifyUserNicknameCommand.userId());
-        User modifedUser = findUser.modifiedNickname(modifyUserNicknameCommand.nickname());
-        modifyUserInfoPort.modifyUserInfo(modifedUser);
+        modifyUserNicknamePort.modifyNickname(UserId.make(modifyUserNicknameCommand.userId()),
+                modifyUserNicknameCommand.nickname());
     }
 
     @Override
