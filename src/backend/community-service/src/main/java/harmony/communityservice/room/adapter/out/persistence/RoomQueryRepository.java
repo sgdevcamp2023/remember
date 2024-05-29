@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-interface roomQueryRepository extends JpaRepository<RoomEntity, RoomIdJpaVO> {
+interface RoomQueryRepository extends JpaRepository<RoomEntity, RoomIdJpaVO> {
     @Query("select distinct r from RoomEntity r join fetch r.roomUserEntities ru where ru.userId = :userId")
     List<RoomEntity> findRoomsByUserIdsContains(@Param("userId") UserIdJpaVO userId);
 

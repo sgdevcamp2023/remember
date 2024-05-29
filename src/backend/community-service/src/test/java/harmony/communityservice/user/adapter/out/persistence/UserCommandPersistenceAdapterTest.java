@@ -36,6 +36,11 @@ class UserCommandPersistenceAdapterTest {
                 .nickname("0chord")
                 .build();
         userCommandPersistenceAdapter.register(user);
+
+        UserEntity userEntity = userCommandRepository.findById(UserIdJpaVO.make(1L))
+                .orElseThrow(NotFoundDataException::new);
+
+        assertEquals(user.getUserId().getId(), userEntity.getUserId().getId());
     }
 
     @Test
@@ -50,8 +55,11 @@ class UserCommandPersistenceAdapterTest {
         userCommandPersistenceAdapter.register(user);
 
         User loadUser = userCommandPersistenceAdapter.loadUser(1L);
+        UserEntity userEntity = userCommandRepository.findById(UserIdJpaVO.make(1L))
+                .orElseThrow(NotFoundDataException::new);
 
         assertEquals(user, loadUser);
+        assertEquals(loadUser.getUserId().getId(), userEntity.getUserId().getId());
     }
 
     @Test
@@ -79,11 +87,15 @@ class UserCommandPersistenceAdapterTest {
                 .build();
         userCommandPersistenceAdapter.register(user);
         String newProfileUrl = "https://cdn.com/user";
-        userCommandPersistenceAdapter.modifyProfile(UserId.make(1L),newProfileUrl);
+        userCommandPersistenceAdapter.modifyProfile(UserId.make(1L), newProfileUrl);
 
         User loadUser = userCommandPersistenceAdapter.loadUser(1L);
+        UserEntity userEntity = userCommandRepository.findById(UserIdJpaVO.make(1L))
+                .orElseThrow(NotFoundDataException::new);
 
-        assertEquals(loadUser.getUserInfo().getCommonUserInfo().getProfile(),newProfileUrl);
+        assertEquals(loadUser.getUserInfo().getCommonUserInfo().getProfile(), newProfileUrl);
+        assertEquals(loadUser.getUserInfo().getCommonUserInfo().getProfile(),
+                userEntity.getUserInfo().getCommonUserInfo().getUserProfile());
     }
 
     @Test
@@ -97,10 +109,15 @@ class UserCommandPersistenceAdapterTest {
                 .build();
         userCommandPersistenceAdapter.register(user);
         String newNickname = "0Chord";
-        userCommandPersistenceAdapter.modifyNickname(UserId.make(1L),newNickname);
+        userCommandPersistenceAdapter.modifyNickname(UserId.make(1L), newNickname);
 
         User loadUser = userCommandPersistenceAdapter.loadUser(1L);
+        UserEntity userEntity = userCommandRepository.findById(UserIdJpaVO.make(1L))
+                .orElseThrow(NotFoundDataException::new);
 
-        assertEquals(loadUser.getUserInfo().getCommonUserInfo().getNickname(),newNickname);
+
+        assertEquals(loadUser.getUserInfo().getCommonUserInfo().getNickname(), newNickname);
+        assertEquals(loadUser.getUserInfo().getCommonUserInfo().getNickname(),
+                userEntity.getUserInfo().getCommonUserInfo().getNickname());
     }
 }

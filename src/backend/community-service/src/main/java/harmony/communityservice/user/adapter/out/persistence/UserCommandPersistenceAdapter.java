@@ -9,7 +9,9 @@ import harmony.communityservice.user.application.port.out.RegisterUserPort;
 import harmony.communityservice.user.domain.User;
 import harmony.communityservice.user.domain.User.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @PersistenceAdapter
 @RequiredArgsConstructor
 class UserCommandPersistenceAdapter implements RegisterUserPort, LoadUserCommandPort, ModifyUserProfilePort,
