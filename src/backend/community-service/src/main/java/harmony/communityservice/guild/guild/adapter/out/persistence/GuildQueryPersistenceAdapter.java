@@ -18,7 +18,6 @@ class GuildQueryPersistenceAdapter implements LoadGuildPort, VerifyGuildManagerP
 
     @Override
     public Guild loadById(GuildId guildId) {
-
         GuildEntity guildEntity = guildQueryRepository.findById(GuildIdJpaVO.make(guildId.getId()))
                 .orElseThrow(NotFoundDataException::new);
         return GuildMapper.convert(guildEntity);

@@ -15,7 +15,7 @@ interface GuildCommandRepository extends JpaRepository<GuildEntity, GuildIdJpaVO
 
     @Modifying
     @Query(value = "delete from guild_user as gu where gu.guild_id = :guildId", nativeQuery = true)
-    void deleteGuildUsersByGuildId(Long guildId);
+    void deleteGuildUsersByGuildId(@Param("guildId") Long guildId);
 
     @Modifying
     @Query(value = "delete from GuildEntity g where g.guildId = :guildId and g.managerId = :userId")
