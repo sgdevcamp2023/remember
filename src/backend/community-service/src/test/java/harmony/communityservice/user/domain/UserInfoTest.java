@@ -16,6 +16,7 @@ class UserInfoTest {
         boolean equals = firstUserInfo.equals(secondUserInfo);
 
         assertSame(equals, true);
+        assertEquals(firstUserInfo.hashCode(),secondUserInfo.hashCode());
     }
 
     @Test
