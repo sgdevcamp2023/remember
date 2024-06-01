@@ -28,7 +28,6 @@ public class RoomUserEntity extends DomainEntity<RoomUserEntity, RoomUserIdJpaVO
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private RoomUserIdJpaVO roomUserIdJpaVO;
 
-    @Getter
     @Embedded
     @Column(name = "user_id")
     private UserIdJpaVO userId;

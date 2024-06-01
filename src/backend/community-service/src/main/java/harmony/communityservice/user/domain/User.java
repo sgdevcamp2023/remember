@@ -5,15 +5,10 @@ import harmony.communityservice.domain.Domain;
 import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.user.domain.User.UserId;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User extends Domain<User, UserId> {
 
     private final UserId userId;
@@ -53,7 +48,7 @@ public class User extends Domain<User, UserId> {
 
         @Override
         protected Object[] getEqualityFields() {
-            return  new Object[] { id };
+            return new Object[]{id};
         }
     }
 }

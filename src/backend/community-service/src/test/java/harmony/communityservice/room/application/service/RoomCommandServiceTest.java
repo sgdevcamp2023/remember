@@ -1,5 +1,6 @@
 package harmony.communityservice.room.application.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -63,6 +64,7 @@ class RoomCommandServiceTest {
         roomCommandService.register(registerRoomCommand);
 
         then(registerRoomPort).should(times(1)).register(room);
+        assertEquals(room.getRoomUsers().size(),2L);
     }
 
     @Test

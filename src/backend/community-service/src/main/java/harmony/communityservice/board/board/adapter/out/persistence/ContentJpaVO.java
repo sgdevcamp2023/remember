@@ -27,10 +27,6 @@ public class ContentJpaVO extends EntityValueObject<ContentJpaVO> {
         return new ContentJpaVO(title, content);
     }
 
-    public ContentJpaVO modify(String title, String content) {
-        return new ContentJpaVO(title, content);
-    }
-
     @Override
     protected Object[] getEqualityFields() {
         return new Object[]{title, content};

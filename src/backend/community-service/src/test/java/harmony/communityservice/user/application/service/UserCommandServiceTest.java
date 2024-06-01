@@ -1,6 +1,8 @@
 package harmony.communityservice.user.application.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
@@ -101,4 +103,18 @@ class UserCommandServiceTest {
         then(modifyUserNicknamePort).should(times(1)).modifyNickname(UserId.make(1L), "0Chord");
     }
 
+    @Test
+    @DisplayName("유저 조회 테스트")
+    void load_user() {
+        assertNotNull(userCommandService);
+
+        given(loadUserCommandPort.loadUser(1L)).willReturn(user);
+
+        User loadUser = userCommandService.loadUser(1L);
+
+        assertEquals(loadUser,user);
+        assertEquals(loadUser.getUserId(),user.getUserId());
+        then(loadUserCommandPort).should(times(1)).loadUser(1L);
+
+    }
 }
