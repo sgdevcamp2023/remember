@@ -5,5 +5,5 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record SearchCategoryResponse(List<Category> categories) {
+public record LoadCategoryResponse(List<Category> categories) {
 }
