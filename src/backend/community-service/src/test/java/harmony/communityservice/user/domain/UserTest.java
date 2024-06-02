@@ -33,7 +33,7 @@ class UserTest {
 
         boolean equals = firstUser.equals(secondUser);
 
-        assertThat(equals).isEqualTo(true);
+        assertThat(equals).isTrue();
     }
 
     @Test
@@ -56,7 +56,58 @@ class UserTest {
 
         boolean equals = firstUser.equals(secondUser);
 
-        assertThat(equals).isEqualTo(false);
+        assertThat(equals).isFalse();
+    }
+
+    @Test
+    @DisplayName("객체가 null일 때 다른 객체로 인식하는지 테스트")
+    void equals_object_null() {
+
+        User user = User.builder()
+                .userId(1L)
+                .email("test@test.com")
+                .profile("https://cdn.com/test")
+                .nickname("test")
+                .build();
+
+        boolean equals = user.equals(null);
+
+        assertThat(equals).isFalse();
+    }
+
+    @Test
+    @DisplayName("다른 객체일 때 다른 객체로 인식하는지 테스트")
+    void equals_object() {
+
+        User user = User.builder()
+                .userId(1L)
+                .email("test@test.com")
+                .profile("https://cdn.com/test")
+                .nickname("test")
+                .build();
+
+        CommonUserInfo commonUserInfo = CommonUserInfo.make("test", "https://cdn.com/test");
+
+        boolean equals = user.equals(commonUserInfo);
+
+        assertThat(equals).isFalse();
+    }
+
+    @Test
+    @DisplayName("객체가 null일 때 인식하는지 테스트")
+    void null_object() {
+
+        User user = User.builder()
+                .userId(1L)
+                .email("test@test.com")
+                .profile("https://cdn.com/test")
+                .nickname("test")
+                .build();
+
+
+        boolean equals = user.equals(null);
+
+        assertThat(equals).isFalse();
     }
 
     @Test
@@ -65,9 +116,7 @@ class UserTest {
         UserId firstUserId = UserId.make(1L);
         UserId secondUserId = UserId.make(1L);
 
-        boolean equals = firstUserId.equals(secondUserId);
-
-        assertSame(equals, true);
+        assertSame(true, firstUserId.equals(secondUserId));
     }
 
     @ParameterizedTest

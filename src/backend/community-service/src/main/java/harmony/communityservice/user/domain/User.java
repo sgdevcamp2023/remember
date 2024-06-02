@@ -45,10 +45,5 @@ public class User extends Domain<User, UserId> {
         public static UserId make(Long id) {
             return new UserId(id);
         }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return new Object[]{id};
-        }
     }
 }

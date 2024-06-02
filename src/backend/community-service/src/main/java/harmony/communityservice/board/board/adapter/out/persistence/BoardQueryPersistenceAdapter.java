@@ -10,6 +10,7 @@ import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJ
 import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 @PersistenceAdapter
@@ -21,11 +22,11 @@ class BoardQueryPersistenceAdapter implements LoadBoardsPort, LoadBoardPort {
 
     @Override
     public List<Board> loadBoards(ChannelId channelId, BoardId boardId, PageRequest pageRequest) {
-        List<BoardEntity> boardEntities = boardQueryRepository.findBoardsByChannelOrderByBoardIdDesc(
+        Page<BoardEntity> boardEntities = boardQueryRepository.findBoardsByChannelOrderByBoardIdDesc(
                 ChannelIdJpaVO.make(channelId.getId()),
                 BoardIdJpaVO.make(boardId.getId()), pageRequest);
 
-        return boardEntities.stream()
+        return boardEntities.getContent().stream()
                 .map(BoardMapper::convert)
                 .toList();
     }

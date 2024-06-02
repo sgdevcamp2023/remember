@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -38,11 +39,11 @@ class BoardQueryPersistenceAdapterTest {
     void load_boards() {
         PageRequest pageRequest = PageRequest.of(0, MAX_PAGE_COUNT);
         List<Board> boards = boardQueryPersistenceAdapter.loadBoards(ChannelId.make(1L), BoardId.make(4L), pageRequest);
-        List<BoardEntity> boardEntities = boardQueryRepository.findBoardsByChannelOrderByBoardIdDesc(
+        Page<BoardEntity> boardEntities = boardQueryRepository.findBoardsByChannelOrderByBoardIdDesc(
                 ChannelIdJpaVO.make(1L), BoardIdJpaVO.make(4L),
                 pageRequest);
         assertEquals(boards.size(),3L);
-        assertEquals(boards.size(),boardEntities.size());
+        assertEquals(boards.size(),boardEntities.getContent().size());
     }
 
     @Test

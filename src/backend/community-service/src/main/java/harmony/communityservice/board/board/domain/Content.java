@@ -24,9 +24,4 @@ public class Content extends ValueObject<Content> {
             throw new NotFoundDataException("데이터가 존재하지 않습니다");
         }
     }
-
-    @Override
-    protected Object[] getEqualityFields() {
-        return new Object[]{title, content};
-    }
 }

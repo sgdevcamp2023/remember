@@ -31,6 +31,17 @@ class UserInfoTest {
     }
 
     @Test
+    @DisplayName("객체가 다를 때 다른 객체로 인식 테스트")
+    void different_object() {
+        UserInfo userInfo = UserInfo.make("test1@test1.com", "https://cdn.com/test1", "test1");
+        CommonUserInfo commonUserInfo = CommonUserInfo.make("test1", "https://cdn.com/test1");
+
+        boolean equals = userInfo.equals(commonUserInfo);
+
+        assertSame(equals, false);
+    }
+
+    @Test
     @DisplayName("수정 시 다른 객체로 인식 테스트")
     void modify_userinfo() {
         UserInfo userInfo = UserInfo.make("test1@test1.com", "https://cdn.com/test1", "test1");
