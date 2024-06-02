@@ -8,10 +8,6 @@ public class ImageIdJpaVO extends EntityLongTypeIdentifier {
         super(id);
     }
 
-    public static ImageIdJpaVO make(long id) {
-        return new ImageIdJpaVO(id);
-    }
-
     public Long getId() {
         return longValue();
     }

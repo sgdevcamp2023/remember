@@ -1,5 +1,6 @@
 package harmony.communityservice.common.aop;
 
+import harmony.communityservice.common.dto.CommonCommand;
 import harmony.communityservice.common.dto.CommonRequest;
 import harmony.communityservice.guild.guild.application.port.in.VerifyGuildMemberCommand;
 import harmony.communityservice.guild.guild.application.port.in.VerifyGuildUserQuery;
@@ -24,8 +25,8 @@ public class AuthorizeGuildMemberAop {
     @Around("AuthorizeGuildMember()")
     public Object Authorize(ProceedingJoinPoint joinPoint) throws Throwable {
         Object firstArg = joinPoint.getArgs()[0];
-        if (firstArg instanceof CommonRequest request) {
-            verifyGuildUserQuery.verify(new VerifyGuildMemberCommand(request.getUserId(), request.getGuildId()));
+        if (firstArg instanceof CommonCommand command) {
+            verifyGuildUserQuery.verify(new VerifyGuildMemberCommand(command.getUserId(), command.getGuildId()));
         }
         return joinPoint.proceed();
     }

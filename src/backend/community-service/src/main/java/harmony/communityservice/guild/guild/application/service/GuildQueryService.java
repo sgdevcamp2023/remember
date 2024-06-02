@@ -5,14 +5,12 @@ import harmony.communityservice.common.annotation.UseCase;
 import harmony.communityservice.common.client.UserStatusClient;
 import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
 import harmony.communityservice.guild.guild.adapter.in.web.LoadUserStatesInGuildRequest;
-import harmony.communityservice.guild.guild.application.port.in.LoadGuildReadCommand;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildReadsQuery;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildUserStatesCommand;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildUserStatesQuery;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildUserStatesResponse;
 import harmony.communityservice.guild.guild.application.port.in.LoadInvitationCodeCommand;
 import harmony.communityservice.guild.guild.application.port.in.LoadInvitationCodeQuery;
-import harmony.communityservice.guild.guild.application.port.in.LoadVoiceUserQuery;
 import harmony.communityservice.guild.guild.application.port.in.VerifyGuildManagerQuery;
 import harmony.communityservice.guild.guild.application.port.out.LoadGuildPort;
 import harmony.communityservice.guild.guild.application.port.out.VerifyGuildManagerPort;
@@ -94,8 +92,8 @@ class GuildQueryService implements LoadInvitationCodeQuery, VerifyGuildManagerQu
     }
 
     private Map<Long, Map<Long, ?>> getUserStatesInVoiceChannel(
-                                                                SearchUserStateInGuildAndRoomFeignResponse userState,
-                                                                Map<Long, GuildRead> guildReadMap) {
+            SearchUserStateInGuildAndRoomFeignResponse userState,
+            Map<Long, GuildRead> guildReadMap) {
         Map<Long, Set<Long>> channelStates = userState.getChannelStates();
         Map<Long, Map<Long, ?>> voiceChannelStates = new HashMap<>();
         for (Long channelId : channelStates.keySet()) {

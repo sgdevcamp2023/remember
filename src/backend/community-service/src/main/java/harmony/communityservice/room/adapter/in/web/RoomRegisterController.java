@@ -1,6 +1,6 @@
 package harmony.communityservice.room.adapter.in.web;
 
-import harmony.communityservice.common.annotation.AuthorizeUser;
+import harmony.communityservice.common.annotation.WebAdapter;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.room.application.port.in.RegisterRoomCommand;
 import harmony.communityservice.room.application.port.in.RegisterRoomUseCase;
@@ -10,10 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@AuthorizeUser
-@RestController
+@WebAdapter
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
 public class RoomRegisterController {

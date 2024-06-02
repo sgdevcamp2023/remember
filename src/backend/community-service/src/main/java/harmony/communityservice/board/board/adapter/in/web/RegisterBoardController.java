@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @WebAdapter
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
-public class RegisterBoardController {
+public class  RegisterBoardController {
 
     private final RegisterBoardUseCase registerBoardUseCase;
 
