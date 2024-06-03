@@ -2,7 +2,7 @@ package harmony.communityservice.room.application.service;
 
 import harmony.communityservice.common.annotation.UseCase;
 import harmony.communityservice.common.client.UserStatusClient;
-import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
+import harmony.communityservice.common.dto.LoadDmUserStateFeignResponse;
 import harmony.communityservice.room.application.port.in.LoadRoomIdsQuery;
 import harmony.communityservice.room.application.port.in.LoadRoomsQuery;
 import harmony.communityservice.room.application.port.in.LoadUserStatesInRoomQuery;
@@ -13,7 +13,7 @@ import harmony.communityservice.room.application.port.out.LoadRoomsPort;
 import harmony.communityservice.room.domain.Room;
 import harmony.communityservice.room.domain.Room.RoomId;
 import harmony.communityservice.room.application.port.in.LoadUserStateResponse;
-import harmony.communityservice.common.dto.SearchUserStatusInDmRoomRequest;
+import harmony.communityservice.common.dto.LoadUserStatusInDmRoomRequest;
 import harmony.communityservice.user.application.port.in.LoadUserQuery;
 import harmony.communityservice.user.domain.User;
 import harmony.communityservice.user.domain.User.UserId;
@@ -73,8 +73,8 @@ class RoomQueryService implements LoadRoomsQuery, LoadUserStatesInRoomQuery, Loa
                 .stream()
                 .map(user -> user.getUserId().getId())
                 .toList();
-        SearchUserStatusInDmRoomRequest searchUserStatusInDmRoomRequest = new SearchUserStatusInDmRoomRequest(userIds);
-        SearchDmUserStateFeignResponse searchDmUserStateFeignResponse = userStatusClient.getCommunityUsersState(
+        LoadUserStatusInDmRoomRequest searchUserStatusInDmRoomRequest = new LoadUserStatusInDmRoomRequest(userIds);
+        LoadDmUserStateFeignResponse searchDmUserStateFeignResponse = userStatusClient.userStates(
                 searchUserStatusInDmRoomRequest);
         return searchDmUserStateFeignResponse.getConnectionStates();
     }

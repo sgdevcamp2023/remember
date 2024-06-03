@@ -5,7 +5,6 @@ import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.domain.Domain;
 import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
-import harmony.communityservice.guild.guild.domain.GuildRead.GuildReadId;
 import harmony.communityservice.guild.guild.domain.GuildUser.GuildUserId;
 import harmony.communityservice.user.domain.User.UserId;
 import lombok.AccessLevel;
@@ -64,11 +63,6 @@ public class GuildUser extends Domain<GuildUser, GuildUserId> {
 
         public static GuildUserId make(Long guildUserId) {
             return new GuildUserId(guildUserId);
-        }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return new Object[]{id};
         }
     }
 }

@@ -54,10 +54,5 @@ public class Image extends Domain<Image, ImageId> {
         public static ImageId make(Long imageId) {
             return new ImageId(imageId);
         }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return new Object[]{id};
-        }
     }
 }

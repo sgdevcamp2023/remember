@@ -21,18 +21,8 @@ public class UserInfo extends ValueObject<UserInfo> {
         return new UserInfo(profile, nickname, email);
     }
 
-    UserInfo modifyNickname(String nickname) {
-        CommonUserInfo modifiedCommonUserInfo = commonUserInfo.modifyNickname(nickname);
-        return new UserInfo(this.email, modifiedCommonUserInfo);
-    }
-
     UserInfo modifyProfile(String profile) {
         CommonUserInfo modifiedCommonUserInfo = commonUserInfo.modifyProfile(profile);
         return new UserInfo(this.email, modifiedCommonUserInfo);
-    }
-
-    @Override
-    protected Object[] getEqualityFields() {
-        return new Object[]{email, commonUserInfo};
     }
 }

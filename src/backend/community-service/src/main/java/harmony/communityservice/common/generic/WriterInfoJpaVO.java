@@ -34,12 +34,6 @@ public class WriterInfoJpaVO extends EntityValueObject<WriterInfoJpaVO> {
         return new WriterInfoJpaVO(id, newCommonUserInfo);
     }
 
-    public void verifyWriter(Long writerId) {
-        if (!this.writerId.equals(writerId)) {
-            throw new IllegalStateException("Wrong Writer");
-        }
-    }
-
     @Override
     protected Object[] getEqualityFields() {
         return new Object[]{writerId, commonUserInfo};

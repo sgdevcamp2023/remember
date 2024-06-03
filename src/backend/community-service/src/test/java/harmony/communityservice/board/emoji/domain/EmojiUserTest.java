@@ -1,5 +1,6 @@
 package harmony.communityservice.board.emoji.domain;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,6 +23,7 @@ class EmojiUserTest {
         boolean equals = firstEmojiUser.equals(secondEmojiUser);
 
         assertSame(equals, true);
+        assertEquals(firstEmojiUser.getEmojiUserId(),secondEmojiUser.getEmojiUserId());
     }
 
     @Test

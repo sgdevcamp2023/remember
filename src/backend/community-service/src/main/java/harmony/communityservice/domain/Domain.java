@@ -10,22 +10,26 @@ public abstract class Domain<T extends Domain<T, TID>, TID> {
         if (other == null) {
             return false;
         }
+        if (!(other.getClass().equals(getClass()))) {
+            return false;
+        }
 
         return equals((T) other);
     }
 
     protected boolean equals(T other) {
-        if (other == null) {
-            return false;
-        }
 
         if (getId() == null) {
+            return false;
+        }
+        if (other.hashCode() != hashCode()) {
             return false;
         }
 
         if (other.getClass().equals(getClass())) {
             return getId().equals(other.getId());
         }
+
 
         return super.equals(other);
     }

@@ -11,7 +11,6 @@ import lombok.Getter;
 public class LoadCommentsResponse {
     private List<LordCommentResponse> searchCommentResponses = new ArrayList<>();
 
-    @Builder
     public LoadCommentsResponse(List<LordCommentResponse> searchCommentResponses) {
         this.searchCommentResponses = searchCommentResponses;
     }

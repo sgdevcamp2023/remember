@@ -44,11 +44,6 @@ public class CategoryEntity extends AggregateRootEntity<CategoryEntity, Category
         this.guildId = guildId;
     }
 
-    public void modifyName(String name) {
-        this.name = name;
-        super.updateType();
-    }
-
     @Override
     public CategoryIdJpaVO getId() {
         return categoryId;

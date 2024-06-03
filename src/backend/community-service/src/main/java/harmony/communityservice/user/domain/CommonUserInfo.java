@@ -16,16 +16,7 @@ public class CommonUserInfo extends ValueObject<CommonUserInfo> {
         return new CommonUserInfo(nickname, profile);
     }
 
-    CommonUserInfo modifyNickname(String nickname) {
-        return new CommonUserInfo(nickname, this.profile);
-    }
-
     CommonUserInfo modifyProfile(String profile) {
         return new CommonUserInfo(this.nickname, profile);
-    }
-
-    @Override
-    protected Object[] getEqualityFields() {
-        return new Object[]{nickname, profile};
     }
 }

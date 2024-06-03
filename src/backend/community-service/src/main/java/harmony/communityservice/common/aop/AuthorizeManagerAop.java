@@ -1,6 +1,6 @@
 package harmony.communityservice.common.aop;
 
-import harmony.communityservice.common.dto.ManagerRequest;
+import harmony.communityservice.common.dto.CommonCommand;
 import harmony.communityservice.guild.guild.application.port.in.VerifyGuildManagerQuery;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,8 +23,8 @@ public class AuthorizeManagerAop {
     @Around("AuthorizeGuildManager()")
     public Object Authorize(ProceedingJoinPoint joinPoint) throws Throwable {
         Object firstArg = joinPoint.getArgs()[0];
-        if (firstArg instanceof ManagerRequest request) {
-            verifyGuildManagerQuery.verify(request.getGuildId(), request.getManagerId());
+        if (firstArg instanceof CommonCommand commonCommand) {
+            verifyGuildManagerQuery.verify(commonCommand.getGuildId(), commonCommand.getUserId());
         }
         return joinPoint.proceed();
     }

@@ -20,7 +20,7 @@ public class LoadInvitationCodeController {
 
     @PostMapping("/search/invitation/code/guild")
     public BaseResponse<?> searchInvitationCode(
-            @RequestBody @Validated SearchGuildInvitationCodeRequest searchGuildInvitationCodeRequest) {
+            @RequestBody @Validated LoadGuildInvitationCodeRequest searchGuildInvitationCodeRequest) {
         LoadInvitationCodeCommand loadInvitationCodeCommand = new LoadInvitationCodeCommand(
                 searchGuildInvitationCodeRequest.userId(), searchGuildInvitationCodeRequest.guildId());
         String invitationCode = loadInvitationCodeQuery.loadInvitationCode(loadInvitationCodeCommand);
