@@ -15,9 +15,4 @@ public class CommonUserInfo extends ValueObject<CommonUserInfo> {
     static CommonUserInfo make(String nickname, String profile) {
         return new CommonUserInfo(nickname, profile);
     }
-
-    @Override
-    protected Object[] getEqualityFields() {
-        return new Object[]{nickname, profile};
-    }
 }

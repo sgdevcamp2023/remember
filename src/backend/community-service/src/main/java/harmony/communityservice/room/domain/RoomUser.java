@@ -38,10 +38,6 @@ public class RoomUser extends Domain<RoomUser, RoomUserId> {
     }
 
     private void verifyUserId(UserId userId) {
-        if (userId == null) {
-            throw new NotFoundDataException("userId를 찾을 수 없습니다");
-        }
-
         if (userId.getId() < Threshold.MIN.getValue()) {
             throw new WrongThresholdRangeException("userId 범위가 1 미만입니다");
         }
@@ -65,11 +61,6 @@ public class RoomUser extends Domain<RoomUser, RoomUserId> {
 
         public static RoomUserId make(Long id) {
             return new RoomUserId(id);
-        }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return new Object[]{id};
         }
     }
 }

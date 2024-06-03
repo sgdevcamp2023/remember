@@ -60,6 +60,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'com.github.ben-manes.caffeine:caffeine'
     implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '3.0.3'
+    testCompileOnly 'com.mysql:mysql-connector-j'
 
 }
 
@@ -73,3 +74,4 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+

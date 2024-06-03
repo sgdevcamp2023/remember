@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class RoomQueryPersistenceAdapter implements LoadRoomsPort, LoadRoomPort, LoadRoomIdsPort {
 
-    private final roomQueryRepository roomQueryRepository;
+    private final RoomQueryRepository roomQueryRepository;
 
     @Override
     public List<Room> loadRooms(UserId userId) {

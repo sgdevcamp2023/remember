@@ -11,7 +11,7 @@ interface GuildReadCommandRepository extends JpaRepository<GuildReadEntity, Guil
 
     @Modifying
     @Query("delete from GuildReadEntity gr where gr.guildId = :guildId")
-    void deleteGuildReadsByGuildId(GuildIdJpaVO guildId);
+    void deleteGuildReadsByGuildId(@Param("guildId") GuildIdJpaVO guildId);
 
 
     @Modifying

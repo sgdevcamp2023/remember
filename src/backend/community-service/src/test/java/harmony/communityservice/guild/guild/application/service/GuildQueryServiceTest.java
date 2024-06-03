@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
 
 import harmony.communityservice.common.client.UserStatusClient;
-import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
+import harmony.communityservice.common.dto.LoadUserStateInGuildAndChannelFeignResponse;
 import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.guild.guild.adapter.in.web.LoadUserStatesInGuildRequest;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildReadsQuery;
@@ -150,8 +150,8 @@ class GuildQueryServiceTest {
         Map<Long, Set<Long>> channelStates = Map.of(1L, Set.of(1L, 2L, 3L));
         LoadGuildUserStatesCommand loadGuildUserStatesCommand = new LoadGuildUserStatesCommand(1L, 1L);
         given(loadGuildReadsQuery.loadList(1L)).willReturn(guildReads);
-        given(userStatusClient.userStatus(loadUserStatesInGuildRequest)).willReturn(
-                new SearchUserStateInGuildAndRoomFeignResponse(channelStates, connectionStates));
+        given(userStatusClient.getCommunityUsersState(loadUserStatesInGuildRequest)).willReturn(
+                new LoadUserStateInGuildAndChannelFeignResponse(channelStates, connectionStates));
 
         LoadGuildUserStatesResponse response = guildQueryService.load(loadGuildUserStatesCommand);
         assertEquals(guildStates,response.getGuildStates());

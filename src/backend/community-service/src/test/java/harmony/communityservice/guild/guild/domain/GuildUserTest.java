@@ -1,8 +1,10 @@
 package harmony.communityservice.guild.guild.domain;
 
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.common.exception.WrongThresholdRangeException;
 import harmony.communityservice.guild.guild.domain.GuildUser.GuildUserId;
 import harmony.communityservice.user.domain.User.UserId;
@@ -28,7 +30,7 @@ class GuildUserTest {
                 .build();
 
         boolean equals = firstGuildUser.equals(secondGuildUser);
-
+        assertNotSame(firstGuildUser.getGuildUserId(),secondGuildUser.getGuildUserId());
         assertSame(equals, true);
     }
 
@@ -48,6 +50,14 @@ class GuildUserTest {
         boolean equals = firstGuildUser.equals(secondGuildUser);
 
         assertSame(equals, false);
+    }
+
+    @Test
+    @DisplayName("UserId가 입력되지 않을 시 오류")
+    void not_exists_user_id() {
+        assertThrows(NotFoundDataException.class, () -> GuildUser.builder()
+                .guildUserId(GuildUserId.make(1L))
+                .build());
     }
 
     @ParameterizedTest

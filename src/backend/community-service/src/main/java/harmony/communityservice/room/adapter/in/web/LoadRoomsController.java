@@ -1,6 +1,6 @@
 package harmony.communityservice.room.adapter.in.web;
 
-import harmony.communityservice.common.annotation.AuthorizeUser;
+import harmony.communityservice.common.annotation.WebAdapter;
 import harmony.communityservice.common.dto.BaseResponse;
 import harmony.communityservice.room.application.port.in.LoadRoomsQuery;
 import harmony.communityservice.room.application.port.in.SearchRoomsResponse;
@@ -9,10 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@AuthorizeUser
-@RestController
+@WebAdapter
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
 public class LoadRoomsController {

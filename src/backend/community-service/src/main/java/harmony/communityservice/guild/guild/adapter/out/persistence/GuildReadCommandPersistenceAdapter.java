@@ -22,7 +22,6 @@ class GuildReadCommandPersistenceAdapter implements RegisterGuildReadPort, Delet
 
     @Override
     public void register(GuildRead guildRead) {
-        ;
         GuildReadEntity guildReadEntity = GuildReadEntityMapper.convert(guildRead);
         guildReadCommandRepository.save(guildReadEntity);
     }

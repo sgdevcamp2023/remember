@@ -15,7 +15,7 @@ class CommonUserInfoTest {
         CommonUserInfo secondCommonUserInfo = CommonUserInfo.make("test", "https://cdn.com/test");
         boolean equals = firstCommonUserInfo.equals(secondCommonUserInfo);
 
-        assertSame(equals, true);
+        assertSame(true, equals);
     }
 
     @Test
@@ -26,7 +26,7 @@ class CommonUserInfoTest {
 
         boolean equals = firstCommonUserInfo.equals(secondCommonUserInfo);
 
-        assertSame(equals, false);
+        assertSame(false, equals);
     }
 
     @Test
@@ -37,6 +37,6 @@ class CommonUserInfoTest {
 
         boolean equals = commonUserInfo.equals(modifiedCommonUserInfo);
 
-        assertSame(equals, false);
+        assertSame(false, equals);
     }
 }

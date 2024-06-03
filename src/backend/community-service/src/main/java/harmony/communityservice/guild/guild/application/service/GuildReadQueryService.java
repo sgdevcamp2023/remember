@@ -34,7 +34,7 @@ class GuildReadQueryService implements LoadGuildReadsQuery, LoadVoiceUserQuery, 
     private final LoadGuildIdsPort loadGuildIdsPort;
 
     @Override
-    public Map<Long, ?> loadGuilds(Long userId) {
+    public Map<Long, SearchGuildReadResponse> loadGuilds(Long userId) {
         Map<Long, SearchGuildReadResponse> resultMap = new HashMap<>();
         for (GuildRead guildRead : loadGuildReadsPort.loadListByUserId(UserId.make(userId))) {
             resultMap.put(guildRead.getGuildId().getId(), LoadGuildReadResponseMapper.convert(guildRead));

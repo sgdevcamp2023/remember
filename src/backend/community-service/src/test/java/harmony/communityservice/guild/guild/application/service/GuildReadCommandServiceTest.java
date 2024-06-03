@@ -71,11 +71,17 @@ class GuildReadCommandServiceTest {
                 .name("first_guild")
                 .userId(UserId.make(1L))
                 .build();
+        RegisterGuildReadCommand registerGuildReadCommand = RegisterGuildReadCommand.builder()
+                .guildId(1L)
+                .userId(1L)
+                .profile("http://guild.com/test1")
+                .name("first_guild")
+                .build();
 
         given(loadUserUseCase.loadUser(1L)).willReturn(user);
         willDoNothing().given(registerGuildReadPort).register(guildRead);
 
-        guildReadCommandService.register(new RegisterGuildReadCommand(1L, 1L, "first_guild", "http://guild.com/test1"));
+        guildReadCommandService.register(registerGuildReadCommand);
         then(loadUserUseCase).should(times(1)).loadUser(1L);
         then(registerGuildReadPort).should(times(1)).register(guildRead);
     }

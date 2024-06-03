@@ -9,7 +9,6 @@ public abstract class ValueObject<T extends ValueObject<T>> {
         if (other == null) {
             return false;
         }
-
         if (!(other.getClass().equals(getClass()))) {
             return false;
         }
@@ -18,10 +17,6 @@ public abstract class ValueObject<T extends ValueObject<T>> {
     }
 
     protected boolean equals(T other) {
-        if (other == null) {
-            return false;
-        }
-
         return Arrays.equals(getEqualityFields(), other.getEqualityFields());
     }
 
