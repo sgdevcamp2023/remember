@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaEventProducer implements EventProducer {
+class KafkaEventProducer implements EventProducer {
 
     private final KafkaTemplate<String, ExternalEvent> externalEventKafkaTemplate;
     @Value("${spring.kafka.producer.community-event-topic}")

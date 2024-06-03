@@ -1,25 +1,25 @@
 package harmony.communityservice.common.api;
 
+import harmony.communityservice.common.annotation.WebAdapter;
 import harmony.communityservice.common.dto.BaseResponse;
-import harmony.communityservice.common.dto.SearchRoomsAndGuildsResponse;
-import harmony.communityservice.common.service.impl.InnerApiQueryService;
+import harmony.communityservice.common.dto.LoadRoomsAndGuildsResponse;
+import harmony.communityservice.common.service.LoadUserBelongsQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@WebAdapter
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
 public class InnerApiQueryController {
 
-    private final InnerApiQueryService innerApiQueryService;
+    private final LoadUserBelongsQuery loadUserBelongsQuery;
 
     @GetMapping("/search/rooms/guilds/{userId}")
     public BaseResponse<?> searchRoomsAndGuildsBelongToUser(@PathVariable Long userId) {
-        SearchRoomsAndGuildsResponse searchRoomsAndGuildsResponse = innerApiQueryService.search(userId);
+        LoadRoomsAndGuildsResponse searchRoomsAndGuildsResponse = loadUserBelongsQuery.load(userId);
         return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchRoomsAndGuildsResponse);
     }
 }
