@@ -25,7 +25,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class ExternalEventHandler {
 
-    private final EventProducer producerService;
+    private final EventProducer eventProducer;
     private final ExternalEventOutBoxMapper outBoxMapper;
 
     @TransactionalEventListener(classes = GuildCreatedEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
@@ -91,7 +91,7 @@ public class ExternalEventHandler {
         ExternalEventRecord externalEventRecord = outBoxMapper.findExternalEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            producerService.publishGuildCreationEvent(externalEventRecord.make());
+            eventProducer.publishGuildCreationEvent(externalEventRecord.make());
             outBoxMapper.updateExternalEventRecord(SentType.SEND_SUCCESS, externalEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateExternalEventRecord(SentType.SEND_FAIL, externalEventRecord.getEventId());
@@ -133,6 +133,7 @@ public class ExternalEventHandler {
                 .type(ExternalEventType.DELETED_CHANNEL)
                 .guildId(event.getGuildId())
                 .channelId(event.getChannelId())
+                .sentType(SentType.INIT)
                 .build();
     }
 }

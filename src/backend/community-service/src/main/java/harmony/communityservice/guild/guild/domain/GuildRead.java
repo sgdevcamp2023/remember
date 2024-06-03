@@ -89,10 +89,5 @@ public class GuildRead extends Domain<GuildRead, GuildReadId> {
         public static GuildReadId make(Long id) {
             return new GuildReadId(id);
         }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return new Object[]{id};
-        }
     }
 }

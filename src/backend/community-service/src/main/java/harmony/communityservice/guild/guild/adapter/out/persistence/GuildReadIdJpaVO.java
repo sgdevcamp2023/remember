@@ -13,12 +13,7 @@ public class GuildReadIdJpaVO extends EntityLongTypeIdentifier {
         return longValue();
     }
 
-    public static GuildReadIdJpaVO make(long id) {
-        return new GuildReadIdJpaVO(id);
-    }
-
     public static class GuildReadIdJavaType extends EntityLongTypeIdentifierJavaType<GuildReadIdJpaVO> {
-
         public GuildReadIdJavaType() {
             super(GuildReadIdJpaVO.class);
         }

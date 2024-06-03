@@ -41,6 +41,7 @@ class ChannelCommandService implements RegisterChannelUseCase, DeleteChannelUseC
     }
 
     @Override
+    @AuthorizeGuildMember
     public void delete(DeleteChannelCommand deleteChannelCommand) {
         deleteChannelPort.deleteById(ChannelId.make(deleteChannelCommand.channelId()));
         sendChannelDeletedEvent(deleteChannelCommand.channelId(), deleteChannelCommand.guildId());

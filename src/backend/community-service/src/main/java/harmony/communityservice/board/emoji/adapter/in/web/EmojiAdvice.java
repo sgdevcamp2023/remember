@@ -19,7 +19,6 @@ public class EmojiAdvice {
     public BaseResponse<BaseExceptionResponse> exceptionHandler(DuplicatedEmojiException e) {
         errorLogPrinter.logging("DuplicatedEmojiException");
         return new BaseResponse<>(HttpStatus.BAD_REQUEST.value(), "BAD_REQUEST",
-                new BaseExceptionResponse("DUPLICATED_EMOJI_REQUEST", 1000, "같은 이모지를 추가하실 수 없습니다")
-        );
+                new BaseExceptionResponse("DUPLICATED_EMOJI_REQUEST", 1000, "같은 이모지를 추가하실 수 없습니다"));
     }
 }

@@ -58,16 +58,6 @@ public class CommentEntity extends AggregateRootEntity<CommentEntity, CommentIdJ
         return WriterInfoJpaVO.make(writerName, writerId, writerProfile);
     }
 
-    public void verifyWriter(Long writerId) {
-        writerInfo.verifyWriter(writerId);
-    }
-
-    public void modify(Long userId, String comment) {
-        verifyWriter(userId);
-        this.comment = comment;
-        super.updateType();
-    }
-
     @Override
     public CommentIdJpaVO getId() {
         return commentId;

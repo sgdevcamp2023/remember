@@ -36,10 +36,6 @@ public class EmojiUser extends Domain<EmojiUser, EmojiUserId> {
     }
 
     private void verifyUserId(UserId userId) {
-        if (userId == null) {
-            throw new NotFoundDataException("userId가 존재하지 않습니다");
-        }
-
         if (userId.getId() < Threshold.MIN.getValue()) {
             throw new WrongThresholdRangeException("userId의 범위가 1 미만입니다.");
         }
@@ -52,11 +48,6 @@ public class EmojiUser extends Domain<EmojiUser, EmojiUserId> {
 
         public static EmojiUserId make(Long emojiUserId) {
             return new EmojiUserId(emojiUserId);
-        }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return new Object[]{id};
         }
     }
 }

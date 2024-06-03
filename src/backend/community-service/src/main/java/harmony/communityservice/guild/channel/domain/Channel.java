@@ -79,10 +79,5 @@ public class Channel extends Domain<Channel, ChannelId> {
         public static ChannelId make(Long channelId) {
             return new ChannelId(channelId);
         }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return new Object[]{id};
-        }
     }
 }

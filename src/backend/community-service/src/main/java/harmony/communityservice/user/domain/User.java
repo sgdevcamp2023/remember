@@ -5,13 +5,10 @@ import harmony.communityservice.domain.Domain;
 import harmony.communityservice.domain.Threshold;
 import harmony.communityservice.domain.ValueObject;
 import harmony.communityservice.user.domain.User.UserId;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User extends Domain<User, UserId> {
 
     private final UserId userId;
@@ -23,16 +20,6 @@ public class User extends Domain<User, UserId> {
         verifyUserId(userId);
         this.userId = UserId.make(userId);
         this.userInfo = UserInfo.make(email, profile, nickname);
-    }
-
-    public User modifiedProfile(String profile) {
-        UserInfo modifiedUserInfo = userInfo.modifyProfile(profile);
-        return new User(this.userId, modifiedUserInfo);
-    }
-
-    public User modifiedNickname(String nickname) {
-        UserInfo modifiedUserInfo = userInfo.modifyNickname(nickname);
-        return new User(this.userId, modifiedUserInfo);
     }
 
     private void verifyUserId(Long userId) {
@@ -57,11 +44,6 @@ public class User extends Domain<User, UserId> {
 
         public static UserId make(Long id) {
             return new UserId(id);
-        }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return  new Object[] { id };
         }
     }
 }

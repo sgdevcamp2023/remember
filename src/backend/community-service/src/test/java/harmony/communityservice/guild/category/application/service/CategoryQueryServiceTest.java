@@ -5,9 +5,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-import harmony.communityservice.domain.Threshold;
-import harmony.communityservice.guild.category.application.port.in.SearchCategoryResponse;
-import harmony.communityservice.guild.category.application.port.in.SearchListCommand;
+import harmony.communityservice.guild.category.application.port.in.LoadCategoryResponse;
+import harmony.communityservice.guild.category.application.port.in.LoadListCommand;
 import harmony.communityservice.guild.category.application.port.out.LoadListPort;
 import harmony.communityservice.guild.category.domain.Category;
 import harmony.communityservice.guild.category.domain.Category.CategoryId;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -56,9 +54,9 @@ class CategoryQueryServiceTest {
         List<Category> categories = List.of(first, second, third);
         given(loadListPort.loadList(GuildId.make(1L))).willReturn(categories);
 
-        SearchCategoryResponse searchCategoryResponse = categoryQueryService.loadList(new SearchListCommand(1L, 1L));
+        LoadCategoryResponse searchCategoryResponse = categoryQueryService.loadList(new LoadListCommand(1L, 1L));
 
-        assertEquals(searchCategoryResponse, new SearchCategoryResponse(categories));
+        assertEquals(searchCategoryResponse, new LoadCategoryResponse(categories));
         then(loadListPort).should(times(1)).loadList(GuildId.make(1L));
 
     }

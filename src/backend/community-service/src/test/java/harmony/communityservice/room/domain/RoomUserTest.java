@@ -35,6 +35,19 @@ class RoomUserTest {
         assertSame(equals,false);
     }
 
+    @Test
+    @DisplayName("userId가 0이면 예외 테스트")
+    void userId_equal_zero() {
+        assertThrows(WrongThresholdRangeException.class, () -> RoomUser.make(RoomUserId.make(1L), UserId.make(0L)));
+    }
+
+    @Test
+    @DisplayName("roomUserId가 0이면 예외 테스트")
+    void room_userId_equal_zero() {
+        assertThrows(WrongThresholdRangeException.class, () -> RoomUser.make(RoomUserId.make(0L), UserId.make(1L)));
+    }
+
+
     @ParameterizedTest
     @DisplayName("userId 범위 테스트")
     @ValueSource(longs = {0L,-1L,-10L,-100L,-1000L})

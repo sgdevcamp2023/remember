@@ -3,16 +3,14 @@ package harmony.communityservice.guild.guild.application.service;
 import harmony.communityservice.common.annotation.AuthorizeGuildMember;
 import harmony.communityservice.common.annotation.UseCase;
 import harmony.communityservice.common.client.UserStatusClient;
-import harmony.communityservice.common.dto.SearchUserStateInGuildAndRoomFeignResponse;
+import harmony.communityservice.common.dto.LoadUserStateInGuildAndChannelFeignResponse;
 import harmony.communityservice.guild.guild.adapter.in.web.LoadUserStatesInGuildRequest;
-import harmony.communityservice.guild.guild.application.port.in.LoadGuildReadCommand;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildReadsQuery;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildUserStatesCommand;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildUserStatesQuery;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildUserStatesResponse;
 import harmony.communityservice.guild.guild.application.port.in.LoadInvitationCodeCommand;
 import harmony.communityservice.guild.guild.application.port.in.LoadInvitationCodeQuery;
-import harmony.communityservice.guild.guild.application.port.in.LoadVoiceUserQuery;
 import harmony.communityservice.guild.guild.application.port.in.VerifyGuildManagerQuery;
 import harmony.communityservice.guild.guild.application.port.out.LoadGuildPort;
 import harmony.communityservice.guild.guild.application.port.out.VerifyGuildManagerPort;
@@ -63,7 +61,7 @@ class GuildQueryService implements LoadInvitationCodeQuery, VerifyGuildManagerQu
                 .map(SearchUserStateResponseMapper::convert)
                 .toList();
         Map<Long, GuildRead> guildReadMap = getGuildReadMap(guildReads);
-        SearchUserStateInGuildAndRoomFeignResponse userState = getSearchUserStateInGuildAndRoomFeignResponse(
+        LoadUserStateInGuildAndChannelFeignResponse userState = getSearchUserStateInGuildAndRoomFeignResponse(
                 guildId, loadUserStateResponses);
         Map<Long, LoadUserStateResponse> guildStates = makeUserStatesInGuild(
                 loadUserStateResponses, userState);
@@ -77,25 +75,25 @@ class GuildQueryService implements LoadInvitationCodeQuery, VerifyGuildManagerQu
         return guildReadMap;
     }
 
-    private SearchUserStateInGuildAndRoomFeignResponse getSearchUserStateInGuildAndRoomFeignResponse(long guildId,
-                                                                                                     List<LoadUserStateResponse> searchUserStateResponses) {
+    private LoadUserStateInGuildAndChannelFeignResponse getSearchUserStateInGuildAndRoomFeignResponse(long guildId,
+                                                                                                      List<LoadUserStateResponse> searchUserStateResponses) {
         List<Long> userIds = searchUserStateResponses
                 .stream()
                 .map(LoadUserStateResponse::getUserId)
                 .collect(Collectors.toList());
-        return userStatusClient.userStatus(new LoadUserStatesInGuildRequest(guildId, userIds));
+        return userStatusClient.getCommunityUsersState(new LoadUserStatesInGuildRequest(guildId, userIds));
     }
 
     private Map<Long, LoadUserStateResponse> makeUserStatesInGuild(
-            List<LoadUserStateResponse> stateResponses, SearchUserStateInGuildAndRoomFeignResponse userState) {
+            List<LoadUserStateResponse> stateResponses, LoadUserStateInGuildAndChannelFeignResponse userState) {
         stateResponses.forEach(state -> state.modifyState(userState.getConnectionStates().get(state.getUserId())));
         return stateResponses.stream()
                 .collect(Collectors.toMap(LoadUserStateResponse::getUserId, state -> state));
     }
 
     private Map<Long, Map<Long, ?>> getUserStatesInVoiceChannel(
-                                                                SearchUserStateInGuildAndRoomFeignResponse userState,
-                                                                Map<Long, GuildRead> guildReadMap) {
+            LoadUserStateInGuildAndChannelFeignResponse userState,
+            Map<Long, GuildRead> guildReadMap) {
         Map<Long, Set<Long>> channelStates = userState.getChannelStates();
         Map<Long, Map<Long, ?>> voiceChannelStates = new HashMap<>();
         for (Long channelId : channelStates.keySet()) {

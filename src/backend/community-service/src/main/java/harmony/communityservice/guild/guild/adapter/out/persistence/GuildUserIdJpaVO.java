@@ -8,12 +8,11 @@ public class GuildUserIdJpaVO extends EntityLongTypeIdentifier {
         super(id);
     }
 
-    public static GuildUserIdJpaVO make(long id) {
-        return new GuildUserIdJpaVO(id);
+    public Long getId() {
+        return longValue();
     }
 
     public static class GuildUserIdJavaType extends EntityLongTypeIdentifierJavaType<GuildUserIdJpaVO> {
-
         public GuildUserIdJavaType() {
             super(GuildUserIdJpaVO.class);
         }

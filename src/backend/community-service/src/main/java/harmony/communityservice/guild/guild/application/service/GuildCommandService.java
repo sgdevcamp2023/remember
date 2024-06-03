@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.guild.application.service;
 
+import harmony.communityservice.common.annotation.AuthorizeGuildManager;
 import harmony.communityservice.common.annotation.UseCase;
 import harmony.communityservice.common.event.Events;
 import harmony.communityservice.common.event.dto.inner.DeleteCategoryEvent;
@@ -58,6 +59,7 @@ class GuildCommandService implements RegisterGuildUseCase, JoinGuildUseCase, Del
 
 
     @Override
+    @AuthorizeGuildManager
     public void delete(DeleteGuildCommand deleteGuildCommand) {
         deleteGuildPort.delete(GuildId.make(deleteGuildCommand.guildId()), UserId.make(deleteGuildCommand.userId()));
         Events.send(GuildDeletedEventMapper.convert(deleteGuildCommand.guildId()));

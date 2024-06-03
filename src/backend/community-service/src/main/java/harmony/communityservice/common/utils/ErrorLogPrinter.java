@@ -12,4 +12,3 @@ public class ErrorLogPrinter extends LogPrinter {
         log.error(message);
     }
 }
-

@@ -9,10 +9,10 @@ import org.springframework.data.repository.query.Param;
 interface GuildReadQueryRepository extends JpaRepository<GuildReadEntity, GuildReadIdJpaVO> {
 
     @Query("select gr from GuildReadEntity gr where gr.userId = :userId")
-    List<GuildReadEntity> findGuildReadsByUserId(UserIdJpaVO userId);
+    List<GuildReadEntity> findGuildReadsByUserId(@Param("userId") UserIdJpaVO userId);
 
     @Query("select gr.guildId from GuildReadEntity gr where gr.userId = :userId")
-    List<GuildIdJpaVO> findGuildIdsByUserId(UserIdJpaVO userId);
+    List<GuildIdJpaVO> findGuildIdsByUserId(@Param("userId") UserIdJpaVO userId);
 
     @Query("select gr from GuildReadEntity gr where gr.guildId = :guildId")
     List<GuildReadEntity> findByGuildId(@Param("guildId") GuildIdJpaVO guildId);

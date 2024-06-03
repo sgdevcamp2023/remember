@@ -17,11 +17,11 @@ interface BoardCommandRepository extends JpaRepository<BoardEntity, BoardIdJpaVO
     @Query(value = "delete from image as i where i.board_id in "
             + "(select b.board_id from board as b "
             + "where b.channel_id = :channelId)", nativeQuery = true)
-    void deleteImagesByChannelId(Long channelId);
+    void deleteImagesByChannelId(@Param("channelId") Long channelId);
 
     @Modifying
     @Query("delete from BoardEntity b where b.channelId = :channelId")
-    void deleteBoardsByChannelId(ChannelIdJpaVO channelId);
+    void deleteBoardsByChannelId(@Param("channelId") ChannelIdJpaVO channelId);
 
     @Modifying
     @Query("delete from BoardEntity b where b.boardId = :boardId and b.writerInfo.writerId = :writerId")
@@ -35,7 +35,7 @@ interface BoardCommandRepository extends JpaRepository<BoardEntity, BoardIdJpaVO
     @Query(value = "delete from image as i where i.board_id in "
             + "(select b.board_id from board as b "
             + "where b.channel_id in :channelIds)", nativeQuery = true)
-    void deleteImagesByChannelIds(List<Long> channelIds);
+    void deleteImagesByChannelIds(@Param("channelIds") List<Long> channelIds);
 
     @Modifying
     @Query("delete from BoardEntity b where b.channelId in :channelIds")

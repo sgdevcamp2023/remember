@@ -19,8 +19,4 @@ public class ProfileInfo extends ValueObject<ProfileInfo> {
         return new ProfileInfo(name, profile);
     }
 
-    @Override
-    protected Object[] getEqualityFields() {
-        return new Object[]{name, profile};
-    }
 }

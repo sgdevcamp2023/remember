@@ -61,10 +61,5 @@ public class Room extends Domain<Room, RoomId> {
         public static RoomId make(Long id) {
             return new RoomId(id);
         }
-
-        @Override
-        protected Object[] getEqualityFields() {
-            return new Object[]{id};
-        }
     }
 }
