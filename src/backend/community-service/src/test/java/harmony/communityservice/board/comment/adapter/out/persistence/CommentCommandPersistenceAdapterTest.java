@@ -47,7 +47,7 @@ class CommentCommandPersistenceAdapterTest {
         CommentEntity commentEntity = commentCommandRepository.findById(CommentIdJpaVO.make(9L))
                 .orElseThrow(NotFoundDataException::new);
 
-        assertEquals(9L, commentEntity.getCommentId().getId());
+        assertEquals(9L, commentEntity.getId().getId());
         assertEquals(comment.getComment(), commentEntity.getComment());
         assertEquals(comment.getWriterInfo().getWriterId(), commentEntity.getWriterInfo().getWriterId());
     }

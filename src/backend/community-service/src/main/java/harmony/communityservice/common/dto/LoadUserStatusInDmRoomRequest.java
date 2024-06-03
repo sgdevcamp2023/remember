@@ -7,10 +7,10 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class SearchUserStatusInDmRoomRequest {
+public class LoadUserStatusInDmRoomRequest {
     private List<Long> userIds = new ArrayList<>();
 
-    public SearchUserStatusInDmRoomRequest(List<Long> userIds) {
+    public LoadUserStatusInDmRoomRequest(List<Long> userIds) {
         this.userIds = userIds;
     }
 }

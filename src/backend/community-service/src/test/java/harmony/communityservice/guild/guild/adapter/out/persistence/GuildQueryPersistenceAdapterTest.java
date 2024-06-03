@@ -42,7 +42,7 @@ class GuildQueryPersistenceAdapterTest {
         GuildEntity guildEntity = guildQueryRepository.findById(GuildIdJpaVO.make(2L))
                 .orElseThrow(NotFoundDataException::new);
 
-        assertEquals(guild.getGuildId().getId(), guildEntity.getGuildId().getId());
+        assertEquals(guild.getGuildId().getId(), guildEntity.getId().getId());
         assertEquals(guild.getManagerId().getId(), guildEntity.getManagerId().getId());
     }
 

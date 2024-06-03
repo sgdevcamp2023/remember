@@ -45,7 +45,10 @@ class GuildCommandPersistenceAdapterTest {
         Long guildId = guildCommandPersistenceAdapter.register(guild);
         GuildEntity guildEntity = guildCommandRepository.findById(GuildIdJpaVO.make(guildId))
                 .orElseThrow(NotFoundDataException::new);
-
+        GuildUserEntity guildUserEntity = guildEntity.getGuildUsers().get(0);
+        assertEquals(guildUserEntity.getId().getId(),3L);
+        assertEquals(guildUserEntity.getGuildUserId().getId(),3L);
+        assertEquals(guildUserEntity.getUserId().getId(), 1L);
         assertEquals(guildEntity.getGuildInfo().getName(), guild.getProfileInfo().getName());
     }
 

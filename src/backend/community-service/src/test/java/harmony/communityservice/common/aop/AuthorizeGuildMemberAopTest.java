@@ -10,6 +10,7 @@ import harmony.communityservice.guild.category.application.port.in.DeleteCategor
 import harmony.communityservice.guild.category.application.port.in.LoadListCommand;
 import harmony.communityservice.guild.category.application.port.in.ModifyCategoryCommand;
 import harmony.communityservice.guild.category.application.port.in.RegisterCategoryCommand;
+import harmony.communityservice.guild.channel.application.port.in.DeleteChannelCommand;
 import harmony.communityservice.guild.channel.application.port.in.LoadChannelsCommand;
 import harmony.communityservice.guild.channel.application.port.in.RegisterChannelCommand;
 import harmony.communityservice.guild.guild.application.port.in.LoadGuildUserStatesCommand;
@@ -46,6 +47,7 @@ class AuthorizeGuildMemberAopTest {
         willDoNothing().given(verifyGuildUserQuery).verify(new VerifyGuildMemberCommand(1L, 1L));
         given(joinPoint.proceed()).willReturn(null);
 
+        authorizeGuildMemberAop.AuthorizeGuildMember();
         authorizeGuildMemberAop.Authorize(joinPoint);
 
         then(verifyGuildUserQuery).should(times(1)).verify(new VerifyGuildMemberCommand(1L, 1L));
@@ -155,6 +157,20 @@ class AuthorizeGuildMemberAopTest {
     void authorize_loadGuildUserStatesCommand_test() throws Throwable {
         LoadGuildUserStatesCommand loadGuildUserStatesCommand = new LoadGuildUserStatesCommand(1L, 1L);
         given(joinPoint.getArgs()).willReturn(new Object[]{loadGuildUserStatesCommand});
+        willDoNothing().given(verifyGuildUserQuery).verify(new VerifyGuildMemberCommand(1L, 1L));
+        given(joinPoint.proceed()).willReturn(null);
+
+        authorizeGuildMemberAop.Authorize(joinPoint);
+
+        then(verifyGuildUserQuery).should(times(1)).verify(new VerifyGuildMemberCommand(1L, 1L));
+        then(joinPoint).should(times(1)).proceed();
+    }
+
+    @Test
+    @DisplayName("AuthorizeGuildMemberAop deleteChannelCommand Test")
+    void authorize_deleteChannelCommand_test() throws Throwable {
+        DeleteChannelCommand deleteChannelCommand = new DeleteChannelCommand(1L,1L,1L,"FORUM");
+        given(joinPoint.getArgs()).willReturn(new Object[]{deleteChannelCommand});
         willDoNothing().given(verifyGuildUserQuery).verify(new VerifyGuildMemberCommand(1L, 1L));
         given(joinPoint.proceed()).willReturn(null);
 

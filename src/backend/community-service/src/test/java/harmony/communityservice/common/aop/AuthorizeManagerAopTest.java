@@ -37,6 +37,7 @@ class AuthorizeManagerAopTest {
         given(joinPoint.proceed()).willReturn(null);
         willDoNothing().given(verifyGuildManagerQuery).verify(1L, 1L);
 
+        authorizeManagerAop.AuthorizeGuildManager();
         authorizeManagerAop.Authorize(joinPoint);
 
         then(joinPoint).should(times(1)).proceed();

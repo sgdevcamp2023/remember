@@ -7,8 +7,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import harmony.communityservice.common.client.UserStatusClient;
-import harmony.communityservice.common.dto.SearchDmUserStateFeignResponse;
-import harmony.communityservice.common.dto.SearchUserStatusInDmRoomRequest;
+import harmony.communityservice.common.dto.LoadDmUserStateFeignResponse;
+import harmony.communityservice.common.dto.LoadUserStatusInDmRoomRequest;
 import harmony.communityservice.room.application.port.in.SearchRoomsResponse;
 import harmony.communityservice.room.application.port.in.LoadUserStateResponse;
 import harmony.communityservice.room.application.port.out.LoadRoomIdsPort;
@@ -122,9 +122,9 @@ class RoomQueryServiceTest {
         given(loadRoomPort.loadByRoomId(RoomId.make(1L))).willReturn(room);
         given(loadUserUseCase.loadUser(1L)).willReturn(user);
         given(loadUserUseCase.loadUser(2L)).willReturn(secondUser);
-        given(userStatusClient.getCommunityUsersState(
-                new SearchUserStatusInDmRoomRequest(List.of(1L, 2L)))).willReturn(
-                new SearchDmUserStateFeignResponse(userStates));
+        given(userStatusClient.userStates(
+                new LoadUserStatusInDmRoomRequest(List.of(1L, 2L)))).willReturn(
+                new LoadDmUserStateFeignResponse(userStates));
 
         Map<Long, LoadUserStateResponse> result = roomQueryService.loadUserStates(1L);
 

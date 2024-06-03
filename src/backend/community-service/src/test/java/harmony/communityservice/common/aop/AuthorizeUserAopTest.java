@@ -31,6 +31,7 @@ import harmony.communityservice.user.adapter.in.web.RegisterUserRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,6 +67,7 @@ class AuthorizeUserAopTest {
         given(joinPoint.getArgs()).willReturn(new Object[]{registerUserRequest});
         given(joinPoint.proceed()).willReturn(null);
 
+        authorizeUserAop.AuthorizeUser();
         authorizeUserAop.Authorize(joinPoint);
 
         then(joinPoint).should(times(1)).proceed();
@@ -565,5 +567,18 @@ class AuthorizeUserAopTest {
         authorizeUserAop.Authorize(joinPoint);
 
         then(joinPoint).should(times(1)).proceed();
+    }
+
+    @Test
+    @DisplayName("authorize user exception test")
+    void authorize_user_exception_test() throws Throwable {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("user-id", "1");
+        ServletRequestAttributes attributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(attributes);;
+        given(joinPoint.getArgs()).willReturn(new Object[]{"abc"});
+
+        Assertions.assertThrows(WrongUserException.class, ()->authorizeUserAop.Authorize(joinPoint));
+
     }
 }

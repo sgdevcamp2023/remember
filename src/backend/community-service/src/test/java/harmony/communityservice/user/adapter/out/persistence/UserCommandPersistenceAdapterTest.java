@@ -59,7 +59,7 @@ class UserCommandPersistenceAdapterTest {
                 .orElseThrow(NotFoundDataException::new);
 
         assertEquals(user, loadUser);
-        assertEquals(loadUser.getUserId().getId(), userEntity.getUserId().getId());
+        assertEquals(loadUser.getUserId().getId(), userEntity.getId().getId());
     }
 
     @Test

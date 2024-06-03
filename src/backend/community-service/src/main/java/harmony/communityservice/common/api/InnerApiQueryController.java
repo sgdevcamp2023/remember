@@ -19,7 +19,7 @@ public class InnerApiQueryController {
 
     @GetMapping("/search/rooms/guilds/{userId}")
     public BaseResponse<?> searchRoomsAndGuildsBelongToUser(@PathVariable Long userId) {
-        LoadRoomsAndGuildsResponse searchRoomsAndGuildsResponse = loadUserBelongsQuery.load(userId);
-        return new BaseResponse<>(HttpStatus.OK.value(), "OK", searchRoomsAndGuildsResponse);
+        LoadRoomsAndGuildsResponse loadRoomsAndGuildsResponse = loadUserBelongsQuery.load(userId);
+        return new BaseResponse<>(HttpStatus.OK.value(), "OK", loadRoomsAndGuildsResponse);
     }
 }

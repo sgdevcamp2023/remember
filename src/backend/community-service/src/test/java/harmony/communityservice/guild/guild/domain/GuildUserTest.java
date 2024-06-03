@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.guild.domain;
 
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -29,7 +30,7 @@ class GuildUserTest {
                 .build();
 
         boolean equals = firstGuildUser.equals(secondGuildUser);
-
+        assertNotSame(firstGuildUser.getGuildUserId(),secondGuildUser.getGuildUserId());
         assertSame(equals, true);
     }
 

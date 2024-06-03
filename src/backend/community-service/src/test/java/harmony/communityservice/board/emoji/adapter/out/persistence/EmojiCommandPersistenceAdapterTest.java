@@ -50,6 +50,7 @@ class EmojiCommandPersistenceAdapterTest {
         assertEquals(emojiEntity.getEmojiUsers().size(), 3L);
         assertEquals(emojiEntity.getBoardId().getId(), 5L);
         assertEquals(emojiEntity.getEmojiType(), 1L);
+        assertNotNull(emojiEntity.getId().getId());
     }
 
     @Test

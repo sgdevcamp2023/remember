@@ -1,5 +1,6 @@
 package harmony.communityservice.board.board.adapter.out.persistence;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import harmony.communityservice.board.board.domain.Board;
@@ -8,6 +9,7 @@ import harmony.communityservice.common.exception.NotFoundDataException;
 import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
 import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +56,10 @@ class BoardQueryPersistenceAdapterTest {
                 .orElseThrow(NotFoundDataException::new);
 
         assertEquals(boardEntity.getImages().size(),board.getImages().size());
+        assertThat(boardEntity.getImages().get(0).getId().getId()).isBetween(1L, 100L);
+        assertThat(board.getImages().get(0).getImageId().getId()).isBetween(1L, 100L);
         assertEquals(boardEntity.getContent().getTitle(),board.getContent().getTitle());
+        assertEquals(board.getBoardId().getId(),boardEntity.getId().getId());
     }
 
 }

@@ -45,6 +45,7 @@ class CategoryCommandPersistenceAdapterTest {
 
         assertEquals(category.getName(),categoryEntity.getName());
         assertEquals(category.getGuildId().getId(),categoryEntity.getGuildId().getId());
+        assertEquals(categoryEntity.getId().getId(),7L);
     }
 
     @Test

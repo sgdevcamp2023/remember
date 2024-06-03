@@ -75,6 +75,7 @@ class GuildReadCommandPersistenceAdapterTest {
                 .orElseThrow(NotFoundDataException::new);
 
         assertEquals(guildReadEntity.getCommonUserInfo().getNickname(),"NEW_NICKNAME");
+        assertEquals(1L,guildReadEntity.getId().getId());
     }
 
     @Test

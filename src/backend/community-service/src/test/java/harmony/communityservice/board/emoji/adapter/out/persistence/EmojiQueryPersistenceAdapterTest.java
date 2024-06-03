@@ -1,13 +1,16 @@
 package harmony.communityservice.board.emoji.adapter.out.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import harmony.communityservice.board.board.adapter.out.persistence.BoardIdJpaVO;
 import harmony.communityservice.board.board.domain.Board.BoardId;
 import harmony.communityservice.board.emoji.domain.Emoji;
 import harmony.communityservice.board.emoji.domain.Emoji.EmojiId;
+import harmony.communityservice.board.emoji.domain.EmojiUser;
 import harmony.communityservice.common.exception.NotFoundDataException;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +40,10 @@ class EmojiQueryPersistenceAdapterTest {
 
         EmojiEntity emojiEntity = emojiQueryRepository.findByEmojiId(EmojiIdJpaVO.make(6L))
                 .orElseThrow(NotFoundDataException::new);
-
+        EmojiUser emojiUser = emoji.getEmojiUsers().get(0);
         assertEquals(emoji.getEmojiType(), emojiEntity.getEmojiType());
         assertEquals(emoji.getEmojiUsers().size(), emojiEntity.getEmojiUsers().size());
+        Assertions.assertThat(emojiEntity.getEmojiUsers().get(0).getId().getId()).isBetween(1L, 100L);
     }
 
     @Test

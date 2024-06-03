@@ -1,5 +1,7 @@
 package harmony.communityservice.board.board.adapter.in.web;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
@@ -139,11 +141,14 @@ class RegisterBoardControllerTest {
         MockMultipartFile request = new MockMultipartFile("registerBoardRequest", null,
                 "application/json",
                 objectMapper.writeValueAsString(registerBoardRequest).getBytes(StandardCharsets.UTF_8));
+
         mockMvc.perform(multipart("/api/community/register/board")
                         .file(profile1)
                         .file(profile2)
                         .file(request))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(baseResponse)));
+
+        then(errorLogPrinter).should().logging("HttpMessageNotReadableException");
     }
 }
