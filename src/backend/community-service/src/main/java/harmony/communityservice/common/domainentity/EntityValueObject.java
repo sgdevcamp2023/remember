@@ -18,10 +18,6 @@ public abstract class EntityValueObject<T extends EntityValueObject<T>> {
     }
 
     protected boolean equals(T other) {
-        if (other == null) {
-            return false;
-        }
-
         return Arrays.equals(getEqualityFields(), other.getEqualityFields());
     }
 

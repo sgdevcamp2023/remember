@@ -44,9 +44,10 @@ public class InnerEventRecord {
     private SentType sentType;
 
     @Builder
-    public InnerEventRecord(Long boardId, Long categoryId, Long channelId, String channelName, String channelType,
+    public InnerEventRecord(Long eventId,Long boardId, Long categoryId, Long channelId, String channelName, String channelType,
                             Long guildId, String guildName, String guildProfile, InnerEventType type, Long userId,
                             SentType sentType) {
+        this.eventId = eventId;
         this.boardId = boardId;
         this.categoryId = categoryId;
         this.channelId = channelId;
