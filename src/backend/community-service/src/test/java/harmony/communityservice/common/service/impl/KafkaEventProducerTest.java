@@ -46,7 +46,7 @@ class KafkaEventProducerTest {
                 .build();
         given(externalEventKafkaTemplate.send(communityEvent, externalEventRecord.make())).willReturn(null);
 
-        kafkaEventProducer.publishGuildCreationEvent(externalEventRecord.make());
+        kafkaEventProducer.publishEvent(externalEventRecord.make());
 
         then(externalEventKafkaTemplate).should(times(1)).send(communityEvent, externalEventRecord.make());
     }
@@ -61,7 +61,7 @@ class KafkaEventProducerTest {
                 .build();
         given(externalEventKafkaTemplate.send(communityEvent, externalEventRecord.make())).willReturn(null);
 
-        kafkaEventProducer.publishGuildDeletionEvent(externalEventRecord.make());
+        kafkaEventProducer.publishEvent(externalEventRecord.make());
 
         then(externalEventKafkaTemplate).should(times(1)).send(communityEvent, externalEventRecord.make());
     }
@@ -80,7 +80,7 @@ class KafkaEventProducerTest {
                 .build();
         given(externalEventKafkaTemplate.send(communityEvent, externalEventRecord.make())).willReturn(null);
 
-        kafkaEventProducer.publishChannelCreationEvent(externalEventRecord.make());
+        kafkaEventProducer.publishEvent(externalEventRecord.make());
 
         then(externalEventKafkaTemplate).should(times(1)).send(communityEvent, externalEventRecord.make());
     }
@@ -96,7 +96,7 @@ class KafkaEventProducerTest {
                 .build();
         given(externalEventKafkaTemplate.send(communityEvent, externalEventRecord.make())).willReturn(null);
 
-        kafkaEventProducer.publishChannelDeletionEvent(externalEventRecord.make());
+        kafkaEventProducer.publishEvent(externalEventRecord.make());
 
         then(externalEventKafkaTemplate).should(times(1)).send(communityEvent, externalEventRecord.make());
     }

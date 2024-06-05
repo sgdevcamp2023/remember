@@ -91,7 +91,7 @@ public class ExternalEventHandler {
         ExternalEventRecord externalEventRecord = outBoxMapper.findExternalEventRecord(record)
                 .orElseThrow(NotFoundDataException::new);
         try {
-            eventProducer.publishGuildCreationEvent(externalEventRecord.make());
+            eventProducer.publishEvent(externalEventRecord.make());
             outBoxMapper.updateExternalEventRecord(SentType.SEND_SUCCESS, externalEventRecord.getEventId());
         } catch (Exception e) {
             outBoxMapper.updateExternalEventRecord(SentType.SEND_FAIL, externalEventRecord.getEventId());

@@ -9,7 +9,6 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-@Slf4j
 @Configuration
 public class HeaderConfig {
 
