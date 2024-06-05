@@ -16,22 +16,7 @@ class KafkaEventProducer implements EventProducer {
     private String communityEvent;
 
     @Override
-    public void publishGuildDeletionEvent(ExternalEvent event) {
-        externalEventKafkaTemplate.send(communityEvent, event);
-    }
-
-    @Override
-    public void publishChannelCreationEvent(ExternalEvent event) {
-        externalEventKafkaTemplate.send(communityEvent, event);
-    }
-
-    @Override
-    public void publishChannelDeletionEvent(ExternalEvent event) {
-        externalEventKafkaTemplate.send(communityEvent, event);
-    }
-
-    @Override
-    public void publishGuildCreationEvent(ExternalEvent event) {
+    public void publishEvent(ExternalEvent event) {
         externalEventKafkaTemplate.send(communityEvent, event);
     }
 }

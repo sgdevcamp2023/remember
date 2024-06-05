@@ -14,9 +14,9 @@ public class GCPConfig {
     @Bean
     public Storage gcpStorage() {
         try {
-            ClassPathResource resource = new ClassPathResource("level-totality-416411-c2358eaf982c.json");
+            ClassPathResource resource = new ClassPathResource("focal-bucksaw-425512-i0-b87a4f3d0cdf.json");
             GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
-            String projectId = "level-totality-416411";
+            String projectId = "focal-bucksaw-425512-i0";
             return StorageOptions.newBuilder()
                     .setProjectId(projectId)
                     .setCredentials(credentials)

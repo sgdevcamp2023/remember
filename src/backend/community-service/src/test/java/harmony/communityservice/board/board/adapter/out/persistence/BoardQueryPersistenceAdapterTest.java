@@ -44,8 +44,15 @@ class BoardQueryPersistenceAdapterTest {
         Page<BoardEntity> boardEntities = boardQueryRepository.findBoardsByChannelOrderByBoardIdDesc(
                 ChannelIdJpaVO.make(1L), BoardIdJpaVO.make(4L),
                 pageRequest);
+        ImageEntity imageEntity = ImageEntity.make("test");
+        ImageEntity firstImageEntity = boardEntities.getContent().get(0).getImages().get(0);
+        ImageEntity secondImageEntity = boardEntities.getContent().get(0).getImages().get(1);
         assertEquals(boards.size(),3L);
+        assertFalse(firstImageEntity.equals(imageEntity));
         assertEquals(boards.size(),boardEntities.getContent().size());
+        assertEquals(firstImageEntity.equals(secondImageEntity),false);
+        assertEquals(firstImageEntity.equals(null), false);
+        assertEquals(firstImageEntity.getUpdatedAt().toString(),"2024-05-27T15:48:38.152Z");
     }
 
     @Test

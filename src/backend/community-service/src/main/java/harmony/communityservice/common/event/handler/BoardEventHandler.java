@@ -64,7 +64,7 @@ public class BoardEventHandler {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = DeleteBoardsInGuildEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(DeleteBoardsInGuildEvent event) {
+    public void boardsDeleteInGuildEventAfterHandler(DeleteBoardsInGuildEvent event) {
         List<InnerEventRecord> records = createBoardsDeleteInGuildEvent(event);
         List<InnerEventRecord> innerEventRecords = outBoxMapper.findInnerEventRecords(records);
         try {

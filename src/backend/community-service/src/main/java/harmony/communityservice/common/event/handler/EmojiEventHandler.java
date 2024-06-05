@@ -2,7 +2,6 @@ package harmony.communityservice.common.event.handler;
 
 import harmony.communityservice.board.board.domain.Board.BoardId;
 import harmony.communityservice.board.emoji.application.port.in.DeleteEmojisUseCase;
-import harmony.communityservice.board.emoji.application.port.out.DeleteEmojisPort;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojiEvent;
 import harmony.communityservice.common.event.dto.inner.DeleteEmojisEvent;
 import harmony.communityservice.common.exception.NotFoundDataException;
@@ -63,7 +62,7 @@ public class EmojiEventHandler {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Retryable(retryFor = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000L))
     @TransactionalEventListener(classes = DeleteEmojisEvent.class, phase = TransactionPhase.AFTER_COMMIT)
-    public void handler(DeleteEmojisEvent event) {
+    public void emojisDeleteEventAfterHandler(DeleteEmojisEvent event) {
         List<InnerEventRecord> records = createEmojisInBoardsDeleteEvent(event);
         List<InnerEventRecord> innerEventRecords = outBoxMapper.findInnerEventRecords(records);
         try {

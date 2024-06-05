@@ -2,13 +2,15 @@ package harmony.communityservice.board.board.adapter.out.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import harmony.communityservice.board.board.domain.Board;
 import harmony.communityservice.board.board.domain.Board.BoardId;
 import harmony.communityservice.board.board.domain.Image;
-import harmony.communityservice.board.comment.adapter.out.persistence.CommentEntity;
 import harmony.communityservice.common.exception.NotFoundDataException;
+import harmony.communityservice.common.generic.WriterInfoJpaVO;
+import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelIdJpaVO;
 import harmony.communityservice.guild.channel.domain.Channel.ChannelId;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +39,7 @@ class BoardCommandPersistenceAdapterTest {
     @DisplayName("게시글 저장 테스트")
     void register_board() {
         Image image = Image.make("first");
+        ImageEntity imageEntity = ImageEntity.make("first");
         Board board = Board.builder()
                 .title("first_board")
                 .content("first_content")
@@ -47,11 +50,29 @@ class BoardCommandPersistenceAdapterTest {
                 .images(List.of(image))
                 .build();
 
+        BoardEntity entity = BoardEntity.builder()
+                .title("first_board")
+                .content("first_content")
+                .channelId(ChannelIdJpaVO.make(1L))
+                .writerId(1L)
+                .writerName("user")
+                .writerProfile("first_profile")
+                .images(List.of(imageEntity))
+                .build();
+        ContentJpaVO testContent = ContentJpaVO.make("test", "test");
+
         boardCommandPersistenceAdapter.register(board);
         BoardEntity boardEntity = boardCommandRepository.findById(BoardIdJpaVO.make(5L))
                 .orElseThrow(NotFoundDataException::new);
+        ContentJpaVO content = boardEntity.getContent();
+        WriterInfoJpaVO writerInfo = boardEntity.getWriterInfo();
 
+        boolean equals = content.equals(null);
+        assertEquals(equals, false);
+        assertEquals(content.equals(testContent),false);
+        assertEquals(content.equals(writerInfo), false);
         assertEquals(boardEntity.getContent().getContent(), board.getContent().getContent());
+        assertNotEquals(boardEntity, entity);
     }
 
     @Test
@@ -88,8 +109,8 @@ class BoardCommandPersistenceAdapterTest {
         List<BoardEntity> result = boardCommandRepository.findAll().stream()
                 .filter(boardEntity -> boardEntity.getChannelId().getId().equals(1L))
                 .toList();
-        assertEquals(boardEntities.size(),boardIds.size());
-        assertEquals(result.size(),0L);
+        assertEquals(boardEntities.size(), boardIds.size());
+        assertEquals(result.size(), 0L);
     }
 
     @Test
@@ -105,8 +126,8 @@ class BoardCommandPersistenceAdapterTest {
                 .filter(boardEntity -> channelIds.stream()
                         .anyMatch(channelId -> channelId.getId().equals(boardEntity.getChannelId().getId())))
                 .toList();
-        assertEquals(boardEntities.size(),boardIds.size());
-        assertEquals(result.size(),0L);
+        assertEquals(boardEntities.size(), boardIds.size());
+        assertEquals(result.size(), 0L);
     }
 
 }

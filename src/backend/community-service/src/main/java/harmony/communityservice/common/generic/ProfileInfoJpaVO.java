@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProfileInfoJpaVO extends EntityValueObject<ProfileInfoJpaVO> {
@@ -31,10 +30,5 @@ public class ProfileInfoJpaVO extends EntityValueObject<ProfileInfoJpaVO> {
 
     public static ProfileInfoJpaVO make(String name, String profile) {
         return new ProfileInfoJpaVO(name, profile);
-    }
-
-    @Override
-    protected Object[] getEqualityFields() {
-        return new Object[]{name, profile};
     }
 }
