@@ -9,14 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.Instant;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @JsonInclude(Include.NON_NULL)
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExternalEventRecord {
 
@@ -47,10 +45,10 @@ public class ExternalEventRecord {
     private String profile;
 
     @Builder
-    public ExternalEventRecord(Long categoryId, Long channelId, String channelName, ChannelTypeJpaEnum channelType,
-                               Long guildId, Long guildReadId, String name, String profile,
-                               SentType sentType,
-                               ExternalEventType type) {
+    public ExternalEventRecord(Long eventId, Long categoryId, Long channelId, String channelName,
+                               ChannelTypeJpaEnum channelType, Long guildId, Long guildReadId, String name,
+                               String profile, SentType sentType, ExternalEventType type) {
+        this.eventId = eventId;
         this.categoryId = categoryId;
         this.channelId = channelId;
         this.channelName = channelName;
