@@ -7,9 +7,10 @@
 5. [도메인 구조](#도메인-구조)
 6. [동작 방식](#동작-방식)
 7. [구현 기능 목록](#구현-기능-목록)
-8. [성능 측정 결과](#성능-측정-결과)
-9. [트러블 슈팅](#트러블-슈팅)
-10. [리펙토링 일지](https://meteor-mallet-36a.notion.site/6ae93cdc1d024c639191ae3d3d43d396)
+8. [기능 테스트](#기능-테스트)
+9. [성능 측정 결과](#성능-측정-결과)
+10. [트러블 슈팅](#트러블-슈팅)
+11. [리펙토링 일지](https://meteor-mallet-36a.notion.site/6ae93cdc1d024c639191ae3d3d43d396)
 
 ## 서버 아키텍처
 
@@ -19,7 +20,7 @@
 | Database | `MySQL`                       |
 | Token    | `JWT`                         |
 | CDC      | `Debezium`                    |
-| Test     | `K6`                          |
+| Test     | `K6`, `JUnit5`, `Mokito`       |
 ## 폴더 구조
 ```
 .
@@ -210,7 +211,7 @@ public class KafkaEventProducer implements EventProducer {
             deleteCommentsUseCase.deleteByBoardId(BoardId.make(innerEventRecord.getBoardId()));
     }
 ```
-- `Inner Event`와 `External Event` 발행 보장하기 위해 `Transaction OutBox Pattern`을 사용했습니다. 
+- `Inner Event`와 `External Event` 발행 보장하기 위해 `Transaction OutBox Pattern`을 사용했습니다.
 - [트랜잭셔널 아웃박스 패턴의 실제 구현 사례 (29CM)](https://medium.com/@greg.shiny82/%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%94%EB%84%90-%EC%95%84%EC%9B%83%EB%B0%95%EC%8A%A4-%ED%8C%A8%ED%84%B4%EC%9D%98-%EC%8B%A4%EC%A0%9C-%EA%B5%AC%ED%98%84-%EC%82%AC%EB%A1%80-29cm-0f822fc23edb)에서 도움을 많이 받았습니다.
 ```java
 @TransactionalEventListener(classes = RegisterGuildReadEvent.class, phase = TransactionPhase.BEFORE_COMMIT)
@@ -593,6 +594,12 @@ public class AllControllerAdvice {
 - 유저 이미지 변경
 - [POSTMAN API](https://documenter.getpostman.com/view/25831351/2sA2rAz35k)
 
+## 기능 테스트
+- 애플리케이션이 요구 사항에 따라 제대로 작동하는지 확인하기 위해 `Junit`, `Mokito` 등을 사용하여 `Unit Test`, `Integration Test`를 진행했습니다.
+- 총 테스트 코드는 `492개`를 작성했으며, `Line Coverage`는 `98%`를 달성했습니다.
+  ![img_3.png](img_3.png)
+  ![img_4.png](img_4.png)
+
 ## 성능 측정 결과
 - TPS `52.7%` 향상, RPS `17.2%` 향상
 ### TPS
@@ -641,14 +648,14 @@ dbserver1.harmony.user
 ### 해결
 ```java
 @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private final List<ImageEntity> images = new ArrayList<>();
+@JoinColumn(name = "board_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+private final List<ImageEntity> images = new ArrayList<>();
 ```
 - `FK`를 제거하여 `부모 테이블`보다 `자식 테이블`에 먼저 데이터가 저장되거나 삭제되어도 문제가 없게 만들었다.
 
 ### 문제
 > `DDD`에서는 `일관성`을 위해 `루트엔티티`만 리포지토리가 있고 내부 `도메인엔티티`는 리포지토리가 없다.
-> 그런데 `JPQL`을 통한 `Bulk`연산으로 `Delete`, `Update` 명령을 할 때 `Persistence Context`를 거치지 않고 바로 `DB`에 `Query`를 날리기 때문에 `루트엔티티`만 삭제되고 `도메인엔티티`는 삭제되지 않는다. 
+> 그런데 `JPQL`을 통한 `Bulk`연산으로 `Delete`, `Update` 명령을 할 때 `Persistence Context`를 거치지 않고 바로 `DB`에 `Query`를 날리기 때문에 `루트엔티티`만 삭제되고 `도메인엔티티`는 삭제되지 않는다.
 > 그래서 `도메인엔티티`를 삭제하기 위해 어떻게 해야할까? 고민을 하고 있었고 조영호님께 문의를 드렸다.
 
 ![img_2.png](img_2.png)
