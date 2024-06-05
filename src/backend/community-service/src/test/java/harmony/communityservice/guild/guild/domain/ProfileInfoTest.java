@@ -1,5 +1,6 @@
 package harmony.communityservice.guild.guild.domain;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ class ProfileInfoTest {
         boolean equals = firstProfileInfo.equals(secondProfileInfo);
 
         assertSame(equals, true);
+        assertFalse(firstProfileInfo.equals(null));
     }
 
     @Test

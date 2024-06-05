@@ -31,9 +31,10 @@ class GcsFileConverter implements FileConverter {
                     BlobInfo.newBuilder(bucketName, uuid)
                             .setContentType(ext)
                             .build(),
-                    image.getInputStream());
+                    image.getBytes());
             return bucketUrl + uuid;
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalGcsException();
         }
 

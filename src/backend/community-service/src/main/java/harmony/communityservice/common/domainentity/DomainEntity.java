@@ -35,9 +35,6 @@ public abstract class DomainEntity<T extends DomainEntity<T, TID>, TID> {
     }
 
     protected boolean equals(T other) {
-        if (other == null) {
-            return false;
-        }
 
         if (getId() == null) {
             return false;

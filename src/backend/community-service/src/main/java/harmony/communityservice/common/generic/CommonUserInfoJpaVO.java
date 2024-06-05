@@ -27,9 +27,4 @@ public class CommonUserInfoJpaVO extends EntityValueObject<CommonUserInfoJpaVO> 
     public static CommonUserInfoJpaVO make(String nickname, String profile) {
         return new CommonUserInfoJpaVO(nickname, profile);
     }
-
-    @Override
-    protected Object[] getEqualityFields() {
-        return new Object[]{nickname, userProfile};
-    }
 }

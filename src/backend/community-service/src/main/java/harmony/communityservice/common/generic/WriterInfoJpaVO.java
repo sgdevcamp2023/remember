@@ -33,9 +33,4 @@ public class WriterInfoJpaVO extends EntityValueObject<WriterInfoJpaVO> {
         CommonUserInfoJpaVO newCommonUserInfo = CommonUserInfoJpaVO.make(name, profile);
         return new WriterInfoJpaVO(id, newCommonUserInfo);
     }
-
-    @Override
-    protected Object[] getEqualityFields() {
-        return new Object[]{writerId, commonUserInfo};
-    }
 }
