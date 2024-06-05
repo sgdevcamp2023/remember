@@ -5,15 +5,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.Instant;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
-@ToString
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InnerEventRecord {
 
@@ -44,7 +40,8 @@ public class InnerEventRecord {
     private SentType sentType;
 
     @Builder
-    public InnerEventRecord(Long eventId,Long boardId, Long categoryId, Long channelId, String channelName, String channelType,
+    public InnerEventRecord(Long eventId, Long boardId, Long categoryId, Long channelId, String channelName,
+                            String channelType,
                             Long guildId, String guildName, String guildProfile, InnerEventType type, Long userId,
                             SentType sentType) {
         this.eventId = eventId;
