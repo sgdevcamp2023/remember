@@ -1,5 +1,7 @@
 package harmony.communityservice.common.event.handler;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
@@ -20,6 +22,7 @@ import harmony.communityservice.common.service.EventProducer;
 import harmony.communityservice.guild.channel.adapter.out.persistence.ChannelTypeJpaEnum;
 import harmony.communityservice.guild.channel.domain.ChannelType;
 import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +53,7 @@ class ExternalEventHandlerTest {
                 "httpps://cdn.com/test");
         willDoNothing().given(outBoxMapper).insertExternalEventRecord(argThat(record ->
                 record.getSentType().equals(SentType.INIT) &&
-                        record.getType().equals(ExternalEventType.CREATED_GUILD) &&
+                        record.getType().equals(ExternalEventType.valueOf(guildCreatedEvent.getType())) &&
                         record.getGuildId().equals(guildCreatedEvent.getGuildId()) &&
                         record.getName().equals(guildCreatedEvent.getName()) &&
                         record.getProfile().equals(guildCreatedEvent.getProfile())));
@@ -82,6 +85,7 @@ class ExternalEventHandlerTest {
         then(outBoxMapper).should(times(1)).findExternalEventRecord(any(ExternalEventRecord.class));
         then(eventProducer).should(times(1)).publishEvent(record.make());
         then(outBoxMapper).should(times(1)).updateExternalEventRecord(SentType.SEND_SUCCESS, record.getEventId());
+        assertNotNull(record.getCreatedAt());
     }
 
     @Test

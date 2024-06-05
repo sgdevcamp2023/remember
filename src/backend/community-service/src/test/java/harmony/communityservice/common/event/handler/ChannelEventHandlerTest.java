@@ -1,5 +1,6 @@
 package harmony.communityservice.common.event.handler;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
@@ -17,6 +18,7 @@ import harmony.communityservice.guild.channel.application.port.in.DeleteGuildCha
 import harmony.communityservice.guild.channel.application.port.in.RegisterChannelCommand;
 import harmony.communityservice.guild.channel.application.port.in.RegisterChannelUseCase;
 import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -115,6 +117,7 @@ class ChannelEventHandlerTest {
         then(outBoxMapper).should(times(1)).findInnerEventRecord(any(InnerEventRecord.class));
         then(registerChannelUseCase).should(times(1)).register(registerChannelCommand);
         then(outBoxMapper).should(times(1)).updateInnerEventRecord(SentType.SEND_FAIL, 1L);
+        assertNotNull(record.getCreatedAt());
     }
 
     @Test
